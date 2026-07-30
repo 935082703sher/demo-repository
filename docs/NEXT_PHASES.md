@@ -4,8 +4,8 @@ Future work is intentionally documented but not implemented.
 
 1. Obtain reviewed RTMC FAQ, service, contact, and regulatory records with owner,
    approval/effective/review dates, language, version, status, and official source.
-2. Agree the authenticated Nuxt-backend API contract, session boundary, rate limits,
-   timeouts, origins, and deployment URLs.
+2. Agree the authenticated Nuxt-backend API contract, identity/session boundary,
+   distributed rate limits, timeouts, origins, and deployment URLs.
 3. Decide whether an RTMC-approved external LLM or internal model may process citizen
    text; complete data-location, retention, redaction, contract, and evaluation review.
 4. Design an approved ingestion/review lifecycle and PostgreSQL metadata store. Select
@@ -17,9 +17,10 @@ Future work is intentionally documented but not implemented.
 7. Obtain the official appeal API contract: backend authentication, exact required
    fields, idempotency, timeout/retry behavior, official confirmation semantics, and test
    environment. Only the official system may create case number, department, or status.
-8. Add operational controls: authentication/authorization, rate limiting, kill switch,
-   structured audit store, metrics, tracing, alerts, backup/restore, rollback, dependency
-   scanning, API security tests, and load tests.
+8. Replace process-local limits with centralized authenticated-user and gateway
+   controls. Add authentication/authorization, kill switch, structured audit store,
+   metrics, tracing, alerts, backup/restore, rollback, dependency scanning, API security
+   tests, and load tests.
 9. Complete staging integration, multilingual content review, hallucination and injection
    evaluations, accessibility/user acceptance, security approval, and written service-owner
    risk acceptance before any citizen-facing release.

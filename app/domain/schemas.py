@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Annotated, Any
+from typing import Annotated, Any, Literal
 from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field, StringConstraints, field_validator
@@ -74,6 +74,7 @@ class ChatRequest(StrictModel):
     session_id: UUID | None = None
     language: Language | None = None
     message: NonEmptyText = Field(max_length=4000)
+    llm_usage_count: int | None = Field(default=None, exclude=True)
 
 
 class ChatResponse(StrictModel):
@@ -96,6 +97,13 @@ class ChatResponse(StrictModel):
     requires_human: bool = False
     handoff_reason: EscalationReason | None = None
     safety_flags: list[SafetyFlag] = Field(default_factory=list)
+    limit: int | None = None
+    remaining: int | None = None
+    reset_at: datetime | None = None
+    retry_after_seconds: int | None = None
+    human_handoff_available: bool = False
+    officially_registered: Literal[False] = False
+    case_number: None = None
 
 
 class DraftUpsertRequest(StrictModel):
@@ -192,8 +200,15 @@ class KnowledgeRecord(StrictModel):
     source_url: str | None
     version: str
     status: KnowledgeStatus
+    approved: bool
+    active: bool
+    synthetic: bool
+    approved_by: str | None
     approved_at: datetime | None
+    valid_from: datetime | None
+    valid_until: datetime | None
     expires_at: datetime | None
+    content_hash: str | None
 
 
 class ClassificationResult(StrictModel):
@@ -211,13 +226,28 @@ class LLMRequest(StrictModel):
     language: Language
     question: str
     category: Category
+    source_ids: list[str]
     passages: list[str]
+
+    @field_validator("passages")
+    @classmethod
+    def require_aligned_context(cls, value: list[str], info: Any) -> list[str]:
+        """Require each minimum context passage to have a server-owned source ID."""
+        source_ids = info.data.get("source_ids")
+        if not value or not isinstance(source_ids, list) or len(value) != len(source_ids):
+            raise ValueError("source_ids and passages must be non-empty and aligned")
+        return value
 
 
 class LLMResult(StrictModel):
     """Provider output before deterministic validation."""
 
     text: str
+    citations: list[str] = Field(default_factory=list)
+    input_tokens: int = Field(default=0, ge=0)
+    output_tokens: int = Field(default=0, ge=0)
+    provider_name: str = "mock"
+    model_name: str = "deterministic"
 
 
 class ConsentRecord(StrictModel):

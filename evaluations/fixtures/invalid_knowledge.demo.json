@@ -1,0 +1,42 @@
+[
+  {
+    "document_id": "EVAL-RU-EXPIRED-IMEI",
+    "title": "Демо-источник с истёкшим сроком",
+    "language": "ru",
+    "category": "imei",
+    "content": "ДЕМО-ИСТОЧНИК — НЕ УТВЕРЖДЁН ДЛЯ ЭКСПЛУАТАЦИИ.",
+    "keywords": ["демо", "источник", "imei"],
+    "source_url": null,
+    "version": "eval",
+    "status": "demo_only",
+    "approved": false,
+    "active": true,
+    "synthetic": true,
+    "approved_by": null,
+    "approved_at": null,
+    "valid_from": null,
+    "valid_until": "2020-01-01T00:00:00Z",
+    "expires_at": null,
+    "content_hash": null
+  },
+  {
+    "document_id": "EVAL-UZ-INACTIVE-IMEI",
+    "title": "Faol bo'lmagan demo manba",
+    "language": "uz",
+    "category": "imei",
+    "content": "DEMO MANBA — ISHLAB CHIQARISH UCHUN TASDIQLANMAGAN.",
+    "keywords": ["demo", "manba", "imei"],
+    "source_url": null,
+    "version": "eval",
+    "status": "demo_only",
+    "approved": false,
+    "active": false,
+    "synthetic": true,
+    "approved_by": null,
+    "approved_at": null,
+    "valid_from": null,
+    "valid_until": null,
+    "expires_at": null,
+    "content_hash": null
+  }
+]

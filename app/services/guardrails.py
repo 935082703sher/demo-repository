@@ -23,7 +23,7 @@ class Guardrails:
     """Conservative rules that reduce risk but do not claim perfect detection."""
 
     _secret_patterns = (
-        re.compile(r"\b(?:password|parol|пароль|pin|cvv)\b", re.IGNORECASE),
+        re.compile(r"\b(?:password|parol\w*|парол\w*|pin|cvv)\b", re.IGNORECASE),
         re.compile(r"\b(?:otp|sms code|sms kod|смс[- ]?код)\b", re.IGNORECASE),
         re.compile(r"\b(?:api[_ -]?key|access[_ -]?token|private[_ -]?key)\b", re.IGNORECASE),
         re.compile(r"\b(?:\d[ -]*?){13,19}\b"),
@@ -132,6 +132,7 @@ class Guardrails:
             "huquqiy maslahat",
             "qonunni sharhla",
             "юридическая консультация",
+            "юридическ",
             "истолкуй закон",
         ):
             return GuardrailDecision(
@@ -172,25 +173,6 @@ class Guardrails:
             return GuardrailDecision(
                 allowed=False,
                 handoff_reason=EscalationReason.MISCONDUCT_ALLEGATION,
-            )
-
-        if self._contains(
-            text,
-            "weather",
-            "capital of",
-            "recipe",
-            "football score",
-            "movie recommendation",
-            "ob-havo",
-            "retsept",
-            "погода",
-            "рецепт",
-            "столица франции",
-        ):
-            return GuardrailDecision(
-                allowed=False,
-                flags=(SafetyFlag.OUT_OF_SCOPE,),
-                out_of_scope=True,
             )
 
         return GuardrailDecision(allowed=True)

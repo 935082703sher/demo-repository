@@ -8,14 +8,15 @@ make lint
 make typecheck
 make test
 make check
+python -m evaluations.run
 ```
 
 Equivalent commands:
 
 ```bash
-ruff format app tests
-ruff check app tests
-mypy app tests
+ruff format app tests evaluations
+ruff check app tests evaluations
+mypy app tests evaluations
 pytest
 ```
 
@@ -27,6 +28,13 @@ Coverage includes:
 - missing-language selection and unclear-after-one-clarification escalation;
 - unsupported facts, unrelated scope, explicit synthetic grounding, and source metadata;
 - inactive, expired, and nominally approved-but-undated knowledge rejection;
+- approval identity/source/hash validation and validation-only import reporting;
+- exact localized scope, quota, and rate-limit responses;
+- limits of 5 and 10, session isolation, reset, browser-counter distrust, retry attempts,
+  and continued deterministic complaint behavior after quota exhaustion;
+- structured configured-provider output, authentication, malformed output, timeout,
+  bounded retries, token/cost/latency accounting, and no paid calls;
+- missing and fabricated citation rejection;
 - injection, credentials, emergency, threat, provider outage, and unsafe provider output;
 - draft field allowlists, missing fields, version/hash changes, stale edits, retrieval,
   cancellation, and unknown drafts;

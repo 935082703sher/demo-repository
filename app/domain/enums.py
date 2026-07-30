@@ -36,6 +36,8 @@ class ConversationState(StrEnum):
     HUMAN_HANDOFF = "human_handoff"
     CANCELLED = "cancelled"
     CLOSED = "closed"
+    USAGE_LIMIT_REACHED = "usage_limit_reached"
+    RATE_LIMITED = "rate_limited"
 
 
 class ResponseType(StrEnum):
@@ -48,6 +50,8 @@ class ResponseType(StrEnum):
     HUMAN_HANDOFF = "human_handoff"
     DRAFT = "draft"
     SUBMISSION_RESULT = "submission_result"
+    USAGE_LIMIT_REACHED = "usage_limit_reached"
+    RATE_LIMITED = "rate_limited"
 
 
 class EscalationReason(StrEnum):

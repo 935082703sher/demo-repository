@@ -1,4 +1,4 @@
-"""FastAPI application factory for RTMC AI Assistant Demo 1."""
+"""FastAPI application factory for RTMC AI Assistant Demo 2."""
 
 from __future__ import annotations
 
@@ -20,12 +20,22 @@ from app.core.errors import AppError
 from app.core.logging import configure_logging
 from app.domain.schemas import ErrorBody, ErrorResponse
 from app.providers.base import LLMProvider
-from app.providers.mock_llm import MockLLMProvider
+from app.providers.configured import build_configured_provider
+from app.repositories.usage_repository import (
+    InMemoryRateLimitRepository,
+    InMemoryUsageRepository,
+    RateLimitRepository,
+    UsageRepository,
+)
 from app.services.assistant import AssistantService
 from app.services.classifier import RequestClassifier
 from app.services.complaint_drafts import ComplaintDraftService
+from app.services.generation import GroundedGenerationService
+from app.services.grounding import GroundingValidator
 from app.services.guardrails import Guardrails
 from app.services.knowledge import KnowledgeService
+from app.services.scope import ScopeService
+from app.services.usage_limits import RequestRateLimitService, UsageLimitService
 
 logger = logging.getLogger(__name__)
 
@@ -35,6 +45,8 @@ def create_app(
     settings: Settings | None = None,
     provider: LLMProvider | None = None,
     knowledge_path: Path | None = None,
+    usage_repository: UsageRepository | None = None,
+    rate_limit_repository: RateLimitRepository | None = None,
 ) -> FastAPI:
     """Build an isolated application instance suitable for tests or local serving."""
     app_settings = settings or get_settings()
@@ -48,7 +60,7 @@ def create_app(
         logger.info("event=service_stop")
 
     app = FastAPI(
-        title="RTMC AI Assistant Demo 1",
+        title="RTMC AI Assistant Demo 2",
         version=app_settings.version,
         description=(
             "Local controlled demo only. It cannot register an official appeal "
@@ -57,12 +69,45 @@ def create_app(
         lifespan=lifespan,
     )
     knowledge = KnowledgeService.from_json(data_path)
+    usage_limits = UsageLimitService(
+        usage_repository if usage_repository is not None else InMemoryUsageRepository(),
+        limit=app_settings.llm_generation_limit_per_session,
+        window_seconds=app_settings.llm_quota_window_seconds,
+    )
+    selected_provider = (
+        provider if provider is not None else build_configured_provider(app_settings)
+    )
     app.state.settings = app_settings
+    app.state.usage_limits = usage_limits
     app.state.assistant = AssistantService(
         classifier=RequestClassifier(),
         guardrails=Guardrails(),
+        scope=ScopeService(),
         knowledge=knowledge,
-        provider=provider or MockLLMProvider(),
+        generation=GroundedGenerationService(
+            selected_provider,
+            usage_limits,
+            timeout_seconds=app_settings.llm_timeout_seconds,
+            max_retries=app_settings.llm_max_retries,
+            input_cost_per_million=app_settings.llm_input_cost_per_million,
+            output_cost_per_million=app_settings.llm_output_cost_per_million,
+        ),
+        grounding=GroundingValidator(),
+        usage_limits=usage_limits,
+        rate_limits=RequestRateLimitService(
+            (
+                rate_limit_repository
+                if rate_limit_repository is not None
+                else InMemoryRateLimitRepository()
+            ),
+            limit=app_settings.request_rate_limit_per_minute,
+        ),
+        approved_support_phone=app_settings.approved_support_phone,
+        approved_contact_url=(
+            str(app_settings.approved_contact_url)
+            if app_settings.approved_contact_url is not None
+            else None
+        ),
     )
     app.state.drafts = ComplaintDraftService(app_settings.privacy_notice_version)
 

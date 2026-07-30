@@ -9,8 +9,15 @@
     "source_url": null,
     "version": "demo-1",
     "status": "demo_only",
+    "approved": false,
+    "active": true,
+    "synthetic": true,
+    "approved_by": null,
     "approved_at": null,
-    "expires_at": null
+    "valid_from": null,
+    "valid_until": null,
+    "expires_at": null,
+    "content_hash": null
   },
   {
     "document_id": "DEMO-EN-MNP-001",
@@ -22,8 +29,15 @@
     "source_url": null,
     "version": "demo-1",
     "status": "demo_only",
+    "approved": false,
+    "active": true,
+    "synthetic": true,
+    "approved_by": null,
     "approved_at": null,
-    "expires_at": null
+    "valid_from": null,
+    "valid_until": null,
+    "expires_at": null,
+    "content_hash": null
   },
   {
     "document_id": "DEMO-EN-NUMBER-001",
@@ -35,8 +49,15 @@
     "source_url": null,
     "version": "demo-1",
     "status": "demo_only",
+    "approved": false,
+    "active": true,
+    "synthetic": true,
+    "approved_by": null,
     "approved_at": null,
-    "expires_at": null
+    "valid_from": null,
+    "valid_until": null,
+    "expires_at": null,
+    "content_hash": null
   },
   {
     "document_id": "DEMO-EN-NETWORK-001",
@@ -48,8 +69,15 @@
     "source_url": null,
     "version": "demo-1",
     "status": "demo_only",
+    "approved": false,
+    "active": true,
+    "synthetic": true,
+    "approved_by": null,
     "approved_at": null,
-    "expires_at": null
+    "valid_from": null,
+    "valid_until": null,
+    "expires_at": null,
+    "content_hash": null
   },
   {
     "document_id": "DEMO-EN-WEBSITE-001",
@@ -61,8 +89,15 @@
     "source_url": null,
     "version": "demo-1",
     "status": "demo_only",
+    "approved": false,
+    "active": true,
+    "synthetic": true,
+    "approved_by": null,
     "approved_at": null,
-    "expires_at": null
+    "valid_from": null,
+    "valid_until": null,
+    "expires_at": null,
+    "content_hash": null
   },
   {
     "document_id": "DEMO-EN-OTHER-001",
@@ -74,8 +109,15 @@
     "source_url": null,
     "version": "demo-1",
     "status": "demo_only",
+    "approved": false,
+    "active": true,
+    "synthetic": true,
+    "approved_by": null,
     "approved_at": null,
-    "expires_at": null
+    "valid_from": null,
+    "valid_until": null,
+    "expires_at": null,
+    "content_hash": null
   },
   {
     "document_id": "DEMO-UZ-IMEI-001",
@@ -87,8 +129,15 @@
     "source_url": null,
     "version": "demo-1",
     "status": "demo_only",
+    "approved": false,
+    "active": true,
+    "synthetic": true,
+    "approved_by": null,
     "approved_at": null,
-    "expires_at": null
+    "valid_from": null,
+    "valid_until": null,
+    "expires_at": null,
+    "content_hash": null
   },
   {
     "document_id": "DEMO-UZ-MNP-001",
@@ -100,8 +149,15 @@
     "source_url": null,
     "version": "demo-1",
     "status": "demo_only",
+    "approved": false,
+    "active": true,
+    "synthetic": true,
+    "approved_by": null,
     "approved_at": null,
-    "expires_at": null
+    "valid_from": null,
+    "valid_until": null,
+    "expires_at": null,
+    "content_hash": null
   },
   {
     "document_id": "DEMO-UZ-NUMBER-001",
@@ -113,8 +169,15 @@
     "source_url": null,
     "version": "demo-1",
     "status": "demo_only",
+    "approved": false,
+    "active": true,
+    "synthetic": true,
+    "approved_by": null,
     "approved_at": null,
-    "expires_at": null
+    "valid_from": null,
+    "valid_until": null,
+    "expires_at": null,
+    "content_hash": null
   },
   {
     "document_id": "DEMO-UZ-NETWORK-001",
@@ -126,8 +189,15 @@
     "source_url": null,
     "version": "demo-1",
     "status": "demo_only",
+    "approved": false,
+    "active": true,
+    "synthetic": true,
+    "approved_by": null,
     "approved_at": null,
-    "expires_at": null
+    "valid_from": null,
+    "valid_until": null,
+    "expires_at": null,
+    "content_hash": null
   },
   {
     "document_id": "DEMO-UZ-WEBSITE-001",
@@ -139,8 +209,15 @@
     "source_url": null,
     "version": "demo-1",
     "status": "demo_only",
+    "approved": false,
+    "active": true,
+    "synthetic": true,
+    "approved_by": null,
     "approved_at": null,
-    "expires_at": null
+    "valid_from": null,
+    "valid_until": null,
+    "expires_at": null,
+    "content_hash": null
   },
   {
     "document_id": "DEMO-UZ-OTHER-001",
@@ -152,8 +229,15 @@
     "source_url": null,
     "version": "demo-1",
     "status": "demo_only",
+    "approved": false,
+    "active": true,
+    "synthetic": true,
+    "approved_by": null,
     "approved_at": null,
-    "expires_at": null
+    "valid_from": null,
+    "valid_until": null,
+    "expires_at": null,
+    "content_hash": null
   },
   {
     "document_id": "DEMO-RU-IMEI-001",
@@ -165,8 +249,15 @@
     "source_url": null,
     "version": "demo-1",
     "status": "demo_only",
+    "approved": false,
+    "active": true,
+    "synthetic": true,
+    "approved_by": null,
     "approved_at": null,
-    "expires_at": null
+    "valid_from": null,
+    "valid_until": null,
+    "expires_at": null,
+    "content_hash": null
   },
   {
     "document_id": "DEMO-RU-MNP-001",
@@ -178,8 +269,15 @@
     "source_url": null,
     "version": "demo-1",
     "status": "demo_only",
+    "approved": false,
+    "active": true,
+    "synthetic": true,
+    "approved_by": null,
     "approved_at": null,
-    "expires_at": null
+    "valid_from": null,
+    "valid_until": null,
+    "expires_at": null,
+    "content_hash": null
   },
   {
     "document_id": "DEMO-RU-NUMBER-001",
@@ -191,8 +289,15 @@
     "source_url": null,
     "version": "demo-1",
     "status": "demo_only",
+    "approved": false,
+    "active": true,
+    "synthetic": true,
+    "approved_by": null,
     "approved_at": null,
-    "expires_at": null
+    "valid_from": null,
+    "valid_until": null,
+    "expires_at": null,
+    "content_hash": null
   },
   {
     "document_id": "DEMO-RU-NETWORK-001",
@@ -204,8 +309,15 @@
     "source_url": null,
     "version": "demo-1",
     "status": "demo_only",
+    "approved": false,
+    "active": true,
+    "synthetic": true,
+    "approved_by": null,
     "approved_at": null,
-    "expires_at": null
+    "valid_from": null,
+    "valid_until": null,
+    "expires_at": null,
+    "content_hash": null
   },
   {
     "document_id": "DEMO-RU-WEBSITE-001",
@@ -217,8 +329,15 @@
     "source_url": null,
     "version": "demo-1",
     "status": "demo_only",
+    "approved": false,
+    "active": true,
+    "synthetic": true,
+    "approved_by": null,
     "approved_at": null,
-    "expires_at": null
+    "valid_from": null,
+    "valid_until": null,
+    "expires_at": null,
+    "content_hash": null
   },
   {
     "document_id": "DEMO-RU-OTHER-001",
@@ -230,7 +349,14 @@
     "source_url": null,
     "version": "demo-1",
     "status": "demo_only",
+    "approved": false,
+    "active": true,
+    "synthetic": true,
+    "approved_by": null,
     "approved_at": null,
-    "expires_at": null
+    "valid_from": null,
+    "valid_until": null,
+    "expires_at": null,
+    "content_hash": null
   }
 ]

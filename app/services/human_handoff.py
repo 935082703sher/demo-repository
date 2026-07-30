@@ -50,21 +50,6 @@ _NO_SOURCE = {
     ),
 }
 
-_OUT_OF_SCOPE = {
-    Language.UZ: (
-        "Men faqat RTMC xizmatlari, telekommunikatsiya bo'yicha tasdiqlangan "
-        "ma'lumotlar va murojaat loyihasini tayyorlashda yordam bera olaman."
-    ),
-    Language.RU: (
-        "Я могу помочь только с услугами RTMC, утверждённой информацией в сфере "
-        "телекоммуникаций и подготовкой проекта обращения."
-    ),
-    Language.EN: (
-        "I can assist only with RTMC services, approved telecommunications information, "
-        "and preparing an appeal draft."
-    ),
-}
-
 
 def handoff_message(language: Language, reason: EscalationReason) -> str:
     """Return restrained wording without invented contacts or queue references."""
@@ -77,8 +62,3 @@ def handoff_message(language: Language, reason: EscalationReason) -> str:
     if reason is EscalationReason.NO_APPROVED_SOURCE:
         return _NO_SOURCE[language]
     return _HUMAN_REVIEW[language]
-
-
-def out_of_scope_message(language: Language) -> str:
-    """Return the approved fixed scope refusal."""
-    return _OUT_OF_SCOPE[language]

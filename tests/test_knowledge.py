@@ -28,13 +28,20 @@ def test_expired_and_inactive_records_are_rejected(
         title="Synthetic test record",
         language=Language.EN,
         category=Category.IMEI,
-        content="Synthetic only.",
+        content="DEMO FIXTURE — Synthetic only.",
         keywords=["demo", "fixture", "imei"],
         source_url=None,
         version="test",
         status=status,
+        approved=False,
+        active=True,
+        synthetic=True,
+        approved_by=None,
         approved_at=None,
+        valid_from=None,
+        valid_until=None,
         expires_at=now + timedelta(days=expires_offset),
+        content_hash=None,
     )
     service = KnowledgeService([record])
 
@@ -54,8 +61,15 @@ def test_approved_record_without_approval_date_is_rejected() -> None:
         source_url=None,
         version="test",
         status=KnowledgeStatus.APPROVED,
+        approved=False,
+        active=True,
+        synthetic=False,
+        approved_by=None,
         approved_at=None,
+        valid_from=None,
+        valid_until=None,
         expires_at=None,
+        content_hash=None,
     )
 
     assert (

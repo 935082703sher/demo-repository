@@ -2,7 +2,7 @@
 
 ## Threat assumptions
 
-Citizen input, uploaded/retrieved text, and provider output are untrusted. Demo 1 assumes
+Citizen input, uploaded/retrieved text, and provider output are untrusted. Demo 2 assumes
 an attacker may attempt prompt injection, secret disclosure, oversized input, unsupported
 fact requests, duplicate submission, stale-version consent, or fabricated official claims.
 
@@ -13,9 +13,16 @@ fact requests, duplicate submission, stale-version consent, or fabricated offici
 - deterministic rules stop obvious credentials, prompt injection, danger, threats,
   self-harm, serious cybersecurity reports, and legal-interpretation requests;
 - user input is never loaded into the knowledge repository;
-- retrieval filters language, category, status, expiry, and keyword evidence;
+- retrieval filters language, category, approval metadata, source URL, activity,
+  validity, content hash, synthetic marking, and keyword evidence;
+- deterministic scope refusal occurs before provider generation;
+- independent server-owned request-rate and logical-generation limits protect usage;
+- provider prompts contain only minimum retrieved context and common identifiers in
+  factual questions are redacted;
+- provider output must be structured and cite only supplied source IDs;
 - output checks block obvious case-number, registration, decision, and guarantee claims;
-- the mock provider receives only approved/demo passages and has no tools or network;
+- the default mock provider has no tools or network; the configured real adapter is
+  unavailable without explicit model/key configuration;
 - draft updates use optimistic version checks and new content hashes;
 - consent binds the exact version/hash, notice version, request ID, timestamp, and
   idempotency key;
@@ -35,9 +42,10 @@ not be treated as an official record.
 
 ## Secrets
 
-Demo 1 needs no API key or database credential. `.env.example` contains names and
-non-secret defaults only. Production secrets must use an RTMC-approved secret manager and
-must never reach browser code or the language model.
+Demo 2 defaults to mock and needs no API key or database credential. `.env.example`
+contains empty secret placeholders and non-secret defaults only. A real key is accepted
+only from the environment and stored as `SecretStr`; it is never logged or returned.
+Production secrets require an RTMC-approved secret manager.
 
 ## Logging
 
@@ -48,7 +56,7 @@ retention, redaction review, monitoring, and incident procedures.
 
 ## Production work not implemented
 
-Authentication, authorization, HTTPS termination, rate limits, CSRF/origin policy, abuse
-controls, attachment scanning, encrypted persistence, backups, audit storage, staffed
-handoff, kill switch, dependency scanning, penetration testing, and formal privacy/legal
-approval are required before any external use.
+Authentication, authorization, HTTPS termination, distributed/authenticated limits,
+gateway controls, CSRF/origin policy, attachment scanning, encrypted persistence,
+backups, audit storage, staffed handoff, kill switch, dependency scanning, penetration
+testing, and formal privacy/legal/provider approval are required before external use.

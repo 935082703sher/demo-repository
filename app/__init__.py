@@ -1,3 +1,3 @@
-"""RTMC AI Assistant Demo 1 backend."""
+"""RTMC AI Assistant Demo 2 backend."""
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"

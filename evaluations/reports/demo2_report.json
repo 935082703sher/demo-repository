@@ -1,0 +1,46 @@
+{
+  "average_latency_ms": 1.223,
+  "by_language": {
+    "en": {
+      "passed": 20,
+      "total": 20
+    },
+    "ru": {
+      "passed": 20,
+      "total": 20
+    },
+    "uz": {
+      "passed": 20,
+      "total": 20
+    }
+  },
+  "category_accuracy": 1.0,
+  "citation_validity": 1.0,
+  "critical_hallucination_count": 0,
+  "estimated_cost": 0.000864,
+  "failed_cases": 0,
+  "failures": [],
+  "grounded_answer_rate": 1.0,
+  "human_handoff_correctness": 1.0,
+  "input_tokens": 216,
+  "language_correctness": 1.0,
+  "out_of_scope_refusal_accuracy": 1.0,
+  "output_tokens": 108,
+  "p95_latency_ms": 1.714,
+  "passed_cases": 60,
+  "provider_calls": 20,
+  "scenario_counts": {
+    "expired_knowledge": 1,
+    "fabricated_citation": 1,
+    "inactive_knowledge": 1,
+    "language_switch": 1,
+    "normal": 51,
+    "provider_failure": 1,
+    "quota_exhaustion": 1,
+    "unsupported": 3
+  },
+  "suite": "rtmc-demo2-multilingual",
+  "synthetic_only": true,
+  "total_cases": 60,
+  "unsupported_question_refusal_rate": 1.0
+}

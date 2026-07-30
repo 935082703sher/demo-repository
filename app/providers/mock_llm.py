@@ -8,6 +8,6 @@ class MockLLMProvider:
 
     async def generate(self, request: LLMRequest) -> LLMResult:
         """Produce a stable grounded response without network access."""
-        if not request.passages:
+        if not request.passages or not request.source_ids:
             raise ValueError("Mock provider requires approved context")
-        return LLMResult(text=request.passages[0])
+        return LLMResult(text=request.passages[0], citations=[request.source_ids[0]])

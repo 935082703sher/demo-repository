@@ -1,21 +1,26 @@
-# RTMC AI Assistant — Demo 1 Backend
+# RTMC AI Assistant — Demo 2 Backend
 
-A controlled local FastAPI foundation for RTMC citizen guidance and complaint-draft
-preparation. It proves the API and safety workflow expected by the RTMC Nuxt website;
-the frontend itself is intentionally outside this repository.
+A controlled internal FastAPI demonstration for grounded RTMC guidance and
+complaint-draft preparation. It extends the frozen Demo 1 API without adding an
+official appeal integration or production frontend.
 
-Demo 1 uses:
+Demo 2 uses:
 
 - Pydantic v2 request and response models;
 - deterministic Uzbek, Russian, and English category rules;
-- deterministic input and output guardrails;
-- local synthetic knowledge explicitly marked `demo_only`;
-- a mock language-provider implementation with no network access;
+- deterministic input, scope, output, and citation guardrails;
+- strict approved-knowledge metadata and local synthetic records marked `demo_only`;
+- separate process-local LLM quotas and request-rate protection;
+- a provider-independent boundary with mock default and a disabled-by-default OpenAI
+  Responses adapter;
+- structured provider output, bounded retries, token/cost/latency measurements;
 - process-local sessions, draft versions, consent records, and idempotency state.
+- a repeatable 60-case multilingual synthetic evaluation suite.
 
-> **Safety boundary:** This demo is not production-ready. It cannot register an
+> **Safety boundary:** Demo 2 is not production-ready. It cannot register an
 > official appeal, generate an official case number, track status, or store real
-> citizen data. All in-memory data disappears when the process restarts.
+> citizen data. The default provider makes no network call. All in-memory data
+> disappears when the process restarts.
 
 ## Prerequisites
 
@@ -33,6 +38,7 @@ python3.12 -m venv /tmp/rtmc-ai-assistant-venv
 . /tmp/rtmc-ai-assistant-venv/bin/activate
 pip install -e '.[dev]'
 make check
+python -m evaluations.run
 make run
 ```
 
@@ -60,7 +66,22 @@ docker compose down
 ```
 
 The image runs as a non-root user and includes a health check. It has no database,
-secret, or official RTMC integration.
+committed secret, or official RTMC integration.
+
+## Configuration
+
+Copy `.env.example` to `.env` only when local overrides are required. Important Demo 2
+settings include:
+
+- `LLM_PROVIDER=mock`;
+- `LLM_GENERATION_LIMIT_PER_SESSION=10`;
+- `LLM_QUOTA_WINDOW_SECONDS=86400`;
+- `REQUEST_RATE_LIMIT_PER_MINUTE=20`;
+- optional approved support phone/contact URL;
+- optional external provider model/key, timeout, retries, and cost rates.
+
+Do not configure a real provider without RTMC authorization. No model or API key is
+committed.
 
 ## Repository map
 
@@ -68,16 +89,20 @@ secret, or official RTMC integration.
 app/api/         thin FastAPI routes
 app/core/        settings, errors, safe logging
 app/domain/      typed enums and schemas
-app/providers/   small provider interface and deterministic mock
-app/services/    workflow, guardrails, retrieval, drafts, handoff
+app/providers/   provider interface, mock, configured adapter
+app/repositories process-local replaceable usage/rate storage
+app/services/    workflow, scope, usage, grounding, retrieval, drafts, handoff
 app/data/        synthetic local demo fixture
 tests/           deterministic API and service regression tests
+evaluations/     60 cases, runner, fixtures, generated reports
 docs/            scope, architecture, contract, security, tests, next phases
 ```
 
-See [`docs/DEMO_SCOPE.md`](docs/DEMO_SCOPE.md),
+See [`docs/DEMO2_SCOPE.md`](docs/DEMO2_SCOPE.md),
 [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md), and
 [`docs/API_CONTRACT.md`](docs/API_CONTRACT.md) before integration work.
 
-Completion evidence is recorded in
+Demo 1 evidence remains frozen in
 [`docs/DEMO_1_COMPLETION_EVIDENCE.md`](docs/DEMO_1_COMPLETION_EVIDENCE.md).
+Demo 2 evidence is recorded in
+[`docs/DEMO2_COMPLETION_EVIDENCE.md`](docs/DEMO2_COMPLETION_EVIDENCE.md).

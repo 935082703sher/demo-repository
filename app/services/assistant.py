@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from datetime import datetime
 from threading import RLock
 from uuid import UUID, uuid4
 
@@ -15,12 +16,17 @@ from app.domain.enums import (
     SafetyFlag,
 )
 from app.domain.schemas import ChatRequest, ChatResponse, LLMRequest, SourceReference
-from app.providers.base import LLMProvider
+from app.i18n.messages import out_of_scope_message, rate_limit_message, usage_limit_message
+from app.providers.errors import ProviderOutputError
 from app.services.classifier import RequestClassifier, is_complaint_like, normalize_text
 from app.services.complaint_drafts import missing_fields_for
+from app.services.generation import GroundedGenerationService
+from app.services.grounding import GroundingValidator
 from app.services.guardrails import Guardrails
-from app.services.human_handoff import handoff_message, out_of_scope_message
+from app.services.human_handoff import handoff_message
 from app.services.knowledge import KnowledgeService
+from app.services.scope import ScopeService, ScopeStatus
+from app.services.usage_limits import RequestRateLimitService, UsageLimitService
 
 _LANGUAGE_SELECTION = (
     "RTMC AI yordamchisi / ИИ-помощник RTMC / RTMC AI assistant. "
@@ -196,13 +202,25 @@ class AssistantService:
         self,
         classifier: RequestClassifier,
         guardrails: Guardrails,
+        scope: ScopeService,
         knowledge: KnowledgeService,
-        provider: LLMProvider,
+        generation: GroundedGenerationService,
+        grounding: GroundingValidator,
+        usage_limits: UsageLimitService,
+        rate_limits: RequestRateLimitService,
+        approved_support_phone: str | None,
+        approved_contact_url: str | None,
     ) -> None:
         self._classifier = classifier
         self._guardrails = guardrails
+        self._scope = scope
         self._knowledge = knowledge
-        self._provider = provider
+        self._generation = generation
+        self._grounding = grounding
+        self._usage_limits = usage_limits
+        self._rate_limits = rate_limits
+        self._approved_support_phone = approved_support_phone
+        self._approved_contact_url = approved_contact_url
         self._sessions: dict[UUID, _Session] = {}
         self._initial_sessions: set[UUID] = set()
         self._lock = RLock()
@@ -210,24 +228,13 @@ class AssistantService:
     async def chat(self, request: ChatRequest, request_id: UUID) -> ChatResponse:
         """Process one message without granting submission authority to the provider."""
         session_id = request.session_id or uuid4()
-        language = request.language
+        language = self._resolve_language(session_id, request.language)
         if request.session_id is None and language is not None:
             with self._lock:
                 self._initial_sessions.add(session_id)
 
         safety = self._guardrails.check_input(request.message)
-        response_language = language or Language.EN
         if not safety.allowed:
-            if safety.out_of_scope:
-                return self._base_response(
-                    request_id=request_id,
-                    session_id=session_id,
-                    language=language,
-                    state=ConversationState.CLOSED,
-                    response_type=ResponseType.REFUSAL,
-                    reply=out_of_scope_message(response_language),
-                    safety_flags=list(safety.flags),
-                )
             reason = safety.handoff_reason or EscalationReason.OUTPUT_VALIDATION_FAILED
             return self._handoff(
                 request_id=request_id,
@@ -248,6 +255,33 @@ class AssistantService:
             )
 
         self._remember_session(session_id, language)
+        rate = self._rate_limits.check(session_id)
+        if not rate.allowed:
+            retry_after = rate.retry_after_seconds or 1
+            return self._base_response(
+                request_id=request_id,
+                session_id=session_id,
+                language=language,
+                state=ConversationState.RATE_LIMITED,
+                response_type=ResponseType.RATE_LIMITED,
+                reply=rate_limit_message(language, retry_after),
+                remaining=0,
+                retry_after_seconds=retry_after,
+                human_handoff_available=True,
+            )
+
+        scope = self._scope.classify(request.message)
+        if scope.status is ScopeStatus.OUT_OF_SCOPE:
+            return self._base_response(
+                request_id=request_id,
+                session_id=session_id,
+                language=language,
+                state=ConversationState.CLOSED,
+                response_type=ResponseType.REFUSAL,
+                reply=out_of_scope_message(language),
+                safety_flags=[SafetyFlag.OUT_OF_SCOPE],
+            )
+
         if self._asks_for_human(request.message):
             return self._handoff(
                 request_id=request_id,
@@ -303,14 +337,44 @@ class AssistantService:
                 category=category,
             )
 
+        authorization = self._usage_limits.authorize(session_id)
+        if not authorization.allowed:
+            return self._base_response(
+                request_id=request_id,
+                session_id=session_id,
+                language=language,
+                state=ConversationState.USAGE_LIMIT_REACHED,
+                response_type=ResponseType.USAGE_LIMIT_REACHED,
+                category=category,
+                reply=usage_limit_message(
+                    language,
+                    self._approved_support_phone,
+                    self._approved_contact_url,
+                ),
+                limit=self._usage_limits.limit,
+                remaining=0,
+                reset_at=authorization.snapshot.reset_at,
+                human_handoff_available=True,
+            )
+
         try:
-            result = await self._provider.generate(
+            result = await self._generation.generate(
+                session_id,
                 LLMRequest(
                     language=language,
                     question=request.message,
                     category=category,
+                    source_ids=[record.document_id for record in records],
                     passages=[record.content for record in records],
-                )
+                ),
+            )
+        except ProviderOutputError:
+            return self._handoff(
+                request_id=request_id,
+                session_id=session_id,
+                language=language,
+                reason=EscalationReason.OUTPUT_VALIDATION_FAILED,
+                category=category,
             )
         except Exception:
             return self._handoff(
@@ -318,6 +382,16 @@ class AssistantService:
                 session_id=session_id,
                 language=language,
                 reason=EscalationReason.PROVIDER_UNAVAILABLE,
+                category=category,
+            )
+
+        grounding = self._grounding.validate(result, records)
+        if not grounding.allowed:
+            return self._handoff(
+                request_id=request_id,
+                session_id=session_id,
+                language=language,
+                reason=EscalationReason.OUTPUT_VALIDATION_FAILED,
                 category=category,
             )
 
@@ -340,7 +414,7 @@ class AssistantService:
                 version=record.version,
                 demo_only=record.status.value == "demo_only",
             )
-            for record in records
+            for record in grounding.cited_records
         ]
         return self._base_response(
             request_id=request_id,
@@ -394,6 +468,11 @@ class AssistantService:
         requires_human: bool = False,
         handoff_reason: EscalationReason | None = None,
         safety_flags: list[SafetyFlag] | None = None,
+        limit: int | None = None,
+        remaining: int | None = None,
+        reset_at: datetime | None = None,
+        retry_after_seconds: int | None = None,
+        human_handoff_available: bool = False,
     ) -> ChatResponse:
         response = ChatResponse(
             request_id=request_id,
@@ -413,6 +492,11 @@ class AssistantService:
             requires_human=requires_human,
             handoff_reason=handoff_reason,
             safety_flags=safety_flags or [],
+            limit=limit,
+            remaining=remaining,
+            reset_at=reset_at,
+            retry_after_seconds=retry_after_seconds,
+            human_handoff_available=human_handoff_available,
         )
         if language is not None and self._take_initial(session_id):
             return response.model_copy(
@@ -427,6 +511,14 @@ class AssistantService:
                 self._sessions[session_id] = _Session(language=language)
             else:
                 session.language = language
+
+    def _resolve_language(self, session_id: UUID, requested: Language | None) -> Language | None:
+        """Use the server-owned language unless the request explicitly changes it."""
+        if requested is not None:
+            return requested
+        with self._lock:
+            session = self._sessions.get(session_id)
+            return session.language if session is not None else None
 
     def _take_initial(self, session_id: UUID) -> bool:
         with self._lock:

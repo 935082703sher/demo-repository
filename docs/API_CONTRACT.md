@@ -8,7 +8,7 @@ include an `X-Request-ID` header; error bodies also contain the request UUID.
 Returns `200`:
 
 ```json
-{"status":"ok","service":"rtmc-ai-assistant","version":"0.1.0"}
+{"status":"ok","service":"rtmc-ai-assistant","version":"0.2.0"}
 ```
 
 ## `POST /api/v1/chat`
@@ -26,6 +26,9 @@ Request:
 `language` and `session_id` are optional. A missing language returns
 `state=language_selection`; a missing session creates a cryptographically random UUID.
 Messages are trimmed, must not be empty, and are limited to 4,000 characters.
+An explicit `language` value changes the active server-owned session language.
+`llm_usage_count`, when supplied for website compatibility, is ignored for
+authorization.
 
 The stable response includes:
 
@@ -34,9 +37,11 @@ The stable response includes:
 - collected/missing fields and optional full draft;
 - consent and submission authorization flags;
 - human-handoff reason and safety flags.
+- optional limit/reset/retry fields and explicit
+  `officially_registered=false`, `case_number=null`.
 
-Authorization fields are calculated by backend code. `submission_allowed` is always
-`false` in Demo 1.
+Authorization fields are calculated by backend code. `submission_allowed` remains
+`false` in Demo 2 chat responses; deterministic complaint endpoints remain available.
 
 Common outcomes:
 
@@ -45,6 +50,12 @@ Common outcomes:
 - `refusal`: unrelated request;
 - `human_handoff`: safety, unsupported evidence, repeated uncertainty, or provider failure;
 - `language_selection`: language was omitted.
+- `usage_limit_reached`: HTTP 200 typed response; no provider call;
+- `rate_limited`: HTTP 429 typed response with `Retry-After`; no provider call.
+
+The default logical generation allowance is 10 per session per 24 hours and the
+default request rate is 20 per session per sliding minute. Both are configurable and
+server-owned.
 
 ## `POST /api/v1/complaints/draft`
 
@@ -70,7 +81,7 @@ invalidate any earlier consent by construction.
 
 Returns a complete review model including subject, description, every field, missing
 fields, data-transfer list, version/hash, timestamps, and the “not submitted” notice.
-`personal_data_to_submit` is empty because Demo 1 accepts no identity/contact fields.
+`personal_data_to_submit` is empty because Demo 2 accepts no identity/contact fields.
 
 ## `GET /api/v1/complaints/{draft_id}`
 
@@ -130,8 +141,8 @@ Status use:
 - `422`: malformed JSON, schema violation, unsupported language/field, missing consent;
 - `500`: unexpected internal failure without stack trace or secret disclosure.
 
-No rate-limit or external-unavailable status exists in Demo 1 because those integrations
-are not implemented.
+Provider failures are returned as localized safe human handoff. Raw provider errors,
+prompts, stack traces, keys, and model reasoning are never part of the API response.
 
 ## Versioning
 

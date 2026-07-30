@@ -6,10 +6,13 @@
 RTMC Nuxt backend/API proxy (future)
   -> FastAPI/Pydantic boundary
   -> input guardrails
-  -> deterministic language/category workflow
+  -> active language + per-session request-rate decision
+  -> deterministic scope and category workflow
   -> complaint follow-up OR approved/demo-only knowledge search
-  -> provider protocol with restricted passages
-  -> deterministic output validation
+  -> atomic logical-generation quota
+  -> configured provider protocol with restricted passages
+  -> bounded attempts + token/cost/latency measurement
+  -> deterministic citation and output validation
   -> typed answer/refusal/handoff JSON
 ```
 
@@ -23,14 +26,21 @@ authorize submission, search arbitrary sources, call tools, or create official f
 - `AssistantService` owns state transitions for Demo chat interactions.
 - `RequestClassifier` uses reviewable multilingual keyword rules. Its confidence is a
   rule score and is not presented as calibrated ML confidence.
-- `Guardrails` blocks obvious secrets, injection, high-risk content, unrelated requests,
-  and prohibited provider claims. These rules reduce risk; they are not complete
-  detection.
-- `KnowledgeService` filters by language, category, status, expiry, and relevance.
+- `Guardrails` blocks obvious secrets, injection, high-risk content, and prohibited
+  provider claims. `ScopeService` rejects clear unrelated requests before generation.
+  These rules reduce risk; they are not complete detection.
+- `KnowledgeService` filters by language, category, approval, source, activity,
+  validity, content hash, synthetic marking, and relevance.
   It requires at least two fixture keywords so a category word alone cannot be treated as
   evidence for a fee, deadline, contact, procedure, or status.
-- `LLMProvider` is a narrow asynchronous protocol. Demo 1 uses `MockLLMProvider`, which
-  returns a supplied passage and makes no network call.
+- `UsageLimitService` and `RequestRateLimitService` use independent replaceable
+  repositories; process-local implementations are lock-protected.
+- `LLMProvider` is a narrow asynchronous protocol. Demo 2 defaults to
+  `MockLLMProvider`; a configured OpenAI adapter remains unavailable without model and
+  environment-backed key.
+- `GroundedGenerationService` applies timeout/retry bounds and records attempts,
+  logical results, tokens, cost, and latency.
+- `GroundingValidator` rejects missing or fabricated citations before any answer.
 - `ComplaintDraftService` isolates thread-safe in-memory drafts, versions, hashes,
   consent records, and duplicate-submit state.
 
@@ -38,7 +48,8 @@ authorize submission, search arbitrary sources, call tools, or create official f
 
 The service never connects to the RTMC website database or an official appeal database.
 Its stores are dictionaries protected by a lock and are deliberately destroyed at
-process restart. This is acceptable only for the local demo.
+process restart. Multiple workers do not share state. This is acceptable only for the
+internal demo.
 
 ## Submission invariant
 

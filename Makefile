@@ -10,16 +10,16 @@ install:
 	$(PYTHON) -m pip install -e '.[dev]'
 
 format:
-	$(RUFF) format app tests
+	$(RUFF) format app tests evaluations
 
 format-check:
-	$(RUFF) format --check app tests
+	$(RUFF) format --check app tests evaluations
 
 lint:
-	$(RUFF) check app tests
+	$(RUFF) check app tests evaluations
 
 typecheck:
-	$(MYPY) app tests
+	$(MYPY) app tests evaluations
 
 test:
 	$(PYTEST)
