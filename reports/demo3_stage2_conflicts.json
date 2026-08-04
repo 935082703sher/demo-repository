@@ -1,0 +1,45 @@
+{
+  "report_version": 1,
+  "generated_at": "2026-08-04T12:30:02+05:00",
+  "stage": "demo3_stage2",
+  "status": "blocked_on_material_source_conflict",
+  "source_document": {
+    "source_id": "DEPT-FAQ-001",
+    "sha256": "23f12211e8fbbfd18062e1ef551ecad8b6cad9ab9e5dd5049a181729524225d4",
+    "hash_verified": true,
+    "content_committed": false
+  },
+  "conflicts": [
+    {
+      "conflict_id": "D3S2-CONFLICT-IMEI-DEADLINE-001",
+      "candidate_record_id": "IMEI-UZ-REGISTRATION-DEADLINE-001",
+      "source_paragraphs": [
+        21,
+        22
+      ],
+      "departmental_wording_summary": "The candidate source assigns a 30-calendar-day registration period to residents and a 60-calendar-day period to nonresidents after SIM-slot activation.",
+      "official_source_summary": "The current official tariff page groups resident and nonresident individuals together and distinguishes registration within 30 calendar days from registration after 30 days, measured from the first network event.",
+      "official_sources": [
+        {
+          "url": "https://uzimei.uz/tariffs",
+          "page_title": "UZIMEI.UZ — IMEI registration tariffs",
+          "retrieved_at": "2026-08-04T12:30:02+05:00",
+          "relevant_heading": "Tariflar",
+          "outcome": "contradicts",
+          "source_checked": true
+        }
+      ],
+      "conflict_type": "registration_period_and_tariff_boundary",
+      "severity": "critical",
+      "status": "unresolved",
+      "proposed_owner_role": "RTMC IMEI content owner",
+      "required_legal_reviewer_role": "RTMC authorized legal reviewer",
+      "required_decision": "Confirm the current rule for nonresident registration timing and approve exact citizen-facing wording against the governing regulation and current operational tariff policy.",
+      "runtime_effect": "candidate_blocked_from_generation_approval_and_activation"
+    }
+  ],
+  "runtime_eligible_records": 0,
+  "uzbek_candidates_created": 0,
+  "russian_translation_drafts_created": 0,
+  "english_translation_drafts_created": 0
+}
