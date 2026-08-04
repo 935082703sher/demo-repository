@@ -9,3 +9,10 @@ __pycache__/
 .venv/
 dist/
 htmlcov/
+
+# Demo 3 confidential inputs and all local transformation products.
+data/raw_confidential/
+data/confidential_extraction/
+data/ocr_output/
+data/temporary_conversions/
+data/local_manifests/

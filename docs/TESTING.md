@@ -7,6 +7,7 @@ make format
 make lint
 make typecheck
 make test
+make pii-check
 make check
 python -m evaluations.run
 ```
@@ -40,6 +41,12 @@ Coverage includes:
   cancellation, and unknown drafts;
 - explicit consent, exact notice/version binding, incomplete/stale rejection,
   idempotent replay, duplicate-key conflict, and the absence of official case numbers.
+- strict source manifests and safe content-free SHA-256 verification;
+- archive traversal, symlink, executable, macro, nesting, type, size, and compression limits;
+- offline-only extraction policy and safe synthetic ZIP extraction;
+- defined PII patterns, nested derived-fixture rejection, and provider-request redaction;
+- separate source/record approval and activation, conflicts, language, review, validity,
+  and content-hash enforcement.
 
 New defects should receive a focused regression test at the lowest meaningful layer. API
 tests should assert both HTTP status and stable public error code. Never add fixtures

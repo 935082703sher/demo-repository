@@ -89,6 +89,67 @@ async def test_openai_adapter_uses_structured_minimum_context() -> None:
 
 
 @pytest.mark.anyio
+async def test_openai_adapter_removes_defined_pii_from_question() -> None:
+    sensitive_values = (
+        "Synthetic Person",
+        "Synthetic Street 1",
+        "synthetic.person@example.test",
+        "+998 90 123 45 67",
+        "12345678901234",
+        "123456789012345",
+        "AB 1234567",
+        "SYN-12345",
+        "Synthetic Signer",
+    )
+    question = (
+        "full name: Synthetic Person; address: Synthetic Street 1; "
+        "email: synthetic.person@example.test; phone: +998 90 123 45 67; "
+        "JSHSHIR: 12345678901234; IMEI: 123456789012345; "
+        "passport: AB 1234567; document no: SYN-12345; signature: Synthetic Signer"
+    )
+    observed_body = ""
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        nonlocal observed_body
+        observed_body = request.content.decode()
+        return httpx.Response(
+            200,
+            json={
+                "output": [
+                    {
+                        "type": "message",
+                        "content": [
+                            {
+                                "type": "output_text",
+                                "text": json.dumps(
+                                    {
+                                        "answer": "Synthetic grounded answer.",
+                                        "citations": ["TEST-SOURCE-001"],
+                                    }
+                                ),
+                            }
+                        ],
+                    }
+                ]
+            },
+        )
+
+    provider = OpenAIResponsesProvider(
+        api_key="test-secret-key",
+        model="test-model",
+        timeout_seconds=1,
+        max_output_tokens=100,
+        transport=httpx.MockTransport(handler),
+    )
+    request = grounded_request().model_copy(update={"question": question})
+
+    await provider.generate(request)
+
+    assert all(value not in observed_body for value in sensitive_values)
+    assert "[redacted-" in observed_body
+
+
+@pytest.mark.anyio
 async def test_malformed_structured_output_is_rejected() -> None:
     provider = OpenAIResponsesProvider(
         api_key="test-key",

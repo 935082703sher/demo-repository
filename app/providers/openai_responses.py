@@ -15,6 +15,7 @@ from app.providers.errors import (
     ProviderOutputError,
     ProviderUnavailableError,
 )
+from app.services.pii import redact_likely_pii
 
 _ENDPOINT = "https://api.openai.com/v1/responses"
 
@@ -163,6 +164,6 @@ def _output_text(envelope: _ResponseEnvelope) -> str:
 
 def _minimize_question(question: str) -> str:
     """Redact common unnecessary identifiers before an external provider sees text."""
-    redacted = re.sub(r"\b[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}\b", "[redacted-email]", question)
+    redacted = redact_likely_pii(question)
     redacted = re.sub(r"\b(?:\d[ -]?){7,19}\b", "[redacted-number]", redacted)
     return redacted
