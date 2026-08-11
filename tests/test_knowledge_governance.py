@@ -178,3 +178,24 @@ def test_lifecycle_transitions_are_explicit_and_terminal() -> None:
     assert activation_transition_allowed(ActivationStatus.INACTIVE, ActivationStatus.ACTIVE)
     assert activation_transition_allowed(ActivationStatus.ACTIVE, ActivationStatus.EXPIRED)
     assert not activation_transition_allowed(ActivationStatus.WITHDRAWN, ActivationStatus.ACTIVE)
+
+
+def test_approval_never_auto_activates_and_withdrawal_blocks_retrieval() -> None:
+    approved_but_inactive = active_record(activation_status=ActivationStatus.INACTIVE)
+    withdrawn = active_record(
+        approval_status=ApprovalStatus.WITHDRAWN,
+        activation_status=ActivationStatus.WITHDRAWN,
+    )
+
+    assert not record_is_retrievable(
+        approved_but_inactive,
+        active_source(),
+        language=Language.UZ,
+        now=NOW,
+    )
+    assert not record_is_retrievable(
+        withdrawn,
+        active_source(),
+        language=Language.UZ,
+        now=NOW,
+    )

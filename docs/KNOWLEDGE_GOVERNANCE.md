@@ -61,9 +61,16 @@ recorded in a review item and the candidate is quarantined. Retrieval returns no
 factual answer from it. An LLM cannot choose the prevailing source or resolve the
 conflict.
 
-## Stage 1 status
+## Stage 2 review-package status
 
-Only strict models, policies, and synthetic tests are present. No real source or
-record is committed, approved, or active. Stage 2 may create pending candidates only;
-activation still requires the RTMC decisions listed in the Demo 3 implementation
-package.
+Stage 2 candidate files are offline human-review artifacts under `data/knowledge`.
+They are not loaded by the application runtime. The package schema requires every
+record to remain `pending_review`, `inactive`, quarantined, unapproved, and
+runtime-ineligible. Russian and English drafts must link to the exact Uzbek content
+hash and retain independent language-review fields.
+
+Materially conflicting source items are absent from all language packages and live
+only in the machine-readable conflict report. Records with incomplete public-source
+coverage are marked `pending` rather than verified. Human approval does not activate a
+record; a future separately authorized stage would still need a controlled import and
+activation action.

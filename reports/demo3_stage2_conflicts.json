@@ -1,8 +1,8 @@
 {
-  "report_version": 1,
-  "generated_at": "2026-08-04T12:30:02+05:00",
+  "report_version": 2,
+  "generated_at": "2026-08-04T16:30:00+05:00",
   "stage": "demo3_stage2",
-  "status": "blocked_on_material_source_conflict",
+  "status": "candidate_package_created_with_independent_quarantines",
   "source_document": {
     "source_id": "DEPT-FAQ-001",
     "sha256": "23f12211e8fbbfd18062e1ef551ecad8b6cad9ab9e5dd5049a181729524225d4",
@@ -12,21 +12,17 @@
   "conflicts": [
     {
       "conflict_id": "D3S2-CONFLICT-IMEI-DEADLINE-001",
-      "candidate_record_id": "IMEI-UZ-REGISTRATION-DEADLINE-001",
-      "source_paragraphs": [
-        21,
-        22
-      ],
-      "departmental_wording_summary": "The candidate source assigns a 30-calendar-day registration period to residents and a 60-calendar-day period to nonresidents after SIM-slot activation.",
-      "official_source_summary": "The current official tariff page groups resident and nonresident individuals together and distinguishes registration within 30 calendar days from registration after 30 days, measured from the first network event.",
+      "provisional_record_id": "IMEI-UZ-REGISTRATION-DEADLINE-001",
+      "source_paragraphs": [21, 22, 50, 51],
+      "departmental_wording_summary": "The departmental source assigns residents a 30-calendar-day registration period and nonresidents a 60-calendar-day period after SIM-slot activation; another warning states a general 30-day period.",
+      "official_source_summary": "The current tariff page groups resident and nonresident individuals and distinguishes tariffs within and after 30 days from the first network event.",
       "official_sources": [
         {
           "url": "https://uzimei.uz/tariffs",
           "page_title": "UZIMEI.UZ — IMEI registration tariffs",
-          "retrieved_at": "2026-08-04T12:30:02+05:00",
+          "retrieved_at": "2026-08-04T16:30:00+05:00",
           "relevant_heading": "Tariflar",
-          "outcome": "contradicts",
-          "source_checked": true
+          "outcome": "contradicts_or_addresses_a_different_concept"
         }
       ],
       "conflict_type": "registration_period_and_tariff_boundary",
@@ -34,12 +30,88 @@
       "status": "unresolved",
       "proposed_owner_role": "RTMC IMEI content owner",
       "required_legal_reviewer_role": "RTMC authorized legal reviewer",
-      "required_decision": "Confirm the current rule for nonresident registration timing and approve exact citizen-facing wording against the governing regulation and current operational tariff policy.",
-      "runtime_effect": "candidate_blocked_from_generation_approval_and_activation"
+      "required_decision": "Resolve the nine questions in DEMO3_STAGE2_CONFLICT_RESOLUTION_REQUEST.md and approve exact Uzbek wording without treating a tariff boundary as a legal eligibility interpretation.",
+      "runtime_effect": "source_item_excluded_from_candidates_translations_approval_and_retrieval"
+    },
+    {
+      "conflict_id": "D3S2-CONFLICT-IMEI-PAYMENT-METHODS-001",
+      "provisional_record_id": "IMEI-UZ-PAYMENT-METHODS-001",
+      "source_paragraphs": [25, 26],
+      "departmental_wording_summary": "The departmental source lists Payme, Click, Upay, and banks as payment methods.",
+      "official_source_summary": "The current UZIMEI page lists Payme, Click, Humans, Paynet, and Bank; it does not list Upay.",
+      "official_sources": [
+        {
+          "url": "https://uzimei.uz/tariffs",
+          "page_title": "UZIMEI.UZ — IMEI registration tariffs",
+          "retrieved_at": "2026-08-04T16:30:00+05:00",
+          "relevant_heading": "To'lov usullari",
+          "outcome": "current_official_list_differs"
+        }
+      ],
+      "conflict_type": "time_sensitive_payment_method_list",
+      "severity": "high",
+      "status": "unresolved",
+      "proposed_owner_role": "RTMC IMEI content owner",
+      "required_legal_reviewer_role": null,
+      "required_decision": "Confirm the current complete approved payment-method list and decide whether the departmental FAQ must be corrected.",
+      "runtime_effect": "source_item_excluded_from_candidates_translations_approval_and_retrieval"
+    },
+    {
+      "conflict_id": "D3S2-CONFLICT-IMEI-REGISTRATION-POINTS-001",
+      "provisional_record_id": "IMEI-UZ-REGISTRATION-POINTS-001",
+      "source_paragraphs": [6, 10, 42, 44],
+      "departmental_wording_summary": "The departmental source gives one exact Tashkent address and names selected mobile operators as registration locations.",
+      "official_source_summary": "The current UZIMEI instructions use a dynamic registration-point directory and do not confirm the exact address and named-operator list in the departmental wording.",
+      "official_sources": [
+        {
+          "url": "https://uzimei.uz/?id=instructions",
+          "page_title": "UZIMEI.UZ — Registration methods",
+          "retrieved_at": "2026-08-04T16:30:00+05:00",
+          "relevant_heading": "Ro'yxatdan o'tkazish nuqtalari",
+          "outcome": "does_not_confirm_time_sensitive_detail"
+        }
+      ],
+      "conflict_type": "registration_point_freshness_gap",
+      "severity": "high",
+      "status": "unresolved",
+      "proposed_owner_role": "RTMC IMEI content owner",
+      "required_legal_reviewer_role": null,
+      "required_decision": "Approve a current registration-point source and exact citizen-facing location wording, or require a dynamic-directory link only.",
+      "runtime_effect": "source_item_excluded_from_candidates_translations_approval_and_retrieval"
+    },
+    {
+      "conflict_id": "D3S2-CONFLICT-IMEI-CUSTOMS-FREQUENCY-001",
+      "provisional_record_id": "IMEI-UZ-DUTY-FREE-FREQUENCY-001",
+      "source_paragraphs": [33, 34],
+      "departmental_wording_summary": "The departmental source states a one-device-per-half-year rule for specified land, pedestrian, rail, and river crossings.",
+      "official_source_summary": "Current Customs publications describe changed mobile-device declaration and allowance procedures, but the reviewed current pages do not confirm the departmental route-specific half-year wording.",
+      "official_sources": [
+        {
+          "url": "https://customs.uz/news/masullar-mobil-qurilmalarning-bozhhona-rasmiylashtiruvi-zharayonlarini-zhoyiga-chiqqan-holda-kozdan-kechirishdi",
+          "page_title": "Customs Committee — Mobile-device customs-clearance review",
+          "retrieved_at": "2026-08-04T16:30:00+05:00",
+          "relevant_heading": "Amaldagi tartiblar",
+          "outcome": "current_rules_require_route_specific_reverification"
+        }
+      ],
+      "conflict_type": "customs_rule_freshness_gap",
+      "severity": "high",
+      "status": "unresolved",
+      "proposed_owner_role": "RTMC IMEI content owner",
+      "required_legal_reviewer_role": "RTMC authorized legal reviewer",
+      "required_decision": "Identify the current governing customs act and clause for each entry route and approve corrected wording before candidate generation.",
+      "runtime_effect": "source_item_excluded_from_candidates_translations_approval_and_retrieval"
     }
   ],
-  "runtime_eligible_records": 0,
-  "uzbek_candidates_created": 0,
-  "russian_translation_drafts_created": 0,
-  "english_translation_drafts_created": 0
+  "candidate_summary": {
+    "uzbek_candidates_created": 46,
+    "russian_translation_drafts_created": 46,
+    "english_translation_drafts_created": 46,
+    "verified_uzbek_records": 31,
+    "partially_verified_uzbek_records": 2,
+    "pending_verification_uzbek_records": 13,
+    "contradicted_candidate_records": 0,
+    "quarantined_source_items": 4,
+    "runtime_eligible_records": 0
+  }
 }

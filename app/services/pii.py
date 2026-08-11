@@ -100,6 +100,7 @@ _SENSITIVE_KEYS = frozenset(
         "subscriber_number",
     }
 )
+_SHA256_PATTERN = re.compile(r"^[0-9a-f]{64}$")
 
 
 def scan_text(text: str) -> tuple[PIIFinding, ...]:
@@ -146,6 +147,12 @@ def scan_derived_fixture(value: object) -> tuple[PIIFinding, ...]:
                 normalized_key = str(key).strip().casefold()
                 if normalized_key in _SENSITIVE_KEYS:
                     findings.append(PIIFinding(PIICategory.SENSITIVE_FIELD, 0, 0))
+                if (
+                    normalized_key.endswith("_sha256")
+                    and isinstance(nested, str)
+                    and _SHA256_PATTERN.fullmatch(nested)
+                ):
+                    continue
                 visit(nested)
             return
         if isinstance(item, Sequence) and not isinstance(item, bytes | bytearray):

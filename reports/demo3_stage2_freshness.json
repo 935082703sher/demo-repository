@@ -1,0 +1,332 @@
+{
+  "report_version": 1,
+  "generated_at": "2026-08-04T16:30:00+05:00",
+  "policy": {
+    "time_sensitive_review_days": 30,
+    "standard_review_days": 90
+  },
+  "records": [
+    {
+      "record_id": "IMEI-UZ-IDENTIFIER-FIND-001",
+      "time_sensitive": false,
+      "last_verified_at": "2026-08-04T16:30:00+05:00",
+      "review_due_at": "2026-11-02T16:30:00+05:00",
+      "activation_status": "inactive"
+    },
+    {
+      "record_id": "IMEI-UZ-STATUS-CHECK-001",
+      "time_sensitive": true,
+      "last_verified_at": "2026-08-04T16:30:00+05:00",
+      "review_due_at": "2026-09-03T16:30:00+05:00",
+      "activation_status": "inactive"
+    },
+    {
+      "record_id": "IMEI-UZ-REGISTRATION-METHODS-001",
+      "time_sensitive": true,
+      "last_verified_at": "2026-08-04T16:30:00+05:00",
+      "review_due_at": "2026-09-03T16:30:00+05:00",
+      "activation_status": "inactive"
+    },
+    {
+      "record_id": "IMEI-UZ-RESIDENT-DECLARATION-001",
+      "time_sensitive": true,
+      "last_verified_at": "2026-08-04T16:30:00+05:00",
+      "review_due_at": "2026-09-03T16:30:00+05:00",
+      "activation_status": "inactive"
+    },
+    {
+      "record_id": "IMEI-UZ-SUBSCRIBER-OWNERSHIP-001",
+      "time_sensitive": true,
+      "last_verified_at": "2026-08-04T16:30:00+05:00",
+      "review_due_at": "2026-09-03T16:30:00+05:00",
+      "activation_status": "inactive"
+    },
+    {
+      "record_id": "IMEI-UZ-POSTAL-IMPORT-001",
+      "time_sensitive": true,
+      "last_verified_at": "2026-08-04T16:30:00+05:00",
+      "review_due_at": "2026-09-03T16:30:00+05:00",
+      "activation_status": "inactive"
+    },
+    {
+      "record_id": "IMEI-UZ-NONRESIDENT-REGISTRATION-001",
+      "time_sensitive": true,
+      "last_verified_at": "2026-08-04T16:30:00+05:00",
+      "review_due_at": "2026-09-03T16:30:00+05:00",
+      "activation_status": "inactive"
+    },
+    {
+      "record_id": "IMEI-UZ-LOCAL-PURCHASE-001",
+      "time_sensitive": true,
+      "last_verified_at": "2026-08-04T16:30:00+05:00",
+      "review_due_at": "2026-09-03T16:30:00+05:00",
+      "activation_status": "inactive"
+    },
+    {
+      "record_id": "IMEI-UZ-MULTIPLE-CODES-001",
+      "time_sensitive": false,
+      "last_verified_at": "2026-08-04T16:30:00+05:00",
+      "review_due_at": "2026-11-02T16:30:00+05:00",
+      "activation_status": "inactive"
+    },
+    {
+      "record_id": "IMEI-UZ-UNBLOCK-AFTER-REGISTRATION-001",
+      "time_sensitive": true,
+      "last_verified_at": "2026-08-04T16:30:00+05:00",
+      "review_due_at": "2026-09-03T16:30:00+05:00",
+      "activation_status": "inactive"
+    },
+    {
+      "record_id": "IMEI-UZ-LEGACY-CLONE-LINK-001",
+      "time_sensitive": true,
+      "last_verified_at": "2026-08-04T16:30:00+05:00",
+      "review_due_at": "2026-09-03T16:30:00+05:00",
+      "activation_status": "inactive"
+    },
+    {
+      "record_id": "IMEI-UZ-LOST-STOLEN-001",
+      "time_sensitive": true,
+      "last_verified_at": "2026-08-04T16:30:00+05:00",
+      "review_due_at": "2026-09-03T16:30:00+05:00",
+      "activation_status": "inactive"
+    },
+    {
+      "record_id": "IMEI-UZ-CUSTOMS-EXCESS-001",
+      "time_sensitive": true,
+      "last_verified_at": "2026-08-04T16:30:00+05:00",
+      "review_due_at": "2026-09-03T16:30:00+05:00",
+      "activation_status": "inactive"
+    },
+    {
+      "record_id": "IMEI-UZ-JSHSHIR-DEFINITION-001",
+      "time_sensitive": false,
+      "last_verified_at": "2026-08-04T16:30:00+05:00",
+      "review_due_at": "2026-11-02T16:30:00+05:00",
+      "activation_status": "inactive"
+    },
+    {
+      "record_id": "IMEI-UZ-TAC-MISMATCH-001",
+      "time_sensitive": true,
+      "last_verified_at": "2026-08-04T16:30:00+05:00",
+      "review_due_at": "2026-09-03T16:30:00+05:00",
+      "activation_status": "inactive"
+    },
+    {
+      "record_id": "IMEI-UZ-REGISTRATION-RESPONSIBILITY-001",
+      "time_sensitive": true,
+      "last_verified_at": "2026-08-04T16:30:00+05:00",
+      "review_due_at": "2026-09-03T16:30:00+05:00",
+      "activation_status": "inactive"
+    },
+    {
+      "record_id": "IMEI-UZ-STATELESS-IDENTITY-001",
+      "time_sensitive": true,
+      "last_verified_at": "2026-08-04T16:30:00+05:00",
+      "review_due_at": "2026-09-03T16:30:00+05:00",
+      "activation_status": "inactive"
+    },
+    {
+      "record_id": "IMEI-UZ-ONE-TIME-REGISTRATION-001",
+      "time_sensitive": true,
+      "last_verified_at": "2026-08-04T16:30:00+05:00",
+      "review_due_at": "2026-09-03T16:30:00+05:00",
+      "activation_status": "inactive"
+    },
+    {
+      "record_id": "IMEI-UZ-TARIFF-INDIVIDUAL-WITHIN-30-001",
+      "time_sensitive": true,
+      "last_verified_at": "2026-08-04T16:30:00+05:00",
+      "review_due_at": "2026-09-03T16:30:00+05:00",
+      "activation_status": "inactive"
+    },
+    {
+      "record_id": "IMEI-UZ-TARIFF-INDIVIDUAL-AFTER-30-001",
+      "time_sensitive": true,
+      "last_verified_at": "2026-08-04T16:30:00+05:00",
+      "review_due_at": "2026-09-03T16:30:00+05:00",
+      "activation_status": "inactive"
+    },
+    {
+      "record_id": "IMEI-UZ-TARIFF-IMPORTER-001",
+      "time_sensitive": true,
+      "last_verified_at": "2026-08-04T16:30:00+05:00",
+      "review_due_at": "2026-09-03T16:30:00+05:00",
+      "activation_status": "inactive"
+    },
+    {
+      "record_id": "IMEI-UZ-TARIFF-MANUFACTURER-001",
+      "time_sensitive": true,
+      "last_verified_at": "2026-08-04T16:30:00+05:00",
+      "review_due_at": "2026-09-03T16:30:00+05:00",
+      "activation_status": "inactive"
+    },
+    {
+      "record_id": "IMEI-UZ-TARIFF-FOREIGN-ROAMING-001",
+      "time_sensitive": true,
+      "last_verified_at": "2026-08-04T16:30:00+05:00",
+      "review_due_at": "2026-09-03T16:30:00+05:00",
+      "activation_status": "inactive"
+    },
+    {
+      "record_id": "MNP-UZ-OPERATOR-LIST-001",
+      "time_sensitive": true,
+      "last_verified_at": "2026-08-04T16:30:00+05:00",
+      "review_due_at": "2026-09-03T16:30:00+05:00",
+      "activation_status": "inactive"
+    },
+    {
+      "record_id": "MNP-UZ-NUMBER-PRESERVATION-001",
+      "time_sensitive": false,
+      "last_verified_at": "2026-08-04T16:30:00+05:00",
+      "review_due_at": "2026-11-02T16:30:00+05:00",
+      "activation_status": "inactive"
+    },
+    {
+      "record_id": "MNP-UZ-GSM-ONLY-001",
+      "time_sensitive": true,
+      "last_verified_at": "2026-08-04T16:30:00+05:00",
+      "review_due_at": "2026-09-03T16:30:00+05:00",
+      "activation_status": "inactive"
+    },
+    {
+      "record_id": "MNP-UZ-RETRANSFER-INTERVAL-001",
+      "time_sensitive": true,
+      "last_verified_at": "2026-08-04T16:30:00+05:00",
+      "review_due_at": "2026-09-03T16:30:00+05:00",
+      "activation_status": "inactive"
+    },
+    {
+      "record_id": "MNP-UZ-BALANCE-TRANSFER-001",
+      "time_sensitive": true,
+      "last_verified_at": "2026-08-04T16:30:00+05:00",
+      "review_due_at": "2026-09-03T16:30:00+05:00",
+      "activation_status": "inactive"
+    },
+    {
+      "record_id": "MNP-UZ-TRANSFER-TIMING-001",
+      "time_sensitive": true,
+      "last_verified_at": "2026-08-04T16:30:00+05:00",
+      "review_due_at": "2026-09-03T16:30:00+05:00",
+      "activation_status": "inactive"
+    },
+    {
+      "record_id": "MNP-UZ-PERSONAL-DATA-MATCH-001",
+      "time_sensitive": true,
+      "last_verified_at": "2026-08-04T16:30:00+05:00",
+      "review_due_at": "2026-09-03T16:30:00+05:00",
+      "activation_status": "inactive"
+    },
+    {
+      "record_id": "MNP-UZ-DEBT-CONDITION-001",
+      "time_sensitive": true,
+      "last_verified_at": "2026-08-04T16:30:00+05:00",
+      "review_due_at": "2026-09-03T16:30:00+05:00",
+      "activation_status": "inactive"
+    },
+    {
+      "record_id": "MNP-UZ-CONTRACT-OBLIGATION-001",
+      "time_sensitive": true,
+      "last_verified_at": "2026-08-04T16:30:00+05:00",
+      "review_due_at": "2026-09-03T16:30:00+05:00",
+      "activation_status": "inactive"
+    },
+    {
+      "record_id": "MNP-UZ-SUCCESS-SMS-001",
+      "time_sensitive": true,
+      "last_verified_at": "2026-08-04T16:30:00+05:00",
+      "review_due_at": "2026-09-03T16:30:00+05:00",
+      "activation_status": "inactive"
+    },
+    {
+      "record_id": "MNP-UZ-INDIVIDUAL-DOCUMENT-001",
+      "time_sensitive": true,
+      "last_verified_at": "2026-08-04T16:30:00+05:00",
+      "review_due_at": "2026-09-03T16:30:00+05:00",
+      "activation_status": "inactive"
+    },
+    {
+      "record_id": "MNP-UZ-LEGAL-ENTITY-DOCUMENT-001",
+      "time_sensitive": true,
+      "last_verified_at": "2026-08-04T16:30:00+05:00",
+      "review_due_at": "2026-09-03T16:30:00+05:00",
+      "activation_status": "inactive"
+    },
+    {
+      "record_id": "MNP-UZ-REJECTED-DATA-MISMATCH-001",
+      "time_sensitive": true,
+      "last_verified_at": "2026-08-04T16:30:00+05:00",
+      "review_due_at": "2026-09-03T16:30:00+05:00",
+      "activation_status": "inactive"
+    },
+    {
+      "record_id": "MNP-UZ-REJECTED-DEBT-001",
+      "time_sensitive": true,
+      "last_verified_at": "2026-08-04T16:30:00+05:00",
+      "review_due_at": "2026-09-03T16:30:00+05:00",
+      "activation_status": "inactive"
+    },
+    {
+      "record_id": "MNP-UZ-REJECTED-INTERVAL-001",
+      "time_sensitive": true,
+      "last_verified_at": "2026-08-04T16:30:00+05:00",
+      "review_due_at": "2026-09-03T16:30:00+05:00",
+      "activation_status": "inactive"
+    },
+    {
+      "record_id": "MNP-UZ-REJECTED-BLOCKED-001",
+      "time_sensitive": true,
+      "last_verified_at": "2026-08-04T16:30:00+05:00",
+      "review_due_at": "2026-09-03T16:30:00+05:00",
+      "activation_status": "inactive"
+    },
+    {
+      "record_id": "MNP-UZ-OWNER-REPRESENTATIVE-001",
+      "time_sensitive": true,
+      "last_verified_at": "2026-08-04T16:30:00+05:00",
+      "review_due_at": "2026-09-03T16:30:00+05:00",
+      "activation_status": "inactive"
+    },
+    {
+      "record_id": "MNP-UZ-OWNERSHIP-REASSIGNMENT-001",
+      "time_sensitive": true,
+      "last_verified_at": "2026-08-04T16:30:00+05:00",
+      "review_due_at": "2026-09-03T16:30:00+05:00",
+      "activation_status": "inactive"
+    },
+    {
+      "record_id": "MNP-UZ-ROAMING-DEBT-BLOCK-001",
+      "time_sensitive": true,
+      "last_verified_at": "2026-08-04T16:30:00+05:00",
+      "review_due_at": "2026-09-03T16:30:00+05:00",
+      "activation_status": "inactive"
+    },
+    {
+      "record_id": "MNP-UZ-APPLICATION-RECIPIENT-001",
+      "time_sensitive": true,
+      "last_verified_at": "2026-08-04T16:30:00+05:00",
+      "review_due_at": "2026-09-03T16:30:00+05:00",
+      "activation_status": "inactive"
+    },
+    {
+      "record_id": "MNP-UZ-SERVICE-FEE-001",
+      "time_sensitive": true,
+      "last_verified_at": "2026-08-04T16:30:00+05:00",
+      "review_due_at": "2026-09-03T16:30:00+05:00",
+      "activation_status": "inactive"
+    },
+    {
+      "record_id": "MNP-UZ-NEW-SIM-001",
+      "time_sensitive": true,
+      "last_verified_at": "2026-08-04T16:30:00+05:00",
+      "review_due_at": "2026-09-03T16:30:00+05:00",
+      "activation_status": "inactive"
+    },
+    {
+      "record_id": "MNP-UZ-DEFINITION-001",
+      "time_sensitive": false,
+      "last_verified_at": "2026-08-04T16:30:00+05:00",
+      "review_due_at": "2026-11-02T16:30:00+05:00",
+      "activation_status": "inactive"
+    }
+  ]
+}

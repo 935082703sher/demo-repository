@@ -2,51 +2,61 @@
 
 ## Status
 
-Stage 2 stopped on 2026-08-04 under the approved material-conflict stopping rule.
-No Uzbek candidate, Russian translation, or English translation was created. No real
-record is approved, active, or runtime-eligible.
+Stage 2 continued on 2026-08-04 only for source items with no unresolved material
+conflict. The resulting Uzbek, Russian, and English records remain pending review,
+inactive, quarantined, and unavailable for runtime retrieval.
+
+The disputed IMEI resident/nonresident deadline was not interpreted or resolved. Tariff
+records reproduce the current official tariff boundaries but explicitly do not treat
+those boundaries as legal registration deadlines.
 
 ## Source integrity and local inspection
 
-The only content source inspected was `DEPT-FAQ-001`. Its SHA-256 matched the approved
-expected value:
+The only departmental content source processed was `DEPT-FAQ-001`. Its approved
+SHA-256 was verified before extraction:
 
 ```text
 23f12211e8fbbfd18062e1ef551ecad8b6cad9ab9e5dd5049a181729524225d4
 ```
 
-The DOCX passed the local package checks: no macro-enabled content type, embedded/OLE
-part, executable part, unsafe external relationship, path traversal, or malformed XML
-was found. Extraction remained in memory and produced 143 normalized paragraph
-references. The PII scan reported no findings. Raw extracted text was not written to
-the repository.
+The DOCX passed the local package checks. Extraction stayed in memory, and normalized
+records passed the PII gate before entering Git. No raw extraction, source document,
+case file, or personal value was written to the repository.
 
-## Unresolved material conflict
+## Independent quarantines
 
-Conflict ID: `D3S2-CONFLICT-IMEI-DEADLINE-001`
+### `D3S2-CONFLICT-IMEI-DEADLINE-001` — critical
 
-- Provisional candidate: `IMEI-UZ-REGISTRATION-DEADLINE-001`
-- Departmental reference: paragraphs 21–22
-- Departmental summary: residents are assigned 30 calendar days and nonresidents 60
-  calendar days after SIM-slot activation.
-- Current official source: <https://uzimei.uz/tariffs>
-- Official-source summary: the current tariff page groups resident and nonresident
-  individuals together, with one price for registration within 30 calendar days and
-  another after 30 days from the first network event.
-- Conflict type: registration-period and tariff boundary
-- Severity: critical
-- Status: unresolved
-- Runtime effect: generation, approval, and activation are blocked.
+The departmental source's 30-day/60-day registration wording remains unresolved
+against the current UZIMEI tariff boundary. Paragraphs 21, 22, 50, and 51 produced no
+candidate or translation. The RTMC IMEI content owner and authorized legal reviewer
+must complete `DEMO3_STAGE2_CONFLICT_RESOLUTION_REQUEST.md`.
 
-## Required resolution
+### `D3S2-CONFLICT-IMEI-PAYMENT-METHODS-001` — high
 
-The RTMC IMEI content owner and an authorized legal reviewer must confirm the current
-nonresident registration rule against the governing regulation and operational policy,
-then approve exact citizen-facing wording. No engineer or language model may choose
-between these sources.
+The departmental list contains Upay, while the current official page lists Payme,
+Click, Humans, Paynet, and Bank. Paragraphs 25–26 remain excluded. The RTMC IMEI
+content owner must approve the complete current list and decide whether to correct the
+FAQ.
 
-After a documented resolution, Stage 2 must restart source comparison from the clean
-Stage 0–1 checkpoint and verify every other candidate independently. Tariffs, payment
-methods, registration channels, operator names, identity requirements, legal
-references, addresses, and support details remain unverified and must not be inferred
-from this partial review.
+### `D3S2-CONFLICT-IMEI-REGISTRATION-POINTS-001` — high
+
+The exact address and named-operator list in paragraphs 6, 10, 42, and 44 are not
+confirmed by the current dynamic UZIMEI registration-point directory. The RTMC IMEI
+content owner must approve a current location source or require use of the dynamic
+directory only.
+
+### `D3S2-CONFLICT-IMEI-CUSTOMS-FREQUENCY-001` — high
+
+The route-specific half-year wording in paragraphs 33–34 requires current legal and
+customs verification. Current Customs publications describe changed declaration and
+allowance procedures but do not confirm that exact rule for every route. The RTMC IMEI
+content owner and authorized legal reviewer must identify and approve the current act
+and clause.
+
+## Runtime effect
+
+All four source items are absent from candidate and translation packages. Their
+conflict records are maintained in `reports/demo3_stage2_conflicts.json`. Missing or
+partial answers from RTMC do not resolve a conflict, and no conflict record can become
+eligible for activation.

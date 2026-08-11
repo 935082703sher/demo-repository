@@ -8,6 +8,7 @@ from app.services.pii import (
     DerivedFixturePIIError,
     PIICategory,
     redact_likely_pii,
+    scan_derived_fixture,
     scan_text,
     validate_derived_fixture,
 )
@@ -55,6 +56,15 @@ def test_nested_pii_failure_does_not_echo_value() -> None:
 
     assert sensitive not in str(error.value)
     assert "email:1" in str(error.value)
+
+
+def test_valid_sha256_fields_do_not_trigger_numeric_identifier_patterns() -> None:
+    value = {
+        "source_sha256": "1" * 64,
+        "content_sha256": "123456789012345" + "a" * 49,
+    }
+
+    assert scan_derived_fixture(value) == ()
 
 
 def test_redaction_removes_values_without_reversible_tokens() -> None:

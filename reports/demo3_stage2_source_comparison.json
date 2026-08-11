@@ -1,0 +1,795 @@
+{
+  "report_version": 1,
+  "generated_at": "2026-08-04T16:30:00+05:00",
+  "source_document_id": "DEPT-FAQ-001",
+  "source_sha256": "23f12211e8fbbfd18062e1ef551ecad8b6cad9ab9e5dd5049a181729524225d4",
+  "candidate_counts": {
+    "uz": 46,
+    "ru": 46,
+    "en": 46
+  },
+  "uzbek_records": [
+    {
+      "record_id": "IMEI-UZ-IDENTIFIER-FIND-001",
+      "category": "imei",
+      "subcategory": "status_check",
+      "verification_status": "verified",
+      "official_sources": [
+        {
+          "url": "https://uzimei.uz/",
+          "page_title": "UZIMEI.UZ — Mobile-device IMEI registration system",
+          "retrieved_at": "2026-08-04T16:30:00+05:00",
+          "section": "IMEI information",
+          "outcome": "supports",
+          "note": "The current page gives *#06# and identifies the box, warranty document, and battery area as additional locations."
+        }
+      ],
+      "runtime_eligible": false
+    },
+    {
+      "record_id": "IMEI-UZ-STATUS-CHECK-001",
+      "category": "imei",
+      "subcategory": "status_check",
+      "verification_status": "verified",
+      "official_sources": [
+        {
+          "url": "https://rtmc.uz/contact/faq",
+          "page_title": "RTMC — Frequently asked questions",
+          "retrieved_at": "2026-08-04T16:30:00+05:00",
+          "section": "IMEI and MNP questions",
+          "outcome": "supports",
+          "note": "The current RTMC FAQ supports the stated low-risk IMEI or MNP fact."
+        }
+      ],
+      "runtime_eligible": false
+    },
+    {
+      "record_id": "IMEI-UZ-REGISTRATION-METHODS-001",
+      "category": "imei",
+      "subcategory": "registration_methods",
+      "verification_status": "verified",
+      "official_sources": [
+        {
+          "url": "https://uzimei.uz/?id=instructions",
+          "page_title": "UZIMEI.UZ — Registration methods",
+          "retrieved_at": "2026-08-04T16:30:00+05:00",
+          "section": "Ro'yxatdan o'tish usullari",
+          "outcome": "supports",
+          "note": "The current page lists Birda, MyGov, USSD/SMS, UZIMEI operator, and postal registration methods."
+        }
+      ],
+      "runtime_eligible": false
+    },
+    {
+      "record_id": "IMEI-UZ-RESIDENT-DECLARATION-001",
+      "category": "imei",
+      "subcategory": "device_import",
+      "verification_status": "verified",
+      "official_sources": [
+        {
+          "url": "https://rtmc.uz/news/new-procedure-for-registering-mobile-device-imei-codes",
+          "page_title": "RTMC — New procedure for registering mobile-device IMEI codes",
+          "retrieved_at": "2026-08-04T16:30:00+05:00",
+          "section": "Declaration and registration procedure",
+          "outcome": "supports",
+          "note": "The current RTMC notice describes declaration of personally imported devices and integrated customs-to-UZIMEI registration."
+        }
+      ],
+      "runtime_eligible": false
+    },
+    {
+      "record_id": "IMEI-UZ-SUBSCRIBER-OWNERSHIP-001",
+      "category": "imei",
+      "subcategory": "required_documents",
+      "verification_status": "verified",
+      "official_sources": [
+        {
+          "url": "https://uzimei.uz/",
+          "page_title": "UZIMEI.UZ — Registration information",
+          "retrieved_at": "2026-08-04T16:30:00+05:00",
+          "section": "Applicant phone number and identity information",
+          "outcome": "supports",
+          "note": "The current page requires the local subscriber number to be registered to the applicant and describes identity fields."
+        }
+      ],
+      "runtime_eligible": false
+    },
+    {
+      "record_id": "IMEI-UZ-POSTAL-IMPORT-001",
+      "category": "imei",
+      "subcategory": "device_import",
+      "verification_status": "verified",
+      "official_sources": [
+        {
+          "url": "https://uzimei.uz/?id=instructions",
+          "page_title": "UZIMEI.UZ — Registration methods",
+          "retrieved_at": "2026-08-04T16:30:00+05:00",
+          "section": "Pochta",
+          "outcome": "supports",
+          "note": "The current page describes in-person postal registration, same-identity SIM ownership, and the stamped package requirement."
+        }
+      ],
+      "runtime_eligible": false
+    },
+    {
+      "record_id": "IMEI-UZ-NONRESIDENT-REGISTRATION-001",
+      "category": "imei",
+      "subcategory": "foreign_citizens",
+      "verification_status": "verified",
+      "official_sources": [
+        {
+          "url": "https://uzimei.uz/?id=instructions",
+          "page_title": "UZIMEI.UZ — Registration methods",
+          "retrieved_at": "2026-08-04T16:30:00+05:00",
+          "section": "Ro'yxatdan o'tish usullari",
+          "outcome": "supports",
+          "note": "The current page lists Birda, MyGov, USSD/SMS, UZIMEI operator, and postal registration methods."
+        }
+      ],
+      "runtime_eligible": false
+    },
+    {
+      "record_id": "IMEI-UZ-LOCAL-PURCHASE-001",
+      "category": "imei",
+      "subcategory": "device_import",
+      "verification_status": "verified",
+      "official_sources": [
+        {
+          "url": "https://rtmc.uz/news/telefon-sotib-olishdan-oldin-imei-kodini-tekshiring",
+          "page_title": "RTMC — Check the IMEI code before buying a phone",
+          "retrieved_at": "2026-08-04T16:30:00+05:00",
+          "section": "Asosiy qoidalar",
+          "outcome": "supports",
+          "note": "The current RTMC notice places registration responsibility on importing businesses and tells purchasers to check IMEI status."
+        }
+      ],
+      "runtime_eligible": false
+    },
+    {
+      "record_id": "IMEI-UZ-MULTIPLE-CODES-001",
+      "category": "imei",
+      "subcategory": "dual_sim_multiple_imei",
+      "verification_status": "pending",
+      "official_sources": [
+        {
+          "url": "https://uzimei.uz/?id=instructions",
+          "page_title": "UZIMEI.UZ — Registration methods",
+          "retrieved_at": "2026-08-04T16:30:00+05:00",
+          "section": "Current public instructions",
+          "outcome": "does_not_address",
+          "note": "The accessible current page does not confirm this specific departmental procedure; human source review remains required."
+        }
+      ],
+      "runtime_eligible": false
+    },
+    {
+      "record_id": "IMEI-UZ-UNBLOCK-AFTER-REGISTRATION-001",
+      "category": "imei",
+      "subcategory": "errors_support",
+      "verification_status": "pending",
+      "official_sources": [
+        {
+          "url": "https://uzimei.uz/?id=instructions",
+          "page_title": "UZIMEI.UZ — Registration methods",
+          "retrieved_at": "2026-08-04T16:30:00+05:00",
+          "section": "Current public instructions",
+          "outcome": "does_not_address",
+          "note": "The accessible current page does not confirm this specific departmental procedure; human source review remains required."
+        }
+      ],
+      "runtime_eligible": false
+    },
+    {
+      "record_id": "IMEI-UZ-LEGACY-CLONE-LINK-001",
+      "category": "imei",
+      "subcategory": "errors_support",
+      "verification_status": "pending",
+      "official_sources": [
+        {
+          "url": "https://uzimei.uz/?id=instructions",
+          "page_title": "UZIMEI.UZ — Registration methods",
+          "retrieved_at": "2026-08-04T16:30:00+05:00",
+          "section": "Current public instructions",
+          "outcome": "does_not_address",
+          "note": "The accessible current page does not confirm this specific departmental procedure; human source review remains required."
+        }
+      ],
+      "runtime_eligible": false
+    },
+    {
+      "record_id": "IMEI-UZ-LOST-STOLEN-001",
+      "category": "imei",
+      "subcategory": "errors_support",
+      "verification_status": "partially_verified",
+      "official_sources": [
+        {
+          "url": "https://rtmc.uz/news/-stolen-phone-can-the-uzimei-database-help-you-get-your-gadget-back",
+          "page_title": "RTMC — Stolen phone and the UZIMEI database",
+          "retrieved_at": "2026-08-04T16:30:00+05:00",
+          "section": "What to do after theft",
+          "outcome": "partially_supports",
+          "note": "The current RTMC notice supports reporting theft to law enforcement and retaining the IMEI, but does not specify every application field."
+        }
+      ],
+      "runtime_eligible": false
+    },
+    {
+      "record_id": "IMEI-UZ-CUSTOMS-EXCESS-001",
+      "category": "imei",
+      "subcategory": "device_import",
+      "verification_status": "verified",
+      "official_sources": [
+        {
+          "url": "https://uzimei.customs.uz/",
+          "page_title": "Customs Committee — IMEI customs registration check",
+          "retrieved_at": "2026-08-04T16:30:00+05:00",
+          "section": "Customs import-order status",
+          "outcome": "supports",
+          "note": "The current Customs service exposes IMEI registration linked to a customs import order."
+        }
+      ],
+      "runtime_eligible": false
+    },
+    {
+      "record_id": "IMEI-UZ-JSHSHIR-DEFINITION-001",
+      "category": "imei",
+      "subcategory": "required_documents",
+      "verification_status": "verified",
+      "official_sources": [
+        {
+          "url": "https://uzimei.uz/",
+          "page_title": "UZIMEI.UZ — Registration information",
+          "retrieved_at": "2026-08-04T16:30:00+05:00",
+          "section": "JSHSHIR",
+          "outcome": "supports",
+          "note": "The current page defines JSHSHIR as a fourteen-digit personal identification number."
+        }
+      ],
+      "runtime_eligible": false
+    },
+    {
+      "record_id": "IMEI-UZ-TAC-MISMATCH-001",
+      "category": "imei",
+      "subcategory": "errors_support",
+      "verification_status": "pending",
+      "official_sources": [
+        {
+          "url": "https://uzimei.uz/?id=instructions",
+          "page_title": "UZIMEI.UZ — Registration methods",
+          "retrieved_at": "2026-08-04T16:30:00+05:00",
+          "section": "Current public instructions",
+          "outcome": "does_not_address",
+          "note": "The accessible current page does not confirm this specific departmental procedure; human source review remains required."
+        }
+      ],
+      "runtime_eligible": false
+    },
+    {
+      "record_id": "IMEI-UZ-REGISTRATION-RESPONSIBILITY-001",
+      "category": "imei",
+      "subcategory": "registration_eligibility",
+      "verification_status": "verified",
+      "official_sources": [
+        {
+          "url": "https://rtmc.uz/news/telefon-sotib-olishdan-oldin-imei-kodini-tekshiring",
+          "page_title": "RTMC — Check the IMEI code before buying a phone",
+          "retrieved_at": "2026-08-04T16:30:00+05:00",
+          "section": "Registration responsibility",
+          "outcome": "supports",
+          "note": "The current RTMC notice confirms importer responsibility for devices brought in for sale."
+        }
+      ],
+      "runtime_eligible": false
+    },
+    {
+      "record_id": "IMEI-UZ-STATELESS-IDENTITY-001",
+      "category": "imei",
+      "subcategory": "foreign_citizens",
+      "verification_status": "verified",
+      "official_sources": [
+        {
+          "url": "https://uzimei.uz/?id=instructions",
+          "page_title": "UZIMEI.UZ — Registration methods",
+          "retrieved_at": "2026-08-04T16:30:00+05:00",
+          "section": "Pochta and identity information",
+          "outcome": "supports",
+          "note": "The current page states that stateless persons may use the prescribed biometric travel document."
+        }
+      ],
+      "runtime_eligible": false
+    },
+    {
+      "record_id": "IMEI-UZ-ONE-TIME-REGISTRATION-001",
+      "category": "imei",
+      "subcategory": "registration_eligibility",
+      "verification_status": "pending",
+      "official_sources": [
+        {
+          "url": "https://uzimei.uz/?id=instructions",
+          "page_title": "UZIMEI.UZ — Registration methods",
+          "retrieved_at": "2026-08-04T16:30:00+05:00",
+          "section": "Current public instructions",
+          "outcome": "does_not_address",
+          "note": "The accessible current page does not confirm this specific departmental procedure; human source review remains required."
+        }
+      ],
+      "runtime_eligible": false
+    },
+    {
+      "record_id": "IMEI-UZ-TARIFF-INDIVIDUAL-WITHIN-30-001",
+      "category": "imei",
+      "subcategory": "tariffs",
+      "verification_status": "verified",
+      "official_sources": [
+        {
+          "url": "https://uzimei.uz/tariffs",
+          "page_title": "UZIMEI.UZ — IMEI registration tariffs",
+          "retrieved_at": "2026-08-04T16:30:00+05:00",
+          "section": "Tariflar",
+          "outcome": "supports",
+          "note": "The current tariff page displays the same applicant class, amount, percentage, and tariff boundary."
+        }
+      ],
+      "runtime_eligible": false
+    },
+    {
+      "record_id": "IMEI-UZ-TARIFF-INDIVIDUAL-AFTER-30-001",
+      "category": "imei",
+      "subcategory": "tariffs",
+      "verification_status": "verified",
+      "official_sources": [
+        {
+          "url": "https://uzimei.uz/tariffs",
+          "page_title": "UZIMEI.UZ — IMEI registration tariffs",
+          "retrieved_at": "2026-08-04T16:30:00+05:00",
+          "section": "Tariflar",
+          "outcome": "supports",
+          "note": "The current tariff page displays the same applicant class, amount, percentage, and tariff boundary."
+        }
+      ],
+      "runtime_eligible": false
+    },
+    {
+      "record_id": "IMEI-UZ-TARIFF-IMPORTER-001",
+      "category": "imei",
+      "subcategory": "tariffs",
+      "verification_status": "verified",
+      "official_sources": [
+        {
+          "url": "https://uzimei.uz/tariffs",
+          "page_title": "UZIMEI.UZ — IMEI registration tariffs",
+          "retrieved_at": "2026-08-04T16:30:00+05:00",
+          "section": "Tariflar",
+          "outcome": "supports",
+          "note": "The current tariff page displays the same applicant class, amount, percentage, and tariff boundary."
+        }
+      ],
+      "runtime_eligible": false
+    },
+    {
+      "record_id": "IMEI-UZ-TARIFF-MANUFACTURER-001",
+      "category": "imei",
+      "subcategory": "tariffs",
+      "verification_status": "verified",
+      "official_sources": [
+        {
+          "url": "https://uzimei.uz/tariffs",
+          "page_title": "UZIMEI.UZ — IMEI registration tariffs",
+          "retrieved_at": "2026-08-04T16:30:00+05:00",
+          "section": "Tariflar",
+          "outcome": "supports",
+          "note": "The current tariff page displays the same applicant class, amount, percentage, and tariff boundary."
+        }
+      ],
+      "runtime_eligible": false
+    },
+    {
+      "record_id": "IMEI-UZ-TARIFF-FOREIGN-ROAMING-001",
+      "category": "imei",
+      "subcategory": "tariffs",
+      "verification_status": "verified",
+      "official_sources": [
+        {
+          "url": "https://uzimei.uz/tariffs",
+          "page_title": "UZIMEI.UZ — IMEI registration tariffs",
+          "retrieved_at": "2026-08-04T16:30:00+05:00",
+          "section": "Tariflar",
+          "outcome": "supports",
+          "note": "The current tariff page displays the same applicant class, amount, percentage, and tariff boundary."
+        }
+      ],
+      "runtime_eligible": false
+    },
+    {
+      "record_id": "MNP-UZ-OPERATOR-LIST-001",
+      "category": "mnp",
+      "subcategory": "operator_selection",
+      "verification_status": "verified",
+      "official_sources": [
+        {
+          "url": "https://mnp.uz/en/press/abonentam-mobilnoi-svyazi-predostavlena-vozmoznost-polzovatsya-uslugami-togo-mobilnogo-operatora-kotorym-oni-xotyat-soxranyaya-pri-etom-svoi-mobilnye-nomera-30",
+          "page_title": "MNP.UZ — Official launch of number portability",
+          "retrieved_at": "2026-08-04T16:30:00+05:00",
+          "section": "Operator list and number preservation",
+          "outcome": "supports",
+          "note": "The official MNP publication lists the five GSM operators and confirms preservation of the subscriber number."
+        }
+      ],
+      "runtime_eligible": false
+    },
+    {
+      "record_id": "MNP-UZ-NUMBER-PRESERVATION-001",
+      "category": "mnp",
+      "subcategory": "eligibility",
+      "verification_status": "verified",
+      "official_sources": [
+        {
+          "url": "https://mnp.uz/en/press/abonentam-mobilnoi-svyazi-predostavlena-vozmoznost-polzovatsya-uslugami-togo-mobilnogo-operatora-kotorym-oni-xotyat-soxranyaya-pri-etom-svoi-mobilnye-nomera-30",
+          "page_title": "MNP.UZ — Official launch of number portability",
+          "retrieved_at": "2026-08-04T16:30:00+05:00",
+          "section": "Operator list and number preservation",
+          "outcome": "supports",
+          "note": "The official MNP publication lists the five GSM operators and confirms preservation of the subscriber number."
+        }
+      ],
+      "runtime_eligible": false
+    },
+    {
+      "record_id": "MNP-UZ-GSM-ONLY-001",
+      "category": "mnp",
+      "subcategory": "eligibility",
+      "verification_status": "verified",
+      "official_sources": [
+        {
+          "url": "https://mnp.uz/",
+          "page_title": "MNP.UZ — Mobile number portability",
+          "retrieved_at": "2026-08-04T16:30:00+05:00",
+          "section": "Asosiy qoidalar and service steps",
+          "outcome": "supports",
+          "note": "The current MNP page supports the stated portability rule or service step."
+        }
+      ],
+      "runtime_eligible": false
+    },
+    {
+      "record_id": "MNP-UZ-RETRANSFER-INTERVAL-001",
+      "category": "mnp",
+      "subcategory": "transfer_conditions",
+      "verification_status": "verified",
+      "official_sources": [
+        {
+          "url": "https://mnp.uz/",
+          "page_title": "MNP.UZ — Mobile number portability",
+          "retrieved_at": "2026-08-04T16:30:00+05:00",
+          "section": "Asosiy qoidalar and service steps",
+          "outcome": "supports",
+          "note": "The current MNP page supports the stated portability rule or service step."
+        }
+      ],
+      "runtime_eligible": false
+    },
+    {
+      "record_id": "MNP-UZ-BALANCE-TRANSFER-001",
+      "category": "mnp",
+      "subcategory": "debt_balance",
+      "verification_status": "verified",
+      "official_sources": [
+        {
+          "url": "https://rtmc.uz/news/-how-to-change-your-operator-while-keeping-your-number",
+          "page_title": "RTMC — How to change operator while keeping the number",
+          "retrieved_at": "2026-08-04T16:30:00+05:00",
+          "section": "Frequently asked questions",
+          "outcome": "supports",
+          "note": "The current RTMC guidance supports the stated MNP eligibility, debt, document, balance, or timing condition."
+        }
+      ],
+      "runtime_eligible": false
+    },
+    {
+      "record_id": "MNP-UZ-TRANSFER-TIMING-001",
+      "category": "mnp",
+      "subcategory": "transfer_timing",
+      "verification_status": "pending",
+      "official_sources": [
+        {
+          "url": "https://mnp.uz/knowledge",
+          "page_title": "MNP.UZ — Savollar va javoblar",
+          "retrieved_at": "2026-08-04T16:30:00+05:00",
+          "section": "Savollar va javoblar",
+          "outcome": "does_not_address",
+          "note": "The current public page lists the relevant FAQ question but does not expose its answer in accessible page content."
+        }
+      ],
+      "runtime_eligible": false
+    },
+    {
+      "record_id": "MNP-UZ-PERSONAL-DATA-MATCH-001",
+      "category": "mnp",
+      "subcategory": "transfer_conditions",
+      "verification_status": "verified",
+      "official_sources": [
+        {
+          "url": "https://rtmc.uz/news/-how-to-change-your-operator-while-keeping-your-number",
+          "page_title": "RTMC — How to change operator while keeping the number",
+          "retrieved_at": "2026-08-04T16:30:00+05:00",
+          "section": "Frequently asked questions",
+          "outcome": "supports",
+          "note": "The current RTMC guidance supports the stated MNP eligibility, debt, document, balance, or timing condition."
+        }
+      ],
+      "runtime_eligible": false
+    },
+    {
+      "record_id": "MNP-UZ-DEBT-CONDITION-001",
+      "category": "mnp",
+      "subcategory": "debt_balance",
+      "verification_status": "verified",
+      "official_sources": [
+        {
+          "url": "https://rtmc.uz/news/-how-to-change-your-operator-while-keeping-your-number",
+          "page_title": "RTMC — How to change operator while keeping the number",
+          "retrieved_at": "2026-08-04T16:30:00+05:00",
+          "section": "Frequently asked questions",
+          "outcome": "supports",
+          "note": "The current RTMC guidance supports the stated MNP eligibility, debt, document, balance, or timing condition."
+        }
+      ],
+      "runtime_eligible": false
+    },
+    {
+      "record_id": "MNP-UZ-CONTRACT-OBLIGATION-001",
+      "category": "mnp",
+      "subcategory": "transfer_conditions",
+      "verification_status": "pending",
+      "official_sources": [
+        {
+          "url": "https://mnp.uz/knowledge",
+          "page_title": "MNP.UZ — Savollar va javoblar",
+          "retrieved_at": "2026-08-04T16:30:00+05:00",
+          "section": "Savollar va javoblar",
+          "outcome": "does_not_address",
+          "note": "The current public page lists the relevant FAQ question but does not expose its answer in accessible page content."
+        }
+      ],
+      "runtime_eligible": false
+    },
+    {
+      "record_id": "MNP-UZ-SUCCESS-SMS-001",
+      "category": "mnp",
+      "subcategory": "status_check",
+      "verification_status": "verified",
+      "official_sources": [
+        {
+          "url": "https://mnp.uz/",
+          "page_title": "MNP.UZ — Mobile number portability",
+          "retrieved_at": "2026-08-04T16:30:00+05:00",
+          "section": "Asosiy qoidalar and service steps",
+          "outcome": "supports",
+          "note": "The current MNP page supports the stated portability rule or service step."
+        }
+      ],
+      "runtime_eligible": false
+    },
+    {
+      "record_id": "MNP-UZ-INDIVIDUAL-DOCUMENT-001",
+      "category": "mnp",
+      "subcategory": "required_documents",
+      "verification_status": "verified",
+      "official_sources": [
+        {
+          "url": "https://rtmc.uz/news/-how-to-change-your-operator-while-keeping-your-number",
+          "page_title": "RTMC — How to change operator while keeping the number",
+          "retrieved_at": "2026-08-04T16:30:00+05:00",
+          "section": "Frequently asked questions",
+          "outcome": "supports",
+          "note": "The current RTMC guidance supports the stated MNP eligibility, debt, document, balance, or timing condition."
+        }
+      ],
+      "runtime_eligible": false
+    },
+    {
+      "record_id": "MNP-UZ-LEGAL-ENTITY-DOCUMENT-001",
+      "category": "mnp",
+      "subcategory": "required_documents",
+      "verification_status": "pending",
+      "official_sources": [
+        {
+          "url": "https://mnp.uz/knowledge",
+          "page_title": "MNP.UZ — Savollar va javoblar",
+          "retrieved_at": "2026-08-04T16:30:00+05:00",
+          "section": "Savollar va javoblar",
+          "outcome": "does_not_address",
+          "note": "The current public page lists the relevant FAQ question but does not expose its answer in accessible page content."
+        }
+      ],
+      "runtime_eligible": false
+    },
+    {
+      "record_id": "MNP-UZ-REJECTED-DATA-MISMATCH-001",
+      "category": "mnp",
+      "subcategory": "rejected_transfer",
+      "verification_status": "pending",
+      "official_sources": [
+        {
+          "url": "https://mnp.uz/knowledge",
+          "page_title": "MNP.UZ — Savollar va javoblar",
+          "retrieved_at": "2026-08-04T16:30:00+05:00",
+          "section": "Savollar va javoblar",
+          "outcome": "does_not_address",
+          "note": "The current public page lists the relevant FAQ question but does not expose its answer in accessible page content."
+        }
+      ],
+      "runtime_eligible": false
+    },
+    {
+      "record_id": "MNP-UZ-REJECTED-DEBT-001",
+      "category": "mnp",
+      "subcategory": "rejected_transfer",
+      "verification_status": "verified",
+      "official_sources": [
+        {
+          "url": "https://rtmc.uz/news/-how-to-change-your-operator-while-keeping-your-number",
+          "page_title": "RTMC — How to change operator while keeping the number",
+          "retrieved_at": "2026-08-04T16:30:00+05:00",
+          "section": "Frequently asked questions",
+          "outcome": "supports",
+          "note": "The current RTMC guidance supports the stated MNP eligibility, debt, document, balance, or timing condition."
+        }
+      ],
+      "runtime_eligible": false
+    },
+    {
+      "record_id": "MNP-UZ-REJECTED-INTERVAL-001",
+      "category": "mnp",
+      "subcategory": "rejected_transfer",
+      "verification_status": "verified",
+      "official_sources": [
+        {
+          "url": "https://mnp.uz/",
+          "page_title": "MNP.UZ — Mobile number portability",
+          "retrieved_at": "2026-08-04T16:30:00+05:00",
+          "section": "Asosiy qoidalar and service steps",
+          "outcome": "supports",
+          "note": "The current MNP page supports the stated portability rule or service step."
+        }
+      ],
+      "runtime_eligible": false
+    },
+    {
+      "record_id": "MNP-UZ-REJECTED-BLOCKED-001",
+      "category": "mnp",
+      "subcategory": "rejected_transfer",
+      "verification_status": "pending",
+      "official_sources": [
+        {
+          "url": "https://mnp.uz/knowledge",
+          "page_title": "MNP.UZ — Savollar va javoblar",
+          "retrieved_at": "2026-08-04T16:30:00+05:00",
+          "section": "Savollar va javoblar",
+          "outcome": "does_not_address",
+          "note": "The current public page lists the relevant FAQ question but does not expose its answer in accessible page content."
+        }
+      ],
+      "runtime_eligible": false
+    },
+    {
+      "record_id": "MNP-UZ-OWNER-REPRESENTATIVE-001",
+      "category": "mnp",
+      "subcategory": "number_ownership",
+      "verification_status": "pending",
+      "official_sources": [
+        {
+          "url": "https://mnp.uz/knowledge",
+          "page_title": "MNP.UZ — Savollar va javoblar",
+          "retrieved_at": "2026-08-04T16:30:00+05:00",
+          "section": "Savollar va javoblar",
+          "outcome": "does_not_address",
+          "note": "The current public page lists the relevant FAQ question but does not expose its answer in accessible page content."
+        }
+      ],
+      "runtime_eligible": false
+    },
+    {
+      "record_id": "MNP-UZ-OWNERSHIP-REASSIGNMENT-001",
+      "category": "mnp",
+      "subcategory": "number_ownership",
+      "verification_status": "pending",
+      "official_sources": [
+        {
+          "url": "https://mnp.uz/knowledge",
+          "page_title": "MNP.UZ — Savollar va javoblar",
+          "retrieved_at": "2026-08-04T16:30:00+05:00",
+          "section": "Savollar va javoblar",
+          "outcome": "does_not_address",
+          "note": "The current public page lists the relevant FAQ question but does not expose its answer in accessible page content."
+        }
+      ],
+      "runtime_eligible": false
+    },
+    {
+      "record_id": "MNP-UZ-ROAMING-DEBT-BLOCK-001",
+      "category": "mnp",
+      "subcategory": "debt_balance",
+      "verification_status": "pending",
+      "official_sources": [
+        {
+          "url": "https://mnp.uz/knowledge",
+          "page_title": "MNP.UZ — Savollar va javoblar",
+          "retrieved_at": "2026-08-04T16:30:00+05:00",
+          "section": "Savollar va javoblar",
+          "outcome": "does_not_address",
+          "note": "The current public page lists the relevant FAQ question but does not expose its answer in accessible page content."
+        }
+      ],
+      "runtime_eligible": false
+    },
+    {
+      "record_id": "MNP-UZ-APPLICATION-RECIPIENT-001",
+      "category": "mnp",
+      "subcategory": "application_procedure",
+      "verification_status": "verified",
+      "official_sources": [
+        {
+          "url": "https://mnp.uz/",
+          "page_title": "MNP.UZ — Mobile number portability",
+          "retrieved_at": "2026-08-04T16:30:00+05:00",
+          "section": "Asosiy qoidalar and service steps",
+          "outcome": "supports",
+          "note": "The current MNP page supports the stated portability rule or service step."
+        }
+      ],
+      "runtime_eligible": false
+    },
+    {
+      "record_id": "MNP-UZ-SERVICE-FEE-001",
+      "category": "mnp",
+      "subcategory": "service_fee",
+      "verification_status": "partially_verified",
+      "official_sources": [
+        {
+          "url": "https://mnp.uz/",
+          "page_title": "MNP.UZ — Mobile number portability",
+          "retrieved_at": "2026-08-04T16:30:00+05:00",
+          "section": "Service fee",
+          "outcome": "partially_supports",
+          "note": "The current page confirms that the fee varies by operator, but does not confirm every payment-contract detail in the departmental wording."
+        }
+      ],
+      "runtime_eligible": false
+    },
+    {
+      "record_id": "MNP-UZ-NEW-SIM-001",
+      "category": "mnp",
+      "subcategory": "application_procedure",
+      "verification_status": "verified",
+      "official_sources": [
+        {
+          "url": "https://mnp.uz/",
+          "page_title": "MNP.UZ — Mobile number portability",
+          "retrieved_at": "2026-08-04T16:30:00+05:00",
+          "section": "Asosiy qoidalar and service steps",
+          "outcome": "supports",
+          "note": "The current MNP page supports the stated portability rule or service step."
+        }
+      ],
+      "runtime_eligible": false
+    },
+    {
+      "record_id": "MNP-UZ-DEFINITION-001",
+      "category": "mnp",
+      "subcategory": "eligibility",
+      "verification_status": "verified",
+      "official_sources": [
+        {
+          "url": "https://mnp.uz/",
+          "page_title": "MNP.UZ — Mobile number portability",
+          "retrieved_at": "2026-08-04T16:30:00+05:00",
+          "section": "Asosiy qoidalar and service steps",
+          "outcome": "supports",
+          "note": "The current MNP page supports the stated portability rule or service step."
+        }
+      ],
+      "runtime_eligible": false
+    }
+  ]
+}
