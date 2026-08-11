@@ -9,6 +9,7 @@ services:
       RTMC_ENVIRONMENT: local-docker
       RTMC_LOG_LEVEL: INFO
       RTMC_PRIVACY_NOTICE_VERSION: demo-privacy-v1
+      GOVERNED_COMPLAINT_WORKFLOW_ENABLED: "false"
     env_file:
       - .env.example
     ports:

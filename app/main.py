@@ -27,9 +27,11 @@ from app.repositories.usage_repository import (
     RateLimitRepository,
     UsageRepository,
 )
+from app.services.approved_links import stage3b_link_registry
 from app.services.assistant import AssistantService
 from app.services.classifier import RequestClassifier
 from app.services.complaint_drafts import ComplaintDraftService
+from app.services.complaint_workflow_adapter import GovernedComplaintWorkflowAdapter
 from app.services.generation import GroundedGenerationService
 from app.services.grounding import GroundingValidator
 from app.services.guardrails import Guardrails
@@ -79,6 +81,13 @@ def create_app(
     )
     app.state.settings = app_settings
     app.state.usage_limits = usage_limits
+    legacy_drafts = ComplaintDraftService(app_settings.privacy_notice_version)
+    governed_adapter = GovernedComplaintWorkflowAdapter(
+        legacy=legacy_drafts,
+        enabled=app_settings.governed_complaint_workflow_enabled,
+        privacy_notice_version=app_settings.privacy_notice_version,
+        consent_wording_version=app_settings.governed_consent_wording_version,
+    )
     app.state.assistant = AssistantService(
         classifier=RequestClassifier(),
         guardrails=Guardrails(),
@@ -108,8 +117,15 @@ def create_app(
             if app_settings.approved_contact_url is not None
             else None
         ),
+        handoff_observer=(
+            governed_adapter.observe_legacy_handoff
+            if app_settings.governed_complaint_workflow_enabled
+            else None
+        ),
     )
-    app.state.drafts = ComplaintDraftService(app_settings.privacy_notice_version)
+    app.state.drafts = governed_adapter
+    app.state.governed_complaint_workflow = governed_adapter
+    app.state.approved_links = stage3b_link_registry()
 
     @app.middleware("http")
     async def request_context(

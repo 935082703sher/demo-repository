@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass
 from datetime import datetime
 from threading import RLock
@@ -210,6 +211,7 @@ class AssistantService:
         rate_limits: RequestRateLimitService,
         approved_support_phone: str | None,
         approved_contact_url: str | None,
+        handoff_observer: Callable[[UUID, Language, EscalationReason, UUID], None] | None = None,
     ) -> None:
         self._classifier = classifier
         self._guardrails = guardrails
@@ -221,6 +223,7 @@ class AssistantService:
         self._rate_limits = rate_limits
         self._approved_support_phone = approved_support_phone
         self._approved_contact_url = approved_contact_url
+        self._handoff_observer = handoff_observer
         self._sessions: dict[UUID, _Session] = {}
         self._initial_sessions: set[UUID] = set()
         self._lock = RLock()
@@ -439,6 +442,8 @@ class AssistantService:
         flags: list[SafetyFlag] | None = None,
     ) -> ChatResponse:
         response_language = language or Language.EN
+        if self._handoff_observer is not None:
+            self._handoff_observer(session_id, response_language, reason, request_id)
         return self._base_response(
             request_id=request_id,
             session_id=session_id,

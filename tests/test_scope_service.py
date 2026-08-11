@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import pytest
 from fastapi.testclient import TestClient
 
 from app.domain.schemas import LLMRequest, LLMResult
@@ -41,6 +42,27 @@ def test_legitimate_telecommunications_request_is_in_scope() -> None:
     decision = ScopeService().classify("My mobile network signal is weak")
 
     assert decision.status is ScopeStatus.IN_SCOPE
+
+
+@pytest.mark.parametrize(
+    ("message", "expected"),
+    [
+        ("What is religion?", ScopeStatus.OUT_OF_SCOPE),
+        ("Tell me about religious history", ScopeStatus.OUT_OF_SCOPE),
+        ("Internet is slow in Samarqand region", ScopeStatus.IN_SCOPE),
+        ("Samarqand viloyatida mobil internet sekin", ScopeStatus.IN_SCOPE),
+        ("В Самаркандской области плохо работает мобильный интернет", ScopeStatus.IN_SCOPE),
+        ("MOBILE INTERNET is slow in SAMARQAND REGION, Urgut district", ScopeStatus.IN_SCOPE),
+        ("Mobil internet Toshkent viloyati, Chirchiq shahrida sekin", ScopeStatus.IN_SCOPE),
+        ("Мобильный интернет слабый в области, районе и городе", ScopeStatus.IN_SCOPE),
+        ("Is this relegion or region?", ScopeStatus.AMBIGUOUS),
+    ],
+)
+def test_region_and_religion_are_distinguished_deterministically(
+    message: str,
+    expected: ScopeStatus,
+) -> None:
+    assert ScopeService().classify(message).status is expected
 
 
 def test_ambiguous_request_remains_ambiguous() -> None:

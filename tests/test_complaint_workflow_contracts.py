@@ -122,6 +122,7 @@ def consent_for(draft: ComplaintWorkflowDraft, **changes: object) -> ConsentBind
         "draft_version": draft.version,
         "draft_hash": draft.draft_hash,
         "privacy_notice_version": draft.privacy_notice_version,
+        "consent_wording_version": "synthetic-consent-v1",
         "language": draft.language,
         "consent_given": True,
         "recorded_at": NOW + timedelta(minutes=1),

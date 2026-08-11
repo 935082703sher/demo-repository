@@ -302,8 +302,8 @@ class ComplaintDraftService:
         updated_at: datetime,
     ) -> ComplaintDraftReview:
         missing = [field for field in REQUIRED_FIELDS[category] if not fields.get(field)]
-        subject = fields.get("subject", _CATEGORY_SUBJECTS[language][category])
-        description = fields.get("description") or ComplaintDraftService._derive_description(fields)
+        subject = fields.get("subject", default_subject_for(language, category))
+        description = fields.get("description") or derive_description(fields)
         canonical = json.dumps(
             {
                 "version": version,
@@ -337,11 +337,7 @@ class ComplaintDraftService:
 
     @staticmethod
     def _derive_description(fields: dict[str, str]) -> str:
-        preferred = ("impact", "observed_result", "observed_error", "error_message")
-        for key in preferred:
-            if fields.get(key):
-                return fields[key]
-        return " | ".join(f"{key}: {value}" for key, value in sorted(fields.items()))
+        return derive_description(fields)
 
 
 def missing_fields_for(category: Category) -> list[str]:
@@ -352,3 +348,27 @@ def missing_fields_for(category: Category) -> list[str]:
 def cancelled_message(language: Language) -> str:
     """Return a localized cancellation result without implying official activity."""
     return _CANCELLED[language]
+
+
+def default_subject_for(language: Language, category: Category) -> str:
+    """Return the existing localized synthetic subject for adapter compatibility."""
+    return _CATEGORY_SUBJECTS[language][category]
+
+
+def derive_description(fields: dict[str, str]) -> str:
+    """Derive the existing deterministic review description without mutating fields."""
+    preferred = ("impact", "observed_result", "observed_error", "error_message")
+    for key in preferred:
+        if fields.get(key):
+            return fields[key]
+    return " | ".join(f"{key}: {value}" for key, value in sorted(fields.items()))
+
+
+def not_submitted_message(language: Language) -> str:
+    """Return the existing non-registration notice for an adapted review."""
+    return _NOT_SUBMITTED[language]
+
+
+def submission_not_configured_message(language: Language) -> str:
+    """Return the existing safe local-only submission result wording."""
+    return _SUBMISSION_NOT_CONFIGURED[language]

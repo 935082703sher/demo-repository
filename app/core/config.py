@@ -1,8 +1,10 @@
 """Environment-backed application settings."""
 
+from __future__ import annotations
+
 from functools import lru_cache
 
-from pydantic import Field, HttpUrl, SecretStr, field_validator
+from pydantic import Field, HttpUrl, SecretStr, field_validator, model_validator
 from pydantic.aliases import AliasChoices
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -22,6 +24,22 @@ class Settings(BaseSettings):
     version: str = "0.2.0"
     log_level: str = "INFO"
     privacy_notice_version: str = "demo-privacy-v1"
+    governed_complaint_workflow_enabled: bool = Field(
+        default=False,
+        validation_alias=AliasChoices(
+            "GOVERNED_COMPLAINT_WORKFLOW_ENABLED",
+            "RTMC_GOVERNED_COMPLAINT_WORKFLOW_ENABLED",
+        ),
+    )
+    governed_consent_wording_version: str = Field(
+        default="synthetic-consent-v1",
+        min_length=1,
+        max_length=100,
+        validation_alias=AliasChoices(
+            "GOVERNED_CONSENT_WORDING_VERSION",
+            "RTMC_GOVERNED_CONSENT_WORDING_VERSION",
+        ),
+    )
     llm_generation_limit_per_session: int = Field(
         default=10,
         ge=1,
@@ -131,6 +149,20 @@ class Settings(BaseSettings):
     def normalize_model_name(cls, value: str) -> str:
         """Strip accidental whitespace without selecting a paid model."""
         return value.strip()
+
+    @model_validator(mode="after")
+    def restrict_governed_workflow_to_safe_local_use(self) -> Settings:
+        """Fail closed if the Stage 3B adapter is enabled outside a synthetic runtime."""
+        if self.governed_complaint_workflow_enabled and self.environment not in {
+            "local",
+            "local-docker",
+            "test",
+            "testing",
+        }:
+            raise ValueError("governed complaint workflow is limited to local/test environments")
+        if self.governed_complaint_workflow_enabled and self.llm_provider != "mock":
+            raise ValueError("governed complaint workflow requires the mock provider")
+        return self
 
 
 @lru_cache

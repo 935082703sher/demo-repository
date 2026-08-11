@@ -365,6 +365,7 @@ class ConsentBinding(StrictModel):
     draft_version: int = Field(ge=1)
     draft_hash: str = Field(pattern=r"^[0-9a-f]{64}$")
     privacy_notice_version: str = Field(min_length=1, max_length=100)
+    consent_wording_version: str = Field(min_length=1, max_length=100)
     language: Language
     consent_given: Literal[True]
     recorded_at: datetime

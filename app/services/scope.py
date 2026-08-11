@@ -31,6 +31,7 @@ _OUT_OF_SCOPE_SIGNALS = (
     "flight itinerary",
     "tourist attraction",
     "religion",
+    "religious",
     "religious teaching",
     "political campaign",
     "political election",
@@ -78,6 +79,13 @@ _OUT_OF_SCOPE_SIGNALS = (
     "погода",
 )
 
+_AMBIGUOUS_RELIGION_REGION_TYPOS = (
+    "relegion",
+    "religon",
+    "reglion",
+    "reigion",
+)
+
 _IN_SCOPE_SIGNALS = (
     "rtmc",
     "telecom",
@@ -91,6 +99,7 @@ _IN_SCOPE_SIGNALS = (
     "region code",
     "mobile network",
     "mobile data",
+    "internet",
     "signal",
     "coverage",
     "fixed internet",
@@ -122,6 +131,9 @@ class ScopeService:
     def classify(self, message: str) -> ScopeDecision:
         """Return out-of-scope only when a configured signal is explicit."""
         normalized = normalize_text(message)
+        for signal in _AMBIGUOUS_RELIGION_REGION_TYPOS:
+            if signal in normalized:
+                return ScopeDecision(ScopeStatus.AMBIGUOUS, signal)
         for signal in _OUT_OF_SCOPE_SIGNALS:
             if signal in normalized:
                 return ScopeDecision(ScopeStatus.OUT_OF_SCOPE, signal)
