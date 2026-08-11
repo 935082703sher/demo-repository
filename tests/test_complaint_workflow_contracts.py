@@ -119,6 +119,7 @@ def complete_draft(
 def consent_for(draft: ComplaintWorkflowDraft, **changes: object) -> ConsentBinding:
     values: dict[str, object] = {
         "draft_id": draft.draft_id,
+        "synthetic_session_id": draft.session_id,
         "draft_version": draft.version,
         "draft_hash": draft.draft_hash,
         "privacy_notice_version": draft.privacy_notice_version,
@@ -395,6 +396,10 @@ def test_edit_creates_version_and_hash_and_invalidates_consent() -> None:
             WorkflowErrorCode.PRIVACY_NOTICE_MISMATCH,
         ),
         ({"language": Language.RU}, WorkflowErrorCode.CONSENT_LANGUAGE_MISMATCH),
+        (
+            {"synthetic_session_id": UUID("10000000-0000-4000-8000-000000000099")},
+            WorkflowErrorCode.CONSENT_SESSION_MISMATCH,
+        ),
         (
             {"recorded_at": NOW - timedelta(seconds=1)},
             WorkflowErrorCode.CONSENT_TIMESTAMP_INVALID,

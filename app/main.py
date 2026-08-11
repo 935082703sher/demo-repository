@@ -33,6 +33,7 @@ from app.services.classifier import RequestClassifier
 from app.services.complaint_drafts import ComplaintDraftService
 from app.services.complaint_workflow_adapter import GovernedComplaintWorkflowAdapter
 from app.services.generation import GroundedGenerationService
+from app.services.governed_complaint_orchestrator import GovernedComplaintOrchestrator
 from app.services.grounding import GroundingValidator
 from app.services.guardrails import Guardrails
 from app.services.knowledge import KnowledgeService
@@ -125,6 +126,15 @@ def create_app(
     )
     app.state.drafts = governed_adapter
     app.state.governed_complaint_workflow = governed_adapter
+    app.state.governed_complaint_orchestrator = (
+        GovernedComplaintOrchestrator(
+            adapter=governed_adapter,
+            privacy_notice_version=app_settings.privacy_notice_version,
+            consent_wording_version=app_settings.governed_consent_wording_version,
+        )
+        if app_settings.governed_complaint_workflow_enabled
+        else None
+    )
     app.state.approved_links = stage3b_link_registry()
 
     @app.middleware("http")

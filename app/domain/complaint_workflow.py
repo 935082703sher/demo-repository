@@ -58,6 +58,10 @@ class ComplaintSubcategory(StrEnum):
     SERVICE_FEE = "service_fee"
     TRANSFER_CONDITIONS = "transfer_conditions"
     TRANSFER_TIMING = "transfer_timing"
+    NUMBER_CODE_INFORMATION = "number_code_information"
+    NETWORK_SERVICE_DEGRADATION = "network_service_degradation"
+    WEBSITE_FUNCTIONAL_ERROR = "website_functional_error"
+    OTHER_RTMCMATTER = "other_rtmc_matter"
     UNKNOWN = "unknown"
     UNSUPPORTED = "unsupported"
 
@@ -362,6 +366,7 @@ class ConsentBinding(StrictModel):
     """Explicit local consent bound to one exact non-official draft version."""
 
     draft_id: UUID
+    synthetic_session_id: UUID
     draft_version: int = Field(ge=1)
     draft_hash: str = Field(pattern=r"^[0-9a-f]{64}$")
     privacy_notice_version: str = Field(min_length=1, max_length=100)
@@ -483,7 +488,13 @@ def subcategory_is_compatible(category: Category, subcategory: ComplaintSubcateg
         return subcategory in IMEI_SUBCATEGORIES
     if category is Category.MNP:
         return subcategory in MNP_SUBCATEGORIES
-    return False
+    if category is Category.NUMBER_CODES:
+        return subcategory is ComplaintSubcategory.NUMBER_CODE_INFORMATION
+    if category is Category.NETWORK_QUALITY:
+        return subcategory is ComplaintSubcategory.NETWORK_SERVICE_DEGRADATION
+    if category is Category.WEBSITE_ISSUE:
+        return subcategory is ComplaintSubcategory.WEBSITE_FUNCTIONAL_ERROR
+    return subcategory is ComplaintSubcategory.OTHER_RTMCMATTER
 
 
 def canonical_draft_hash(draft_or_values: ComplaintWorkflowDraft | dict[str, object]) -> str:

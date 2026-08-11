@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from datetime import date
 from enum import StrEnum
 from typing import Literal
@@ -37,6 +38,7 @@ class ApprovalEvidence(StrictModel):
     review_or_expiry_date: date
     source_document_reference: str = Field(min_length=3, max_length=300)
     conflict_resolution_reference: str | None = Field(default=None, min_length=3, max_length=300)
+    legal_review_reference: str | None = Field(default=None, min_length=3, max_length=300)
     approval_status: Literal[ApprovalStatus.APPROVED] = ApprovalStatus.APPROVED
     activation_status: Literal[ActivationStatus.INACTIVE] = ActivationStatus.INACTIVE
     runtime_eligible: Literal[False] = False
@@ -51,6 +53,11 @@ class ApprovalEvidence(StrictModel):
             raise ValueError("effective date cannot precede approval date")
         if self.review_or_expiry_date <= self.effective_date:
             raise ValueError("review or expiry date must follow effective date")
+        if (
+            self.target_type is ApprovalTargetType.REQUIREMENTS_PROFILE
+            and self.legal_review_reference is None
+        ):
+            raise ValueError("requirements-profile approval requires legal review reference")
         return self
 
 
@@ -62,6 +69,53 @@ class ApprovalValidationResult(StrictModel):
     activation_status: Literal[ActivationStatus.INACTIVE] = ActivationStatus.INACTIVE
     runtime_eligible: Literal[False] = False
     reason_code: str
+
+
+class ApprovalIntakeResult(StrictModel):
+    """Sanitized intake result that never echoes submitted evidence values."""
+
+    accepted: bool
+    approval_status: ApprovalStatus
+    activation_status: Literal[ActivationStatus.INACTIVE] = ActivationStatus.INACTIVE
+    runtime_eligible: Literal[False] = False
+    missing_fields: list[str]
+    reason_code: str
+
+
+_REQUIRED_APPROVAL_FIELDS = frozenset(ApprovalEvidence.model_fields) - {
+    "conflict_resolution_reference",
+    "legal_review_reference",
+    "approval_status",
+    "activation_status",
+    "runtime_eligible",
+}
+
+
+def assess_approval_metadata(payload: Mapping[str, object]) -> ApprovalIntakeResult:
+    """Reject incomplete/unparseable evidence using field names only, never raw values."""
+    missing = sorted(field for field in _REQUIRED_APPROVAL_FIELDS if not payload.get(field))
+    if missing:
+        return ApprovalIntakeResult(
+            accepted=False,
+            approval_status=ApprovalStatus.PENDING_REVIEW,
+            missing_fields=missing,
+            reason_code="approval_evidence_incomplete",
+        )
+    try:
+        ApprovalEvidence.model_validate(payload)
+    except ValueError:
+        return ApprovalIntakeResult(
+            accepted=False,
+            approval_status=ApprovalStatus.PENDING_REVIEW,
+            missing_fields=[],
+            reason_code="approval_evidence_invalid",
+        )
+    return ApprovalIntakeResult(
+        accepted=True,
+        approval_status=ApprovalStatus.APPROVED,
+        missing_fields=[],
+        reason_code="approval_metadata_valid_but_inactive",
+    )
 
 
 def validate_approval_evidence(

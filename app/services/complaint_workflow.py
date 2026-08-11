@@ -34,6 +34,7 @@ class WorkflowErrorCode(StrEnum):
     STALE_CONSENT_VERSION = "stale_consent_version"
     STALE_CONSENT_HASH = "stale_consent_hash"
     CONSENT_LANGUAGE_MISMATCH = "consent_language_mismatch"
+    CONSENT_SESSION_MISMATCH = "consent_session_mismatch"
     PRIVACY_NOTICE_MISMATCH = "privacy_notice_version_mismatch"
     CONSENT_REQUIRED = "current_draft_consent_required"
     CONSENT_TIMESTAMP_INVALID = "consent_timestamp_invalid"
@@ -240,6 +241,8 @@ class ComplaintWorkflowEngine:
             raise ComplaintWorkflowError(WorkflowErrorCode.INVALID_TRANSITION)
         if consent.draft_id != draft.draft_id or consent.draft_version != draft.version:
             raise ComplaintWorkflowError(WorkflowErrorCode.STALE_CONSENT_VERSION)
+        if consent.synthetic_session_id != draft.session_id:
+            raise ComplaintWorkflowError(WorkflowErrorCode.CONSENT_SESSION_MISMATCH)
         if consent.draft_hash != draft.draft_hash:
             raise ComplaintWorkflowError(WorkflowErrorCode.STALE_CONSENT_HASH)
         if consent.privacy_notice_version != draft.privacy_notice_version:

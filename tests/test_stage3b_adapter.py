@@ -100,6 +100,7 @@ def create_complete(
         mapping=mapping or explicit_mapping(),
     )
     assert review.complete
+    service.acknowledge_review(review.draft_id, review.version, review.draft_hash)
     return review.draft_id, review.version
 
 
@@ -250,6 +251,7 @@ def test_consent_is_fully_bound_and_stops_at_submission_blocked() -> None:
     assert governed.workflow_state is ComplaintWorkflowState.SUBMISSION_BLOCKED
     assert governed.consent_state is ConsentState.RECORDED
     assert consent is not None
+    assert consent.synthetic_session_id == governed.session_id
     assert consent.draft_hash == governed.draft_hash
     assert consent.language is governed.language
     assert consent.privacy_notice_version == "demo-privacy-v1"

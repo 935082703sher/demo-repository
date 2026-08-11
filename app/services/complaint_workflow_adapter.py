@@ -120,6 +120,7 @@ class GovernedComplaintWorkflowAdapter:
         self._secure_issuer = SyntheticSecureValueIssuer()
         self._records: dict[UUID, _CanonicalAdapterRecord] = {}
         self._submissions: dict[tuple[UUID, int], _SubmissionEvidence] = {}
+        self._reviewed_versions: set[tuple[UUID, int, str]] = set()
         self._handoffs: dict[UUID, HumanHandoff] = {}
         self._lock = RLock()
 
@@ -246,6 +247,24 @@ class GovernedComplaintWorkflowAdapter:
             evidence = self._submissions.get((draft_id, version))
             return evidence.consent.model_copy(deep=True) if evidence is not None else None
 
+    def acknowledge_review(self, draft_id: UUID, version: int, draft_hash: str) -> None:
+        """Record local review of the exact complete version without implying submission."""
+        if not self.enabled:
+            raise RequestValidationError(
+                "governed_workflow_disabled",
+                "The governed complaint workflow is disabled",
+            )
+        with self._lock:
+            draft = self._get_active(draft_id).draft
+            if draft.version != version or draft.draft_hash != draft_hash:
+                raise ConflictError(
+                    "stale_draft_review",
+                    "Review must reference the current draft version and hash",
+                )
+            if draft.workflow_state is not ComplaintWorkflowState.REVIEW_READY:
+                raise ConflictError("incomplete_draft", "Only a complete draft can be reviewed")
+            self._reviewed_versions.add((draft_id, version, draft_hash))
+
     def cancel(self, draft_id: UUID) -> ComplaintDraftReview:
         if not self.enabled:
             return self._legacy.cancel(draft_id)
@@ -303,6 +322,11 @@ class GovernedComplaintWorkflowAdapter:
                     "incomplete_draft",
                     "The governed draft requires clarification, missing fields, or human review",
                 )
+            if (draft.draft_id, draft.version, draft.draft_hash) not in self._reviewed_versions:
+                raise ConflictError(
+                    "draft_review_required",
+                    "Review the current draft version before recording consent",
+                )
             now = datetime.now(UTC)
             awaiting = self._engine.transition(
                 draft,
@@ -311,6 +335,7 @@ class GovernedComplaintWorkflowAdapter:
             )
             consent = ConsentBinding(
                 draft_id=awaiting.draft_id,
+                synthetic_session_id=awaiting.session_id,
                 draft_version=awaiting.version,
                 draft_hash=awaiting.draft_hash,
                 privacy_notice_version=awaiting.privacy_notice_version,
@@ -437,21 +462,18 @@ class GovernedComplaintWorkflowAdapter:
             if mapping.subcategory is not ComplaintSubcategory.UNKNOWN
             else _DEFAULT_SUBCATEGORY.get(category, ComplaintSubcategory.UNKNOWN)
         )
+        variant = "|".join(
+            (
+                subcategory.value,
+                *sorted(field.value for field in mapping.required_secure_fields),
+            )
+        )
+        variant_key = hashlib.sha256(variant.encode("utf-8")).hexdigest()[:10].upper()
         profile_key = (
-            "-".join((category.value, applicant.value, appeal.value, subcategory.value))
+            "-".join(("STAGE3B", category.value, applicant.value, appeal.value, variant_key))
             .upper()
             .replace("_", "-")
         )
-        secure_key = (
-            hashlib.sha256(
-                ",".join(sorted(field.value for field in mapping.required_secure_fields)).encode(
-                    "utf-8"
-                )
-            )
-            .hexdigest()[:8]
-            .upper()
-        )
-        profile_key = f"{profile_key}-{secure_key}"
         required = [
             "issue_description" if field == "description" else field
             for field in REQUIRED_FIELDS[category]
