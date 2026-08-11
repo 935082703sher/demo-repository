@@ -67,6 +67,19 @@ def test_valid_sha256_fields_do_not_trigger_numeric_identifier_patterns() -> Non
     assert scan_derived_fixture(value) == ()
 
 
+def test_sensitive_field_aliases_are_rejected_without_echoing_values() -> None:
+    findings = scan_derived_fixture(
+        {
+            "passport_number": "SYNTHETIC_TEST_VALUE",
+            "private_phone": "SYNTHETIC_TEST_VALUE",
+            "document_image_reference": "SYNTHETIC_TEST_VALUE",
+        }
+    )
+
+    assert len(findings) == 3
+    assert all(finding.category is PIICategory.SENSITIVE_FIELD for finding in findings)
+
+
 def test_redaction_removes_values_without_reversible_tokens() -> None:
     sensitive = "synthetic.person@example.test"
     redacted = redact_likely_pii(f"email: {sensitive}")

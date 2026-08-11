@@ -101,6 +101,31 @@ _SENSITIVE_KEYS = frozenset(
     }
 )
 _SHA256_PATTERN = re.compile(r"^[0-9a-f]{64}$")
+_SENSITIVE_KEY_MARKERS = (
+    "attachment",
+    "authorization_document",
+    "document_image",
+    "email",
+    "full_imei",
+    "identity_document",
+    "jshshir",
+    "passport",
+    "personal_email",
+    "phone",
+    "pinfl",
+    "private_telephone",
+    "registration_identifier",
+    "residential_address",
+    "signature",
+)
+
+
+def is_sensitive_field_name(value: str) -> bool:
+    """Return whether an ordinary-storage key is reserved for protected data."""
+    normalized = value.strip().casefold()
+    return normalized in _SENSITIVE_KEYS or any(
+        marker in normalized for marker in _SENSITIVE_KEY_MARKERS
+    )
 
 
 def scan_text(text: str) -> tuple[PIIFinding, ...]:
@@ -145,7 +170,7 @@ def scan_derived_fixture(value: object) -> tuple[PIIFinding, ...]:
         if isinstance(item, Mapping):
             for key, nested in item.items():
                 normalized_key = str(key).strip().casefold()
-                if normalized_key in _SENSITIVE_KEYS:
+                if is_sensitive_field_name(normalized_key):
                     findings.append(PIIFinding(PIICategory.SENSITIVE_FIELD, 0, 0))
                 if (
                     normalized_key.endswith("_sha256")
