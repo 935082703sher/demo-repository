@@ -3,10 +3,11 @@
 from __future__ import annotations
 
 from functools import lru_cache
+from typing import Annotated
 
 from pydantic import Field, HttpUrl, SecretStr, field_validator, model_validator
 from pydantic.aliases import AliasChoices
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic_settings import BaseSettings, NoDecode, SettingsConfigDict
 
 
 class Settings(BaseSettings):
@@ -71,7 +72,7 @@ class Settings(BaseSettings):
     )
     llm_provider: str = Field(
         default="mock",
-        pattern=r"^(mock|openai)$",
+        pattern=r"^(mock|openai|ollama)$",
         validation_alias=AliasChoices("LLM_PROVIDER", "RTMC_LLM_PROVIDER"),
     )
     llm_model: str = Field(
@@ -116,6 +117,38 @@ class Settings(BaseSettings):
             "RTMC_LLM_OUTPUT_COST_PER_MILLION",
         ),
     )
+    ollama_base_url: str = Field(
+        default="http://127.0.0.1:11434",
+        min_length=1,
+        validation_alias=AliasChoices("OLLAMA_BASE_URL", "RTMC_OLLAMA_BASE_URL"),
+    )
+    ollama_model: str = Field(
+        default="qwen3:8b",
+        validation_alias=AliasChoices("OLLAMA_MODEL", "RTMC_OLLAMA_MODEL"),
+    )
+    ollama_timeout_seconds: float = Field(
+        default=60,
+        gt=0,
+        le=120,
+        validation_alias=AliasChoices("OLLAMA_TIMEOUT_SECONDS", "RTMC_OLLAMA_TIMEOUT_SECONDS"),
+    )
+    cors_allowed_origins: Annotated[list[str], NoDecode] = Field(
+        default_factory=lambda: [
+            "http://localhost:3000",
+            "http://127.0.0.1:3000",
+            "http://localhost:5173",
+            "http://127.0.0.1:5173",
+        ],
+        validation_alias=AliasChoices("CORS_ALLOWED_ORIGINS", "RTMC_CORS_ALLOWED_ORIGINS"),
+    )
+
+    @field_validator("cors_allowed_origins", mode="before")
+    @classmethod
+    def split_cors_origins(cls, value: object) -> object:
+        """Accept a comma-separated env string alongside a native list."""
+        if isinstance(value, str):
+            return [origin.strip() for origin in value.split(",") if origin.strip()]
+        return value
 
     @field_validator("approved_support_phone")
     @classmethod
@@ -144,11 +177,20 @@ class Settings(BaseSettings):
         """Treat an empty optional secret as unconfigured."""
         return None if value == "" else value
 
-    @field_validator("llm_model")
+    @field_validator("llm_model", "ollama_model")
     @classmethod
     def normalize_model_name(cls, value: str) -> str:
         """Strip accidental whitespace without selecting a paid model."""
         return value.strip()
+
+    @field_validator("ollama_base_url")
+    @classmethod
+    def normalize_ollama_base_url(cls, value: str) -> str:
+        """Reject a malformed local/self-hosted inference server URL."""
+        normalized = value.strip().rstrip("/")
+        if not normalized.startswith(("http://", "https://")):
+            raise ValueError("ollama base URL must start with http:// or https://")
+        return normalized
 
     @model_validator(mode="after")
     def restrict_governed_workflow_to_safe_local_use(self) -> Settings:

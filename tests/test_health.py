@@ -27,3 +27,11 @@ def test_swagger_ui_is_available(client: TestClient) -> None:
 
     assert response.status_code == 200
     assert "swagger-ui" in response.text.lower()
+
+
+def test_demo_page_is_served_at_root(client: TestClient) -> None:
+    response = client.get("/")
+
+    assert response.status_code == 200
+    assert "text/html" in response.headers["content-type"]
+    assert "RTMC AI Assistant" in response.text

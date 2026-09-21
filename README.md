@@ -44,6 +44,7 @@ make run
 
 Open:
 
+- Demo test page: <http://127.0.0.1:8000/>
 - Swagger UI: <http://127.0.0.1:8000/docs>
 - OpenAPI JSON: <http://127.0.0.1:8000/openapi.json>
 - Health: <http://127.0.0.1:8000/health>
@@ -65,6 +66,15 @@ curl -s http://127.0.0.1:8000/health
 docker compose down
 ```
 
+Or the one-command demo path:
+
+```bash
+make demo
+```
+
+which runs `docker compose up --build` and opens the API on
+<http://127.0.0.1:8000/> (demo page) once healthy.
+
 The image runs as a non-root user and includes a health check. It has no database,
 committed secret, or official RTMC integration.
 
@@ -73,15 +83,19 @@ committed secret, or official RTMC integration.
 Copy `.env.example` to `.env` only when local overrides are required. Important Demo 2
 settings include:
 
-- `LLM_PROVIDER=mock`;
+- `LLM_PROVIDER=mock` (default) — deterministic, no network call. `openai` remains
+  disabled without a key. `ollama` runs a real self-hosted local model with no external
+  API and no key required — see [`docs/LOCAL_LLM.md`](docs/LOCAL_LLM.md);
 - `LLM_GENERATION_LIMIT_PER_SESSION=10`;
 - `LLM_QUOTA_WINDOW_SECONDS=86400`;
 - `REQUEST_RATE_LIMIT_PER_MINUTE=20`;
 - optional approved support phone/contact URL;
-- optional external provider model/key, timeout, retries, and cost rates.
+- optional external provider model/key, timeout, retries, and cost rates;
+- `CORS_ALLOWED_ORIGINS` for local website integration (defaults to common Nuxt/Vite
+  dev ports; empty disables CORS entirely).
 
-Do not configure a real provider without RTMC authorization. No model or API key is
-committed.
+Do not configure a real external provider without RTMC authorization. No model or API
+key is committed. Self-hosted local inference (Ollama) requires no API key at all.
 
 ## Repository map
 
@@ -99,8 +113,10 @@ docs/            scope, architecture, contract, security, tests, next phases
 ```
 
 See [`docs/DEMO2_SCOPE.md`](docs/DEMO2_SCOPE.md),
-[`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md), and
-[`docs/API_CONTRACT.md`](docs/API_CONTRACT.md) before integration work.
+[`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md),
+[`docs/API_CONTRACT.md`](docs/API_CONTRACT.md),
+[`docs/WEB_INTEGRATION.md`](docs/WEB_INTEGRATION.md), and
+[`docs/LOCAL_LLM.md`](docs/LOCAL_LLM.md) before integration work.
 
 Demo 1 evidence remains frozen in
 [`docs/DEMO_1_COMPLETION_EVIDENCE.md`](docs/DEMO_1_COMPLETION_EVIDENCE.md).

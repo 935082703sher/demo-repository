@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>RTMC AI Assistant — Test Demo</title>
+<style>
+  :root { color-scheme: light; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 16px;
+    background: #f5f6f8;
+    color: #1c1e21;
+  }
+  h1 { font-size: 1.25rem; margin-bottom: 0; }
+  .subtitle { color: #666; font-size: 0.85rem; margin-top: 4px; margin-bottom: 16px; }
+  .banner {
+    background: #fff8e1;
+    border: 1px solid #f0d98c;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 0.8rem;
+    margin-bottom: 16px;
+  }
+  #log {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-height: 300px;
+    max-height: 55vh;
+    overflow-y: auto;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 12px;
+  }
+  .msg { max-width: 85%; padding: 8px 12px; border-radius: 10px; white-space: pre-wrap; font-size: 0.92rem; }
+  .msg.user { align-self: flex-end; background: #0b6efd; color: #fff; }
+  .msg.bot { align-self: flex-start; background: #eef1f4; color: #1c1e21; }
+  .msg.error { align-self: flex-start; background: #fdecea; color: #611a15; border: 1px solid #f5c6cb; }
+  .meta { font-size: 0.72rem; color: #888; margin-top: 4px; }
+  .sources { font-size: 0.72rem; color: #555; margin-top: 6px; border-top: 1px dashed #ccc; padding-top: 4px; }
+  form { display: flex; gap: 8px; }
+  select, input[type=text] {
+    font-size: 0.95rem;
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+  }
+  input[type=text] { flex: 1; }
+  button {
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: none;
+    background: #0b6efd;
+    color: #fff;
+    font-size: 0.95rem;
+    cursor: pointer;
+  }
+  button:disabled { background: #9db8e8; cursor: not-allowed; }
+  .loading { font-size: 0.85rem; color: #888; margin-bottom: 8px; }
+  footer { margin-top: 16px; font-size: 0.75rem; color: #888; text-align: center; }
+  footer a { color: #0b6efd; }
+</style>
+</head>
+<body>
+  <h1>RTMC AI Assistant — Test Demo</h1>
+  <div class="subtitle">Local controlled demo only. It cannot register an official appeal or generate an official case number.</div>
+  <div class="banner">
+    This is a <strong>test/demo build</strong>. Answers are grounded only in a small local
+    demo knowledge set (not real approved RTMC content). If the assistant does not have an
+    approved source, it will say so instead of guessing.
+  </div>
+
+  <div id="log"></div>
+  <div id="loading" class="loading" style="display:none;">Assistant is typing…</div>
+
+  <form id="chat-form">
+    <select id="language">
+      <option value="uz">UZ</option>
+      <option value="ru">RU</option>
+      <option value="en" selected>EN</option>
+    </select>
+    <input id="message" type="text" placeholder="Type a message…" autocomplete="off" required />
+    <button type="submit">Send</button>
+  </form>
+
+  <footer>
+    Local AI / Test mode — inference runs via a self-hosted local model (Ollama)
+    or a deterministic mock provider. No OpenAI, Anthropic, or other external
+    LLM API is used.<br />
+    API docs: <a href="/docs" target="_blank">/docs</a> ·
+    Health: <a href="/health" target="_blank">/health</a>
+  </footer>
+
+<script>
+  const log = document.getElementById('log');
+  const form = document.getElementById('chat-form');
+  const input = document.getElementById('message');
+  const languageSelect = document.getElementById('language');
+  const loading = document.getElementById('loading');
+  const sendButton = form.querySelector('button');
+  let sessionId = null;
+
+  function addMessage(text, cls, metaLines, sources) {
+    const div = document.createElement('div');
+    div.className = 'msg ' + cls;
+    div.textContent = text;
+    if (metaLines && metaLines.length) {
+      const meta = document.createElement('div');
+      meta.className = 'meta';
+      meta.textContent = metaLines.join(' · ');
+      div.appendChild(meta);
+    }
+    if (sources && sources.length) {
+      const src = document.createElement('div');
+      src.className = 'sources';
+      src.textContent = 'Sources: ' + sources.map(s => s.title + (s.demo_only ? ' (demo, not official)' : '')).join('; ');
+      div.appendChild(src);
+    }
+    log.appendChild(div);
+    log.scrollTop = log.scrollHeight;
+  }
+
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const message = input.value.trim();
+    if (!message) return;
+
+    addMessage(message, 'user');
+    input.value = '';
+    sendButton.disabled = true;
+    loading.style.display = 'block';
+
+    try {
+      const payload = { language: languageSelect.value, message };
+      if (sessionId) payload.session_id = sessionId;
+
+      const response = await fetch('/api/v1/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      const body = await response.json();
+
+      if (!response.ok) {
+        addMessage((body.error && body.error.message) || 'Request failed', 'error');
+        return;
+      }
+
+      sessionId = body.session_id;
+      const metaLines = [
+        'state=' + body.state,
+        'category=' + (body.category || 'n/a'),
+        'grounded=' + body.grounded,
+      ];
+      if (body.requires_human) metaLines.push('human handoff requested');
+      addMessage(body.reply, 'bot', metaLines, body.sources);
+    } catch (err) {
+      addMessage('Network error: could not reach the assistant service.', 'error');
+    } finally {
+      sendButton.disabled = false;
+      loading.style.display = 'none';
+    }
+  });
+</script>
+</body>
+</html>

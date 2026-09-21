@@ -4,7 +4,7 @@ RUFF ?= ruff
 MYPY ?= mypy
 PYTEST ?= pytest
 
-.PHONY: install format format-check lint typecheck test pii-check run check
+.PHONY: install format format-check lint typecheck test pii-check run check demo
 
 install:
 	$(PYTHON) -m pip install -e '.[dev]'
@@ -31,3 +31,6 @@ run:
 	$(UVICORN) app.main:app --host 127.0.0.1 --port 8000
 
 check: format-check lint typecheck test pii-check
+
+demo:
+	docker compose up --build

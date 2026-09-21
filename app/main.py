@@ -11,6 +11,7 @@ from uuid import UUID, uuid4
 
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError as FastAPIValidationError
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from starlette.responses import Response
 
@@ -71,6 +72,14 @@ def create_app(
         ),
         lifespan=lifespan,
     )
+    if app_settings.cors_allowed_origins:
+        app.add_middleware(
+            CORSMiddleware,
+            allow_origins=app_settings.cors_allowed_origins,
+            allow_methods=["GET", "POST", "DELETE"],
+            allow_headers=["Content-Type", "X-Request-ID"],
+            allow_credentials=False,
+        )
     knowledge = KnowledgeService.from_json(data_path)
     usage_limits = UsageLimitService(
         usage_repository if usage_repository is not None else InMemoryUsageRepository(),

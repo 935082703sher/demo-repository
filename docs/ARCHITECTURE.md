@@ -37,7 +37,10 @@ authorize submission, search arbitrary sources, call tools, or create official f
   repositories; process-local implementations are lock-protected.
 - `LLMProvider` is a narrow asynchronous protocol. Demo 2 defaults to
   `MockLLMProvider`; a configured OpenAI adapter remains unavailable without model and
-  environment-backed key.
+  environment-backed key. An `OllamaProvider` adapter (self-hosted, on-premise, no
+  external API) is also available — see [`docs/LOCAL_LLM.md`](LOCAL_LLM.md). All three
+  implement the same protocol, so the chat/RAG/governance layers above them are
+  unchanged regardless of which one is configured.
 - `GroundedGenerationService` applies timeout/retry bounds and records attempts,
   logical results, tokens, cost, and latency.
 - `GroundingValidator` rejects missing or fabricated citations before any answer.
@@ -72,3 +75,22 @@ This is a structural guarantee, not a prompt instruction.
 A future approved official client belongs behind a backend-only interface after
 authentication, data-field, privacy, audit, idempotency, timeout, retry, and official
 response contracts are approved. It must not be added to the language provider.
+
+## Production inference direction
+
+Local development uses Ollama (see [`docs/LOCAL_LLM.md`](LOCAL_LLM.md)). The intended
+production path is a self-hosted, on-premise inference runtime on RTMC's own GPU
+server (e.g. vLLM) serving an approved open-weight model, reached through the same
+`LLMProvider` protocol. No production or development path calls OpenAI, Anthropic, or
+any other external cloud LLM API.
+
+## Future Agent Runtime Evaluation
+
+Frameworks such as OpenClaw or Hermes are agent-orchestration runtimes for multi-step
+tool use, controlled agent actions, and persistent agent workflows. They are not
+required to generate a single grounded chat response and are not used anywhere in this
+service today. They may be evaluated later, separately from this work, only if RTMC
+requires multiple tools, multi-step workflows, controlled agent actions, tool
+orchestration, or persistent agent capabilities beyond the current retrieve-then-answer
+flow. Introducing either is a distinct, deliberate architecture decision — not a
+dependency of the chat/RAG/governance pipeline described above.
