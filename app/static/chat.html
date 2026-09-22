@@ -210,11 +210,18 @@
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message, tree_id: state.tree_id, node_id: state.node_id, language: state.lang })
       });
+      if (!res.ok) throw new Error("http " + res.status);
       return await res.json();
+    } catch (e) {
+      bubble("ai", state.lang === "ru"
+        ? "Ошибка связи с сервером. Попробуйте ещё раз."
+        : "Server bilan bog‘lanishda xatolik. Qayta urinib ko‘ring.");
+      return null;
     } finally { typing(false); sendBtn.disabled = false; input.focus(); }
   }
 
   function handle(d) {
+    if (!d) return;
     state.tree_id = d.tree_id;
     state.node_id = d.node_id;
     if (d.requires_human) {
