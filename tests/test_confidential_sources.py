@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import stat
+import sys
 import zipfile
 from pathlib import Path
 
@@ -24,6 +25,14 @@ from app.services.confidential_sources import (
     verify_manifest_entry,
 )
 from app.services.source_manifest import create_local_pdf_manifest
+
+# These checks rely on POSIX file-mode semantics (chmod 0o600 / 0o700 source
+# roots) and on creating symlinks, neither of which Windows enforces the same
+# way. They still run on Linux and in CI, where the security guarantees matter.
+_posix_only = pytest.mark.skipif(
+    sys.platform == "win32",
+    reason="POSIX file-mode / symlink semantics not enforced on Windows",
+)
 
 
 class SyntheticLocalExtractor:
@@ -47,6 +56,7 @@ def manifest_entry(filename: str, digest: str) -> SourceManifestEntry:
     )
 
 
+@_posix_only
 def test_manifest_hash_verification_succeeds_without_returning_content(tmp_path: Path) -> None:
     source = tmp_path / "synthetic.pdf"
     source.write_bytes(b"synthetic non-personal bytes")
@@ -60,6 +70,7 @@ def test_manifest_hash_verification_succeeds_without_returning_content(tmp_path:
     assert "synthetic non-personal bytes" not in repr(result)
 
 
+@_posix_only
 def test_manifest_hash_mismatch_fails_with_source_id_only(tmp_path: Path) -> None:
     source = tmp_path / "synthetic.pdf"
     source.write_bytes(b"synthetic bytes")
@@ -76,6 +87,7 @@ def test_manifest_rejects_nonlocal_filenames(filename: str) -> None:
         manifest_entry(filename, "0" * 64)
 
 
+@_posix_only
 def test_manifest_rejects_symlink(tmp_path: Path) -> None:
     target = tmp_path / "target.pdf"
     target.write_bytes(b"synthetic")
@@ -177,6 +189,7 @@ def test_local_extractor_receives_offline_policy(tmp_path: Path) -> None:
     assert result == "privacy-safe synthetic text"
 
 
+@_posix_only
 def test_local_pdf_manifest_is_mode_600_and_contains_hashes_only(tmp_path: Path) -> None:
     source = tmp_path / "synthetic.pdf"
     source.write_bytes(b"privacy-safe synthetic bytes")

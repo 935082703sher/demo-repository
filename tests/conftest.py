@@ -5,7 +5,16 @@ from collections.abc import Iterator
 import pytest
 from fastapi.testclient import TestClient
 
+from app.core.config import Settings, get_settings
 from app.main import create_app
+
+# A developer's local .env (see README) must never leak into the test suite.
+# Tests construct Settings(...) with explicit values and rely on those init
+# arguments taking effect; with fields that use validation_alias, a loaded
+# .env otherwise overrides them. Disable dotenv loading for the whole session
+# and drop any cached settings built before this ran.
+Settings.model_config["env_file"] = None
+get_settings.cache_clear()
 
 
 @pytest.fixture
