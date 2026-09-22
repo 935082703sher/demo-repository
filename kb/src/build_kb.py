@@ -17,6 +17,7 @@ from faq_data import FAQ                     # noqa: E402
 from legal_data import LAW, REGULATIONS      # noqa: E402
 from mask import find_leaks                  # noqa: E402
 from normalize import detect_lang, normalize  # noqa: E402
+from vmq778_data import VMQ778               # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "out"
@@ -96,6 +97,23 @@ def build():
             text=r["text"],
             legal_refs=[r["ref"]],
             tags=[],
+        ))
+
+    # --- 2-qatlam (davomi): VMQ 778-son muhim qoidalari (authority 2) --------
+    for r in VMQ778:
+        rows.append(base(
+            id=rid("reg778", r["title"]),
+            doc_id="VMQ 778-son",
+            source_type="nizom",
+            source_title="VMQ 778-son, 17.09.2019",
+            title=r["title"],
+            authority=2,
+            domain=r.get("domain", "imei"),
+            case_type=r.get("case_type", "royxatdan_otkazish"),
+            outcome=None,
+            text=r["text"],
+            legal_refs=["VMQ 778-son"],
+            tags=r.get("tags", []),
         ))
 
     # --- 3-qatlam: FAQ (authority 3) -----------------------------------------
