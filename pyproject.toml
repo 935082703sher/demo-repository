@@ -50,3 +50,11 @@ plugins = ["pydantic.mypy"]
 [[tool.mypy.overrides]]
 module = ["uvicorn.*"]
 ignore_missing_imports = true
+
+# The kb/ pipeline is a separate, self-contained package (its own entry points
+# and scripts); it is not part of the strictly typed application surface.
+[[tool.mypy.overrides]]
+module = ["kb.*"]
+ignore_missing_imports = true
+ignore_errors = true
+follow_imports = "skip"
