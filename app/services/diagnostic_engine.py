@@ -97,6 +97,31 @@ class DiagnosticEngine:
                 best, best_score = tree, score
         return best if best_score > 0 else None
 
+    def map_answer(self, tree_id: str, node_id: str, message: str) -> str | None:
+        """Map a free-text reply to one of the node's option values.
+
+        Deterministic keyword overlap against every option's labels (uz/ru/en)
+        and its value; returns the best match or None when nothing overlaps.
+        """
+        node = self.get_node(tree_id, node_id)
+        if node is None:
+            return None
+        text = _normalize(message).strip()
+        terms = set(_TOKEN.findall(text))
+        for option in node.options:
+            if option.value == text:
+                return option.value
+        best: str | None = None
+        best_score = 0
+        for option in node.options:
+            option_terms: set[str] = set()
+            for label in (option.label.uz, option.label.ru, option.label.en or "", option.value):
+                option_terms |= set(_TOKEN.findall(_normalize(label)))
+            score = len(terms & option_terms)
+            if score > best_score:
+                best, best_score = option.value, score
+        return best if best_score > 0 else None
+
     def answer(
         self, tree_id: str, node_id: str, value: str
     ) -> tuple[DiagnosticNode | None, ResolutionCard | None]:

@@ -9,13 +9,17 @@ answer. When nothing is retrieved it escalates to a human without calling the LL
 
 from __future__ import annotations
 
+from typing import cast
+
 from fastapi import APIRouter, Request
 from pydantic import BaseModel, Field
 
+from app.domain.diagnostics import DecisionTree, DiagnosticNode, ResolutionCard
 from app.domain.enums import Category, Language
 from app.domain.schemas import LLMRequest
 from app.providers.base import LLMProvider
 from app.providers.errors import ProviderError
+from app.services.diagnostic_engine import DiagnosticEngine
 from app.services.kb_retriever import (
     RetrievedChunk,
     build_system_prompt,
@@ -197,3 +201,186 @@ async def assistant_answer(payload: AnswerRequest, request: Request) -> AnswerRe
         input_tokens=result.input_tokens,
         output_tokens=result.output_tokens,
     )
+
+
+# --- Conversational orchestration: free text -> tree -> questions -> answer ---
+
+_LANGUAGE = {"uz": Language.UZ, "ru": Language.RU, "en": Language.EN}
+_CATEGORY = {"imei": Category.IMEI, "mnp": Category.MNP}
+_NO_TREE_REPLY = {
+    "uz": "Kechirasiz, bu murojaatni IMEI yoki MNP bo'yicha aniqlay olmadim. "
+    "Iltimos, muammoni biroz batafsilroq yozing yoki operatorga ulanishni so'rang.",
+    "ru": "Извините, не удалось отнести обращение к IMEI или MNP. Опишите проблему "
+    "подробнее или запросите оператора.",
+    "en": "Sorry, I could not map this to IMEI or MNP. Please describe the problem in "
+    "more detail or ask for an operator.",
+}
+_CLARIFY_REPLY = {
+    "uz": "Tushunmadim. Iltimos, quyidagi variantlardan birini tanlang:",
+    "ru": "Не понял. Пожалуйста, выберите один из вариантов ниже:",
+    "en": "I did not understand. Please choose one of the options below:",
+}
+
+
+class ConverseRequest(BaseModel):
+    """One turn of a diagnostic conversation."""
+
+    message: str = Field(min_length=1, max_length=4000)
+    tree_id: str | None = None
+    node_id: str | None = None
+    language: str = Field(default="uz", pattern="^(uz|ru|en)$")
+
+
+class ConverseOption(BaseModel):
+    value: str
+    label: str
+
+
+class ConverseSource(BaseModel):
+    doc_id: str
+    title: str
+    authority: int
+
+
+class ConverseResponse(BaseModel):
+    """Next question or the final grounded resolution."""
+
+    tree_id: str | None
+    node_id: str | None
+    reply: str
+    options: list[ConverseOption]
+    done: bool
+    card_id: str | None
+    sources: list[ConverseSource]
+    requires_human: bool
+    reason: str | None
+
+
+def _diagnostic_engine(request: Request) -> DiagnosticEngine:
+    return cast(DiagnosticEngine, request.app.state.diagnostic_engine)
+
+
+def _question(tree_id: str, node: DiagnosticNode, lang: str, prefix: str = "") -> ConverseResponse:
+    reply = f"{prefix} {node.question.get(lang)}".strip() if prefix else node.question.get(lang)
+    return ConverseResponse(
+        tree_id=tree_id,
+        node_id=node.id,
+        reply=reply,
+        options=[ConverseOption(value=o.value, label=o.label.get(lang)) for o in node.options],
+        done=False,
+        card_id=None,
+        sources=[],
+        requires_human=False,
+        reason=None,
+    )
+
+
+def _handoff(reason: str, lang: str) -> ConverseResponse:
+    return ConverseResponse(
+        tree_id=None,
+        node_id=None,
+        reply=_NO_TREE_REPLY.get(lang, _NO_TREE_REPLY["uz"]),
+        options=[],
+        done=False,
+        card_id=None,
+        sources=[],
+        requires_human=True,
+        reason=reason,
+    )
+
+
+def _card_context(card: ResolutionCard, lang: str) -> str:
+    lines = [card.probable_cause.get(lang), "", "Qadamlar:"]
+    lines += [f"{i}. {step.get(lang)}" for i, step in enumerate(card.steps, 1)]
+    if card.documents:
+        lines.append("Kerakli hujjatlar: " + ", ".join(d.get(lang) for d in card.documents))
+    if card.where_to_apply:
+        lines.append("Qayerga murojaat: " + card.where_to_apply.get(lang))
+    if card.official_url:
+        lines.append("Rasmiy manzil: " + card.official_url)
+    if card.contact:
+        lines.append("Kontakt: " + card.contact)
+    if card.escalate_when:
+        lines.append("Operatorga yo'naltirish: " + card.escalate_when.get(lang))
+    return "\n".join(lines)
+
+
+async def _resolve(
+    tree: DecisionTree, card: ResolutionCard, message: str, lang: str, provider: LLMProvider
+) -> ConverseResponse:
+    retriever = get_retriever()
+    facts = retriever.sources_by_doc_ids(card.kb_refs)
+    card_context = _card_context(card, lang)
+    passages = [card_context] + [fact.text for fact in facts]
+    source_ids = [f"yechim-kartasi:{card.id}"] + [fact.doc_id for fact in facts]
+
+    reply = card_context  # deterministic, grounded fallback
+    try:
+        result = await provider.generate(
+            LLMRequest(
+                language=_LANGUAGE[lang],
+                question=message,
+                category=_CATEGORY.get(tree.domain, Category.OTHER),
+                source_ids=source_ids,
+                passages=passages,
+            )
+        )
+        reply = result.text
+    except ProviderError:
+        reply = card_context
+
+    sources = [
+        ConverseSource(
+            doc_id=fact.doc_id,
+            title=fact.title or fact.source_title,
+            authority=fact.authority,
+        )
+        for fact in facts
+    ]
+    return ConverseResponse(
+        tree_id=tree.id,
+        node_id=None,
+        reply=reply,
+        options=[],
+        done=True,
+        card_id=card.id,
+        sources=sources,
+        requires_human=False,
+        reason=None,
+    )
+
+
+@router.post("/diagnose", response_model=ConverseResponse)
+async def assistant_diagnose(payload: ConverseRequest, request: Request) -> ConverseResponse:
+    """Drive one diagnostic turn: pick a tree, ask a question, or resolve.
+
+    On the first turn the free-text problem is matched to a decision tree. On
+    later turns the free-text answer is mapped to the current question's options;
+    when a leaf is reached the resolution card is turned into a grounded answer by
+    the configured provider (with a deterministic fallback).
+    """
+    engine = _diagnostic_engine(request)
+    provider = cast(LLMProvider, request.app.state.provider)
+    lang = payload.language
+
+    if payload.tree_id and payload.node_id:
+        tree = engine.get_tree(payload.tree_id)
+        node = engine.get_node(payload.tree_id, payload.node_id)
+        if tree is None or node is None:
+            return _handoff("unknown_state", lang)
+        value = engine.map_answer(payload.tree_id, payload.node_id, payload.message)
+        if value is None:
+            return _question(payload.tree_id, node, lang, prefix=_CLARIFY_REPLY[lang])
+        next_node, card = engine.answer(payload.tree_id, payload.node_id, value)
+        if next_node is not None:
+            return _question(payload.tree_id, next_node, lang)
+        if card is not None:
+            return await _resolve(tree, card, payload.message, lang, provider)
+        return _handoff("invalid_answer", lang)
+
+    tree = engine.match_tree(payload.message)
+    if tree is None:
+        return _handoff("no_matching_tree", lang)
+    root = engine.get_node(tree.id, tree.root)
+    assert root is not None  # integrity-checked at load
+    return _question(tree.id, root, lang)

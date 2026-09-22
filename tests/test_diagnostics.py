@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 from collections.abc import Iterator
 from pathlib import Path
+from typing import Any
 
 import pytest
 from fastapi.testclient import TestClient
@@ -121,3 +122,58 @@ def test_step_no_match_escalates(corpus_client: TestClient) -> None:
     ).json()
     assert body["requires_human"] is True
     assert body["message"] == "no_matching_tree"
+
+
+def _diagnose(client: TestClient, **body: object) -> dict[str, Any]:
+    result: dict[str, Any] = client.post("/assistant/diagnose", json=body).json()
+    return result
+
+
+def test_diagnose_starts_with_matched_tree(corpus_client: TestClient) -> None:
+    body = _diagnose(corpus_client, message="IMEI royxatdan otmayapti")
+    assert body["tree_id"] == "imei-royxatdan_otkazish"
+    assert body["node_id"] == "source"
+    assert body["done"] is False
+    assert body["options"]
+
+
+def test_diagnose_maps_free_text_answer_to_next_question(corpus_client: TestClient) -> None:
+    body = _diagnose(
+        corpus_client,
+        message="chetdan sotib oldim",
+        tree_id="imei-royxatdan_otkazish",
+        node_id="source",
+    )
+    assert body["node_id"] == "customs"
+    assert body["done"] is False
+
+
+def test_diagnose_resolves_to_grounded_card(corpus_client: TestClient) -> None:
+    body = _diagnose(
+        corpus_client,
+        message="ha, me'yordan ortiq olib keldim",
+        tree_id="imei-royxatdan_otkazish",
+        node_id="customs",
+    )
+    assert body["done"] is True
+    assert body["card_id"] == "imei-customs"
+    assert body["reply"], "yechim matni bo'sh"
+    assert any(s["doc_id"] == "faq-mnp-imei" for s in body["sources"])
+
+
+def test_diagnose_clarifies_unmapped_answer(corpus_client: TestClient) -> None:
+    body = _diagnose(
+        corpus_client,
+        message="zzzqqq bilmadim",
+        tree_id="imei-royxatdan_otkazish",
+        node_id="source",
+    )
+    assert body["requires_human"] is False
+    assert body["node_id"] == "source"
+    assert body["options"]
+
+
+def test_diagnose_no_match_escalates(corpus_client: TestClient) -> None:
+    body = _diagnose(corpus_client, message="bugungi ob-havo qanday")
+    assert body["requires_human"] is True
+    assert body["reason"] == "no_matching_tree"
