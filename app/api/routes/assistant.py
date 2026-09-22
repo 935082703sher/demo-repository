@@ -251,6 +251,9 @@ class ConverseResponse(BaseModel):
     options: list[ConverseOption]
     done: bool
     card_id: str | None
+    card_title: str | None = None
+    official_url: str | None = None
+    contact: str | None = None
     sources: list[ConverseSource]
     requires_human: bool
     reason: str | None
@@ -344,6 +347,9 @@ async def _resolve(
         options=[],
         done=True,
         card_id=card.id,
+        card_title=card.title.get(lang),
+        official_url=card.official_url,
+        contact=card.contact,
         sources=sources,
         requires_human=False,
         reason=None,

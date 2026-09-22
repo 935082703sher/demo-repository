@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>RTMC AI Assistant — Diagnostika</title>
+<style>
+  :root {
+    color-scheme: light dark;
+    --bg: #f5f6f8; --panel: #ffffff; --ink: #1c1e21; --muted: #6b7280;
+    --line: #e5e7eb; --brand: #1f6feb; --brand-ink: #ffffff;
+    --ai: #eef2ff; --user: #1f6feb; --card: #f0fdf4; --card-line: #bbf7d0;
+    --warn-bg: #fff8e1; --warn-line: #f0d98c;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0f1115; --panel: #171a21; --ink: #e6e8eb; --muted: #9aa4b2;
+      --line: #262b34; --ai: #1c2333; --card: #10251a; --card-line: #1f5c3a;
+      --warn-bg: #2a2410; --warn-line: #5c4d1f;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    margin: 0; background: var(--bg); color: var(--ink);
+    display: flex; flex-direction: column; height: 100dvh;
+  }
+  header {
+    background: var(--panel); border-bottom: 1px solid var(--line);
+    padding: 12px 16px; display: flex; align-items: center; gap: 12px;
+  }
+  header h1 { font-size: 1rem; margin: 0; flex: 1; }
+  header .sub { color: var(--muted); font-size: 0.72rem; font-weight: 400; }
+  select, .reset {
+    font: inherit; font-size: 0.85rem; padding: 6px 10px; border-radius: 8px;
+    border: 1px solid var(--line); background: var(--panel); color: var(--ink); cursor: pointer;
+  }
+  main {
+    flex: 1; overflow-y: auto; padding: 16px;
+    max-width: 760px; width: 100%; margin: 0 auto;
+  }
+  .banner {
+    background: var(--warn-bg); border: 1px solid var(--warn-line); border-radius: 8px;
+    padding: 8px 12px; font-size: 0.75rem; margin-bottom: 14px; color: var(--ink);
+  }
+  .row { display: flex; margin: 8px 0; }
+  .row.user { justify-content: flex-end; }
+  .bubble {
+    max-width: 82%; padding: 10px 13px; border-radius: 14px; line-height: 1.45;
+    font-size: 0.92rem; white-space: pre-wrap; word-wrap: break-word;
+  }
+  .row.ai .bubble { background: var(--ai); border-bottom-left-radius: 4px; }
+  .row.user .bubble { background: var(--user); color: var(--brand-ink); border-bottom-right-radius: 4px; }
+  .options { display: flex; flex-wrap: wrap; gap: 8px; margin: 4px 0 10px 0; }
+  .opt {
+    font: inherit; font-size: 0.86rem; padding: 8px 12px; border-radius: 999px;
+    border: 1px solid var(--brand); background: transparent; color: var(--brand); cursor: pointer;
+  }
+  .opt:hover { background: var(--brand); color: var(--brand-ink); }
+  .card {
+    background: var(--card); border: 1px solid var(--card-line); border-radius: 12px;
+    padding: 14px; margin: 8px 0; font-size: 0.9rem;
+  }
+  .card h3 { margin: 0 0 6px 0; font-size: 0.98rem; }
+  .card .cause { color: var(--muted); margin-bottom: 10px; }
+  .card ol { margin: 6px 0; padding-left: 20px; }
+  .card li { margin: 4px 0; }
+  .card .meta { margin-top: 10px; font-size: 0.82rem; }
+  .card .meta div { margin: 3px 0; }
+  .card a { color: var(--brand); }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+  .chip { font-size: 0.72rem; padding: 3px 8px; border-radius: 6px; border: 1px solid var(--line); color: var(--muted); }
+  .escalate { color: #b45309; }
+  footer {
+    background: var(--panel); border-top: 1px solid var(--line); padding: 10px 12px;
+  }
+  .inputbar { display: flex; gap: 8px; max-width: 760px; margin: 0 auto; }
+  #msg {
+    flex: 1; font: inherit; font-size: 0.95rem; padding: 11px 14px;
+    border-radius: 12px; border: 1px solid var(--line); background: var(--bg); color: var(--ink);
+  }
+  #send {
+    font: inherit; padding: 0 18px; border-radius: 12px; border: none;
+    background: var(--brand); color: var(--brand-ink); cursor: pointer; font-weight: 600;
+  }
+  #send:disabled { opacity: 0.5; cursor: default; }
+  .typing { color: var(--muted); font-size: 0.85rem; font-style: italic; }
+</style>
+</head>
+<body>
+  <header>
+    <div style="flex:1">
+      <h1>RTMC AI Assistant <span class="sub">— IMEI / MNP diagnostika (demo)</span></h1>
+    </div>
+    <select id="lang" aria-label="Til">
+      <option value="uz">O‘zbekcha</option>
+      <option value="ru">Русский</option>
+    </select>
+    <button class="reset" id="reset">Qayta</button>
+  </header>
+
+  <main id="log">
+    <div class="banner" id="banner">
+      Demo. Rasmiy murojaatni ro‘yxatga olmaydi va shaxsiy ma’lumot so‘ramaydi.
+    </div>
+  </main>
+
+  <footer>
+    <div class="inputbar">
+      <input id="msg" autocomplete="off" placeholder="Muammoingizni yozing… (masalan: IMEI ro‘yxatdan o‘tmayapti)" />
+      <button id="send">Yuborish</button>
+    </div>
+  </footer>
+
+<script>
+(() => {
+  "use strict";
+  const log = document.getElementById("log");
+  const input = document.getElementById("msg");
+  const sendBtn = document.getElementById("send");
+  const langSel = document.getElementById("lang");
+  const resetBtn = document.getElementById("reset");
+
+  const state = { tree_id: null, node_id: null, lang: "uz" };
+
+  const T = {
+    uz: { welcome: "Assalomu alaykum! IMEI yoki MNP bo‘yicha muammoingizni yozing. Masalan: «IMEI ro‘yxatdan o‘tmayapti», «telefonim bloklandi», «raqamni boshqa operatorga ko‘chirmoqchiman».",
+          placeholder: "Muammoingizni yozing…", send: "Yuborish", reset: "Qayta",
+          cause: "Ehtimoliy sabab", steps: "Nima qilish kerak", docs: "Kerakli hujjatlar",
+          where: "Qayerga murojaat", url: "Rasmiy manzil", contact: "Kontakt",
+          escalate: "Operatorga yo‘naltirish", sources: "Manbalar", human: "Operatorga ulanish tavsiya etiladi.",
+          typing: "yozmoqda…" },
+    ru: { welcome: "Здравствуйте! Опишите проблему по IMEI или MNP. Например: «IMEI не регистрируется», «телефон заблокирован», «хочу перенести номер к другому оператору».",
+          placeholder: "Опишите проблему…", send: "Отправить", reset: "Заново",
+          cause: "Вероятная причина", steps: "Что делать", docs: "Нужные документы",
+          where: "Куда обратиться", url: "Официальный адрес", contact: "Контакт",
+          escalate: "Передача оператору", sources: "Источники", human: "Рекомендуется связаться с оператором.",
+          typing: "печатает…" }
+  };
+
+  function tr() { return T[state.lang]; }
+
+  function scroll() { log.scrollTop = log.scrollHeight; }
+
+  function bubble(role, text) {
+    const row = document.createElement("div");
+    row.className = "row " + role;
+    const b = document.createElement("div");
+    b.className = "bubble";
+    b.textContent = text;
+    row.appendChild(b);
+    log.appendChild(row);
+    scroll();
+    return row;
+  }
+
+  function renderOptions(options) {
+    if (!options || !options.length) return;
+    const wrap = document.createElement("div");
+    wrap.className = "options";
+    for (const o of options) {
+      const btn = document.createElement("button");
+      btn.className = "opt";
+      btn.textContent = o.label;
+      btn.onclick = () => { disableOptions(wrap); sendOption(o.value, o.label); };
+      wrap.appendChild(btn);
+    }
+    log.appendChild(wrap);
+    scroll();
+  }
+
+  function disableOptions(wrap) {
+    wrap.querySelectorAll("button").forEach(b => { b.disabled = true; b.style.opacity = "0.5"; });
+  }
+
+  function esc(s) { const d = document.createElement("div"); d.textContent = s == null ? "" : s; return d.innerHTML; }
+
+  function renderCard(d) {
+    // The natural-language reply first, then the structured card.
+    if (d.reply) bubble("ai", d.reply);
+    const t = tr();
+    const c = document.createElement("div");
+    c.className = "card";
+    let html = "";
+    if (d.card_title) html += `<h3>${esc(d.card_title)}</h3>`;
+    let meta = "";
+    if (d.official_url) meta += `<div>🔗 <a href="${esc(d.official_url)}" target="_blank" rel="noopener">${esc(d.official_url)}</a></div>`;
+    if (d.contact) meta += `<div>📞 ${t.contact}: ${esc(d.contact)}</div>`;
+    if (meta) html += `<div class="meta">${meta}</div>`;
+    if (d.sources && d.sources.length) {
+      html += `<div class="chips"><span class="chip">${esc(t.sources)}:</span>` +
+        d.sources.map(s => `<span class="chip">${esc(s.title || s.doc_id)}</span>`).join("") + `</div>`;
+    }
+    c.innerHTML = html;
+    log.appendChild(c);
+    scroll();
+  }
+
+  function typing(on) {
+    let el = document.getElementById("typing");
+    if (on) {
+      if (!el) { el = document.createElement("div"); el.id = "typing"; el.className = "typing"; el.textContent = tr().typing; log.appendChild(el); scroll(); }
+    } else if (el) { el.remove(); }
+  }
+
+  async function post(message) {
+    typing(true); sendBtn.disabled = true;
+    try {
+      const res = await fetch("/assistant/diagnose", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message, tree_id: state.tree_id, node_id: state.node_id, language: state.lang })
+      });
+      return await res.json();
+    } finally { typing(false); sendBtn.disabled = false; input.focus(); }
+  }
+
+  function handle(d) {
+    state.tree_id = d.tree_id;
+    state.node_id = d.node_id;
+    if (d.requires_human) {
+      if (d.reply) bubble("ai", d.reply);
+      bubble("ai", tr().human);
+      state.tree_id = null; state.node_id = null;
+      return;
+    }
+    if (d.done) {
+      renderCard(d);
+      state.tree_id = null; state.node_id = null;  // ready for a new problem
+      return;
+    }
+    if (d.reply) bubble("ai", d.reply);
+    renderOptions(d.options);
+  }
+
+  async function sendText() {
+    const text = input.value.trim();
+    if (!text) return;
+    input.value = "";
+    bubble("user", text);
+    handle(await post(text));
+  }
+
+  async function sendOption(value, label) {
+    bubble("user", label);
+    handle(await post(value));
+  }
+
+  function reset() {
+    state.tree_id = null; state.node_id = null;
+    log.querySelectorAll(".row, .options, .card, #typing").forEach(e => e.remove());
+    bubble("ai", tr().welcome);
+  }
+
+  function applyLang() {
+    state.lang = langSel.value;
+    input.placeholder = tr().placeholder;
+    sendBtn.textContent = tr().send;
+    resetBtn.textContent = tr().reset;
+    document.getElementById("banner").textContent = state.lang === "ru"
+      ? "Демо. Не регистрирует официальное обращение и не запрашивает личные данные."
+      : "Demo. Rasmiy murojaatni ro‘yxatga olmaydi va shaxsiy ma’lumot so‘ramaydi.";
+  }
+
+  sendBtn.onclick = sendText;
+  input.onkeydown = (e) => { if (e.key === "Enter") sendText(); };
+  resetBtn.onclick = reset;
+  langSel.onchange = () => { applyLang(); reset(); };
+
+  applyLang();
+  bubble("ai", tr().welcome);
+  input.focus();
+})();
+</script>
+</body>
+</html>
