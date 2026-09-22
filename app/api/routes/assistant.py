@@ -292,6 +292,31 @@ def _handoff(reason: str, lang: str) -> ConverseResponse:
     )
 
 
+_ROUTE_REPLY = {
+    "uz": "Muammoingizni aniqlashtiraylik. Quyidagilardan mos bo'lganini tanlang:",
+    "ru": "Уточним вашу проблему. Выберите подходящий пункт:",
+    "en": "Let's narrow it down. Please pick the closest option:",
+}
+
+
+def _routing_menu(engine: DiagnosticEngine, lang: str) -> ConverseResponse:
+    """Offer the available trees as a menu when free text did not match one."""
+    return ConverseResponse(
+        tree_id=None,
+        node_id=None,
+        reply=_ROUTE_REPLY.get(lang, _ROUTE_REPLY["uz"]),
+        options=[
+            ConverseOption(value=tree.id, label=tree.title.get(lang))
+            for tree in engine.trees()
+        ],
+        done=False,
+        card_id=None,
+        sources=[],
+        requires_human=False,
+        reason="clarify",
+    )
+
+
 def _card_context(card: ResolutionCard, lang: str) -> str:
     lines = [card.probable_cause.get(lang), "", "Qadamlar:"]
     lines += [f"{i}. {step.get(lang)}" for i, step in enumerate(card.steps, 1)]
@@ -384,9 +409,15 @@ async def assistant_diagnose(payload: ConverseRequest, request: Request) -> Conv
             return await _resolve(tree, card, payload.message, lang, provider)
         return _handoff("invalid_answer", lang)
 
-    tree = engine.match_tree(payload.message)
+    # A menu selection sends the chosen tree id as the message; an explicit
+    # tree_id (without a node) also starts that tree. Otherwise match free text.
+    tree = engine.get_tree(payload.message.strip())
+    if tree is None and payload.tree_id:
+        tree = engine.get_tree(payload.tree_id)
     if tree is None:
-        return _handoff("no_matching_tree", lang)
+        tree = engine.match_tree(payload.message)
+    if tree is None:
+        return _routing_menu(engine, lang)
     root = engine.get_node(tree.id, tree.root)
     assert root is not None  # integrity-checked at load
     return _question(tree.id, root, lang)

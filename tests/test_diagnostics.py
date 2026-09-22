@@ -185,10 +185,19 @@ def test_diagnose_clarifies_unmapped_answer(corpus_client: TestClient) -> None:
     assert body["options"]
 
 
-def test_diagnose_no_match_escalates(corpus_client: TestClient) -> None:
-    body = _diagnose(corpus_client, message="bugungi ob-havo qanday")
-    assert body["requires_human"] is True
-    assert body["reason"] == "no_matching_tree"
+def test_diagnose_vague_problem_offers_routing_menu(corpus_client: TestClient) -> None:
+    body = _diagnose(corpus_client, message="telefonim ishlamayapti")
+    assert body["requires_human"] is False
+    assert body["reason"] == "clarify"
+    assert len(body["options"]) == 5  # every tree offered as a choice
+    assert all(o["value"].startswith(("imei-", "mnp-")) for o in body["options"])
+
+
+def test_diagnose_menu_selection_starts_tree(corpus_client: TestClient) -> None:
+    body = _diagnose(corpus_client, message="imei-blokdan_chiqarish")
+    assert body["tree_id"] == "imei-blokdan_chiqarish"
+    assert body["node_id"] == "cause"
+    assert body["done"] is False
 
 
 @pytest.mark.parametrize(
