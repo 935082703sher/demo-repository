@@ -47,7 +47,13 @@ def _engine() -> DiagnosticEngine:
 
 def test_engine_loads_and_validates() -> None:
     engine = _engine()  # raises DiagnosticError on any broken reference
-    assert {t.id for t in engine.trees()} == {"imei-royxatdan_otkazish", "mnp-mnp_ariza_rad"}
+    assert {t.id for t in engine.trees()} == {
+        "imei-royxatdan_otkazish",
+        "mnp-mnp_ariza_rad",
+        "imei-blokdan_chiqarish",
+        "imei-yoqotilgan_ogirlangan",
+        "mnp-mnp_tartib",
+    }
 
 
 def test_match_tree_by_free_text() -> None:
@@ -87,9 +93,15 @@ def corpus_client(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Iterator[T
     kb_retriever.get_retriever.cache_clear()
 
 
-def test_trees_endpoint_lists_two(corpus_client: TestClient) -> None:
+def test_trees_endpoint_lists_all(corpus_client: TestClient) -> None:
     body = corpus_client.get("/assistant/diagnostics/trees").json()
-    assert {t["case_type"] for t in body} == {"royxatdan_otkazish", "mnp_ariza_rad"}
+    assert {
+        "royxatdan_otkazish",
+        "mnp_ariza_rad",
+        "blokdan_chiqarish",
+        "yoqotilgan_ogirlangan",
+        "mnp_tartib",
+    } <= {t["case_type"] for t in body}
 
 
 def test_step_start_returns_root_question(corpus_client: TestClient) -> None:
@@ -177,3 +189,26 @@ def test_diagnose_no_match_escalates(corpus_client: TestClient) -> None:
     body = _diagnose(corpus_client, message="bugungi ob-havo qanday")
     assert body["requires_human"] is True
     assert body["reason"] == "no_matching_tree"
+
+
+@pytest.mark.parametrize(
+    ("message", "expected_tree"),
+    [
+        ("telefonim bloklandi nima qilay", "imei-blokdan_chiqarish"),
+        ("разблокировать телефон", "imei-blokdan_chiqarish"),
+        ("telefonimni o'g'irlab ketishdi", "imei-yoqotilgan_ogirlangan"),
+        ("украли телефон", "imei-yoqotilgan_ogirlangan"),
+        ("raqamni boshqa operatorga ko'chirmoqchiman", "mnp-mnp_tartib"),
+    ],
+)
+def test_new_trees_match_uz_and_ru(message: str, expected_tree: str) -> None:
+    matched = _engine().match_tree(message)
+    assert matched is not None and matched.id == expected_tree
+
+
+def test_lost_device_flow_reaches_report_card() -> None:
+    engine = _engine()
+    node, card = engine.answer("imei-yoqotilgan_ogirlangan", "what_happened", "stolen")
+    assert node is not None and node.id == "know_imei" and card is None
+    node, card = engine.answer("imei-yoqotilgan_ogirlangan", "know_imei", "yes")
+    assert card is not None and card.id == "imei-report-lost"

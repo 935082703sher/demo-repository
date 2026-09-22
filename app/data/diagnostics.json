@@ -4,8 +4,22 @@
       "id": "imei-royxatdan_otkazish",
       "domain": "imei",
       "case_type": "royxatdan_otkazish",
-      "title": {"uz": "IMEI ro'yxatdan o'tmayapti", "ru": "IMEI не регистрируется"},
-      "keywords": ["imei", "royxatdan", "royxatga", "registratsiya", "otmayapti", "регистрация"],
+      "title": {
+        "uz": "IMEI ro'yxatdan o'tmayapti",
+        "ru": "IMEI не регистрируется"
+      },
+      "keywords": [
+        "imei",
+        "royxatdan",
+        "royxatga",
+        "registratsiya",
+        "otmayapti",
+        "регистрация",
+        "регистрация",
+        "не регистрируется",
+        "регистрация imei",
+        "imei ne registriruetsya"
+      ],
       "root": "source",
       "nodes": [
         {
@@ -15,9 +29,30 @@
             "ru": "Откуда у вас устройство?"
           },
           "options": [
-            {"value": "uzbekistan", "label": {"uz": "O'zbekistondan (do'kon/sotuvchi)", "ru": "Купил в Узбекистане (магазин)"}, "next_node": "retailer"},
-            {"value": "abroad", "label": {"uz": "Chetdan o'zim olib keldim", "ru": "Привёз из-за границы сам"}, "next_node": "customs"},
-            {"value": "post", "label": {"uz": "Pochta/kuryer orqali keldi", "ru": "Пришло почтой/курьером"}, "card": "imei-post"}
+            {
+              "value": "uzbekistan",
+              "label": {
+                "uz": "O'zbekistondan (do'kon/sotuvchi)",
+                "ru": "Купил в Узбекистане (магазин)"
+              },
+              "next_node": "retailer"
+            },
+            {
+              "value": "abroad",
+              "label": {
+                "uz": "Chetdan o'zim olib keldim",
+                "ru": "Привёз из-за границы сам"
+              },
+              "next_node": "customs"
+            },
+            {
+              "value": "post",
+              "label": {
+                "uz": "Pochta/kuryer orqali keldi",
+                "ru": "Пришло почтой/курьером"
+              },
+              "card": "imei-post"
+            }
           ]
         },
         {
@@ -27,8 +62,22 @@
             "ru": "Продавец зарегистрировал IMEI?"
           },
           "options": [
-            {"value": "no", "label": {"uz": "Yo'q, o'tkazib bermagan", "ru": "Нет, не зарегистрировал"}, "card": "imei-retailer"},
-            {"value": "error", "label": {"uz": "Ha, lekin xato chiqyapti", "ru": "Да, но выдаёт ошибку"}, "next_node": "error"}
+            {
+              "value": "no",
+              "label": {
+                "uz": "Yo'q, o'tkazib bermagan",
+                "ru": "Нет, не зарегистрировал"
+              },
+              "card": "imei-retailer"
+            },
+            {
+              "value": "error",
+              "label": {
+                "uz": "Ha, lekin xato chiqyapti",
+                "ru": "Да, но выдаёт ошибку"
+              },
+              "next_node": "error"
+            }
           ]
         },
         {
@@ -38,8 +87,22 @@
             "ru": "Ввезли больше беспошлинной нормы (1 устройство в полгода)?"
           },
           "options": [
-            {"value": "yes", "label": {"uz": "Ha, me'yordan ortiq", "ru": "Да, больше нормы"}, "card": "imei-customs"},
-            {"value": "no", "label": {"uz": "Yo'q, me'yor doirasida", "ru": "Нет, в пределах нормы"}, "next_node": "error"}
+            {
+              "value": "yes",
+              "label": {
+                "uz": "Ha, me'yordan ortiq",
+                "ru": "Да, больше нормы"
+              },
+              "card": "imei-customs"
+            },
+            {
+              "value": "no",
+              "label": {
+                "uz": "Yo'q, me'yor doirasida",
+                "ru": "Нет, в пределах нормы"
+              },
+              "next_node": "error"
+            }
           ]
         },
         {
@@ -49,8 +112,22 @@
             "ru": "Что именно происходит при регистрации?"
           },
           "options": [
-            {"value": "clone", "label": {"uz": "IMEI klonlangan/aniqlanmagan deb chiqyapti", "ru": "Пишет: клонированный/неопределённый IMEI"}, "card": "imei-clone"},
-            {"value": "payment", "label": {"uz": "To'lov yoki muddat bilan bog'liq", "ru": "Связано с оплатой или сроком"}, "card": "imei-register"}
+            {
+              "value": "clone",
+              "label": {
+                "uz": "IMEI klonlangan/aniqlanmagan deb chiqyapti",
+                "ru": "Пишет: клонированный/неопределённый IMEI"
+              },
+              "card": "imei-clone"
+            },
+            {
+              "value": "payment",
+              "label": {
+                "uz": "To'lov yoki muddat bilan bog'liq",
+                "ru": "Связано с оплатой или сроком"
+              },
+              "card": "imei-register"
+            }
           ]
         }
       ]
@@ -59,8 +136,24 @@
       "id": "mnp-mnp_ariza_rad",
       "domain": "mnp",
       "case_type": "mnp_ariza_rad",
-      "title": {"uz": "MNP arizasi rad etildi", "ru": "Заявление MNP отклонено"},
-      "keywords": ["mnp", "ariza", "rad", "kochirish", "перенос", "отказ", "otkazildi"],
+      "title": {
+        "uz": "MNP arizasi rad etildi",
+        "ru": "Заявление MNP отклонено"
+      },
+      "keywords": [
+        "mnp",
+        "ariza",
+        "rad",
+        "kochirish",
+        "перенос",
+        "отказ",
+        "otkazildi",
+        "отказ",
+        "отклонено",
+        "перенос",
+        "otkaz",
+        "otklonili"
+      ],
       "root": "reason",
       "nodes": [
         {
@@ -70,11 +163,253 @@
             "ru": "По какой причине отклонили заявление?"
           },
           "options": [
-            {"value": "data", "label": {"uz": "Ma'lumotlar mos kelmadi (FISH/pasport)", "ru": "Данные не совпали (ФИО/паспорт)"}, "card": "mnp-data"},
-            {"value": "debt", "label": {"uz": "Qarzdorlik bor", "ru": "Есть задолженность"}, "card": "mnp-debt"},
-            {"value": "days30", "label": {"uz": "Oxirgi ko'chirishdan 30 kun o'tmagan", "ru": "Не прошло 30 дней с последнего переноса"}, "card": "mnp-30days"},
-            {"value": "blocked", "label": {"uz": "Raqam bloklangan", "ru": "Номер заблокирован"}, "card": "mnp-blocked"},
-            {"value": "unknown", "label": {"uz": "Sababini bilmayman", "ru": "Не знаю причину"}, "card": "mnp-checkreason"}
+            {
+              "value": "data",
+              "label": {
+                "uz": "Ma'lumotlar mos kelmadi (FISH/pasport)",
+                "ru": "Данные не совпали (ФИО/паспорт)"
+              },
+              "card": "mnp-data"
+            },
+            {
+              "value": "debt",
+              "label": {
+                "uz": "Qarzdorlik bor",
+                "ru": "Есть задолженность"
+              },
+              "card": "mnp-debt"
+            },
+            {
+              "value": "days30",
+              "label": {
+                "uz": "Oxirgi ko'chirishdan 30 kun o'tmagan",
+                "ru": "Не прошло 30 дней с последнего переноса"
+              },
+              "card": "mnp-30days"
+            },
+            {
+              "value": "blocked",
+              "label": {
+                "uz": "Raqam bloklangan",
+                "ru": "Номер заблокирован"
+              },
+              "card": "mnp-blocked"
+            },
+            {
+              "value": "unknown",
+              "label": {
+                "uz": "Sababini bilmayman",
+                "ru": "Не знаю причину"
+              },
+              "card": "mnp-checkreason"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "imei-blokdan_chiqarish",
+      "domain": "imei",
+      "case_type": "blokdan_chiqarish",
+      "title": {
+        "uz": "Qurilma bloklangan",
+        "ru": "Устройство заблокировано"
+      },
+      "keywords": [
+        "blok",
+        "bloklangan",
+        "blokdan",
+        "chiqarish",
+        "qora",
+        "разблокировать",
+        "заблокирован",
+        "чёрный список",
+        "razblokirovat",
+        "zablokirovan"
+      ],
+      "root": "cause",
+      "nodes": [
+        {
+          "id": "cause",
+          "question": {
+            "uz": "Qurilma nega bloklangan deb o'ylaysiz?",
+            "ru": "Почему устройство заблокировано, по-вашему?"
+          },
+          "options": [
+            {
+              "value": "not_registered",
+              "label": {
+                "uz": "Ro'yxatdan o'tmagan / tizimda yo'q",
+                "ru": "Не зарегистрировано / нет в системе"
+              },
+              "card": "imei-unblock"
+            },
+            {
+              "value": "clone",
+              "label": {
+                "uz": "Klonlangan / qora ro'yxatda deyilyapti",
+                "ru": "Клон / в чёрном списке"
+              },
+              "card": "imei-clone"
+            },
+            {
+              "value": "lost",
+              "label": {
+                "uz": "Yo'qolgan/o'g'irlangan deb bloklangan",
+                "ru": "Заблокировано как утерянное/краденое"
+              },
+              "card": "imei-lost-blocked"
+            },
+            {
+              "value": "unknown",
+              "label": {
+                "uz": "Sababini bilmayman",
+                "ru": "Не знаю причину"
+              },
+              "card": "imei-check-status"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "imei-yoqotilgan_ogirlangan",
+      "domain": "imei",
+      "case_type": "yoqotilgan_ogirlangan",
+      "title": {
+        "uz": "Qurilma yo'qoldi yoki o'g'irlandi",
+        "ru": "Устройство утеряно или украдено"
+      },
+      "keywords": [
+        "yoqol",
+        "yoqotdim",
+        "yoqotilgan",
+        "ogirlandi",
+        "ogirlab",
+        "потерял",
+        "украли",
+        "кража",
+        "утеря",
+        "poteryal",
+        "ukrali",
+        "kraja"
+      ],
+      "root": "what_happened",
+      "nodes": [
+        {
+          "id": "what_happened",
+          "question": {
+            "uz": "Qurilmangiz bilan nima bo'ldi?",
+            "ru": "Что случилось с устройством?"
+          },
+          "options": [
+            {
+              "value": "lost",
+              "label": {
+                "uz": "Yo'qotdim",
+                "ru": "Потерял"
+              },
+              "next_node": "know_imei"
+            },
+            {
+              "value": "stolen",
+              "label": {
+                "uz": "O'g'irlab ketishdi",
+                "ru": "Украли"
+              },
+              "next_node": "know_imei"
+            }
+          ]
+        },
+        {
+          "id": "know_imei",
+          "question": {
+            "uz": "IMEI raqamini bilasizmi (quti/chek/hujjatda)?",
+            "ru": "Знаете ли вы IMEI (коробка/чек/документы)?"
+          },
+          "options": [
+            {
+              "value": "yes",
+              "label": {
+                "uz": "Ha, bilaman",
+                "ru": "Да, знаю"
+              },
+              "card": "imei-report-lost"
+            },
+            {
+              "value": "no",
+              "label": {
+                "uz": "Yo'q, bilmayman",
+                "ru": "Нет, не знаю"
+              },
+              "card": "imei-find-imei"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mnp-mnp_tartib",
+      "domain": "mnp",
+      "case_type": "mnp_tartib",
+      "title": {
+        "uz": "Raqamni ko'chirish tartibi (MNP)",
+        "ru": "Порядок переноса номера (MNP)"
+      },
+      "keywords": [
+        "mnp",
+        "kochirish",
+        "kochirmoqchi",
+        "operator",
+        "tartib",
+        "перенос",
+        "перенести",
+        "сменить",
+        "оператора",
+        "perenos",
+        "smenit"
+      ],
+      "root": "topic",
+      "nodes": [
+        {
+          "id": "topic",
+          "question": {
+            "uz": "MNP bo'yicha nima qiziqtiradi?",
+            "ru": "Что вас интересует по MNP?"
+          },
+          "options": [
+            {
+              "value": "process",
+              "label": {
+                "uz": "Qanday ko'chiraman (jarayon)",
+                "ru": "Как перенести (процесс)"
+              },
+              "card": "mnp-how"
+            },
+            {
+              "value": "documents",
+              "label": {
+                "uz": "Qanday hujjatlar kerak",
+                "ru": "Какие документы нужны"
+              },
+              "card": "mnp-docs"
+            },
+            {
+              "value": "balance",
+              "label": {
+                "uz": "Balansdagi pul ko'chadimi",
+                "ru": "Переносится ли баланс"
+              },
+              "card": "mnp-balance"
+            },
+            {
+              "value": "again",
+              "label": {
+                "uz": "Eski operatorga qaytish",
+                "ru": "Вернуться к прежнему оператору"
+              },
+              "card": "mnp-30days"
+            }
           ]
         }
       ]
@@ -83,161 +418,736 @@
   "cards": [
     {
       "id": "imei-register",
-      "title": {"uz": "IMEI'ni ro'yxatdan o'tkazish (to'lov va muddat)", "ru": "Регистрация IMEI (оплата и срок)"},
-      "probable_cause": {"uz": "Ro'yxatdan o'tkazish muddati o'tgan yoki to'lov amalga oshirilmagan.", "ru": "Истёк срок регистрации или не внесена оплата."},
+      "title": {
+        "uz": "IMEI'ni ro'yxatdan o'tkazish (to'lov va muddat)",
+        "ru": "Регистрация IMEI (оплата и срок)"
+      },
+      "probable_cause": {
+        "uz": "Ro'yxatdan o'tkazish muddati o'tgan yoki to'lov amalga oshirilmagan.",
+        "ru": "Истёк срок регистрации или не внесена оплата."
+      },
       "steps": [
-        {"uz": "www.uzimei.uz saytida, my.gov.uz portalida yoki UZIMEI operatori ofisida ro'yxatdan o'ting.", "ru": "Зарегистрируйтесь на www.uzimei.uz, портале my.gov.uz или в офисе оператора UZIMEI."},
-        {"uz": "To'lovni Payme/Click/Upay orqali amalga oshiring: 30 kun ichida 82 400 so'm, keyin 103 000 so'm.", "ru": "Оплатите через Payme/Click/Upay: в течение 30 дней 82 400 сум, позже 103 000 сум."},
-        {"uz": "Ro'yxatga olingach qurilmani o'chirib-yoqing va holatni *1170# orqali tekshiring.", "ru": "После регистрации перезагрузите устройство и проверьте статус через *1170#."}
+        {
+          "uz": "www.uzimei.uz saytida, my.gov.uz portalida yoki UZIMEI operatori ofisida ro'yxatdan o'ting.",
+          "ru": "Зарегистрируйтесь на www.uzimei.uz, портале my.gov.uz или в офисе оператора UZIMEI."
+        },
+        {
+          "uz": "To'lovni Payme/Click/Upay orqali amalga oshiring: 30 kun ichida 82 400 so'm, keyin 103 000 so'm.",
+          "ru": "Оплатите через Payme/Click/Upay: в течение 30 дней 82 400 сум, позже 103 000 сум."
+        },
+        {
+          "uz": "Ro'yxatga olingach qurilmani o'chirib-yoqing va holatni *1170# orqali tekshiring.",
+          "ru": "После регистрации перезагрузите устройство и проверьте статус через *1170#."
+        }
       ],
-      "documents": [{"uz": "Shaxsni tasdiqlovchi hujjat (rezident/norezident)", "ru": "Документ, удостоверяющий личность"}],
-      "where_to_apply": {"uz": "UZIMEI tizimi (www.uzimei.uz)", "ru": "Система UZIMEI (www.uzimei.uz)"},
+      "documents": [
+        {
+          "uz": "Shaxsni tasdiqlovchi hujjat (rezident/norezident)",
+          "ru": "Документ, удостоверяющий личность"
+        }
+      ],
+      "where_to_apply": {
+        "uz": "UZIMEI tizimi (www.uzimei.uz)",
+        "ru": "Система UZIMEI (www.uzimei.uz)"
+      },
       "official_url": "https://www.uzimei.uz",
       "contact": "1170",
-      "escalate_when": {"uz": "To'lov o'tgan, lekin holat 24 soatdan keyin ham o'zgarmasa.", "ru": "Если оплата прошла, но статус не меняется более 24 часов."},
-      "kb_refs": ["faq-mnp-imei", "VMQ 778-son"]
+      "escalate_when": {
+        "uz": "To'lov o'tgan, lekin holat 24 soatdan keyin ham o'zgarmasa.",
+        "ru": "Если оплата прошла, но статус не меняется более 24 часов."
+      },
+      "kb_refs": [
+        "faq-mnp-imei",
+        "VMQ 778-son"
+      ]
     },
     {
       "id": "imei-customs",
-      "title": {"uz": "Me'yordan ortiq qurilma — bojxona kirim orderi", "ru": "Устройство сверх нормы — таможенный ордер"},
-      "probable_cause": {"uz": "Bojsiz olib kirish me'yoridan ortiq qurilma uchun bojxona rasmiylashtiruvi talab qilinadi.", "ru": "Для устройства сверх беспошлинной нормы нужно таможенное оформление."},
+      "title": {
+        "uz": "Me'yordan ortiq qurilma — bojxona kirim orderi",
+        "ru": "Устройство сверх нормы — таможенный ордер"
+      },
+      "probable_cause": {
+        "uz": "Bojsiz olib kirish me'yoridan ortiq qurilma uchun bojxona rasmiylashtiruvi talab qilinadi.",
+        "ru": "Для устройства сверх беспошлинной нормы нужно таможенное оформление."
+      },
       "steps": [
-        {"uz": "Bojxona kirim orderini (rasmiylashtiruvni) oling.", "ru": "Получите таможенный приходный ордер (оформление)."},
-        {"uz": "Uni UZIMEI tizim operatoriga taqdim eting.", "ru": "Предоставьте его оператору системы UZIMEI."},
-        {"uz": "Shundan so'ng IMEI ro'yxatga olinadi.", "ru": "После этого IMEI будет зарегистрирован."}
+        {
+          "uz": "Bojxona kirim orderini (rasmiylashtiruvni) oling.",
+          "ru": "Получите таможенный приходный ордер (оформление)."
+        },
+        {
+          "uz": "Uni UZIMEI tizim operatoriga taqdim eting.",
+          "ru": "Предоставьте его оператору системы UZIMEI."
+        },
+        {
+          "uz": "Shundan so'ng IMEI ro'yxatga olinadi.",
+          "ru": "После этого IMEI будет зарегистрирован."
+        }
       ],
-      "documents": [{"uz": "Bojxona kirim orderi", "ru": "Таможенный приходный ордер"}],
-      "where_to_apply": {"uz": "UZIMEI operatori ofisi", "ru": "Офис оператора UZIMEI"},
+      "documents": [
+        {
+          "uz": "Bojxona kirim orderi",
+          "ru": "Таможенный приходный ордер"
+        }
+      ],
+      "where_to_apply": {
+        "uz": "UZIMEI operatori ofisi",
+        "ru": "Офис оператора UZIMEI"
+      },
       "official_url": "https://www.uzimei.uz",
       "contact": "1170",
-      "escalate_when": {"uz": "Bojxona hujjati bo'lsa ham ro'yxatga olinmasa.", "ru": "Если при наличии таможенного документа регистрация не проходит."},
-      "kb_refs": ["faq-mnp-imei", "VMQ 463-son", "VMQ 778-son"]
+      "escalate_when": {
+        "uz": "Bojxona hujjati bo'lsa ham ro'yxatga olinmasa.",
+        "ru": "Если при наличии таможенного документа регистрация не проходит."
+      },
+      "kb_refs": [
+        "faq-mnp-imei",
+        "VMQ 463-son",
+        "VMQ 778-son"
+      ]
     },
     {
       "id": "imei-clone",
-      "title": {"uz": "Klonlangan yoki aniqlanmagan IMEI", "ru": "Клонированный или неопределённый IMEI"},
-      "probable_cause": {"uz": "778-son nizomga ko'ra klonlangan va aniqlanmagan IMEI-kodli qurilmalar tizimda ro'yxatga olinmaydi va «qora ro'yxat»ga tushadi.", "ru": "По положению 778 клонированные/неопределённые IMEI не регистрируются и попадают в «чёрный список»."},
+      "title": {
+        "uz": "Klonlangan yoki aniqlanmagan IMEI",
+        "ru": "Клонированный или неопределённый IMEI"
+      },
+      "probable_cause": {
+        "uz": "778-son nizomga ko'ra klonlangan va aniqlanmagan IMEI-kodli qurilmalar tizimda ro'yxatga olinmaydi va «qora ro'yxat»ga tushadi.",
+        "ru": "По положению 778 клонированные/неопределённые IMEI не регистрируются и попадают в «чёрный список»."
+      },
       "steps": [
-        {"uz": "IMEI holatini *1170# yoki www.uzimei.uz orqali tekshiring.", "ru": "Проверьте статус IMEI через *1170# или www.uzimei.uz."},
-        {"uz": "Qurilma respublika hududidan sotib olingan bo'lsa, ro'yxatdan o'tkazish uchun sotuvchi (chakana savdo subyekti) javobgar.", "ru": "Если устройство куплено в республике, за регистрацию отвечает продавец."},
-        {"uz": "TAC/IMEI GSMA bazasiga mos kelmasa, IMEI'ni to'g'rilash uchun ishlab chiqaruvchiga murojaat qiling.", "ru": "Если TAC/IMEI не соответствует базе GSMA, обратитесь к производителю для исправления IMEI."}
+        {
+          "uz": "IMEI holatini *1170# yoki www.uzimei.uz orqali tekshiring.",
+          "ru": "Проверьте статус IMEI через *1170# или www.uzimei.uz."
+        },
+        {
+          "uz": "Qurilma respublika hududidan sotib olingan bo'lsa, ro'yxatdan o'tkazish uchun sotuvchi (chakana savdo subyekti) javobgar.",
+          "ru": "Если устройство куплено в республике, за регистрацию отвечает продавец."
+        },
+        {
+          "uz": "TAC/IMEI GSMA bazasiga mos kelmasa, IMEI'ni to'g'rilash uchun ishlab chiqaruvchiga murojaat qiling.",
+          "ru": "Если TAC/IMEI не соответствует базе GSMA, обратитесь к производителю для исправления IMEI."
+        }
       ],
       "documents": [],
-      "where_to_apply": {"uz": "Sotuvchi yoki ishlab chiqaruvchi; tekshiruv — UZIMEI", "ru": "Продавец или производитель; проверка — UZIMEI"},
+      "where_to_apply": {
+        "uz": "Sotuvchi yoki ishlab chiqaruvchi; tekshiruv — UZIMEI",
+        "ru": "Продавец или производитель; проверка — UZIMEI"
+      },
       "official_url": "https://www.uzimei.uz",
       "contact": "1170",
-      "escalate_when": {"uz": "Qurilma qonuniy olingan bo'lsa-yu, klon deb noto'g'ri belgilangan bo'lsa.", "ru": "Если устройство законно, но ошибочно помечено как клон."},
-      "kb_refs": ["VMQ 778-son", "faq-mnp-imei"]
+      "escalate_when": {
+        "uz": "Qurilma qonuniy olingan bo'lsa-yu, klon deb noto'g'ri belgilangan bo'lsa.",
+        "ru": "Если устройство законно, но ошибочно помечено как клон."
+      },
+      "kb_refs": [
+        "VMQ 778-son",
+        "faq-mnp-imei"
+      ]
     },
     {
       "id": "imei-retailer",
-      "title": {"uz": "Sotuvchi ro'yxatdan o'tkazmagan", "ru": "Продавец не зарегистрировал"},
-      "probable_cause": {"uz": "O'zbekistonda sotilgan qurilmani ro'yxatdan o'tkazish uchun chakana savdo subyekti (sotuvchi) javobgar (778-son, 61-band).", "ru": "За регистрацию проданного в Узбекистане устройства отвечает продавец (778, п.61)."},
+      "title": {
+        "uz": "Sotuvchi ro'yxatdan o'tkazmagan",
+        "ru": "Продавец не зарегистрировал"
+      },
+      "probable_cause": {
+        "uz": "O'zbekistonda sotilgan qurilmani ro'yxatdan o'tkazish uchun chakana savdo subyekti (sotuvchi) javobgar (778-son, 61-band).",
+        "ru": "За регистрацию проданного в Узбекистане устройства отвечает продавец (778, п.61)."
+      },
       "steps": [
-        {"uz": "Qurilmani sotib olgan do'kon/sotuvchiga murojaat qiling.", "ru": "Обратитесь в магазин/к продавцу, у которого купили устройство."},
-        {"uz": "Ular qurilmani UZIMEI tizimida ro'yxatdan o'tkazishi kerak.", "ru": "Они обязаны зарегистрировать устройство в системе UZIMEI."},
-        {"uz": "Ro'yxatga olishda ishlatilgan raqam sizning nomingizga rasmiylashtirilgan bo'lishi kerak.", "ru": "Номер, использованный при регистрации, должен быть оформлен на вас."}
+        {
+          "uz": "Qurilmani sotib olgan do'kon/sotuvchiga murojaat qiling.",
+          "ru": "Обратитесь в магазин/к продавцу, у которого купили устройство."
+        },
+        {
+          "uz": "Ular qurilmani UZIMEI tizimida ro'yxatdan o'tkazishi kerak.",
+          "ru": "Они обязаны зарегистрировать устройство в системе UZIMEI."
+        },
+        {
+          "uz": "Ro'yxatga olishda ishlatilgan raqam sizning nomingizga rasmiylashtirilgan bo'lishi kerak.",
+          "ru": "Номер, использованный при регистрации, должен быть оформлен на вас."
+        }
       ],
-      "documents": [{"uz": "Xarid cheki (bo'lsa)", "ru": "Чек о покупке (при наличии)"}],
-      "where_to_apply": {"uz": "Qurilma sotib olingan do'kon", "ru": "Магазин, где куплено устройство"},
+      "documents": [
+        {
+          "uz": "Xarid cheki (bo'lsa)",
+          "ru": "Чек о покупке (при наличии)"
+        }
+      ],
+      "where_to_apply": {
+        "uz": "Qurilma sotib olingan do'kon",
+        "ru": "Магазин, где куплено устройство"
+      },
       "official_url": "https://www.uzimei.uz",
       "contact": "1170",
-      "escalate_when": {"uz": "Sotuvchi ro'yxatdan o'tkazishdan bosh tortsa.", "ru": "Если продавец отказывается регистрировать."},
-      "kb_refs": ["VMQ 778-son", "VMQ 828-son, 31.12.2020, 61-band"]
+      "escalate_when": {
+        "uz": "Sotuvchi ro'yxatdan o'tkazishdan bosh tortsa.",
+        "ru": "Если продавец отказывается регистрировать."
+      },
+      "kb_refs": [
+        "VMQ 778-son",
+        "VMQ 828-son, 31.12.2020, 61-band"
+      ]
     },
     {
       "id": "imei-post",
-      "title": {"uz": "Pochta/kuryer orqali kelgan qurilma", "ru": "Устройство пришло почтой/курьером"},
-      "probable_cause": {"uz": "Xalqaro pochta/kuryer jo'natmasi orqali kelgan qurilma alohida tartibda ro'yxatga olinadi.", "ru": "Устройство из международной посылки регистрируется в отдельном порядке."},
+      "title": {
+        "uz": "Pochta/kuryer orqali kelgan qurilma",
+        "ru": "Устройство пришло почтой/курьером"
+      },
+      "probable_cause": {
+        "uz": "Xalqaro pochta/kuryer jo'natmasi orqali kelgan qurilma alohida tartibda ro'yxatga olinadi.",
+        "ru": "Устройство из международной посылки регистрируется в отдельном порядке."
+      },
       "steps": [
-        {"uz": "Tizim operatoriga shaxsan murojaat qiling.", "ru": "Обратитесь лично к оператору системы."},
-        {"uz": "Pochta identifikatorining shtrix-kodi, kalendar shtempeli bo'lgan konvert va pasportni ko'rsating.", "ru": "Предъявите штрих-код почтового идентификатора, конверт со штемпелем и паспорт."}
+        {
+          "uz": "Tizim operatoriga shaxsan murojaat qiling.",
+          "ru": "Обратитесь лично к оператору системы."
+        },
+        {
+          "uz": "Pochta identifikatorining shtrix-kodi, kalendar shtempeli bo'lgan konvert va pasportni ko'rsating.",
+          "ru": "Предъявите штрих-код почтового идентификатора, конверт со штемпелем и паспорт."
+        }
       ],
-      "documents": [{"uz": "Pochta konverti (shtrix-kod, shtempel)", "ru": "Почтовый конверт (штрих-код, штемпель)"}, {"uz": "Pasport", "ru": "Паспорт"}],
-      "where_to_apply": {"uz": "UZIMEI operatori ofisi yoki sayti", "ru": "Офис или сайт оператора UZIMEI"},
+      "documents": [
+        {
+          "uz": "Pochta konverti (shtrix-kod, shtempel)",
+          "ru": "Почтовый конверт (штрих-код, штемпель)"
+        },
+        {
+          "uz": "Pasport",
+          "ru": "Паспорт"
+        }
+      ],
+      "where_to_apply": {
+        "uz": "UZIMEI operatori ofisi yoki sayti",
+        "ru": "Офис или сайт оператора UZIMEI"
+      },
       "official_url": "https://www.uzimei.uz",
       "contact": "1170",
-      "escalate_when": {"uz": "Barcha hujjatlar bilan ham ro'yxatga olinmasa.", "ru": "Если при всех документах регистрация не проходит."},
-      "kb_refs": ["faq-mnp-imei"]
+      "escalate_when": {
+        "uz": "Barcha hujjatlar bilan ham ro'yxatga olinmasa.",
+        "ru": "Если при всех документах регистрация не проходит."
+      },
+      "kb_refs": [
+        "faq-mnp-imei"
+      ]
     },
     {
       "id": "mnp-data",
-      "title": {"uz": "Ma'lumotlar mos kelmadi", "ru": "Данные не совпали"},
-      "probable_cause": {"uz": "Arizadagi FISH yoki pasport ma'lumotlari oldingi operator bazasiga mos kelmagan.", "ru": "ФИО или паспортные данные в заявлении не совпали с базой прежнего оператора."},
+      "title": {
+        "uz": "Ma'lumotlar mos kelmadi",
+        "ru": "Данные не совпали"
+      },
+      "probable_cause": {
+        "uz": "Arizadagi FISH yoki pasport ma'lumotlari oldingi operator bazasiga mos kelmagan.",
+        "ru": "ФИО или паспортные данные в заявлении не совпали с базой прежнего оператора."
+      },
       "steps": [
-        {"uz": "Oldingi operatorning sotuv va xizmat ko'rsatish bo'limiga murojaat qiling.", "ru": "Обратитесь в отдел продаж/обслуживания прежнего оператора."},
-        {"uz": "Raqam egasining FISH va pasport ma'lumotlarini to'g'rilang.", "ru": "Исправьте ФИО и паспортные данные владельца номера."},
-        {"uz": "So'ng yangi operatorda arizani qayta topshiring.", "ru": "Затем повторно подайте заявление у нового оператора."}
+        {
+          "uz": "Oldingi operatorning sotuv va xizmat ko'rsatish bo'limiga murojaat qiling.",
+          "ru": "Обратитесь в отдел продаж/обслуживания прежнего оператора."
+        },
+        {
+          "uz": "Raqam egasining FISH va pasport ma'lumotlarini to'g'rilang.",
+          "ru": "Исправьте ФИО и паспортные данные владельца номера."
+        },
+        {
+          "uz": "So'ng yangi operatorda arizani qayta topshiring.",
+          "ru": "Затем повторно подайте заявление у нового оператора."
+        }
       ],
-      "documents": [{"uz": "Shaxsni tasdiqlovchi hujjat", "ru": "Документ, удостоверяющий личность"}],
-      "where_to_apply": {"uz": "Oldingi operator ofisi", "ru": "Офис прежнего оператора"},
+      "documents": [
+        {
+          "uz": "Shaxsni tasdiqlovchi hujjat",
+          "ru": "Документ, удостоверяющий личность"
+        }
+      ],
+      "where_to_apply": {
+        "uz": "Oldingi operator ofisi",
+        "ru": "Офис прежнего оператора"
+      },
       "official_url": null,
       "contact": null,
-      "escalate_when": {"uz": "Ma'lumot to'g'rilangach ham ariza rad etilsa.", "ru": "Если после исправления данных заявление снова отклонено."},
-      "kb_refs": ["faq-mnp-imei"]
+      "escalate_when": {
+        "uz": "Ma'lumot to'g'rilangach ham ariza rad etilsa.",
+        "ru": "Если после исправления данных заявление снова отклонено."
+      },
+      "kb_refs": [
+        "faq-mnp-imei"
+      ]
     },
     {
       "id": "mnp-debt",
-      "title": {"uz": "Qarzdorlik sababli rad", "ru": "Отказ из-за задолженности"},
-      "probable_cause": {"uz": "Oldingi operator oldida qarzdorlik (shu jumladan rouming) bor.", "ru": "Есть задолженность перед прежним оператором (в т.ч. роуминг)."},
+      "title": {
+        "uz": "Qarzdorlik sababli rad",
+        "ru": "Отказ из-за задолженности"
+      },
+      "probable_cause": {
+        "uz": "Oldingi operator oldida qarzdorlik (shu jumladan rouming) bor.",
+        "ru": "Есть задолженность перед прежним оператором (в т.ч. роуминг)."
+      },
       "steps": [
-        {"uz": "Oldingi operator oldidagi qarzni to'liq so'ndiring.", "ru": "Полностью погасите задолженность перед прежним оператором."},
-        {"uz": "Rouming qarzdorligi bo'lsa, blokdan chiqarish uchun oldingi operator ofisiga murojaat qiling.", "ru": "При роуминговой задолженности обратитесь в офис прежнего оператора для разблокировки."},
-        {"uz": "Yangi operatorda arizani qayta topshiring.", "ru": "Повторно подайте заявление у нового оператора."}
+        {
+          "uz": "Oldingi operator oldidagi qarzni to'liq so'ndiring.",
+          "ru": "Полностью погасите задолженность перед прежним оператором."
+        },
+        {
+          "uz": "Rouming qarzdorligi bo'lsa, blokdan chiqarish uchun oldingi operator ofisiga murojaat qiling.",
+          "ru": "При роуминговой задолженности обратитесь в офис прежнего оператора для разблокировки."
+        },
+        {
+          "uz": "Yangi operatorda arizani qayta topshiring.",
+          "ru": "Повторно подайте заявление у нового оператора."
+        }
       ],
       "documents": [],
-      "where_to_apply": {"uz": "Oldingi operator ofisi", "ru": "Офис прежнего оператора"},
+      "where_to_apply": {
+        "uz": "Oldingi operator ofisi",
+        "ru": "Офис прежнего оператора"
+      },
       "official_url": null,
       "contact": null,
-      "escalate_when": {"uz": "Qarz to'langan, lekin blok saqlanib qolsa.", "ru": "Если долг оплачен, но блокировка сохраняется."},
-      "kb_refs": ["faq-mnp-imei"]
+      "escalate_when": {
+        "uz": "Qarz to'langan, lekin blok saqlanib qolsa.",
+        "ru": "Если долг оплачен, но блокировка сохраняется."
+      },
+      "kb_refs": [
+        "faq-mnp-imei"
+      ]
     },
     {
       "id": "mnp-30days",
-      "title": {"uz": "30 kun o'tmagan", "ru": "Не прошло 30 дней"},
-      "probable_cause": {"uz": "Har bir navbatdagi ko'chirish avvalgi ko'chirish sanasidan kamida 30 kun o'tgach amalga oshiriladi.", "ru": "Каждый следующий перенос возможен не ранее чем через 30 дней после предыдущего."},
+      "title": {
+        "uz": "30 kun o'tmagan",
+        "ru": "Не прошло 30 дней"
+      },
+      "probable_cause": {
+        "uz": "Har bir navbatdagi ko'chirish avvalgi ko'chirish sanasidan kamida 30 kun o'tgach amalga oshiriladi.",
+        "ru": "Каждый следующий перенос возможен не ранее чем через 30 дней после предыдущего."
+      },
       "steps": [
-        {"uz": "Oxirgi ko'chirish sanasidan 30 kalendar kun o'tishini kuting.", "ru": "Дождитесь 30 календарных дней с даты последнего переноса."},
-        {"uz": "Muddat to'lgach yangi operatorda arizani qayta topshiring.", "ru": "По истечении срока повторно подайте заявление."}
+        {
+          "uz": "Oxirgi ko'chirish sanasidan 30 kalendar kun o'tishini kuting.",
+          "ru": "Дождитесь 30 календарных дней с даты последнего переноса."
+        },
+        {
+          "uz": "Muddat to'lgach yangi operatorda arizani qayta topshiring.",
+          "ru": "По истечении срока повторно подайте заявление."
+        }
       ],
       "documents": [],
-      "where_to_apply": {"uz": "Yangi operator ofisi", "ru": "Офис нового оператора"},
+      "where_to_apply": {
+        "uz": "Yangi operator ofisi",
+        "ru": "Офис нового оператора"
+      },
       "official_url": null,
       "contact": null,
-      "escalate_when": {"uz": "30 kun o'tgan, lekin ariza baribir rad etilsa.", "ru": "Если 30 дней прошло, но заявление всё равно отклонено."},
-      "kb_refs": ["faq-mnp-imei"]
+      "escalate_when": {
+        "uz": "30 kun o'tgan, lekin ariza baribir rad etilsa.",
+        "ru": "Если 30 дней прошло, но заявление всё равно отклонено."
+      },
+      "kb_refs": [
+        "faq-mnp-imei"
+      ]
     },
     {
       "id": "mnp-blocked",
-      "title": {"uz": "Raqam bloklangan", "ru": "Номер заблокирован"},
-      "probable_cause": {"uz": "Raqam oldingi operator tomonidan bloklangan (SIM yo'qolgani, sud qarori yoki to'lov qilinmagani sababli).", "ru": "Номер заблокирован прежним оператором (утеря SIM, решение суда или неоплата)."},
+      "title": {
+        "uz": "Raqam bloklangan",
+        "ru": "Номер заблокирован"
+      },
+      "probable_cause": {
+        "uz": "Raqam oldingi operator tomonidan bloklangan (SIM yo'qolgani, sud qarori yoki to'lov qilinmagani sababli).",
+        "ru": "Номер заблокирован прежним оператором (утеря SIM, решение суда или неоплата)."
+      },
       "steps": [
-        {"uz": "Oldingi operator ofisiga murojaat qilib, blok sababini aniqlang.", "ru": "Обратитесь в офис прежнего оператора и выясните причину блокировки."},
-        {"uz": "Sababni bartaraf eting (to'lov, ariza) va raqamni blokdan chiqaring.", "ru": "Устраните причину (оплата, заявление) и разблокируйте номер."},
-        {"uz": "So'ng ko'chirish arizasini qayta topshiring.", "ru": "Затем повторно подайте заявление на перенос."}
+        {
+          "uz": "Oldingi operator ofisiga murojaat qilib, blok sababini aniqlang.",
+          "ru": "Обратитесь в офис прежнего оператора и выясните причину блокировки."
+        },
+        {
+          "uz": "Sababni bartaraf eting (to'lov, ariza) va raqamni blokdan chiqaring.",
+          "ru": "Устраните причину (оплата, заявление) и разблокируйте номер."
+        },
+        {
+          "uz": "So'ng ko'chirish arizasini qayta topshiring.",
+          "ru": "Затем повторно подайте заявление на перенос."
+        }
       ],
-      "documents": [{"uz": "Shaxsni tasdiqlovchi hujjat", "ru": "Документ, удостоверяющий личность"}],
-      "where_to_apply": {"uz": "Oldingi operator ofisi", "ru": "Офис прежнего оператора"},
+      "documents": [
+        {
+          "uz": "Shaxsni tasdiqlovchi hujjat",
+          "ru": "Документ, удостоверяющий личность"
+        }
+      ],
+      "where_to_apply": {
+        "uz": "Oldingi operator ofisi",
+        "ru": "Офис прежнего оператора"
+      },
       "official_url": null,
       "contact": null,
-      "escalate_when": {"uz": "Blok sababi bartaraf etilgach ham ochilmasa.", "ru": "Если после устранения причины блокировка не снята."},
-      "kb_refs": ["faq-mnp-imei"]
+      "escalate_when": {
+        "uz": "Blok sababi bartaraf etilgach ham ochilmasa.",
+        "ru": "Если после устранения причины блокировка не снята."
+      },
+      "kb_refs": [
+        "faq-mnp-imei"
+      ]
     },
     {
       "id": "mnp-checkreason",
-      "title": {"uz": "Rad sababini aniqlash", "ru": "Выяснение причины отказа"},
-      "probable_cause": {"uz": "Rad etish sababi to'rt asosdan biri bo'lishi mumkin: ma'lumot mos emas, qarzdorlik, 30 kun o'tmagan yoki raqam bloklangan.", "ru": "Причина может быть одной из четырёх: несовпадение данных, задолженность, менее 30 дней, блокировка."},
+      "title": {
+        "uz": "Rad sababini aniqlash",
+        "ru": "Выяснение причины отказа"
+      },
+      "probable_cause": {
+        "uz": "Rad etish sababi to'rt asosdan biri bo'lishi mumkin: ma'lumot mos emas, qarzdorlik, 30 kun o'tmagan yoki raqam bloklangan.",
+        "ru": "Причина может быть одной из четырёх: несовпадение данных, задолженность, менее 30 дней, блокировка."
+      },
       "steps": [
-        {"uz": "Rad etilgani haqidagi SMS/xabar matnini diqqat bilan o'qing.", "ru": "Внимательно прочитайте SMS/уведомление об отказе."},
-        {"uz": "Oldingi operatorning xizmat ko'rsatish bo'limiga qo'ng'iroq qilib, aniq sababni so'rang.", "ru": "Позвоните в службу поддержки прежнего оператора и уточните точную причину."},
-        {"uz": "Sabab aniqlangach, tegishli qadamlarni bajarib, arizani qayta topshiring.", "ru": "После выяснения причины выполните нужные шаги и повторно подайте заявление."}
+        {
+          "uz": "Rad etilgani haqidagi SMS/xabar matnini diqqat bilan o'qing.",
+          "ru": "Внимательно прочитайте SMS/уведомление об отказе."
+        },
+        {
+          "uz": "Oldingi operatorning xizmat ko'rsatish bo'limiga qo'ng'iroq qilib, aniq sababni so'rang.",
+          "ru": "Позвоните в службу поддержки прежнего оператора и уточните точную причину."
+        },
+        {
+          "uz": "Sabab aniqlangach, tegishli qadamlarni bajarib, arizani qayta topshiring.",
+          "ru": "После выяснения причины выполните нужные шаги и повторно подайте заявление."
+        }
       ],
       "documents": [],
-      "where_to_apply": {"uz": "Oldingi operator xizmat ko'rsatish bo'limi", "ru": "Служба поддержки прежнего оператора"},
+      "where_to_apply": {
+        "uz": "Oldingi operator xizmat ko'rsatish bo'limi",
+        "ru": "Служба поддержки прежнего оператора"
+      },
       "official_url": null,
       "contact": null,
-      "escalate_when": {"uz": "Sabab noaniq bo'lib, operator ham tushuntira olmasa.", "ru": "Если причина неясна и оператор не может её объяснить."},
-      "kb_refs": ["faq-mnp-imei"]
+      "escalate_when": {
+        "uz": "Sabab noaniq bo'lib, operator ham tushuntira olmasa.",
+        "ru": "Если причина неясна и оператор не может её объяснить."
+      },
+      "kb_refs": [
+        "faq-mnp-imei"
+      ]
+    },
+    {
+      "id": "imei-unblock",
+      "title": {
+        "uz": "Blokdan chiqarish — ro'yxatdan o'tkazish",
+        "ru": "Разблокировка — регистрация"
+      },
+      "probable_cause": {
+        "uz": "Qurilma UZIMEI tizimida ro'yxatdan o'tmagani uchun bloklangan.",
+        "ru": "Устройство заблокировано, так как не зарегистрировано в UZIMEI."
+      },
+      "steps": [
+        {
+          "uz": "Qurilmaning IMEI-kodini UZIMEI tizimida ro'yxatdan o'tkazing (www.uzimei.uz).",
+          "ru": "Зарегистрируйте IMEI в системе UZIMEI (www.uzimei.uz)."
+        },
+        {
+          "uz": "Ro'yxatdan o'tgach, qurilmani o'chirib-yoqing.",
+          "ru": "После регистрации перезагрузите устройство."
+        },
+        {
+          "uz": "Holatni *1170# orqali tekshiring.",
+          "ru": "Проверьте статус через *1170#."
+        }
+      ],
+      "documents": [],
+      "where_to_apply": {
+        "uz": "UZIMEI tizimi",
+        "ru": "Система UZIMEI"
+      },
+      "official_url": "https://www.uzimei.uz",
+      "contact": "1170",
+      "escalate_when": {
+        "uz": "Ro'yxatdan o'tgach ham blok saqlansa.",
+        "ru": "Если блокировка сохраняется после регистрации."
+      },
+      "kb_refs": [
+        "faq-mnp-imei",
+        "VMQ 778-son"
+      ]
+    },
+    {
+      "id": "imei-lost-blocked",
+      "title": {
+        "uz": "Yo'qolgan/o'g'irlangan deb bloklangan",
+        "ru": "Заблокировано как утерянное/краденое"
+      },
+      "probable_cause": {
+        "uz": "Qurilma yo'qolgan yoki o'g'irlangan deb qora ro'yxatga kiritilgan.",
+        "ru": "Устройство внесено в чёрный список как утерянное/краденое."
+      },
+      "steps": [
+        {
+          "uz": "Agar qurilma sizniki bo'lsa, uni qanday olganingizni tasdiqlovchi hujjatni tayyorlang.",
+          "ru": "Если устройство ваше, подготовьте документ о приобретении."
+        },
+        {
+          "uz": "Tizim operatoriga (UZIMEI) murojaat qilib, holatni aniqlang.",
+          "ru": "Обратитесь к оператору системы (UZIMEI) для выяснения статуса."
+        },
+        {
+          "uz": "Zarur bo'lsa, Ichki ishlar organlariga murojaat qiling.",
+          "ru": "При необходимости обратитесь в органы внутренних дел."
+        }
+      ],
+      "documents": [],
+      "where_to_apply": {
+        "uz": "UZIMEI operatori",
+        "ru": "Оператор UZIMEI"
+      },
+      "official_url": "https://www.uzimei.uz",
+      "contact": "1170",
+      "escalate_when": {
+        "uz": "Qurilma qonuniy sizniki bo'lsa-yu, blok ochilmasa.",
+        "ru": "Если устройство законно ваше, но блокировка не снимается."
+      },
+      "kb_refs": [
+        "VMQ 778-son",
+        "faq-mnp-imei"
+      ]
+    },
+    {
+      "id": "imei-check-status",
+      "title": {
+        "uz": "IMEI holatini tekshirish",
+        "ru": "Проверка статуса IMEI"
+      },
+      "probable_cause": {
+        "uz": "Blok sababi noaniq — avval qurilma holatini aniqlash kerak.",
+        "ru": "Причина блокировки неясна — сначала нужно узнать статус устройства."
+      },
+      "steps": [
+        {
+          "uz": "*1170# USSD so'rovini yuboring yoki www.uzimei.uz saytiga kiring.",
+          "ru": "Отправьте USSD *1170# или зайдите на www.uzimei.uz."
+        },
+        {
+          "uz": "1170 raqamiga IMEI'ni SMS qilib ham holatni bilib olishingiz mumkin.",
+          "ru": "Также можно узнать статус, отправив IMEI на 1170."
+        },
+        {
+          "uz": "Holatga qarab tegishli qadamni bajaring.",
+          "ru": "В зависимости от статуса выполните нужный шаг."
+        }
+      ],
+      "documents": [],
+      "where_to_apply": {
+        "uz": "UZIMEI (www.uzimei.uz)",
+        "ru": "UZIMEI (www.uzimei.uz)"
+      },
+      "official_url": "https://www.uzimei.uz",
+      "contact": "1170",
+      "escalate_when": null,
+      "kb_refs": [
+        "faq-mnp-imei"
+      ]
+    },
+    {
+      "id": "imei-report-lost",
+      "title": {
+        "uz": "Yo'qolgan/o'g'irlangan qurilma — ariza",
+        "ru": "Утеря/кража — заявление"
+      },
+      "probable_cause": {
+        "uz": "Yo'qolgan yoki o'g'irlangan qurilma bo'yicha rasmiy ariza berish kerak.",
+        "ru": "По утерянному/краденому устройству нужно официальное заявление."
+      },
+      "steps": [
+        {
+          "uz": "Ichki ishlar boshqarmasiga ariza bilan murojaat qiling.",
+          "ru": "Обратитесь с заявлением в органы внутренних дел."
+        },
+        {
+          "uz": "Arizada qurilmaning ishlab chiqaruvchisi, modeli va IMEI-kodini ko'rsating.",
+          "ru": "В заявлении укажите производителя, модель и IMEI."
+        }
+      ],
+      "documents": [
+        {
+          "uz": "IMEI raqami",
+          "ru": "Номер IMEI"
+        },
+        {
+          "uz": "Shaxsni tasdiqlovchi hujjat",
+          "ru": "Документ, удостоверяющий личность"
+        }
+      ],
+      "where_to_apply": {
+        "uz": "Ichki ishlar boshqarmasi",
+        "ru": "Органы внутренних дел"
+      },
+      "official_url": null,
+      "contact": null,
+      "escalate_when": {
+        "uz": "Rasmiy jarayon bo'yicha qo'shimcha savol tug'ilsa.",
+        "ru": "Если возникают вопросы по процедуре."
+      },
+      "kb_refs": [
+        "faq-mnp-imei"
+      ]
+    },
+    {
+      "id": "imei-find-imei",
+      "title": {
+        "uz": "IMEI raqamini topish",
+        "ru": "Как найти номер IMEI"
+      },
+      "probable_cause": {
+        "uz": "Ariza berish uchun IMEI kerak, lekin qurilma qo'lda yo'q.",
+        "ru": "Для заявления нужен IMEI, но устройства нет на руках."
+      },
+      "steps": [
+        {
+          "uz": "IMEI qurilma qutisida yoki kafolat kartasida yozilgan bo'ladi.",
+          "ru": "IMEI указан на коробке или в гарантийном талоне."
+        },
+        {
+          "uz": "Xarid cheki yoki hujjatlarni tekshiring.",
+          "ru": "Проверьте чек о покупке или документы."
+        },
+        {
+          "uz": "IMEI topilgach, Ichki ishlar boshqarmasiga murojaat qiling.",
+          "ru": "Найдя IMEI, обратитесь в органы внутренних дел."
+        }
+      ],
+      "documents": [],
+      "where_to_apply": {
+        "uz": "Quti/chek; so'ng IIB",
+        "ru": "Коробка/чек; затем ОВД"
+      },
+      "official_url": null,
+      "contact": null,
+      "escalate_when": null,
+      "kb_refs": [
+        "faq-mnp-imei"
+      ]
+    },
+    {
+      "id": "mnp-how",
+      "title": {
+        "uz": "Raqamni ko'chirish jarayoni",
+        "ru": "Процесс переноса номера"
+      },
+      "probable_cause": {
+        "uz": "MNP orqali raqamni saqlab qolib boshqa operatorga o'tish mumkin.",
+        "ru": "Через MNP можно перейти к другому оператору, сохранив номер."
+      },
+      "steps": [
+        {
+          "uz": "O'tmoqchi bo'lgan yangi operator ofisiga boring.",
+          "ru": "Придите в офис нового оператора."
+        },
+        {
+          "uz": "Ariza to'ldiring va shaxsni tasdiqlovchi hujjatni taqdim eting.",
+          "ru": "Заполните заявление и предъявите документ, удостоверяющий личность."
+        },
+        {
+          "uz": "Yangi operator to'lovini amalga oshiring.",
+          "ru": "Оплатите услугу нового оператора."
+        },
+        {
+          "uz": "Ko'chirish yakunlangani haqida yangi SIM-kartaga SMS keladi.",
+          "ru": "О завершении переноса придёт SMS на новую SIM."
+        }
+      ],
+      "documents": [
+        {
+          "uz": "Shaxsni tasdiqlovchi hujjat",
+          "ru": "Документ, удостоверяющий личность"
+        }
+      ],
+      "where_to_apply": {
+        "uz": "Yangi operator ofisi",
+        "ru": "Офис нового оператора"
+      },
+      "official_url": null,
+      "contact": null,
+      "escalate_when": {
+        "uz": "Ariza rad etilsa.",
+        "ru": "Если заявление отклонено."
+      },
+      "kb_refs": [
+        "faq-mnp-imei"
+      ]
+    },
+    {
+      "id": "mnp-docs",
+      "title": {
+        "uz": "MNP uchun kerakli hujjatlar",
+        "ru": "Документы для MNP"
+      },
+      "probable_cause": {
+        "uz": "Ariza uchun shaxsni tasdiqlovchi hujjat (yoki yuridik shaxs uchun STIR) kerak.",
+        "ru": "Нужен документ, удостоверяющий личность (или ИНН для юрлица)."
+      },
+      "steps": [
+        {
+          "uz": "Jismoniy shaxs: raqamni ro'yxatga olishda ishlatilgan hujjat.",
+          "ru": "Физлицо: документ, использованный при регистрации номера."
+        },
+        {
+          "uz": "Yuridik shaxs: tashkilotning STIRi.",
+          "ru": "Юрлицо: ИНН организации."
+        },
+        {
+          "uz": "Ariza yangi operator ofisida to'ldiriladi.",
+          "ru": "Заявление заполняется в офисе нового оператора."
+        }
+      ],
+      "documents": [],
+      "where_to_apply": {
+        "uz": "Yangi operator ofisi",
+        "ru": "Офис нового оператора"
+      },
+      "official_url": null,
+      "contact": null,
+      "escalate_when": null,
+      "kb_refs": [
+        "faq-mnp-imei"
+      ]
+    },
+    {
+      "id": "mnp-balance",
+      "title": {
+        "uz": "Balansdagi pul ko'chadimi",
+        "ru": "Переносится ли баланс"
+      },
+      "probable_cause": {
+        "uz": "Mablag'ni bir operator hisobidan boshqasiga to'g'ridan-to'g'ri ko'chirib bo'lmaydi.",
+        "ru": "Средства нельзя напрямую перенести со счёта на счёт."
+      },
+      "steps": [
+        {
+          "uz": "Balansdagi pul yangi operatorga ko'chmaydi.",
+          "ru": "Баланс не переносится к новому оператору."
+        },
+        {
+          "uz": "Mablag'ni qaytarish uchun oldingi operator ofisiga murojaat qiling.",
+          "ru": "Для возврата средств обратитесь в офис прежнего оператора."
+        }
+      ],
+      "documents": [],
+      "where_to_apply": {
+        "uz": "Oldingi operator ofisi",
+        "ru": "Офис прежнего оператора"
+      },
+      "official_url": null,
+      "contact": null,
+      "escalate_when": null,
+      "kb_refs": [
+        "faq-mnp-imei"
+      ]
     }
   ]
 }

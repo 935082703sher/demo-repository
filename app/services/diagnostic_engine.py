@@ -33,6 +33,16 @@ def _normalize(text: str) -> str:
     return text.lower()
 
 
+def _stem_match(token: str, terms: set[str]) -> bool:
+    """True if a keyword token overlaps a query term by stem (substring either way).
+
+    Uzbek/Russian are agglutinative, so exact token equality misses inflections
+    ('operator' vs 'operatorga', 'blok' vs 'bloklandi'). Substring matching keeps
+    the rule transparent while tolerating common suffixes.
+    """
+    return any(token in term or term in token for term in terms)
+
+
 class DiagnosticError(ValueError):
     """A tree/card reference is inconsistent."""
 
@@ -92,7 +102,11 @@ class DiagnosticEngine:
         best: DecisionTree | None = None
         best_score = 0
         for tree in self._trees.values():
-            score = sum(1 for keyword in tree.keywords if _normalize(keyword) in terms)
+            score = 0
+            for keyword in tree.keywords:
+                tokens = _TOKEN.findall(_normalize(keyword))
+                if tokens and any(_stem_match(token, terms) for token in tokens):
+                    score += 1
             if score > best_score:
                 best, best_score = tree, score
         return best if best_score > 0 else None
@@ -117,7 +131,7 @@ class DiagnosticEngine:
             option_terms: set[str] = set()
             for label in (option.label.uz, option.label.ru, option.label.en or "", option.value):
                 option_terms |= set(_TOKEN.findall(_normalize(label)))
-            score = len(terms & option_terms)
+            score = sum(1 for term in terms if _stem_match(term, option_terms))
             if score > best_score:
                 best, best_score = option.value, score
         return best if best_score > 0 else None
