@@ -201,6 +201,24 @@ class KBRetriever:
                 break
         return results
 
+    def sources_by_doc_ids(self, doc_ids: list[str]) -> list[KBChunk]:
+        """Return one representative chunk per requested doc id (for citations)."""
+        wanted = set(doc_ids)
+        seen: dict[str, KBChunk] = {}
+        for chunk in self._chunks:
+            if chunk.doc_id in wanted and chunk.doc_id not in seen:
+                seen[chunk.doc_id] = chunk
+        return [seen[doc_id] for doc_id in doc_ids if doc_id in seen]
+
+    def case_guidance(self, case_type: str, limit: int = 2) -> list[KBChunk]:
+        """Return anonymized practice letters (layer 4) for a case type as style."""
+        letters = [
+            chunk
+            for chunk in self._chunks
+            if chunk.authority == 4 and chunk.case_type == case_type
+        ]
+        return letters[:limit]
+
     def stats(self) -> dict[str, Any]:
         layers: Counter[int] = Counter(chunk.authority for chunk in self._chunks)
         return {

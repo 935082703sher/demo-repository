@@ -33,6 +33,7 @@ from app.services.assistant import AssistantService
 from app.services.classifier import RequestClassifier
 from app.services.complaint_drafts import ComplaintDraftService
 from app.services.complaint_workflow_adapter import GovernedComplaintWorkflowAdapter
+from app.services.diagnostic_engine import DiagnosticEngine
 from app.services.generation import GroundedGenerationService
 from app.services.governed_complaint_orchestrator import GovernedComplaintOrchestrator
 from app.services.grounding import GroundingValidator
@@ -89,8 +90,10 @@ def create_app(
     selected_provider = (
         provider if provider is not None else build_configured_provider(app_settings)
     )
+    diagnostics_path = Path(__file__).parent / "data" / "diagnostics.json"
     app.state.settings = app_settings
     app.state.provider = selected_provider
+    app.state.diagnostic_engine = DiagnosticEngine.from_json(diagnostics_path)
     app.state.usage_limits = usage_limits
     legacy_drafts = ComplaintDraftService(app_settings.privacy_notice_version)
     governed_adapter = GovernedComplaintWorkflowAdapter(
