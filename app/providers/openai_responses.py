@@ -117,6 +117,7 @@ class OpenAIResponsesProvider:
             "category": request.category.value,
             "question": _minimize_question(request.question),
             "approved_context": context,
+            "case_guidance": request.case_guidance,
         }
         return {
             "model": self._model,

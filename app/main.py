@@ -30,6 +30,7 @@ from app.repositories.usage_repository import (
 )
 from app.services.approved_links import stage3b_link_registry
 from app.services.assistant import AssistantService
+from app.services.case_guidance import CaseGuidanceService
 from app.services.classifier import RequestClassifier
 from app.services.complaint_drafts import ComplaintDraftService
 from app.services.complaint_workflow_adapter import GovernedComplaintWorkflowAdapter
@@ -82,6 +83,9 @@ def create_app(
             allow_credentials=False,
         )
     knowledge = KnowledgeService.from_json(data_path)
+    case_guidance = CaseGuidanceService.from_jsonl(
+        Path(__file__).parent.parent / "data" / "raw_confidential" / "case_guidance" / "kb.jsonl"
+    )
     usage_limits = UsageLimitService(
         usage_repository if usage_repository is not None else InMemoryUsageRepository(),
         limit=app_settings.llm_generation_limit_per_session,
@@ -107,6 +111,7 @@ def create_app(
         guardrails=Guardrails(),
         scope=ScopeService(),
         knowledge=knowledge,
+        case_guidance=case_guidance,
         generation=GroundedGenerationService(
             selected_provider,
             usage_limits,

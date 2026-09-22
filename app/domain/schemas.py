@@ -228,6 +228,7 @@ class LLMRequest(StrictModel):
     category: Category
     source_ids: list[str]
     passages: list[str]
+    case_guidance: list[str] = Field(default_factory=list, max_length=2)
 
     @field_validator("passages")
     @classmethod

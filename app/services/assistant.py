@@ -19,6 +19,7 @@ from app.domain.enums import (
 from app.domain.schemas import ChatRequest, ChatResponse, LLMRequest, SourceReference
 from app.i18n.messages import out_of_scope_message, rate_limit_message, usage_limit_message
 from app.providers.errors import ProviderOutputError
+from app.services.case_guidance import CaseGuidanceService
 from app.services.classifier import RequestClassifier, is_complaint_like, normalize_text
 from app.services.complaint_drafts import missing_fields_for
 from app.services.generation import GroundedGenerationService
@@ -205,6 +206,7 @@ class AssistantService:
         guardrails: Guardrails,
         scope: ScopeService,
         knowledge: KnowledgeService,
+        case_guidance: CaseGuidanceService,
         generation: GroundedGenerationService,
         grounding: GroundingValidator,
         usage_limits: UsageLimitService,
@@ -217,6 +219,7 @@ class AssistantService:
         self._guardrails = guardrails
         self._scope = scope
         self._knowledge = knowledge
+        self._case_guidance = case_guidance
         self._generation = generation
         self._grounding = grounding
         self._usage_limits = usage_limits
@@ -361,6 +364,7 @@ class AssistantService:
             )
 
         try:
+            guidance = self._case_guidance.search(request.message, category)
             result = await self._generation.generate(
                 session_id,
                 LLMRequest(
@@ -369,6 +373,7 @@ class AssistantService:
                     category=category,
                     source_ids=[record.document_id for record in records],
                     passages=[record.content for record in records],
+                    case_guidance=[example.text for example in guidance],
                 ),
             )
         except ProviderOutputError:
