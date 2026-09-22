@@ -19,6 +19,14 @@ from app.domain.enums import Category, Language
 from app.domain.schemas import LLMRequest
 from app.providers.base import LLMProvider
 from app.providers.errors import ProviderError
+from app.services.audit_log import (
+    OUTCOME_CLARIFY,
+    OUTCOME_HANDOFF,
+    OUTCOME_QUESTION,
+    OUTCOME_RESOLVED,
+    AuditEvent,
+    AuditLog,
+)
 from app.services.diagnostic_engine import DiagnosticEngine
 from app.services.kb_retriever import (
     RetrievedChunk,
@@ -381,19 +389,29 @@ async def _resolve(
     )
 
 
-@router.post("/diagnose", response_model=ConverseResponse)
-async def assistant_diagnose(payload: ConverseRequest, request: Request) -> ConverseResponse:
-    """Drive one diagnostic turn: pick a tree, ask a question, or resolve.
+def _turn_outcome(response: ConverseResponse) -> str:
+    if response.card_id:
+        return OUTCOME_RESOLVED
+    if response.requires_human:
+        return OUTCOME_HANDOFF
+    if response.reason == "clarify":
+        return OUTCOME_CLARIFY
+    return OUTCOME_QUESTION
 
-    On the first turn the free-text problem is matched to a decision tree. On
-    later turns the free-text answer is mapped to the current question's options;
-    when a leaf is reached the resolution card is turned into a grounded answer by
-    the configured provider (with a deterministic fallback).
-    """
-    engine = _diagnostic_engine(request)
-    provider = cast(LLMProvider, request.app.state.provider)
-    lang = payload.language
 
+def _category_of(tree_id: str | None) -> str | None:
+    if not tree_id:
+        return None
+    if tree_id.startswith("imei"):
+        return "imei"
+    if tree_id.startswith("mnp"):
+        return "mnp"
+    return None
+
+
+async def _run_diagnose(
+    engine: DiagnosticEngine, provider: LLMProvider, payload: ConverseRequest, lang: str
+) -> ConverseResponse:
     if payload.tree_id and payload.node_id:
         tree = engine.get_tree(payload.tree_id)
         node = engine.get_node(payload.tree_id, payload.node_id)
@@ -421,3 +439,40 @@ async def assistant_diagnose(payload: ConverseRequest, request: Request) -> Conv
     root = engine.get_node(tree.id, tree.root)
     assert root is not None  # integrity-checked at load
     return _question(tree.id, root, lang)
+
+
+@router.post("/diagnose", response_model=ConverseResponse)
+async def assistant_diagnose(payload: ConverseRequest, request: Request) -> ConverseResponse:
+    """Drive one diagnostic turn: pick a tree, ask a question, or resolve.
+
+    On the first turn the free-text problem is matched to a decision tree. On
+    later turns the free-text answer is mapped to the current question's options;
+    when a leaf is reached the resolution card is turned into a grounded answer by
+    the configured provider (with a deterministic fallback). Every turn is audited.
+    """
+    engine = _diagnostic_engine(request)
+    provider = cast(LLMProvider, request.app.state.provider)
+    lang = payload.language
+
+    response = await _run_diagnose(engine, provider, payload, lang)
+
+    audit = cast(AuditLog, request.app.state.audit_log)
+    await audit.record(
+        AuditEvent(
+            channel="web",
+            language=lang,
+            outcome=_turn_outcome(response),
+            category=_category_of(response.tree_id),
+            tree_id=response.tree_id,
+            card_id=response.card_id,
+            session_id=payload.tree_id,
+        )
+    )
+    return response
+
+
+@router.get("/metrics")
+async def assistant_metrics(request: Request) -> dict[str, object]:
+    """Return pilot KPIs (self-service resolution rate, handoff rate, counts)."""
+    audit = cast(AuditLog, request.app.state.audit_log)
+    return await audit.metrics()

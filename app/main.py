@@ -30,6 +30,7 @@ from app.repositories.usage_repository import (
 )
 from app.services.approved_links import stage3b_link_registry
 from app.services.assistant import AssistantService
+from app.services.audit_log import InMemoryAuditLog
 from app.services.case_guidance import CaseGuidanceService
 from app.services.classifier import RequestClassifier
 from app.services.complaint_drafts import ComplaintDraftService
@@ -98,6 +99,7 @@ def create_app(
     app.state.settings = app_settings
     app.state.provider = selected_provider
     app.state.diagnostic_engine = DiagnosticEngine.from_json(diagnostics_path)
+    app.state.audit_log = InMemoryAuditLog()
     app.state.usage_limits = usage_limits
     legacy_drafts = ComplaintDraftService(app_settings.privacy_notice_version)
     governed_adapter = GovernedComplaintWorkflowAdapter(
