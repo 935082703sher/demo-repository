@@ -30,7 +30,7 @@ from app.repositories.usage_repository import (
 )
 from app.services.approved_links import stage3b_link_registry
 from app.services.assistant import AssistantService
-from app.services.audit_log import InMemoryAuditLog
+from app.services.audit_log import InMemoryAuditLog, PostgresAuditLog
 from app.services.case_guidance import CaseGuidanceService
 from app.services.classifier import RequestClassifier
 from app.services.complaint_drafts import ComplaintDraftService
@@ -61,9 +61,19 @@ def create_app(
     data_path = knowledge_path or Path(__file__).parent / "data" / "approved_faq.demo.json"
 
     @asynccontextmanager
-    async def lifespan(_: FastAPI) -> AsyncIterator[None]:
+    async def lifespan(application: FastAPI) -> AsyncIterator[None]:
         logger.info("event=service_start environment=%s", app_settings.environment)
+        postgres_audit: PostgresAuditLog | None = None
+        if app_settings.database_url:
+            try:
+                postgres_audit = await PostgresAuditLog.create(app_settings.database_url)
+                application.state.audit_log = postgres_audit
+                logger.info("event=audit_log_backend backend=postgres")
+            except Exception:
+                logger.exception("event=audit_log_backend backend=in_memory reason=postgres_failed")
         yield
+        if postgres_audit is not None:
+            await postgres_audit.close()
         logger.info("event=service_stop")
 
     app = FastAPI(

@@ -14,6 +14,10 @@ services:
       OLLAMA_BASE_URL: ${OLLAMA_BASE_URL:-http://host.docker.internal:11434}
       OLLAMA_MODEL: ${OLLAMA_MODEL:-qwen3:8b}
       OLLAMA_TIMEOUT_SECONDS: ${OLLAMA_TIMEOUT_SECONDS:-60}
+      DATABASE_URL: ${DATABASE_URL:-postgresql://rtmc:rtmc@db:5432/rtmc}
+    depends_on:
+      db:
+        condition: service_healthy
     env_file:
       - .env.example
     extra_hosts:
@@ -32,3 +36,23 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
+
+  db:
+    image: postgres:16-alpine
+    container_name: rtmc-db
+    environment:
+      POSTGRES_USER: rtmc
+      POSTGRES_PASSWORD: rtmc
+      POSTGRES_DB: rtmc
+    volumes:
+      - rtmc-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U rtmc -d rtmc"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 5s
+    restart: unless-stopped
+
+volumes:
+  rtmc-db-data:

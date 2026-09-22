@@ -9,6 +9,7 @@ description = "Controlled local Demo 2 backend for grounded RTMC guidance and co
 readme = "README.md"
 requires-python = ">=3.12,<3.14"
 dependencies = [
+  "asyncpg==0.30.0",
   "fastapi==0.115.12",
   "httpx==0.28.1",
   "pydantic==2.11.4",
@@ -48,7 +49,7 @@ warn_unreachable = true
 plugins = ["pydantic.mypy"]
 
 [[tool.mypy.overrides]]
-module = ["uvicorn.*"]
+module = ["uvicorn.*", "asyncpg.*"]
 ignore_missing_imports = true
 
 # The kb/ pipeline is a separate, self-contained package (its own entry points

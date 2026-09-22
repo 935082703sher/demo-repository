@@ -62,6 +62,10 @@ class Settings(BaseSettings):
             "RTMC_REQUEST_RATE_LIMIT_PER_MINUTE",
         ),
     )
+    database_url: str | None = Field(
+        default=None,
+        validation_alias=AliasChoices("DATABASE_URL", "RTMC_DATABASE_URL"),
+    )
     approved_support_phone: str | None = Field(
         default=None,
         validation_alias=AliasChoices("APPROVED_SUPPORT_PHONE", "RTMC_APPROVED_SUPPORT_PHONE"),
