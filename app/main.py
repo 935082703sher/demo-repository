@@ -90,6 +90,7 @@ def create_app(
         provider if provider is not None else build_configured_provider(app_settings)
     )
     app.state.settings = app_settings
+    app.state.provider = selected_provider
     app.state.usage_limits = usage_limits
     legacy_drafts = ComplaintDraftService(app_settings.privacy_notice_version)
     governed_adapter = GovernedComplaintWorkflowAdapter(

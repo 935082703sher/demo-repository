@@ -134,3 +134,49 @@ def test_missing_corpus_reports_unavailable(
     kb_retriever.get_retriever.cache_clear()
     assert body["chunks"] == 0
     assert body["mode"] == "unavailable"
+
+
+def test_answer_generates_grounded_answer(corpus_client: TestClient) -> None:
+    response = corpus_client.post(
+        "/assistant/answer", json={"query": "IMEI kodni qanday bilaman", "language": "uz"}
+    )
+    assert response.status_code == 200
+    body = response.json()
+    assert body["requires_human"] is False
+    assert body["answer"]  # mock provider echoes the top grounded passage
+    assert body["citations"], "kutilgan iqtibos yo'q"
+    assert any(source["doc_id"] == "faq-imei-check" for source in body["sources"])
+    assert body["model"]
+
+
+def test_answer_without_match_escalates_without_llm(corpus_client: TestClient) -> None:
+    response = corpus_client.post("/assistant/answer", json={"query": "zzzqqqxxx"})
+    body = response.json()
+    assert body["answer"] is None
+    assert body["requires_human"] is True
+    assert body["reason"] == "no_approved_source"
+
+
+def test_answer_handles_provider_failure(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from app.domain.schemas import LLMRequest, LLMResult
+    from app.providers.errors import ProviderUnavailableError
+
+    class _FailingProvider:
+        async def generate(self, request: LLMRequest) -> LLMResult:
+            raise ProviderUnavailableError("down")
+
+    corpus = tmp_path / "kb.jsonl"
+    corpus.write_text(
+        "\n".join(json.dumps(row, ensure_ascii=False) for row in _SYNTHETIC_ROWS) + "\n",
+        encoding="utf-8",
+    )
+    monkeypatch.setenv("KB_CORPUS_PATH", str(corpus))
+    kb_retriever.get_retriever.cache_clear()
+    with TestClient(create_app(provider=_FailingProvider())) as client:
+        body = client.post("/assistant/answer", json={"query": "IMEI kodni bilaman"}).json()
+    kb_retriever.get_retriever.cache_clear()
+    assert body["answer"] is None
+    assert body["requires_human"] is True
+    assert body["reason"] == "provider_unavailable"
