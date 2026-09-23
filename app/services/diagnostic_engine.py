@@ -224,11 +224,12 @@ class DiagnosticEngine:
         return None
 
     def route(self, query: str) -> tuple[DecisionTree | None, str | None]:
-        """Route free text to a tree, or to a domain when the tree is ambiguous.
+        """Route free text to a tree, or to a domain when the topic is unclear.
 
-        Returns (tree, None) for one clear winner, (None, domain) when several
-        trees of the same domain tie (ask which topic), or (None, None) for no
-        match at all (offer the full menu).
+        Returns (tree, None) for one clear winner, (None, domain) when the message
+        names only a domain (a generic 'imei'/'mnp' word, or several trees of one
+        domain tie) so the topic must be asked, or (None, None) for no match at all
+        (offer the full menu).
         """
         scores = self._keyword_scores(query)
         if not scores:
@@ -237,6 +238,11 @@ class DiagnosticEngine:
         if best <= 0:
             return None, None
         top = [self._trees[tid] for tid, score in scores.items() if score == best]
+        # A win driven only by a generic domain word names no specific topic, so
+        # ask which one rather than defaulting into a tree.
+        if best <= _GENERIC_WEIGHT:
+            domains = {tree.domain for tree in top}
+            return (None, next(iter(domains))) if len(domains) == 1 else (None, None)
         if len(top) == 1:
             return top[0], None
         domains = {tree.domain for tree in top}

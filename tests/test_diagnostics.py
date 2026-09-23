@@ -238,9 +238,10 @@ def test_route_specific_word_outranks_generic_domain_word() -> None:
     # 'IMEI bloklandi' is a block problem: the specific word must win over 'imei'.
     tree, _ = engine.route("IMEI bloklandi nima qilay")
     assert tree is not None and tree.id == "imei-blokdan_chiqarish"
-    # A bare 'imei' message still reaches the primary IMEI tree (weak but real signal).
-    tree, _ = engine.route("IMEI muammosi bor")
-    assert tree is not None and tree.id == "imei-royxatdan_otkazish"
+    # A bare 'imei' message names only the domain, so ask which topic (menu), never
+    # railroad into a specific tree.
+    tree, domain = engine.route("IMEI muammosi bor")
+    assert tree is None and domain == "imei"
 
 
 def test_smalltalk_gets_natural_reply_not_menu(corpus_client: TestClient) -> None:

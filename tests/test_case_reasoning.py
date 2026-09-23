@@ -185,16 +185,17 @@ def test_converse_routes_mnp_to_a_domain_menu() -> None:
         assert values and all(v.startswith("mnp-") for v in values)  # only MNP topics offered
 
 
-def test_converse_generic_imei_message_enters_primary_imei_flow() -> None:
+def test_converse_generic_imei_message_offers_topic_menu_not_a_tree() -> None:
     with TestClient(create_app()) as client:
         body = client.post(
             "/assistant/converse",
-            json={"message": "IMEI muammosi bor", "session_id": "cv-imei-gen"},
+            json={"message": "imei tushunmayapman", "session_id": "cv-imei-gen"},
         ).json()
         assert body["domain"] == "imei"
         assert body["done"] is False
-        # A bare IMEI message defaults to the registration flow's first question.
-        assert "qayerdan" in body["reply"].lower()
+        # A vague IMEI message asks which topic instead of walking a tree.
+        values = {opt["value"] for opt in body["options"]}
+        assert values and all(v.startswith("imei-") for v in values)
 
 
 def test_converse_block_message_routes_to_unblock_not_registration() -> None:
@@ -208,6 +209,25 @@ def test_converse_block_message_routes_to_unblock_not_registration() -> None:
         reply = body["reply"].lower()
         assert "blok" in reply  # asks about being blocked
         assert "qayerdan" not in reply  # not the registration 'where from' question
+
+
+def test_converse_reroutes_mid_tree_when_a_new_story_arrives() -> None:
+    with TestClient(create_app()) as client:
+        # Start walking the registration tree (its first question).
+        first = client.post(
+            "/assistant/converse",
+            json={"message": "IMEI ro'yxatdan o'tmayapti", "session_id": "cv-switch"},
+        ).json()
+        assert first["done"] is False and "qayerdan" in first["reply"].lower()
+
+        # A different problem mid-tree must re-route, not repeat the open question.
+        switched = client.post(
+            "/assistant/converse",
+            json={"message": "aslida telefonim bloklandi", "session_id": "cv-switch"},
+        ).json()
+        assert switched["done"] is False
+        assert "qayerdan" not in switched["reply"].lower()  # left the registration tree
+        assert "blok" in switched["reply"].lower()  # now the unblock tree
 
 
 def test_converse_new_problem_after_resolve_does_not_reuse_facts() -> None:

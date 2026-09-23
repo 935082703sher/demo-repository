@@ -221,17 +221,12 @@ def _card_reply(card: ResolutionCard, lang: str) -> str:
     return "\n".join(lines)
 
 
-def _apply_pending_answer(
-    engine: DiagnosticEngine, case: CaseState, message: str
+def _apply_option(
+    engine: DiagnosticEngine, case: CaseState, value: str
 ) -> ResolutionCard | None:
-    """Apply a reply to the pending question: set its fact and advance/resolve."""
-    if not (case.active_tree and case.pending_node):
-        return None
-    node = engine.get_node(case.active_tree, case.pending_node)
+    """Apply the chosen option on the pending node: set its fact, advance/resolve."""
+    node = engine.get_node(case.active_tree or "", case.pending_node or "")
     if node is None:
-        return None
-    value = engine.map_answer(case.active_tree, case.pending_node, message)
-    if value is None:
         return None
     option = next((o for o in node.options if o.value == value), None)
     if option is None:
@@ -276,53 +271,57 @@ async def assistant_converse(
     if case.status in (CaseStatus.RESOLVED, CaseStatus.HANDOFF):
         _start_fresh_case(case)
 
-    # A) A reply to the pending question becomes a fact and advances / resolves.
-    resolved = _apply_pending_answer(engine, case, payload.message)
-    if resolved is not None:
-        _refresh_unknowns(case)
-        store.save(case)
-        return _resp(case, _card_reply(resolved, lang), done=True, card_id=resolved.id)
-
-    # B) Understand the (possibly rich) message.
+    # 1) Understand the message every turn, so a new story is never ignored.
     for fact in await extractor.extract(payload.message, case, turn_id=case.turn_count):
         case.upsert(fact)
     if case.domain is None:
         case.domain = detect_domain(payload.message)
     _refresh_unknowns(case)
 
-    # C) No active tree yet: menu selection, routed tree, domain menu, greeting or menu.
-    if case.active_tree is None:
+    # 2) If a question is open and this message answers it, take that answer.
+    answered = False
+    if case.active_tree and case.pending_node:
+        value = engine.map_answer(case.active_tree, case.pending_node, payload.message)
+        if value is not None:
+            resolved = _apply_option(engine, case, value)
+            if resolved is not None:
+                _refresh_unknowns(case)
+                store.save(case)
+                return _resp(case, _card_reply(resolved, lang), done=True, card_id=resolved.id)
+            answered = True
+
+    # 3) Otherwise (re)choose the tree from the message and known facts. A new story
+    #    mid-conversation re-routes instead of repeating the open question.
+    if not answered:
         chosen = engine.get_tree(payload.message.strip())
         if chosen is None:
             matched, domain = engine.route(payload.message)
-            # Keywords may be ambiguous while an extracted decision fact already
-            # names the tree (e.g. mnp_topic -> the MNP how-to tree).
-            if matched is None:
-                matched = engine.tree_from_facts(case.known_facts(), domain=case.domain)
-            # No specific tree, but if we know the domain (from routing tie or fact
-            # extraction) offer that domain's topics instead of the whole menu.
-            menu_domain = domain or case.domain
-            if matched is not None:
-                chosen = matched
-            elif menu_domain is not None and engine.trees_for_domain(menu_domain):
-                by_lang = _DOMAIN_INTRO.get(lang, _DOMAIN_INTRO["uz"])
-                intro = by_lang.get(menu_domain) or _ROUTE_INTRO.get(lang, _ROUTE_INTRO["uz"])
+            # Keywords may be ambiguous while an extracted decision fact names the
+            # tree (e.g. mnp_topic -> the MNP how-to tree).
+            chosen = matched or engine.tree_from_facts(case.known_facts(), domain=case.domain)
+            if chosen is None and case.active_tree is None:
+                # Nothing to walk yet: a domain menu, a greeting, or the full menu.
+                menu_domain = domain or case.domain
+                if menu_domain is not None and engine.trees_for_domain(menu_domain):
+                    by_lang = _DOMAIN_INTRO.get(lang, _DOMAIN_INTRO["uz"])
+                    intro = by_lang.get(menu_domain) or _ROUTE_INTRO.get(lang, _ROUTE_INTRO["uz"])
+                    store.save(case)
+                    return _menu(case, engine.trees_for_domain(menu_domain), intro, lang)
+                if _is_smalltalk(payload.message):
+                    store.save(case)
+                    return _resp(case, _GREETING.get(lang, _GREETING["uz"]))
                 store.save(case)
-                return _menu(case, engine.trees_for_domain(menu_domain), intro, lang)
-            elif _is_smalltalk(payload.message):
-                store.save(case)
-                return _resp(case, _GREETING.get(lang, _GREETING["uz"]))
-            else:
-                store.save(case)
-                return _menu(case, engine.trees(), _ROUTE_INTRO.get(lang, _ROUTE_INTRO["uz"]), lang)
-        case.active_tree = chosen.id
-        case.pending_node = chosen.root
-        if case.domain is None:
-            case.domain = chosen.domain
-        _refresh_unknowns(case)
+                intro = _ROUTE_INTRO.get(lang, _ROUTE_INTRO["uz"])
+                return _menu(case, engine.trees(), intro, lang)
+        if chosen is not None and chosen.id != case.active_tree:
+            case.active_tree = chosen.id
+            case.pending_node = chosen.root
+            if case.domain is None:
+                case.domain = chosen.domain
+            _refresh_unknowns(case)
 
-    # D) Walk from the current node, skipping questions the facts already answer.
-    kind, obj = engine.advance(case.active_tree, case.pending_node or "", case.known_facts())
+    # 4) Walk from the current node, skipping questions the facts already answer.
+    kind, obj = engine.advance(case.active_tree or "", case.pending_node or "", case.known_facts())
     if kind == "resolve" and isinstance(obj, ResolutionCard):
         case.resolution_card_id = obj.id
         case.status = CaseStatus.RESOLVED
