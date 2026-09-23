@@ -470,10 +470,3 @@ async def assistant_diagnose(payload: ConverseRequest, request: Request) -> Conv
         )
     )
     return response
-
-
-@router.get("/metrics")
-async def assistant_metrics(request: Request) -> dict[str, object]:
-    """Return pilot KPIs (self-service resolution rate, handoff rate, counts)."""
-    audit = cast(AuditLog, request.app.state.audit_log)
-    return await audit.metrics()

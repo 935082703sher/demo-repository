@@ -66,6 +66,14 @@ class Settings(BaseSettings):
         default=None,
         validation_alias=AliasChoices("DATABASE_URL", "RTMC_DATABASE_URL"),
     )
+    admin_user: str = Field(
+        default="admin",
+        validation_alias=AliasChoices("ADMIN_USER", "RTMC_ADMIN_USER"),
+    )
+    admin_password: SecretStr | None = Field(
+        default=None,
+        validation_alias=AliasChoices("ADMIN_PASSWORD", "RTMC_ADMIN_PASSWORD"),
+    )
     approved_support_phone: str | None = Field(
         default=None,
         validation_alias=AliasChoices("APPROVED_SUPPORT_PHONE", "RTMC_APPROVED_SUPPORT_PHONE"),
@@ -175,7 +183,7 @@ class Settings(BaseSettings):
         """Treat an empty optional environment value as unconfigured."""
         return None if value == "" else value
 
-    @field_validator("llm_api_key", mode="before")
+    @field_validator("llm_api_key", "admin_password", mode="before")
     @classmethod
     def empty_api_key_is_unset(cls, value: object) -> object:
         """Treat an empty optional secret as unconfigured."""

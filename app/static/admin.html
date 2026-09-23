@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>RTMC AI Assistant — Admin KPI</title>
+<style>
+  :root {
+    color-scheme: light dark;
+    --bg: #f5f6f8; --panel: #ffffff; --ink: #1c1e21; --muted: #6b7280;
+    --line: #e5e7eb; --brand: #1f6feb; --good: #15803d; --warn: #b45309; --bar: #c7d2fe;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0f1115; --panel: #171a21; --ink: #e6e8eb; --muted: #9aa4b2;
+      --line: #262b34; --bar: #26314f;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    margin: 0; background: var(--bg); color: var(--ink); padding: 20px;
+    max-width: 900px; margin: 0 auto;
+  }
+  header { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+  header h1 { font-size: 1.15rem; margin: 0; flex: 1; }
+  .sub { color: var(--muted); font-size: 0.75rem; font-weight: 400; }
+  button {
+    font: inherit; font-size: 0.85rem; padding: 7px 14px; border-radius: 8px;
+    border: 1px solid var(--brand); background: var(--brand); color: #fff; cursor: pointer;
+  }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+  .card {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 16px;
+  }
+  .card .label { color: var(--muted); font-size: 0.78rem; margin-bottom: 6px; }
+  .card .value { font-size: 1.9rem; font-weight: 700; }
+  .card .value.good { color: var(--good); }
+  .card .value.warn { color: var(--warn); }
+  section {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
+    padding: 16px; margin-top: 16px;
+  }
+  section h2 { font-size: 0.95rem; margin: 0 0 12px 0; }
+  .row { display: flex; align-items: center; gap: 10px; margin: 7px 0; font-size: 0.88rem; }
+  .row .name { width: 190px; color: var(--muted); }
+  .row .track { flex: 1; background: var(--bg); border-radius: 6px; height: 18px; overflow: hidden; }
+  .row .fill { height: 100%; background: var(--bar); }
+  .row .n { width: 44px; text-align: right; font-variant-numeric: tabular-nums; }
+  .empty { color: var(--muted); font-size: 0.85rem; }
+  .err { color: #b91c1c; font-size: 0.85rem; margin-top: 12px; }
+  .foot { color: var(--muted); font-size: 0.72rem; margin-top: 18px; }
+</style>
+</head>
+<body>
+  <header>
+    <div style="flex:1">
+      <h1>Admin KPI <span class="sub">— RTMC AI Assistant (pilot)</span></h1>
+    </div>
+    <button id="refresh">Yangilash</button>
+  </header>
+
+  <div class="cards" id="cards"></div>
+  <section><h2>Natijalar (outcomes)</h2><div id="outcomes" class="empty">Yuklanmoqda…</div></section>
+  <section><h2>Kategoriyalar</h2><div id="categories" class="empty">Yuklanmoqda…</div></section>
+  <div class="err" id="err" hidden></div>
+  <div class="foot" id="foot"></div>
+
+<script>
+(() => {
+  "use strict";
+  const $ = (id) => document.getElementById(id);
+  const OUTCOME_LABELS = { resolved: "Hal qilindi", handoff: "Operatorga", question: "Savol berildi", clarify: "Aniqlashtirish" };
+  const pct = (x) => x == null ? "—" : (x * 100).toFixed(1) + "%";
+
+  function bars(container, counts, labels) {
+    const entries = Object.entries(counts || {});
+    if (!entries.length) { container.className = "empty"; container.textContent = "Ma'lumot yo'q"; return; }
+    const max = Math.max(...entries.map(([, n]) => n));
+    container.className = "";
+    container.innerHTML = entries.sort((a, b) => b[1] - a[1]).map(([k, n]) => {
+      const name = (labels && labels[k]) || k;
+      const w = max ? Math.round((n / max) * 100) : 0;
+      return `<div class="row"><div class="name">${name}</div>` +
+             `<div class="track"><div class="fill" style="width:${w}%"></div></div>` +
+             `<div class="n">${n}</div></div>`;
+    }).join("");
+  }
+
+  async function load() {
+    $("err").hidden = true;
+    try {
+      const res = await fetch("/admin/metrics", { headers: { "Accept": "application/json" } });
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      const m = await res.json();
+      const rate = m.self_service_resolution_rate;
+      $("cards").innerHTML =
+        card("Self-Service Resolution Rate", pct(rate), rate != null && rate >= 0.5 ? "good" : (rate != null ? "warn" : "")) +
+        card("Handoff Rate", pct(m.handoff_rate), "") +
+        card("Jami suhbat turlari", m.total_events ?? 0, "") +
+        card("Yakuniy natijalar", m.terminal_events ?? 0, "");
+      bars($("outcomes"), m.outcomes, OUTCOME_LABELS);
+      bars($("categories"), m.categories, { imei: "IMEI", mnp: "MNP" });
+      $("foot").textContent = "Yangilandi: " + new Date().toLocaleString();
+    } catch (e) {
+      $("err").hidden = false;
+      $("err").textContent = "Xatolik: " + e.message + " (parol noto'g'ri yoki server o'chiq bo'lishi mumkin)";
+    }
+  }
+
+  function card(label, value, cls) {
+    return `<div class="card"><div class="label">${label}</div><div class="value ${cls}">${value}</div></div>`;
+  }
+
+  $("refresh").onclick = load;
+  load();
+})();
+</script>
+</body>
+</html>

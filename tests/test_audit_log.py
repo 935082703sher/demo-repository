@@ -4,8 +4,10 @@ from __future__ import annotations
 
 import asyncio
 
+from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
+from app.core.config import Settings
 from app.main import create_app
 from app.services.audit_log import (
     OUTCOME_HANDOFF,
@@ -38,8 +40,13 @@ def test_empty_log_reports_no_rate() -> None:
     assert metrics["self_service_resolution_rate"] is None
 
 
+def _admin_app() -> FastAPI:
+    settings = Settings(_env_file=None, environment="test", admin_password="s3cret")
+    return create_app(settings=settings)
+
+
 def test_metrics_endpoint_reflects_diagnose_turns() -> None:
-    with TestClient(create_app()) as client:
+    with TestClient(_admin_app()) as client:
         # Intermediate question.
         client.post("/assistant/diagnose", json={"message": "telefonim bloklandi"})
         # Reach a resolution card.
@@ -54,7 +61,7 @@ def test_metrics_endpoint_reflects_diagnose_turns() -> None:
         # Vague problem -> routing menu (clarify).
         client.post("/assistant/diagnose", json={"message": "telefonim ishlamayapti"})
 
-        metrics = client.get("/assistant/metrics").json()
+        metrics = client.get("/admin/metrics", auth=("admin", "s3cret")).json()
 
     assert metrics["total_events"] == 3
     outcomes = metrics["outcomes"]
@@ -62,3 +69,15 @@ def test_metrics_endpoint_reflects_diagnose_turns() -> None:
     assert outcomes.get("question", 0) >= 1
     assert outcomes.get("clarify", 0) >= 1
     assert metrics["categories"].get("imei", 0) >= 1
+
+
+def test_admin_metrics_requires_valid_credentials() -> None:
+    with TestClient(_admin_app()) as client:
+        assert client.get("/admin/metrics").status_code == 401
+        assert client.get("/admin/metrics", auth=("admin", "wrong")).status_code == 401
+        assert client.get("/admin/metrics", auth=("admin", "s3cret")).status_code == 200
+
+
+def test_admin_refused_when_password_not_configured() -> None:
+    with TestClient(create_app()) as client:  # no admin password configured
+        assert client.get("/admin/metrics", auth=("admin", "anything")).status_code == 503
