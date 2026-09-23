@@ -2,11 +2,14 @@
 
 from __future__ import annotations
 
+import asyncio
+import json
+
 from fastapi.testclient import TestClient
 
 from app.domain.case_state import CaseState, CaseStatus, Fact, FactStatus
 from app.main import create_app
-from app.services.fact_extraction import RuleBasedFactExtractor
+from app.services.fact_extraction import LLMFactExtractor, RuleBasedFactExtractor
 
 _DUBAI_STORY = (
     "Dubaydan telefon olib kelgandim ikki oycha bo'ldi. Avval ishlayotgandi, "
@@ -20,7 +23,7 @@ def _case() -> CaseState:
 
 
 def test_rule_extractor_reconstructs_dubai_case() -> None:
-    extracted = RuleBasedFactExtractor().extract(_DUBAI_STORY, _case(), turn_id=1)
+    extracted = asyncio.run(RuleBasedFactExtractor().extract(_DUBAI_STORY, _case(), turn_id=1))
     facts = {f.name: f.value for f in extracted}
     assert facts["device_origin"] == "imported"
     assert facts["origin_country"] == "UAE"
@@ -64,6 +67,57 @@ def test_understand_endpoint_extracts_and_persists_across_turns() -> None:
         assert second["known_facts"]["device_origin"] == "imported"  # earlier fact kept
         assert second["known_facts"]["declaration_status"] == "not_declared"
         assert "declaration_status" not in second["unknown_facts"]
+
+
+def test_llm_extractor_merges_and_prefers_rule_matches() -> None:
+    async def fake_complete(prompt: str) -> str:
+        return json.dumps(
+            {
+                "facts": [
+                    # Rules already say imported; the LLM's weaker guess must not win.
+                    {"name": "device_origin", "value": "local", "status": "inferred",
+                     "confidence": 0.6},
+                    # A fact the rules missed is added.
+                    {"name": "declaration_status", "value": "not_declared",
+                     "status": "explicit", "confidence": 0.9},
+                ]
+            }
+        )
+
+    extractor = LLMFactExtractor(fake_complete, fallback=RuleBasedFactExtractor())
+    facts = {f.name: f for f in asyncio.run(extractor.extract(_DUBAI_STORY, _case(), turn_id=1))}
+    assert facts["device_origin"].value == "imported"  # rule match kept
+    assert facts["declaration_status"].value == "not_declared"  # LLM added
+    assert facts["declaration_status"].source == "llm"
+
+
+def test_llm_extractor_falls_back_to_rules_on_error() -> None:
+    async def broken(prompt: str) -> str:
+        raise RuntimeError("network down")
+
+    extractor = LLMFactExtractor(broken, fallback=RuleBasedFactExtractor())
+    facts = {f.name for f in asyncio.run(extractor.extract(_DUBAI_STORY, _case(), turn_id=1))}
+    assert "device_origin" in facts  # rule facts still returned
+
+
+def test_llm_extractor_rejects_invalid_or_unknown_facts() -> None:
+    async def fake(prompt: str) -> str:
+        return json.dumps(
+            {
+                "facts": [
+                    {"name": "affected_sim", "value": "third", "status": "explicit",
+                     "confidence": 0.9},  # invalid value -> rejected (rule keeps 'second')
+                    {"name": "made_up_field", "value": "x", "status": "explicit",
+                     "confidence": 1.0},  # unknown fact -> rejected
+                ]
+            }
+        )
+
+    extractor = LLMFactExtractor(fake, fallback=RuleBasedFactExtractor())
+    extracted = asyncio.run(extractor.extract(_DUBAI_STORY, _case(), turn_id=1))
+    facts = {f.name: f.value for f in extracted}
+    assert facts["affected_sim"] == "second"
+    assert "made_up_field" not in facts
 
 
 def test_understand_reports_unknowns_for_short_message() -> None:

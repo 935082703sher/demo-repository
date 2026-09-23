@@ -45,7 +45,7 @@ class UnderstandResponse(BaseModel):
 
 
 @router.post("/understand", response_model=UnderstandResponse)
-def assistant_understand(payload: UnderstandRequest, request: Request) -> UnderstandResponse:
+async def assistant_understand(payload: UnderstandRequest, request: Request) -> UnderstandResponse:
     """Update the session's case with facts extracted from this message."""
     store = cast(CaseStore, request.app.state.case_store)
     extractor = cast(FactExtractor, request.app.state.fact_extractor)
@@ -57,7 +57,7 @@ def assistant_understand(payload: UnderstandRequest, request: Request) -> Unders
     if case.domain is None:
         case.domain = detect_domain(payload.message)
 
-    for fact in extractor.extract(payload.message, case, turn_id=case.turn_count):
+    for fact in await extractor.extract(payload.message, case, turn_id=case.turn_count):
         case.upsert(fact)
 
     if case.domain == "imei":

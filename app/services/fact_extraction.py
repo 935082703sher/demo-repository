@@ -9,7 +9,9 @@ behind the same protocol; the rule extractor stays as a reliable baseline.
 
 from __future__ import annotations
 
-from typing import Protocol
+import json
+from collections.abc import Awaitable, Callable
+from typing import Any, Protocol
 
 from app.domain.case_state import CaseState, Fact, FactStatus
 
@@ -73,13 +75,13 @@ _COUNTRIES = {
 class FactExtractor(Protocol):
     """Turn one user message (in the case context) into typed facts."""
 
-    def extract(self, message: str, case: CaseState, *, turn_id: int) -> list[Fact]: ...
+    async def extract(self, message: str, case: CaseState, *, turn_id: int) -> list[Fact]: ...
 
 
 class RuleBasedFactExtractor:
     """Deterministic IMEI fact extraction; every match is EXPLICIT (user-stated)."""
 
-    def extract(self, message: str, case: CaseState, *, turn_id: int) -> list[Fact]:
+    async def extract(self, message: str, case: CaseState, *, turn_id: int) -> list[Fact]:
         norm = _normalize(message)
         found: dict[str, str] = {}
 
@@ -102,6 +104,160 @@ class RuleBasedFactExtractor:
             Fact(name=name, value=value, status=FactStatus.EXPLICIT, source="user", turn_id=turn_id)
             for name, value in found.items()
         ]
+
+
+ExtractComplete = Callable[[str], Awaitable[str]]
+
+# Allowed values per fact; empty list means free text (e.g. country name).
+_ALLOWED_VALUES: dict[str, tuple[str, ...]] = {
+    "device_origin": ("local", "imported"),
+    "origin_country": (),
+    "declaration_status": ("declared", "not_declared"),
+    "affected_sim": ("first", "second", "both"),
+    "registration_status": ("not_attempted", "attempted", "failed", "success"),
+    "previously_working": ("true", "false"),
+    "imei_notification_received": ("true", "false"),
+}
+
+_LLM_INSTRUCTIONS = (
+    "You extract structured IMEI case facts from a user's free-form message written "
+    "in Uzbek, Russian or mixed language, possibly short, long, messy or misspelled. "
+    "Understand the meaning, not the exact words. Output a fact ONLY when the message "
+    "states or clearly implies it; never invent. Use status 'explicit' when the user "
+    "stated it directly and 'inferred' when you deduced it from context. Leave "
+    "anything unclear out entirely. Respond as JSON: "
+    '{"facts": [{"name": ..., "value": ..., "status": "explicit|inferred", '
+    '"confidence": 0..1}]}. Allowed names and values: '
+    "device_origin(local|imported), origin_country(free text), "
+    "declaration_status(declared|not_declared), affected_sim(first|second|both), "
+    "registration_status(not_attempted|attempted|failed|success), "
+    "previously_working(true|false), imei_notification_received(true|false)."
+)
+
+_FACTS_JSON_SCHEMA: dict[str, Any] = {
+    "type": "object",
+    "properties": {
+        "facts": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "name": {"type": "string"},
+                    "value": {"type": "string"},
+                    "status": {"type": "string"},
+                    "confidence": {"type": "number"},
+                },
+                "required": ["name", "value", "status", "confidence"],
+                "additionalProperties": False,
+            },
+        }
+    },
+    "required": ["facts"],
+    "additionalProperties": False,
+}
+
+
+class LLMFactExtractor:
+    """Semantic IMEI fact extraction via an LLM, with a rule-based safety net.
+
+    Reliable rule matches (EXPLICIT) are always kept; the LLM adds facts the rules
+    missed and marks deductions INFERRED. Any LLM failure degrades to rules only.
+    """
+
+    def __init__(self, complete: ExtractComplete, fallback: FactExtractor) -> None:
+        self._complete = complete
+        self._fallback = fallback
+
+    async def extract(self, message: str, case: CaseState, *, turn_id: int) -> list[Fact]:
+        rule_facts = await self._fallback.extract(message, case, turn_id=turn_id)
+        try:
+            raw = await self._complete(self._prompt(message, case))
+            llm_facts = self._parse(raw, turn_id)
+        except Exception:  # pragma: no cover - network/parse failure -> rules only
+            return rule_facts
+        merged = {fact.name: fact for fact in rule_facts}
+        for fact in llm_facts:
+            merged.setdefault(fact.name, fact)  # rule matches are authoritative
+        return list(merged.values())
+
+    @staticmethod
+    def _prompt(message: str, case: CaseState) -> str:
+        return json.dumps(
+            {"message": message, "already_known": case.known_facts()}, ensure_ascii=False
+        )
+
+    @staticmethod
+    def _parse(raw: str, turn_id: int) -> list[Fact]:
+        data = json.loads(raw)
+        facts: list[Fact] = []
+        for item in data.get("facts", []):
+            name = str(item.get("name", ""))
+            if name not in _ALLOWED_VALUES:
+                continue
+            value = item.get("value")
+            value_str = str(value) if value is not None else None
+            allowed = _ALLOWED_VALUES[name]
+            if allowed and value_str not in allowed:
+                continue
+            status = (
+                FactStatus.INFERRED
+                if str(item.get("status")) == "inferred"
+                else FactStatus.EXPLICIT
+            )
+            confidence = float(item.get("confidence") or 0.8)
+            facts.append(
+                Fact(
+                    name=name,
+                    value=value_str,
+                    status=status,
+                    confidence=max(0.0, min(1.0, confidence)),
+                    source="llm",
+                    turn_id=turn_id,
+                )
+            )
+        return facts
+
+
+def build_openai_fact_complete(
+    *, api_key: str, model: str, timeout_seconds: float = 20.0
+) -> ExtractComplete:
+    """Return an OpenAI-backed completion callable for LLM fact extraction."""
+    import httpx
+
+    async def complete(prompt: str) -> str:
+        payload = {
+            "model": model,
+            "store": False,
+            "instructions": _LLM_INSTRUCTIONS,
+            "input": prompt,
+            "max_output_tokens": 500,
+            "text": {
+                "format": {
+                    "type": "json_schema",
+                    "name": "imei_facts",
+                    "strict": True,
+                    "schema": _FACTS_JSON_SCHEMA,
+                }
+            },
+        }
+        async with httpx.AsyncClient(timeout=timeout_seconds) as client:
+            response = await client.post(
+                "https://api.openai.com/v1/responses",
+                headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
+                json=payload,
+            )
+            response.raise_for_status()
+            return _extract_output_text(response.json())
+
+    return complete
+
+
+def _extract_output_text(envelope: dict[str, Any]) -> str:
+    for output in envelope.get("output", []):
+        for content in output.get("content", []):
+            if content.get("type") == "output_text" and content.get("text"):
+                return str(content["text"])
+    raise ValueError("provider response did not contain output_text")
 
 
 def detect_domain(message: str) -> str | None:

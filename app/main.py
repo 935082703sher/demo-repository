@@ -37,7 +37,12 @@ from app.services.classifier import RequestClassifier
 from app.services.complaint_drafts import ComplaintDraftService
 from app.services.complaint_workflow_adapter import GovernedComplaintWorkflowAdapter
 from app.services.diagnostic_engine import DiagnosticEngine
-from app.services.fact_extraction import RuleBasedFactExtractor
+from app.services.fact_extraction import (
+    FactExtractor,
+    LLMFactExtractor,
+    RuleBasedFactExtractor,
+    build_openai_fact_complete,
+)
 from app.services.generation import GroundedGenerationService
 from app.services.governed_complaint_orchestrator import GovernedComplaintOrchestrator
 from app.services.grounding import GroundingValidator
@@ -112,7 +117,23 @@ def create_app(
     app.state.provider = selected_provider
     app.state.diagnostic_engine = DiagnosticEngine.from_json(diagnostics_path)
     app.state.case_store = InMemoryCaseStore()
-    app.state.fact_extractor = RuleBasedFactExtractor()
+    rule_extractor = RuleBasedFactExtractor()
+    fact_extractor: FactExtractor = rule_extractor
+    if (
+        app_settings.llm_provider == "openai"
+        and app_settings.llm_api_key is not None
+        and app_settings.llm_api_key.get_secret_value()
+        and app_settings.llm_model
+    ):
+        fact_extractor = LLMFactExtractor(
+            build_openai_fact_complete(
+                api_key=app_settings.llm_api_key.get_secret_value(),
+                model=app_settings.llm_model,
+                timeout_seconds=app_settings.llm_timeout_seconds,
+            ),
+            fallback=rule_extractor,
+        )
+    app.state.fact_extractor = fact_extractor
     app.state.audit_log = InMemoryAuditLog()
     app.state.usage_limits = usage_limits
     legacy_drafts = ComplaintDraftService(app_settings.privacy_notice_version)
