@@ -577,5 +577,5 @@ def test_feature_disabled_keeps_legacy_and_enabled_adds_no_openapi_paths() -> No
     assert disabled.state.governed_complaint_orchestrator is None
     assert enabled.state.governed_complaint_orchestrator is not None
     assert disabled.openapi() == enabled.openapi()
-    # 5 legacy + 6 /assistant (incl. /understand) + 2 diagnostics + 1 /admin/metrics.
-    assert len(enabled.openapi()["paths"]) == 14
+    # 5 legacy + 7 /assistant (incl. /understand, /converse) + 2 diagnostics + admin.
+    assert len(enabled.openapi()["paths"]) == 15

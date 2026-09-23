@@ -4,12 +4,17 @@ from __future__ import annotations
 
 import asyncio
 import json
+from pathlib import Path
 
 from fastapi.testclient import TestClient
 
 from app.domain.case_state import CaseState, CaseStatus, Fact, FactStatus
+from app.domain.diagnostics import DiagnosticNode, ResolutionCard
 from app.main import create_app
+from app.services.diagnostic_engine import DiagnosticEngine
 from app.services.fact_extraction import LLMFactExtractor, RuleBasedFactExtractor
+
+_DIAGNOSTICS = Path(__file__).resolve().parents[1] / "app" / "data" / "diagnostics.json"
 
 _DUBAI_STORY = (
     "Dubaydan telefon olib kelgandim ikki oycha bo'ldi. Avval ishlayotgandi, "
@@ -118,6 +123,42 @@ def test_llm_extractor_rejects_invalid_or_unknown_facts() -> None:
     facts = {f.name: f.value for f in extracted}
     assert facts["affected_sim"] == "second"
     assert "made_up_field" not in facts
+
+
+def test_walk_asks_only_the_unknown_fact() -> None:
+    engine = DiagnosticEngine.from_json(_DIAGNOSTICS)
+    tree = "imei-royxatdan_otkazish"
+
+    kind, node = engine.walk(tree, {})
+    assert kind == "ask" and isinstance(node, DiagnosticNode) and node.id == "source"
+
+    # device_origin known -> the 'where from' question is skipped.
+    kind, node = engine.walk(tree, {"device_origin": "imported"})
+    assert kind == "ask" and isinstance(node, DiagnosticNode) and node.id == "customs"
+
+    # Enough facts -> resolve without any question.
+    kind, card = engine.walk(
+        tree, {"device_origin": "imported", "declaration_status": "not_declared"}
+    )
+    assert kind == "resolve" and isinstance(card, ResolutionCard) and card.id == "imei-customs"
+
+
+def test_converse_dubai_skips_known_facts_then_resolves() -> None:
+    with TestClient(create_app()) as client:
+        turn1 = client.post(
+            "/assistant/converse",
+            json={"message": _DUBAI_STORY, "session_id": "cv1", "language": "uz"},
+        ).json()
+        assert turn1["done"] is False
+        assert turn1["known_facts"]["device_origin"] == "imported"  # understood, not asked
+        assert "me'yor" in turn1["reply"] or "deklarat" in turn1["reply"].lower()
+
+        turn2 = client.post(
+            "/assistant/converse",
+            json={"message": "Deklaratsiya qilmaganman", "session_id": "cv1", "language": "uz"},
+        ).json()
+        assert turn2["done"] is True
+        assert turn2["card_id"] == "imei-customs"
 
 
 def test_understand_reports_unknowns_for_short_message() -> None:

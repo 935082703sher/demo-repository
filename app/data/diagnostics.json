@@ -35,7 +35,8 @@
                 "uz": "O'zbekistondan (do'kon/sotuvchi)",
                 "ru": "Купил в Узбекистане (магазин)"
               },
-              "next_node": "retailer"
+              "next_node": "retailer",
+              "fact_value": "local"
             },
             {
               "value": "abroad",
@@ -43,7 +44,8 @@
                 "uz": "Chetdan o'zim olib keldim",
                 "ru": "Привёз из-за границы сам"
               },
-              "next_node": "customs"
+              "next_node": "customs",
+              "fact_value": "imported"
             },
             {
               "value": "post",
@@ -53,7 +55,8 @@
               },
               "card": "imei-post"
             }
-          ]
+          ],
+          "fact": "device_origin"
         },
         {
           "id": "retailer",
@@ -93,7 +96,8 @@
                 "uz": "Ha, me'yordan ortiq",
                 "ru": "Да, больше нормы"
               },
-              "card": "imei-customs"
+              "card": "imei-customs",
+              "fact_value": "not_declared"
             },
             {
               "value": "no",
@@ -101,9 +105,11 @@
                 "uz": "Yo'q, me'yor doirasida",
                 "ru": "Нет, в пределах нормы"
               },
-              "next_node": "error"
+              "next_node": "error",
+              "fact_value": "declared"
             }
-          ]
+          ],
+          "fact": "declaration_status"
         },
         {
           "id": "error",

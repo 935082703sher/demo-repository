@@ -111,6 +111,34 @@ class DiagnosticEngine:
                 best, best_score = tree, score
         return best if best_score > 0 else None
 
+    def walk(
+        self, tree_id: str, facts: dict[str, str], *, max_steps: int = 20
+    ) -> tuple[str, DiagnosticNode | ResolutionCard | None]:
+        """Walk a tree using known facts, asking only the first unknown one.
+
+        Returns ("ask", node) for the next question the case still needs,
+        ("resolve", card) when the facts complete a path, or ("stuck", None) when
+        the tree cannot proceed. Nodes whose fact is already known are auto-advanced
+        (their question is skipped), so a user is never asked what they already told.
+        """
+        tree = self.get_tree(tree_id)
+        if tree is None:
+            return ("stuck", None)
+        node = self.get_node(tree_id, tree.root)
+        for _ in range(max_steps):
+            if node is None:
+                return ("stuck", None)
+            if node.fact and node.fact in facts:
+                value = facts[node.fact]
+                option = next((o for o in node.options if o.fact_value == value), None)
+                if option is not None:
+                    if option.card is not None:
+                        return ("resolve", self.get_card(option.card))
+                    node = self.get_node(tree_id, option.next_node) if option.next_node else None
+                    continue
+            return ("ask", node)
+        return ("stuck", None)
+
     def map_answer(self, tree_id: str, node_id: str, message: str) -> str | None:
         """Map a free-text reply to one of the node's option values.
 

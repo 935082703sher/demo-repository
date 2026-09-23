@@ -33,6 +33,7 @@ class DiagnosticOption(_Model):
     label: LocalizedText
     next_node: str | None = None
     card: str | None = None
+    fact_value: str | None = None  # the CaseState fact value this option represents
 
 
 class DiagnosticNode(_Model):
@@ -40,6 +41,7 @@ class DiagnosticNode(_Model):
 
     id: str = Field(min_length=1)
     question: LocalizedText
+    fact: str | None = None  # the case fact this node establishes (for auto-advance)
     options: list[DiagnosticOption] = Field(min_length=1)
 
 

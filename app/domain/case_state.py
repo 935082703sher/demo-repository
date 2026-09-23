@@ -62,6 +62,8 @@ class CaseState(BaseModel):
     diagnosis: str | None = None
     diagnosis_confidence: float | None = None
     resolution_card_id: str | None = None
+    active_tree: str | None = None
+    pending_node: str | None = None
     status: CaseStatus = CaseStatus.UNDERSTANDING
     language: str = "uz"
     channel: str = "web"
