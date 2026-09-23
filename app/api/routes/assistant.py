@@ -237,6 +237,7 @@ class ConverseRequest(BaseModel):
     tree_id: str | None = None
     node_id: str | None = None
     language: str = Field(default="uz", pattern="^(uz|ru|en)$")
+    channel: str = Field(default="web", pattern="^(web|telegram)$")
 
 
 class ConverseOption(BaseModel):
@@ -459,7 +460,7 @@ async def assistant_diagnose(payload: ConverseRequest, request: Request) -> Conv
     audit = cast(AuditLog, request.app.state.audit_log)
     await audit.record(
         AuditEvent(
-            channel="web",
+            channel=payload.channel,
             language=lang,
             outcome=_turn_outcome(response),
             category=_category_of(response.tree_id),
