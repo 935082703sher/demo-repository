@@ -231,6 +231,21 @@ def test_engine_route_returns_domain_when_ambiguous() -> None:
     assert tree is not None and tree.id == "imei-blokdan_chiqarish"
 
 
+def test_smalltalk_gets_natural_reply_not_menu(corpus_client: TestClient) -> None:
+    for greeting in ("hello", "qandaysan", "salom"):
+        body = _diagnose(corpus_client, message=greeting)
+        assert body["reason"] == "greeting"
+        assert body["options"] == []  # a warm reply, not the fixed menu
+        assert body["requires_human"] is False
+
+
+def test_greeting_with_real_problem_still_routes(corpus_client: TestClient) -> None:
+    # A greeting glued to a real problem must route, not be treated as small talk.
+    body = _diagnose(corpus_client, message="salom, telefonim bloklandi")
+    assert body["tree_id"] == "imei-blokdan_chiqarish"
+    assert body["node_id"] == "cause"
+
+
 def test_vague_domain_message_offers_domain_menu_not_handoff(corpus_client: TestClient) -> None:
     body = _diagnose(corpus_client, message="Menga MNP bo'yicha muammo bor")
     assert body["requires_human"] is False

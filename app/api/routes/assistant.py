@@ -347,6 +347,45 @@ def _domain_menu(engine: DiagnosticEngine, domain: str, lang: str) -> ConverseRe
     return _menu(reply, engine.trees_for_domain(domain), lang)
 
 
+_SMALLTALK_TERMS = (
+    "salom", "assalom", "alaykum", "hello", "hi", "hey", "hayrli",
+    "qandaysan", "qalaysan", "yaxshimisiz", "rahmat", "tashakkur", "xayr",
+    "how are you", "thanks", "thank you", "privet", "zdravstvuy", "spasibo",
+    "poka", "kak dela", "salomat",
+)
+
+_SMALLTALK_REPLY = {
+    "uz": "Assalomu alaykum! Men IMEI va MNP bo'yicha yordam beraman. Muammoingizni "
+    "o'z so'zlaringiz bilan yozing — masalan «telefonim chetdan, ro'yxatdan o'tmayapti» "
+    "yoki «raqamni boshqa operatorga ko'chirmoqchiman». Sizga qanday yordam bera olaman?",
+    "ru": "Здравствуйте! Я помогаю по вопросам IMEI и MNP. Опишите проблему своими "
+    "словами — например «телефон из-за границы, не регистрируется» или «хочу перенести "
+    "номер к другому оператору». Чем могу помочь?",
+    "en": "Hello! I help with IMEI and MNP matters. Describe your problem in your own "
+    "words — for example 'imported phone won't register' or 'I want to port my number'. "
+    "How can I help?",
+}
+
+
+def _is_smalltalk(message: str) -> bool:
+    norm = message.lower().replace("'", "").replace("ʻ", "").replace("`", "")
+    return any(term in norm for term in _SMALLTALK_TERMS)
+
+
+def _greeting(lang: str) -> ConverseResponse:
+    return ConverseResponse(
+        tree_id=None,
+        node_id=None,
+        reply=_SMALLTALK_REPLY.get(lang, _SMALLTALK_REPLY["uz"]),
+        options=[],
+        done=False,
+        card_id=None,
+        sources=[],
+        requires_human=False,
+        reason="greeting",
+    )
+
+
 def _card_context(card: ResolutionCard, lang: str) -> str:
     lines = [card.probable_cause.get(lang), "", "Qadamlar:"]
     lines += [f"{i}. {step.get(lang)}" for i, step in enumerate(card.steps, 1)]
@@ -455,12 +494,15 @@ async def _run_diagnose(
     if tree is None and payload.tree_id:
         tree = engine.get_tree(payload.tree_id)
     if tree is None:
-        # Route free text: a clear tree, else a domain menu, else the full menu.
+        # Route free text: a clear tree, else a domain menu.
         matched, domain = engine.route(payload.message)
         if matched is None and domain is not None:
             return _domain_menu(engine, domain, lang)
         tree = matched
     if tree is None:
+        # Nothing matched a topic: greet small talk naturally, otherwise offer the menu.
+        if _is_smalltalk(payload.message):
+            return _greeting(lang)
         return _routing_menu(engine, lang)
     root = engine.get_node(tree.id, tree.root)
     assert root is not None  # integrity-checked at load
