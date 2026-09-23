@@ -289,13 +289,16 @@ async def assistant_converse(
         chosen = engine.get_tree(payload.message.strip())
         if chosen is None:
             matched, domain = engine.route(payload.message)
+            # No specific tree, but if we know the domain (from routing tie or fact
+            # extraction) offer that domain's topics instead of the whole menu.
+            menu_domain = domain or case.domain
             if matched is not None:
                 chosen = matched
-            elif domain is not None:
+            elif menu_domain is not None and engine.trees_for_domain(menu_domain):
                 by_lang = _DOMAIN_INTRO.get(lang, _DOMAIN_INTRO["uz"])
-                intro = by_lang.get(domain) or _ROUTE_INTRO.get(lang, _ROUTE_INTRO["uz"])
+                intro = by_lang.get(menu_domain) or _ROUTE_INTRO.get(lang, _ROUTE_INTRO["uz"])
                 store.save(case)
-                return _menu(case, engine.trees_for_domain(domain), intro, lang)
+                return _menu(case, engine.trees_for_domain(menu_domain), intro, lang)
             elif _is_smalltalk(payload.message):
                 store.save(case)
                 return _resp(case, _GREETING.get(lang, _GREETING["uz"]))

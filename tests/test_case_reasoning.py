@@ -185,6 +185,31 @@ def test_converse_routes_mnp_to_a_domain_menu() -> None:
         assert values and all(v.startswith("mnp-") for v in values)  # only MNP topics offered
 
 
+def test_converse_generic_imei_message_enters_primary_imei_flow() -> None:
+    with TestClient(create_app()) as client:
+        body = client.post(
+            "/assistant/converse",
+            json={"message": "IMEI muammosi bor", "session_id": "cv-imei-gen"},
+        ).json()
+        assert body["domain"] == "imei"
+        assert body["done"] is False
+        # A bare IMEI message defaults to the registration flow's first question.
+        assert "qayerdan" in body["reply"].lower()
+
+
+def test_converse_block_message_routes_to_unblock_not_registration() -> None:
+    with TestClient(create_app()) as client:
+        body = client.post(
+            "/assistant/converse",
+            json={"message": "IMEI bloklandi, nima qilay", "session_id": "cv-block"},
+        ).json()
+        # The block tree asks its own first question; it is not the registration flow.
+        assert body["done"] is False
+        reply = body["reply"].lower()
+        assert "blok" in reply  # asks about being blocked
+        assert "qayerdan" not in reply  # not the registration 'where from' question
+
+
 def test_converse_new_problem_after_resolve_does_not_reuse_facts() -> None:
     with TestClient(create_app()) as client:
         # Resolve a customs case first.

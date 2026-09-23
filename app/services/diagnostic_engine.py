@@ -21,6 +21,12 @@ from app.domain.diagnostics import (
 
 _TOKEN = re.compile(r"[a-z0-9]{3,}")
 
+# Domain words that name a topic area, not a specific problem. They are a real
+# signal (a bare 'imei' message should still reach the primary IMEI tree), but a
+# specific word like 'bloklandi' must outrank them, so they weigh less.
+_GENERIC_TOKENS = frozenset({"imei", "mnp"})
+_GENERIC_WEIGHT = 0.5
+
 try:  # reuse the KB normalizer so uz/ru/cyrillic queries match tree keywords
     from kb.src.normalize import normalize as _kb_normalize
 except Exception:  # pragma: no cover
@@ -94,22 +100,49 @@ class DiagnosticEngine:
     def get_card(self, card_id: str) -> ResolutionCard | None:
         return self._cards.get(card_id)
 
-    def match_tree(self, query: str) -> DecisionTree | None:
-        """Pick the tree whose keywords best overlap the free-text problem."""
+    def _tree_score(self, tree: DecisionTree, terms: set[str]) -> float:
+        """Score one tree against the query terms; multi-word keywords are phrases.
+
+        A single-token keyword matches when its token overlaps a query term by
+        stem. A multi-token keyword is a phrase: it matches only when every one of
+        its tokens overlaps some query term, so 'регистрация imei' needs the
+        registration word too, not merely 'imei'. Each distinct query term counts
+        once at the weight of the strongest keyword that matched it (a generic
+        domain word weighs less), so a repeated or generic word cannot inflate a
+        score above a specific match.
+        """
+        weights: dict[str, float] = {}
+        for keyword in tree.keywords:
+            tokens = _TOKEN.findall(_normalize(keyword))
+            if not tokens:
+                continue
+            hits: list[tuple[str, float]] = []
+            generic = len(tokens) == 1 and tokens[0] in _GENERIC_TOKENS
+            weight = _GENERIC_WEIGHT if generic else 1.0
+            for token in tokens:
+                hit = next((term for term in terms if token in term or term in token), None)
+                if hit is None:
+                    hits = []
+                    break
+                hits.append((hit, weight))
+            for term, term_weight in hits:
+                weights[term] = max(weights.get(term, 0.0), term_weight)
+        return sum(weights.values())
+
+    def _keyword_scores(self, query: str) -> dict[str, float]:
+        """Score every tree by its weighted overlap with the query terms."""
         terms = set(_TOKEN.findall(_normalize(query)))
         if not terms:
+            return {}
+        return {tree.id: self._tree_score(tree, terms) for tree in self._trees.values()}
+
+    def match_tree(self, query: str) -> DecisionTree | None:
+        """Pick the tree whose keywords best overlap the free-text problem."""
+        scores = self._keyword_scores(query)
+        if not scores:
             return None
-        best: DecisionTree | None = None
-        best_score = 0
-        for tree in self._trees.values():
-            score = 0
-            for keyword in tree.keywords:
-                tokens = _TOKEN.findall(_normalize(keyword))
-                if tokens and any(_stem_match(token, terms) for token in tokens):
-                    score += 1
-            if score > best_score:
-                best, best_score = tree, score
-        return best if best_score > 0 else None
+        best_id = max(scores, key=lambda tid: scores[tid])
+        return self._trees[best_id] if scores[best_id] > 0 else None
 
     def walk(
         self, tree_id: str, facts: dict[str, str], *, max_steps: int = 20
@@ -180,19 +213,11 @@ class DiagnosticEngine:
         trees of the same domain tie (ask which topic), or (None, None) for no
         match at all (offer the full menu).
         """
-        terms = set(_TOKEN.findall(_normalize(query)))
-        if not terms:
+        scores = self._keyword_scores(query)
+        if not scores:
             return None, None
-        scores: dict[str, int] = {}
-        for tree in self._trees.values():
-            score = 0
-            for keyword in tree.keywords:
-                tokens = _TOKEN.findall(_normalize(keyword))
-                if tokens and any(_stem_match(token, terms) for token in tokens):
-                    score += 1
-            scores[tree.id] = score
         best = max(scores.values())
-        if best == 0:
+        if best <= 0:
             return None, None
         top = [self._trees[tid] for tid, score in scores.items() if score == best]
         if len(top) == 1:

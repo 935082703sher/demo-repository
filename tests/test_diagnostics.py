@@ -204,6 +204,8 @@ def test_diagnose_menu_selection_starts_tree(corpus_client: TestClient) -> None:
     ("message", "expected_tree"),
     [
         ("telefonim bloklandi nima qilay", "imei-blokdan_chiqarish"),
+        # The generic word 'IMEI' must not pull a 'blocked' message to registration.
+        ("IMEI bloklandi nima qilay", "imei-blokdan_chiqarish"),
         ("разблокировать телефон", "imei-blokdan_chiqarish"),
         ("telefonimni o'g'irlab ketishdi", "imei-yoqotilgan_ogirlangan"),
         ("украли телефон", "imei-yoqotilgan_ogirlangan"),
@@ -229,6 +231,16 @@ def test_engine_route_returns_domain_when_ambiguous() -> None:
     assert tree is None and domain == "mnp"  # ambiguous within MNP -> domain
     tree, domain = engine.route("telefonim bloklandi")  # one clear tree
     assert tree is not None and tree.id == "imei-blokdan_chiqarish"
+
+
+def test_route_specific_word_outranks_generic_domain_word() -> None:
+    engine = _engine()
+    # 'IMEI bloklandi' is a block problem: the specific word must win over 'imei'.
+    tree, _ = engine.route("IMEI bloklandi nima qilay")
+    assert tree is not None and tree.id == "imei-blokdan_chiqarish"
+    # A bare 'imei' message still reaches the primary IMEI tree (weak but real signal).
+    tree, _ = engine.route("IMEI muammosi bor")
+    assert tree is not None and tree.id == "imei-royxatdan_otkazish"
 
 
 def test_smalltalk_gets_natural_reply_not_menu(corpus_client: TestClient) -> None:
