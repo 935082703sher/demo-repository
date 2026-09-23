@@ -114,17 +114,23 @@ class DiagnosticEngine:
     def walk(
         self, tree_id: str, facts: dict[str, str], *, max_steps: int = 20
     ) -> tuple[str, DiagnosticNode | ResolutionCard | None]:
-        """Walk a tree using known facts, asking only the first unknown one.
-
-        Returns ("ask", node) for the next question the case still needs,
-        ("resolve", card) when the facts complete a path, or ("stuck", None) when
-        the tree cannot proceed. Nodes whose fact is already known are auto-advanced
-        (their question is skipped), so a user is never asked what they already told.
-        """
+        """Walk from the tree root using known facts (see advance)."""
         tree = self.get_tree(tree_id)
         if tree is None:
             return ("stuck", None)
-        node = self.get_node(tree_id, tree.root)
+        return self.advance(tree_id, tree.root, facts, max_steps=max_steps)
+
+    def advance(
+        self, tree_id: str, node_id: str, facts: dict[str, str], *, max_steps: int = 20
+    ) -> tuple[str, DiagnosticNode | ResolutionCard | None]:
+        """Advance from a node, auto-skipping questions whose fact is already known.
+
+        Returns ("ask", node) for the next question the case still needs,
+        ("resolve", card) when a fact completes a path, or ("stuck", None). A node
+        whose fact is known is auto-advanced, so the user is never asked what they
+        already told; a node without a fact (or an unknown one) is asked.
+        """
+        node = self.get_node(tree_id, node_id)
         for _ in range(max_steps):
             if node is None:
                 return ("stuck", None)

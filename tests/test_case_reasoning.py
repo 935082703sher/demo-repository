@@ -161,6 +161,52 @@ def test_converse_dubai_skips_known_facts_then_resolves() -> None:
         assert turn2["card_id"] == "imei-customs"
 
 
+def test_converse_greets_small_talk_without_a_menu() -> None:
+    with TestClient(create_app()) as client:
+        body = client.post(
+            "/assistant/converse",
+            json={"message": "hello", "session_id": "cv-greet", "language": "uz"},
+        ).json()
+        assert body["done"] is False
+        assert body["card_id"] is None
+        assert body["options"] == []  # a greeting, not the routing menu
+        assert body["requires_human"] is False
+
+
+def test_converse_routes_mnp_to_a_domain_menu() -> None:
+    with TestClient(create_app()) as client:
+        body = client.post(
+            "/assistant/converse",
+            json={"message": "Menga MNP bo'yicha muammo bor", "session_id": "cv-mnp"},
+        ).json()
+        assert body["domain"] == "mnp"
+        assert body["done"] is False
+        values = {opt["value"] for opt in body["options"]}
+        assert values and all(v.startswith("mnp-") for v in values)  # only MNP topics offered
+
+
+def test_converse_new_problem_after_resolve_does_not_reuse_facts() -> None:
+    with TestClient(create_app()) as client:
+        # Resolve a customs case first.
+        client.post(
+            "/assistant/converse",
+            json={"message": _DUBAI_STORY, "session_id": "cv-reuse", "language": "uz"},
+        )
+        done = client.post(
+            "/assistant/converse",
+            json={"message": "Deklaratsiya qilmaganman", "session_id": "cv-reuse"},
+        ).json()
+        assert done["done"] is True and done["card_id"] == "imei-customs"
+
+        # A brand-new problem must start fresh, not auto-resolve on the old facts.
+        fresh = client.post(
+            "/assistant/converse",
+            json={"message": "Qurilmani ro'yxatdan o'tkazmoqchiman", "session_id": "cv-reuse"},
+        ).json()
+        assert fresh["done"] is False  # asks, not silently reuses declaration_status
+        assert "declaration_status" not in fresh["known_facts"]
+
+
 def test_understand_reports_unknowns_for_short_message() -> None:
     with TestClient(create_app()) as client:
         body = client.post(

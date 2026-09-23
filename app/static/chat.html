@@ -121,7 +121,10 @@
   const langSel = document.getElementById("lang");
   const resetBtn = document.getElementById("reset");
 
-  const state = { tree_id: null, node_id: null, lang: "uz" };
+  function newSession() {
+    return (crypto.randomUUID ? crypto.randomUUID() : "s-" + Date.now() + "-" + Math.random().toString(16).slice(2));
+  }
+  const state = { session_id: newSession(), lang: "uz" };
 
   const T = {
     uz: { welcome: "Assalomu alaykum! IMEI yoki MNP bo‘yicha muammoingizni yozing. Masalan: «IMEI ro‘yxatdan o‘tmayapti», «telefonim bloklandi», «raqamni boshqa operatorga ko‘chirmoqchiman».",
@@ -173,29 +176,6 @@
     wrap.querySelectorAll("button").forEach(b => { b.disabled = true; b.style.opacity = "0.5"; });
   }
 
-  function esc(s) { const d = document.createElement("div"); d.textContent = s == null ? "" : s; return d.innerHTML; }
-
-  function renderCard(d) {
-    // The natural-language reply first, then the structured card.
-    if (d.reply) bubble("ai", d.reply);
-    const t = tr();
-    const c = document.createElement("div");
-    c.className = "card";
-    let html = "";
-    if (d.card_title) html += `<h3>${esc(d.card_title)}</h3>`;
-    let meta = "";
-    if (d.official_url) meta += `<div>🔗 <a href="${esc(d.official_url)}" target="_blank" rel="noopener">${esc(d.official_url)}</a></div>`;
-    if (d.contact) meta += `<div>📞 ${t.contact}: ${esc(d.contact)}</div>`;
-    if (meta) html += `<div class="meta">${meta}</div>`;
-    if (d.sources && d.sources.length) {
-      html += `<div class="chips"><span class="chip">${esc(t.sources)}:</span>` +
-        d.sources.map(s => `<span class="chip">${esc(s.title || s.doc_id)}</span>`).join("") + `</div>`;
-    }
-    c.innerHTML = html;
-    log.appendChild(c);
-    scroll();
-  }
-
   function typing(on) {
     let el = document.getElementById("typing");
     if (on) {
@@ -206,9 +186,9 @@
   async function post(message) {
     typing(true); sendBtn.disabled = true;
     try {
-      const res = await fetch("/assistant/diagnose", {
+      const res = await fetch("/assistant/converse", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message, tree_id: state.tree_id, node_id: state.node_id, language: state.lang })
+        body: JSON.stringify({ message, session_id: state.session_id, language: state.lang, channel: "web" })
       });
       if (!res.ok) throw new Error("http " + res.status);
       return await res.json();
@@ -222,18 +202,15 @@
 
   function handle(d) {
     if (!d) return;
-    state.tree_id = d.tree_id;
-    state.node_id = d.node_id;
     if (d.requires_human) {
       if (d.reply) bubble("ai", d.reply);
       bubble("ai", tr().human);
-      state.tree_id = null; state.node_id = null;
       return;
     }
     if (d.done) {
-      renderCard(d);
-      state.tree_id = null; state.node_id = null;  // ready for a new problem
-      return;
+      // The reply already carries the full resolution card (cause, steps, links).
+      if (d.reply) bubble("ai", d.reply);
+      return;  // the case reset server-side; the same session is ready for a new problem
     }
     if (d.reply) bubble("ai", d.reply);
     renderOptions(d.options);
@@ -253,7 +230,7 @@
   }
 
   function reset() {
-    state.tree_id = null; state.node_id = null;
+    state.session_id = newSession();
     log.querySelectorAll(".row, .options, .card, #typing").forEach(e => e.remove());
     bubble("ai", tr().welcome);
   }
