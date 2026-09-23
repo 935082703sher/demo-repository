@@ -308,22 +308,43 @@ _ROUTE_REPLY = {
 }
 
 
-def _routing_menu(engine: DiagnosticEngine, lang: str) -> ConverseResponse:
-    """Offer the available trees as a menu when free text did not match one."""
+_DOMAIN_REPLY = {
+    "uz": {
+        "imei": "IMEI bo'yicha aynan qanday yordam kerak? Tanlang:",
+        "mnp": "MNP bo'yicha aynan qanday yordam kerak? Tanlang:",
+    },
+    "ru": {
+        "imei": "Что именно нужно по IMEI? Выберите:",
+        "mnp": "Что именно нужно по MNP? Выберите:",
+    },
+}
+
+
+def _menu(reply: str, trees: list[DecisionTree], lang: str) -> ConverseResponse:
     return ConverseResponse(
         tree_id=None,
         node_id=None,
-        reply=_ROUTE_REPLY.get(lang, _ROUTE_REPLY["uz"]),
-        options=[
-            ConverseOption(value=tree.id, label=tree.title.get(lang))
-            for tree in engine.trees()
-        ],
+        reply=reply,
+        options=[ConverseOption(value=tree.id, label=tree.title.get(lang)) for tree in trees],
         done=False,
         card_id=None,
         sources=[],
         requires_human=False,
         reason="clarify",
     )
+
+
+def _routing_menu(engine: DiagnosticEngine, lang: str) -> ConverseResponse:
+    """Offer every tree when free text did not match any domain."""
+    return _menu(_ROUTE_REPLY.get(lang, _ROUTE_REPLY["uz"]), engine.trees(), lang)
+
+
+def _domain_menu(engine: DiagnosticEngine, domain: str, lang: str) -> ConverseResponse:
+    """Offer a single domain's trees when the topic is clear but the tree is not."""
+    reply = _DOMAIN_REPLY.get(lang, _DOMAIN_REPLY["uz"]).get(domain) or _ROUTE_REPLY.get(
+        lang, _ROUTE_REPLY["uz"]
+    )
+    return _menu(reply, engine.trees_for_domain(domain), lang)
 
 
 def _card_context(card: ResolutionCard, lang: str) -> str:
@@ -429,12 +450,16 @@ async def _run_diagnose(
         return _handoff("invalid_answer", lang)
 
     # A menu selection sends the chosen tree id as the message; an explicit
-    # tree_id (without a node) also starts that tree. Otherwise match free text.
+    # tree_id (without a node) also starts that tree.
     tree = engine.get_tree(payload.message.strip())
     if tree is None and payload.tree_id:
         tree = engine.get_tree(payload.tree_id)
     if tree is None:
-        tree = engine.match_tree(payload.message)
+        # Route free text: a clear tree, else a domain menu, else the full menu.
+        matched, domain = engine.route(payload.message)
+        if matched is None and domain is not None:
+            return _domain_menu(engine, domain, lang)
+        tree = matched
     if tree is None:
         return _routing_menu(engine, lang)
     root = engine.get_node(tree.id, tree.root)

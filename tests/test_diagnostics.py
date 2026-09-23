@@ -221,3 +221,23 @@ def test_lost_device_flow_reaches_report_card() -> None:
     assert node is not None and node.id == "know_imei" and card is None
     node, card = engine.answer("imei-yoqotilgan_ogirlangan", "know_imei", "yes")
     assert card is not None and card.id == "imei-report-lost"
+
+
+def test_engine_route_returns_domain_when_ambiguous() -> None:
+    engine = _engine()
+    tree, domain = engine.route("Menga MNP bo'yicha muammo bor")
+    assert tree is None and domain == "mnp"  # ambiguous within MNP -> domain
+    tree, domain = engine.route("telefonim bloklandi")  # one clear tree
+    assert tree is not None and tree.id == "imei-blokdan_chiqarish"
+
+
+def test_vague_domain_message_offers_domain_menu_not_handoff(corpus_client: TestClient) -> None:
+    body = _diagnose(corpus_client, message="Menga MNP bo'yicha muammo bor")
+    assert body["requires_human"] is False
+    assert body["reason"] == "clarify"
+    assert body["tree_id"] is None
+    assert {o["value"] for o in body["options"]} == {"mnp-mnp_ariza_rad", "mnp-mnp_tartib"}
+
+    follow = _diagnose(corpus_client, message="mnp-mnp_tartib")
+    assert follow["tree_id"] == "mnp-mnp_tartib"
+    assert follow["node_id"] == "topic"

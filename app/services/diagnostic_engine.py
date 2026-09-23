@@ -136,6 +136,38 @@ class DiagnosticEngine:
                 best, best_score = option.value, score
         return best if best_score > 0 else None
 
+    def trees_for_domain(self, domain: str) -> list[DecisionTree]:
+        return [tree for tree in self._trees.values() if tree.domain == domain]
+
+    def route(self, query: str) -> tuple[DecisionTree | None, str | None]:
+        """Route free text to a tree, or to a domain when the tree is ambiguous.
+
+        Returns (tree, None) for one clear winner, (None, domain) when several
+        trees of the same domain tie (ask which topic), or (None, None) for no
+        match at all (offer the full menu).
+        """
+        terms = set(_TOKEN.findall(_normalize(query)))
+        if not terms:
+            return None, None
+        scores: dict[str, int] = {}
+        for tree in self._trees.values():
+            score = 0
+            for keyword in tree.keywords:
+                tokens = _TOKEN.findall(_normalize(keyword))
+                if tokens and any(_stem_match(token, terms) for token in tokens):
+                    score += 1
+            scores[tree.id] = score
+        best = max(scores.values())
+        if best == 0:
+            return None, None
+        top = [self._trees[tid] for tid, score in scores.items() if score == best]
+        if len(top) == 1:
+            return top[0], None
+        domains = {tree.domain for tree in top}
+        if len(domains) == 1:
+            return None, next(iter(domains))
+        return top[0], None
+
     def answer(
         self, tree_id: str, node_id: str, value: str
     ) -> tuple[DiagnosticNode | None, ResolutionCard | None]:
