@@ -23,12 +23,23 @@ from typing import Any
 
 import httpx
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+_ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(_ROOT))
 
 from app.services.telegram_bot import TelegramBot  # noqa: E402
 
 
+def _load_env_file() -> None:
+    """Load TELEGRAM_BOT_TOKEN (and others) from the repo .env if present."""
+    try:
+        from dotenv import load_dotenv
+    except ImportError:
+        return
+    load_dotenv(_ROOT / ".env")
+
+
 async def main() -> None:
+    _load_env_file()
     token = os.environ.get("TELEGRAM_BOT_TOKEN")
     if not token:
         print("TELEGRAM_BOT_TOKEN o'rnatilmagan. @BotFather'dan token oling.")
