@@ -206,6 +206,23 @@ class DiagnosticEngine:
     def trees_for_domain(self, domain: str) -> list[DecisionTree]:
         return [tree for tree in self._trees.values() if tree.domain == domain]
 
+    def tree_from_facts(
+        self, facts: dict[str, str], *, domain: str | None = None
+    ) -> DecisionTree | None:
+        """Pick the tree a known decision fact belongs to, when keywords are unclear.
+
+        A fact like ``mnp_topic`` only appears on one tree, so once it is known the
+        tree is determined even if the wording did not match its keywords. An
+        optional ``domain`` restricts the search so a stale fact from another
+        domain cannot select a tree.
+        """
+        for tree in self._trees.values():
+            if domain is not None and tree.domain != domain:
+                continue
+            if any(node.fact and node.fact in facts for node in tree.nodes):
+                return tree
+        return None
+
     def route(self, query: str) -> tuple[DecisionTree | None, str | None]:
         """Route free text to a tree, or to a domain when the tree is ambiguous.
 

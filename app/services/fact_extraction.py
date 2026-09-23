@@ -71,6 +71,42 @@ _COUNTRIES = {
     "amerika": "USA", "rossiya": "Russia",
 }
 
+# The decision-critical MNP fact schema. Each of the two MNP trees turns on a
+# single fact: why an application was rejected, or what the user wants to know.
+MNP_FACT_FIELDS = (
+    "mnp_rejection_reason",
+    "mnp_topic",
+)
+
+# (fact, value, patterns) for MNP; more-specific values are listed first so a
+# message that mentions documents or balance is not swallowed by the broad
+# 'process' intent.
+_MNP_RULES: tuple[tuple[str, str, tuple[str, ...]], ...] = (
+    ("mnp_rejection_reason", "debt",
+     ("qarz", "qarzdor", "dolg", "zadolzhen", "долг", "задолжен")),
+    ("mnp_rejection_reason", "data_mismatch",
+     ("mos kelma", "mos emas", "notogri malumot", "malumot notogri", "fish",
+      "ne sovpad", "dannye ne", "familiya notogri", "ism notogri")),
+    ("mnp_rejection_reason", "within_30_days",
+     ("30 kun", "30 dan", "oxirgi kochirish", "yaqinda kochir", "30 dney", "otmagan")),
+    ("mnp_rejection_reason", "blocked",
+     ("raqam bloklangan", "raqam blok", "nomer zablok", "nomer zabl")),
+    ("mnp_topic", "documents",
+     ("qanday hujjat", "qanaqa hujjat", "hujjatlar kerak", "kerakli hujjat",
+      "qaysi hujjat", "kakie dokument", "dokument kerak")),
+    ("mnp_topic", "balance",
+     ("balans", "balansdagi pul", "pulim koch", "pul koch", "dengi na balanse")),
+    ("mnp_topic", "return_operator",
+     ("eski operatorga qayt", "ortga qayt", "orqaga qayt", "qaytmoqchi",
+      "vernut operator", "obratno")),
+    ("mnp_topic", "process",
+     ("qanday kochir", "qanaqa kochir", "qanday otkaz", "qanday qilib koch",
+      "jarayon", "kak perenes", "kochirmoqchi", "kochirsam", "raqamni koch")),
+)
+
+# All rule sets run on every message; namespaced facts keep IMEI/MNP separate.
+_RULES: tuple[tuple[str, str, tuple[str, ...]], ...] = _IMEI_RULES + _MNP_RULES
+
 
 class FactExtractor(Protocol):
     """Turn one user message (in the case context) into typed facts."""
@@ -79,13 +115,13 @@ class FactExtractor(Protocol):
 
 
 class RuleBasedFactExtractor:
-    """Deterministic IMEI fact extraction; every match is EXPLICIT (user-stated)."""
+    """Deterministic IMEI/MNP fact extraction; every match is EXPLICIT (user-stated)."""
 
     async def extract(self, message: str, case: CaseState, *, turn_id: int) -> list[Fact]:
         norm = _normalize(message)
         found: dict[str, str] = {}
 
-        for fact_name, value, patterns in _IMEI_RULES:
+        for fact_name, value, patterns in _RULES:
             if fact_name in found:
                 continue
             if any(pattern in norm for pattern in patterns):
@@ -117,21 +153,25 @@ _ALLOWED_VALUES: dict[str, tuple[str, ...]] = {
     "registration_status": ("not_attempted", "attempted", "failed", "success"),
     "previously_working": ("true", "false"),
     "imei_notification_received": ("true", "false"),
+    "mnp_rejection_reason": ("data_mismatch", "debt", "within_30_days", "blocked"),
+    "mnp_topic": ("process", "documents", "balance", "return_operator"),
 }
 
 _LLM_INSTRUCTIONS = (
-    "You extract structured IMEI case facts from a user's free-form message written "
-    "in Uzbek, Russian or mixed language, possibly short, long, messy or misspelled. "
-    "Understand the meaning, not the exact words. Output a fact ONLY when the message "
-    "states or clearly implies it; never invent. Use status 'explicit' when the user "
-    "stated it directly and 'inferred' when you deduced it from context. Leave "
-    "anything unclear out entirely. Respond as JSON: "
+    "You extract structured IMEI and MNP (number-portability) case facts from a user's "
+    "free-form message written in Uzbek, Russian or mixed language, possibly short, "
+    "long, messy or misspelled. Understand the meaning, not the exact words. Output a "
+    "fact ONLY when the message states or clearly implies it; never invent. Use status "
+    "'explicit' when the user stated it directly and 'inferred' when you deduced it from "
+    "context. Leave anything unclear out entirely. Respond as JSON: "
     '{"facts": [{"name": ..., "value": ..., "status": "explicit|inferred", '
     '"confidence": 0..1}]}. Allowed names and values: '
     "device_origin(local|imported), origin_country(free text), "
     "declaration_status(declared|not_declared), affected_sim(first|second|both), "
     "registration_status(not_attempted|attempted|failed|success), "
-    "previously_working(true|false), imei_notification_received(true|false)."
+    "previously_working(true|false), imei_notification_received(true|false), "
+    "mnp_rejection_reason(data_mismatch|debt|within_30_days|blocked), "
+    "mnp_topic(process|documents|balance|return_operator)."
 )
 
 _FACTS_JSON_SCHEMA: dict[str, Any] = {

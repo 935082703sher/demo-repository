@@ -19,7 +19,12 @@ from app.domain.case_state import CaseState, CaseStatus, Fact, FactStatus
 from app.domain.diagnostics import DecisionTree, DiagnosticNode, ResolutionCard
 from app.services.case_store import CaseStore
 from app.services.diagnostic_engine import DiagnosticEngine
-from app.services.fact_extraction import IMEI_FACT_FIELDS, FactExtractor, detect_domain
+from app.services.fact_extraction import (
+    IMEI_FACT_FIELDS,
+    MNP_FACT_FIELDS,
+    FactExtractor,
+    detect_domain,
+)
 
 router = APIRouter(prefix="/assistant", tags=["case"])
 
@@ -54,8 +59,9 @@ class UnderstandResponse(BaseModel):
 
 
 def _refresh_unknowns(case: CaseState) -> None:
-    if case.domain == "imei":
-        case.unknown_facts = [name for name in IMEI_FACT_FIELDS if not case.has(name)]
+    fields = {"imei": IMEI_FACT_FIELDS, "mnp": MNP_FACT_FIELDS}.get(case.domain or "")
+    if fields is not None:
+        case.unknown_facts = [name for name in fields if not case.has(name)]
 
 
 @router.post("/understand", response_model=UnderstandResponse)
@@ -289,6 +295,10 @@ async def assistant_converse(
         chosen = engine.get_tree(payload.message.strip())
         if chosen is None:
             matched, domain = engine.route(payload.message)
+            # Keywords may be ambiguous while an extracted decision fact already
+            # names the tree (e.g. mnp_topic -> the MNP how-to tree).
+            if matched is None:
+                matched = engine.tree_from_facts(case.known_facts(), domain=case.domain)
             # No specific tree, but if we know the domain (from routing tie or fact
             # extraction) offer that domain's topics instead of the whole menu.
             menu_domain = domain or case.domain

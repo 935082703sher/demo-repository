@@ -164,6 +164,7 @@
       "nodes": [
         {
           "id": "reason",
+          "fact": "mnp_rejection_reason",
           "question": {
             "uz": "Ariza qaysi sabab bilan rad etildi?",
             "ru": "По какой причине отклонили заявление?"
@@ -171,6 +172,7 @@
           "options": [
             {
               "value": "data",
+              "fact_value": "data_mismatch",
               "label": {
                 "uz": "Ma'lumotlar mos kelmadi (FISH/pasport)",
                 "ru": "Данные не совпали (ФИО/паспорт)"
@@ -179,6 +181,7 @@
             },
             {
               "value": "debt",
+              "fact_value": "debt",
               "label": {
                 "uz": "Qarzdorlik bor",
                 "ru": "Есть задолженность"
@@ -187,6 +190,7 @@
             },
             {
               "value": "days30",
+              "fact_value": "within_30_days",
               "label": {
                 "uz": "Oxirgi ko'chirishdan 30 kun o'tmagan",
                 "ru": "Не прошло 30 дней с последнего переноса"
@@ -195,6 +199,7 @@
             },
             {
               "value": "blocked",
+              "fact_value": "blocked",
               "label": {
                 "uz": "Raqam bloklangan",
                 "ru": "Номер заблокирован"
@@ -379,6 +384,7 @@
       "nodes": [
         {
           "id": "topic",
+          "fact": "mnp_topic",
           "question": {
             "uz": "MNP bo'yicha nima qiziqtiradi?",
             "ru": "Что вас интересует по MNP?"
@@ -386,6 +392,7 @@
           "options": [
             {
               "value": "process",
+              "fact_value": "process",
               "label": {
                 "uz": "Qanday ko'chiraman (jarayon)",
                 "ru": "Как перенести (процесс)"
@@ -394,6 +401,7 @@
             },
             {
               "value": "documents",
+              "fact_value": "documents",
               "label": {
                 "uz": "Qanday hujjatlar kerak",
                 "ru": "Какие документы нужны"
@@ -402,6 +410,7 @@
             },
             {
               "value": "balance",
+              "fact_value": "balance",
               "label": {
                 "uz": "Balansdagi pul ko'chadimi",
                 "ru": "Переносится ли баланс"
@@ -410,6 +419,7 @@
             },
             {
               "value": "again",
+              "fact_value": "return_operator",
               "label": {
                 "uz": "Eski operatorga qaytish",
                 "ru": "Вернуться к прежнему оператору"

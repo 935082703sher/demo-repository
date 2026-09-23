@@ -232,6 +232,53 @@ def test_converse_new_problem_after_resolve_does_not_reuse_facts() -> None:
         assert "declaration_status" not in fresh["known_facts"]
 
 
+def test_rule_extractor_reads_mnp_rejection_and_topic() -> None:
+    ex = RuleBasedFactExtractor()
+    case = CaseState(case_id="m", session_id="m", domain="mnp")
+    debt = asyncio.run(ex.extract("MNP arizam qarzdorlik sababli rad etildi", case, turn_id=1))
+    assert {f.name: f.value for f in debt}["mnp_rejection_reason"] == "debt"
+    docs = asyncio.run(ex.extract("MNP uchun qanday hujjatlar kerak?", case, turn_id=1))
+    assert {f.name: f.value for f in docs}["mnp_topic"] == "documents"
+    # A bare rejection with no reason stays unknown - nothing is invented.
+    vague = asyncio.run(ex.extract("MNP arizam rad etildi", case, turn_id=1))
+    assert all(f.name != "mnp_rejection_reason" for f in vague)
+
+
+def test_converse_mnp_rejection_reason_resolves_without_a_menu() -> None:
+    with TestClient(create_app()) as client:
+        body = client.post(
+            "/assistant/converse",
+            json={"message": "MNP arizam qarzdorlik sababli rad etildi", "session_id": "cv-rej"},
+        ).json()
+        assert body["done"] is True and body["card_id"] == "mnp-debt"  # understood, not asked
+
+
+def test_converse_mnp_topic_selects_tree_when_keywords_are_ambiguous() -> None:
+    with TestClient(create_app()) as client:
+        # 'documents' names no tree by keyword, but the extracted topic fact does.
+        body = client.post(
+            "/assistant/converse",
+            json={"message": "MNP uchun qanday hujjatlar kerak?", "session_id": "cv-docs"},
+        ).json()
+        assert body["done"] is True and body["card_id"] == "mnp-docs"
+
+
+def test_converse_mnp_without_reason_asks_then_resolves_on_answer() -> None:
+    with TestClient(create_app()) as client:
+        ask = client.post(
+            "/assistant/converse",
+            json={"message": "MNP arizam rad etildi", "session_id": "cv-mnp-ask"},
+        ).json()
+        assert ask["done"] is False
+        assert {o["value"] for o in ask["options"]} >= {"data", "debt", "days30", "blocked"}
+
+        done = client.post(
+            "/assistant/converse",
+            json={"message": "debt", "session_id": "cv-mnp-ask"},
+        ).json()
+        assert done["done"] is True and done["card_id"] == "mnp-debt"
+
+
 def test_understand_reports_unknowns_for_short_message() -> None:
     with TestClient(create_app()) as client:
         body = client.post(
