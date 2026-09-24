@@ -45,19 +45,17 @@ _MIN_STEM = 4
 def _overlap(a: str, b: str) -> bool:
     """True if two words match by stem, tolerant of Uzbek/Russian inflection.
 
-    Equal words always match. Otherwise one must contain the other AND the shorter
-    (the stem doing the matching) must be at least four characters, so real stems
-    ('operator' in 'operatorga', 'blok' in 'bloklandi') match while a short common
-    word does not accidentally hit a longer keyword ('yoq'=no vs 'yoqol'=lose,
-    'men'=I vs 'smenit'=change).
+    Equal words always match. Otherwise the shorter must be a PREFIX of the longer
+    and at least four characters. Uzbek/Russian inflect by adding suffixes, so a
+    stem is a prefix ('operator'->'operatorga', 'blok'->'bloklandi', 'qarz'->
+    'qarzdorlik'). Prefix (not substring-anywhere) matching stops a common word
+    from hitting an unrelated keyword it merely sits inside ('meni'=me is inside
+    's-meni-t'=change; 'yoq'=no starts 'yoqol'=lose but is too short).
     """
     if a == b:
         return True
-    if a in b:
-        return len(a) >= _MIN_STEM
-    if b in a:
-        return len(b) >= _MIN_STEM
-    return False
+    short, long = (a, b) if len(a) <= len(b) else (b, a)
+    return len(short) >= _MIN_STEM and long.startswith(short)
 
 
 def _stem_match(token: str, terms: set[str]) -> bool:

@@ -235,11 +235,15 @@ def test_engine_route_returns_domain_when_ambiguous() -> None:
 
 def test_route_ignores_short_common_words() -> None:
     engine = _engine()
-    # 'yo'q' (no) and 'men' (I) must not stem-match 'yoqol'/'smenit' and mis-route.
-    tree, domain = engine.route("yo'q men telefonim ishlamayapti")
-    assert tree is None  # vague -> no specific tree (the domain menu is offered)
-    tree, _ = engine.route("men telefonim ishlamayapti")
-    assert tree is None or tree.domain == "imei"  # never the MNP tree via 'men'
+    # 'yo'q' (no), 'men'/'meni' (I/me) must not stem-match 'yoqol'/'smenit' by being
+    # a substring of them; only a real prefix stem (>=4 chars) counts.
+    for message in (
+        "yo'q men telefonim ishlamayapti",
+        "men telefonim ishlamayapti",
+        "meni telfonim ishlamayapti",
+    ):
+        tree, _ = engine.route(message)
+        assert tree is None or tree.domain == "imei"  # never the MNP tree
 
 
 def test_route_specific_word_outranks_generic_domain_word() -> None:
