@@ -24,3 +24,6 @@ data/local_manifests/
 kb/raw/
 kb/out/
 kb/src/__pycache__/
+
+# Interaction logs (PII-redacted conversation captures)
+logs/
