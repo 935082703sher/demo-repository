@@ -44,6 +44,7 @@ from app.services.fact_extraction import (
     detect_domain,
 )
 from app.services.kb_retriever import get_retriever
+from app.services.pii import redact_likely_pii
 from app.services.router import Route
 from app.services.turn_analysis import TurnAnalyzer
 
@@ -95,9 +96,10 @@ async def assistant_understand(payload: UnderstandRequest, request: Request) -> 
         payload.session_id, language=payload.language, channel=payload.channel
     )
     case.turn_count += 1
+    message = redact_likely_pii(payload.message)  # never store or extract from raw PII
     if case.domain is None:
-        case.domain = detect_domain(payload.message)
-    for fact in await extractor.extract(payload.message, case, turn_id=case.turn_count):
+        case.domain = detect_domain(message)
+    for fact in await extractor.extract(message, case, turn_id=case.turn_count):
         case.upsert(fact)
     _refresh_unknowns(case)
     await store.save(case)
@@ -374,6 +376,10 @@ async def assistant_converse(
     )
     case.turn_count += 1
     lang = payload.language
+    # Redact PII up front: nothing raw reaches the LLM, the KB, the persisted case
+    # or the logs. Only labelled/structured identifiers are redacted, so tariffs
+    # and short official numbers pass through untouched.
+    message = redact_likely_pii(payload.message)
 
     # A previously closed case starts fresh so old facts don't auto-complete a new one.
     if case.status in (CaseStatus.RESOLVED, CaseStatus.HANDOFF):
@@ -381,17 +387,17 @@ async def assistant_converse(
 
     # 1) Understand the message every turn (route + facts in one LLM call), so a
     #    new story is never ignored.
-    analysis = await analyzer.analyze(payload.message, case, turn_id=case.turn_count)
+    analysis = await analyzer.analyze(message, case, turn_id=case.turn_count)
     for fact in analysis.facts:
         case.upsert(fact)
     if case.domain is None:
-        case.domain = detect_domain(payload.message)
+        case.domain = detect_domain(message)
     _refresh_unknowns(case)
 
     # 2) If a question is open and this message answers it, take that answer.
     answered = False
     if case.active_tree and case.pending_node:
-        value = engine.map_answer(case.active_tree, case.pending_node, payload.message)
+        value = engine.map_answer(case.active_tree, case.pending_node, message)
         if value is not None:
             resolved = _apply_option(engine, case, value)
             if resolved is not None:
@@ -404,9 +410,9 @@ async def assistant_converse(
 
     # 3) Not an answer to an open question: pick the lane for this message.
     if not answered:
-        matched, route_domain = engine.route(payload.message)
+        matched, route_domain = engine.route(message)
         chosen = (
-            engine.get_tree(payload.message.strip())
+            engine.get_tree(message.strip())
             or matched
             or engine.tree_from_facts(case.known_facts(), domain=case.domain)
         )
@@ -436,7 +442,7 @@ async def assistant_converse(
             await _audit(audit, case, OUTCOME_GREETING, ROUTE_GREETING)
             return _resp(case, _GREETING.get(lang, _GREETING["uz"]))
         if route is Route.RAG:
-            reply = await _rag_answer(provider, case, payload.message, lang)
+            reply = await _rag_answer(provider, case, message, lang)
             outcome = OUTCOME_HANDOFF if reply.requires_human else OUTCOME_ANSWER
             await _audit(audit, case, outcome, ROUTE_RAG)  # record before the reset
             # A standalone question leaves no residue; a question mid-diagnosis

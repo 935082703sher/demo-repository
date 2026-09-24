@@ -350,6 +350,26 @@ def test_converse_resolution_keeps_approved_steps_and_link() -> None:
         assert "1." in done["reply"]  # the numbered action steps are present
 
 
+def test_converse_redacts_pii_before_use() -> None:
+    with TestClient(create_app()) as client:
+        body = client.post(
+            "/assistant/converse",
+            json={
+                "message": (
+                    "IMEI raqamim 356938035643809, telefon +998901234567, "
+                    "ro'yxatdan o'tmayapti"
+                ),
+                "session_id": "cv-pii",
+            },
+        ).json()
+        # The flow still understands the problem (registration question), and no raw
+        # IMEI or phone number surfaces anywhere in the response.
+        assert body["done"] is False
+        blob = json.dumps(body, ensure_ascii=False)
+        assert "356938035643809" not in blob
+        assert "998901234567" not in blob
+
+
 def test_has_strong_evidence_threshold() -> None:
     from types import SimpleNamespace
 
