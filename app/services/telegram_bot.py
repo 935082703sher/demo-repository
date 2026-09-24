@@ -1,10 +1,10 @@
-"""Telegram channel adapter over the diagnostic conversation flow.
+"""Telegram channel adapter over the /assistant/converse case-reasoning flow.
 
-Pure, testable core: it turns a diagnose response into a Telegram message with
-inline-keyboard buttons, and drives one update (text message or button press)
-through the stateless /assistant/diagnose contract while keeping the per-chat
-tree/node position. Network I/O (calling diagnose, sending messages) is injected,
-so the logic is tested without Telegram or a server.
+Same brain as the web chat: each chat is one session (keyed by its chat id) and
+the server holds the case state, so the bot only forwards the message and renders
+the reply - a topic menu, a diagnostic question with inline buttons, or a finished
+answer/resolution card. Network I/O (calling converse, sending messages) is
+injected, so the logic is tested without Telegram or a server.
 """
 
 from __future__ import annotations
@@ -12,7 +12,8 @@ from __future__ import annotations
 from collections.abc import Awaitable, Callable
 from typing import Any
 
-DiagnoseFn = Callable[[str, str | None, str | None, str], Awaitable[dict[str, Any]]]
+# (message, session_id, language) -> converse response
+ConverseFn = Callable[[str, str, str], Awaitable[dict[str, Any]]]
 SendFn = Callable[[dict[str, Any]], Awaitable[None]]
 
 
@@ -22,22 +23,22 @@ def detect_language(code: str | None) -> str:
 
 
 def render(response: dict[str, Any]) -> dict[str, Any]:
-    """Turn a diagnose response into a Telegram sendMessage payload (no chat_id)."""
+    """Turn a converse response into a Telegram sendMessage payload (no chat_id).
+
+    The reply already carries the full card or answer text; grounded sources are
+    appended as a short line, and any options become inline-keyboard buttons.
+    """
     text = str(response.get("reply") or "")
 
-    if response.get("card_id"):
-        extras: list[str] = []
-        if response.get("official_url"):
-            extras.append(f"🔗 {response['official_url']}")
-        if response.get("contact"):
-            extras.append(f"📞 {response['contact']}")
-        sources = response.get("sources") or []
-        if sources:
-            names = ", ".join(str(s.get("title") or s.get("doc_id")) for s in sources)
-            extras.append(f"📎 {names}")
-        if extras:
-            text = f"{text}\n\n" + "\n".join(extras)
-        return {"text": text}
+    sources = response.get("sources") or []
+    if sources:
+        names: list[str] = []
+        for source in sources:
+            name = str(source.get("title") or source.get("doc_id"))
+            if name and name not in names:
+                names.append(name)
+        if names:
+            text = f"{text}\n\n📎 " + ", ".join(names)
 
     options = response.get("options") or []
     if options:
@@ -48,27 +49,18 @@ def render(response: dict[str, Any]) -> dict[str, Any]:
 
 
 class TelegramBot:
-    """Drive diagnostic turns for Telegram chats, holding per-chat position."""
+    """Drive converse turns for Telegram chats; the server holds the case state."""
 
-    def __init__(self, diagnose: DiagnoseFn, send: SendFn) -> None:
-        self._diagnose = diagnose
+    def __init__(self, converse: ConverseFn, send: SendFn) -> None:
+        self._converse = converse
         self._send = send
-        self._state: dict[int, tuple[str | None, str | None]] = {}
 
     async def handle_update(self, update: dict[str, Any]) -> None:
         parsed = self._parse(update)
         if parsed is None:
             return
         chat_id, text, language = parsed
-
-        tree_id, node_id = self._state.get(chat_id, (None, None))
-        response = await self._diagnose(text, tree_id, node_id, language)
-
-        if response.get("card_id") or response.get("requires_human"):
-            self._state.pop(chat_id, None)  # conversation ended; next message starts fresh
-        else:
-            self._state[chat_id] = (response.get("tree_id"), response.get("node_id"))
-
+        response = await self._converse(text, str(chat_id), language)
         payload = render(response)
         payload["chat_id"] = chat_id
         await self._send(payload)

@@ -30,71 +30,89 @@ def test_render_question_builds_inline_keyboard() -> None:
     ]
 
 
-def test_render_card_appends_contact_and_has_no_keyboard() -> None:
+def test_render_menu_uses_tree_ids_as_callback_data() -> None:
     payload = render(
         {
-            "reply": "Bojxona kirim orderi oling.",
+            "reply": "IMEI bo'yicha nima kerak?",
+            "options": [{"value": "imei-blokdan_chiqarish", "label": "Blokdan chiqarish"}],
+            "card_id": None,
+        }
+    )
+    assert payload["reply_markup"]["inline_keyboard"][0][0]["callback_data"] == (
+        "imei-blokdan_chiqarish"
+    )
+
+
+def test_render_card_has_no_keyboard() -> None:
+    # The reply already contains the whole card (cause, steps, link, contact).
+    payload = render(
+        {
+            "reply": "Bojxona kirim orderi oling.\n🔗 https://www.uzimei.uz\n📞 1170",
             "options": [],
             "card_id": "imei-customs",
-            "official_url": "https://www.uzimei.uz",
-            "contact": "1170",
-            "sources": [{"doc_id": "faq-mnp-imei", "title": "IMEI FAQ"}],
         }
     )
     assert "reply_markup" not in payload
     assert "https://www.uzimei.uz" in payload["text"]
     assert "1170" in payload["text"]
-    assert "IMEI FAQ" in payload["text"]
+
+
+def test_render_answer_appends_sources() -> None:
+    payload = render(
+        {
+            "reply": "Ro'yxatdan o'tkazish 82 400 so'm.",
+            "options": [],
+            "card_id": None,
+            "sources": [
+                {"doc_id": "faq-mnp-imei", "title": "IMEI FAQ"},
+                {"doc_id": "faq-mnp-imei", "title": "IMEI FAQ"},  # deduped
+            ],
+        }
+    )
+    assert "reply_markup" not in payload
+    assert payload["text"].count("IMEI FAQ") == 1
+    assert "📎" in payload["text"]
 
 
 class _Fake:
     def __init__(self, responses: list[dict[str, Any]]) -> None:
         self._responses = responses
-        self.calls: list[tuple[str, str | None, str | None, str]] = []
+        self.calls: list[tuple[str, str, str]] = []
         self.sent: list[dict[str, Any]] = []
 
-    async def diagnose(
-        self, message: str, tree_id: str | None, node_id: str | None, language: str
-    ) -> dict[str, Any]:
-        self.calls.append((message, tree_id, node_id, language))
+    async def converse(self, message: str, session_id: str, language: str) -> dict[str, Any]:
+        self.calls.append((message, session_id, language))
         return self._responses.pop(0)
 
     async def send(self, payload: dict[str, Any]) -> None:
         self.sent.append(payload)
 
 
-def test_handle_update_threads_state_across_turns() -> None:
+def test_handle_update_uses_chat_id_as_session() -> None:
     question: dict[str, Any] = {
         "reply": "Nega bloklangan?",
-        "tree_id": "imei-blokdan_chiqarish",
-        "node_id": "cause",
         "options": [{"value": "not_registered", "label": "Ro'yxatda yo'q"}],
         "card_id": None,
         "requires_human": False,
-        "reason": None,
     }
     card: dict[str, Any] = {
-        "reply": "Ro'yxatdan o'ting.",
-        "tree_id": "imei-blokdan_chiqarish",
-        "node_id": None,
+        "reply": "Ro'yxatdan o'ting.\n📞 1170",
         "options": [],
         "card_id": "imei-unblock",
         "requires_human": False,
-        "reason": None,
-        "contact": "1170",
     }
     fake = _Fake([question, card])
-    bot = TelegramBot(fake.diagnose, fake.send)
+    bot = TelegramBot(fake.converse, fake.send)
 
-    # Turn 1: a free-text message with no prior state.
+    # Turn 1: a free-text message; the chat id becomes the session id (no client state).
     text_update = {"message": {"chat": {"id": 555}, "from": {"language_code": "uz"},
                                "text": "telefonim bloklandi"}}
     asyncio.run(bot.handle_update(text_update))
-    assert fake.calls[0] == ("telefonim bloklandi", None, None, "uz")
+    assert fake.calls[0] == ("telefonim bloklandi", "555", "uz")
     assert fake.sent[0]["chat_id"] == 555
     assert fake.sent[0]["reply_markup"]["inline_keyboard"]
 
-    # Turn 2: a button press carries the stored tree/node as the answer.
+    # Turn 2: a button press; same session id, the server holds the position.
     button_update = {
         "callback_query": {
             "id": "cq1",
@@ -104,13 +122,13 @@ def test_handle_update_threads_state_across_turns() -> None:
         }
     }
     asyncio.run(bot.handle_update(button_update))
-    assert fake.calls[1] == ("not_registered", "imei-blokdan_chiqarish", "cause", "uz")
+    assert fake.calls[1] == ("not_registered", "555", "uz")
     assert "1170" in fake.sent[1]["text"]
     assert "reply_markup" not in fake.sent[1]  # resolution card has no buttons
 
 
 def test_handle_update_ignores_non_text() -> None:
     fake = _Fake([])
-    bot = TelegramBot(fake.diagnose, fake.send)
+    bot = TelegramBot(fake.converse, fake.send)
     asyncio.run(bot.handle_update({"message": {"chat": {"id": 1}, "sticker": {}}}))
     assert fake.calls == [] and fake.sent == []

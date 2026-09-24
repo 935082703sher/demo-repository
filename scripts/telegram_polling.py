@@ -9,8 +9,9 @@ Usage (Windows):
     set ASSISTANT_API_URL=http://127.0.0.1:8000   (optional, this is the default)
     python scripts/telegram_polling.py
 
-The bot forwards each message/button to POST /assistant/diagnose (channel=telegram)
-and replies with the question buttons or the resolution card.
+The bot forwards each message/button to POST /assistant/converse (channel=telegram,
+session = chat id) and replies with the topic menu, question buttons, or the
+finished answer/resolution card - the same case-reasoning brain as the web chat.
 """
 
 from __future__ import annotations
@@ -49,15 +50,12 @@ async def main() -> None:
 
     async with httpx.AsyncClient(timeout=65.0) as client:
 
-        async def diagnose(
-            message: str, tree_id: str | None, node_id: str | None, language: str
-        ) -> dict[str, Any]:
+        async def converse(message: str, session_id: str, language: str) -> dict[str, Any]:
             response = await client.post(
-                f"{api}/assistant/diagnose",
+                f"{api}/assistant/converse",
                 json={
                     "message": message,
-                    "tree_id": tree_id,
-                    "node_id": node_id,
+                    "session_id": session_id,
                     "language": language,
                     "channel": "telegram",
                 },
@@ -68,7 +66,7 @@ async def main() -> None:
         async def send(payload: dict[str, Any]) -> None:
             await client.post(f"{telegram}/sendMessage", json=payload)
 
-        bot = TelegramBot(diagnose, send)
+        bot = TelegramBot(converse, send)
         offset = 0
         print("Telegram bot ishga tushdi. To'xtatish: Ctrl+C")
         while True:
