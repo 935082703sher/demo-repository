@@ -198,6 +198,19 @@ def test_converse_generic_imei_message_offers_topic_menu_not_a_tree() -> None:
         assert values and all(v.startswith("imei-") for v in values)
 
 
+def test_converse_vague_broken_phone_asks_topic_not_lost_tree() -> None:
+    with TestClient(create_app()) as client:
+        body = client.post(
+            "/assistant/converse",
+            json={"message": "yo'q men telefonim ishlamayapti", "session_id": "cv-vague"},
+        ).json()
+        assert body["done"] is False
+        values = {opt["value"] for opt in body["options"]}
+        # 'yo'q' must not drop the user into the lost/stolen tree; ask the topic.
+        assert "lost" not in values and "stolen" not in values
+        assert all(v.startswith("imei-") for v in values)
+
+
 def test_converse_block_message_routes_to_unblock_not_registration() -> None:
     with TestClient(create_app()) as client:
         body = client.post(

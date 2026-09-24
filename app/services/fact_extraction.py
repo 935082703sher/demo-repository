@@ -303,7 +303,7 @@ def _extract_output_text(envelope: dict[str, Any]) -> str:
 def detect_domain(message: str) -> str | None:
     """Cheap domain hint for the case (imei / mnp) from the message."""
     norm = _normalize(message)
-    imei_terms = ("imei", "royxat", "registratsiya", "qurilma", "telefon")
+    imei_terms = ("imei", "royxat", "registratsiya", "qurilma", "telefon", "telfon")
     mnp_terms = ("mnp", "kochir", "operator", "perenos", "raqamni bosh")
     imei_hits = any(term in norm for term in imei_terms)
     mnp_hits = any(term in norm for term in mnp_terms)

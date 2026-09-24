@@ -233,6 +233,15 @@ def test_engine_route_returns_domain_when_ambiguous() -> None:
     assert tree is not None and tree.id == "imei-blokdan_chiqarish"
 
 
+def test_route_ignores_short_common_words() -> None:
+    engine = _engine()
+    # 'yo'q' (no) and 'men' (I) must not stem-match 'yoqol'/'smenit' and mis-route.
+    tree, domain = engine.route("yo'q men telefonim ishlamayapti")
+    assert tree is None  # vague -> no specific tree (the domain menu is offered)
+    tree, _ = engine.route("men telefonim ishlamayapti")
+    assert tree is None or tree.domain == "imei"  # never the MNP tree via 'men'
+
+
 def test_route_specific_word_outranks_generic_domain_word() -> None:
     engine = _engine()
     # 'IMEI bloklandi' is a block problem: the specific word must win over 'imei'.

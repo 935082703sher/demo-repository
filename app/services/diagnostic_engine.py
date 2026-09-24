@@ -39,14 +39,30 @@ def _normalize(text: str) -> str:
     return text.lower()
 
 
-def _stem_match(token: str, terms: set[str]) -> bool:
-    """True if a keyword token overlaps a query term by stem (substring either way).
+_MIN_STEM = 4
 
-    Uzbek/Russian are agglutinative, so exact token equality misses inflections
-    ('operator' vs 'operatorga', 'blok' vs 'bloklandi'). Substring matching keeps
-    the rule transparent while tolerating common suffixes.
+
+def _overlap(a: str, b: str) -> bool:
+    """True if two words match by stem, tolerant of Uzbek/Russian inflection.
+
+    Equal words always match. Otherwise one must contain the other AND the shorter
+    (the stem doing the matching) must be at least four characters, so real stems
+    ('operator' in 'operatorga', 'blok' in 'bloklandi') match while a short common
+    word does not accidentally hit a longer keyword ('yoq'=no vs 'yoqol'=lose,
+    'men'=I vs 'smenit'=change).
     """
-    return any(token in term or term in token for term in terms)
+    if a == b:
+        return True
+    if a in b:
+        return len(a) >= _MIN_STEM
+    if b in a:
+        return len(b) >= _MIN_STEM
+    return False
+
+
+def _stem_match(token: str, terms: set[str]) -> bool:
+    """True if a keyword token overlaps any query term by stem (see _overlap)."""
+    return any(_overlap(token, term) for term in terms)
 
 
 class DiagnosticError(ValueError):
@@ -120,7 +136,7 @@ class DiagnosticEngine:
             generic = len(tokens) == 1 and tokens[0] in _GENERIC_TOKENS
             weight = _GENERIC_WEIGHT if generic else 1.0
             for token in tokens:
-                hit = next((term for term in terms if token in term or term in token), None)
+                hit = next((term for term in terms if _overlap(token, term)), None)
                 if hit is None:
                     hits = []
                     break
