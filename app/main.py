@@ -53,6 +53,7 @@ from app.services.generation import GroundedGenerationService
 from app.services.governed_complaint_orchestrator import GovernedComplaintOrchestrator
 from app.services.grounding import GroundingValidator
 from app.services.guardrails import Guardrails
+from app.services.interaction_log import build_interaction_log
 from app.services.knowledge import KnowledgeService
 from app.services.question_explainer import (
     LLMQuestionExplainer,
@@ -214,6 +215,7 @@ def create_app(
         )
     app.state.question_explainer = question_explainer
     app.state.grounding = GroundingValidator()
+    app.state.interaction_log = build_interaction_log(app_settings.interaction_log_path)
     app.state.audit_log = InMemoryAuditLog()
     app.state.usage_limits = usage_limits
     legacy_drafts = ComplaintDraftService(app_settings.privacy_notice_version)

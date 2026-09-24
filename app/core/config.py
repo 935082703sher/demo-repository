@@ -66,6 +66,10 @@ class Settings(BaseSettings):
         default=None,
         validation_alias=AliasChoices("DATABASE_URL", "RTMC_DATABASE_URL"),
     )
+    interaction_log_path: str | None = Field(
+        default=None,
+        validation_alias=AliasChoices("INTERACTION_LOG_PATH", "RTMC_INTERACTION_LOG_PATH"),
+    )
     admin_user: str = Field(
         default="admin",
         validation_alias=AliasChoices("ADMIN_USER", "RTMC_ADMIN_USER"),

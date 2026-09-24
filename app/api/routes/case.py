@@ -49,6 +49,7 @@ from app.services.fact_extraction import (
     detect_domain,
 )
 from app.services.grounding import GroundingValidator
+from app.services.interaction_log import InteractionRecord
 from app.services.kb_retriever import get_retriever
 from app.services.pii import redact_likely_pii
 from app.services.question_explainer import QuestionExplainer
@@ -375,8 +376,7 @@ async def _rag_answer(
     return _resp(case, result.text, done=True, sources=sources)
 
 
-@router.post("/converse", response_model=ConverseCaseResponse)
-async def assistant_converse(
+async def _converse_turn(
     payload: ConverseCaseRequest, request: Request
 ) -> ConverseCaseResponse:
     """One conversation turn: greet, route, extract facts, ask only what's missing."""
@@ -519,6 +519,56 @@ async def assistant_converse(
     await store.save(case)
     await _audit(audit, case, OUTCOME_HANDOFF, ROUTE_CASE, tree_id=active_tree)
     return _resp(case, _HANDOFF_REPLY.get(lang, _HANDOFF_REPLY["uz"]), requires_human=True)
+
+
+def _outcome_of(resp: ConverseCaseResponse) -> str:
+    """Classify a response for the interaction log (mirrors the eval lanes)."""
+    if resp.requires_human:
+        return "handoff"  # includes a RAG abstention (done, but no grounded answer)
+    if resp.done:
+        return "resolved" if resp.card_id else "answer"
+    values = [o.value for o in resp.options]
+    if values and all("-" in value for value in values):
+        return "menu"
+    if values:
+        return "question"
+    return "greeting"
+
+
+async def _log_interaction(
+    request: Request, payload: ConverseCaseRequest, resp: ConverseCaseResponse
+) -> None:
+    """Capture the turn (message redacted) for offline analysis and improvement."""
+    log = getattr(request.app.state, "interaction_log", None)
+    if log is None:
+        return
+    await log.record(
+        InteractionRecord(
+            session_id=payload.session_id,
+            channel=payload.channel,
+            language=payload.language,
+            message=redact_likely_pii(payload.message),
+            reply=resp.reply,
+            domain=resp.domain,
+            outcome=_outcome_of(resp),
+            card_id=resp.card_id,
+            options=[o.value for o in resp.options],
+            known_facts=resp.known_facts,
+            sources=[s.doc_id for s in resp.sources],
+            requires_human=resp.requires_human,
+            done=resp.done,
+        )
+    )
+
+
+@router.post("/converse", response_model=ConverseCaseResponse)
+async def assistant_converse(
+    payload: ConverseCaseRequest, request: Request
+) -> ConverseCaseResponse:
+    """One conversation turn, then capture it to the interaction log."""
+    response = await _converse_turn(payload, request)
+    await _log_interaction(request, payload, response)
+    return response
 
 
 # --- /assistant/converse/stream: progressively render the validated reply ------
