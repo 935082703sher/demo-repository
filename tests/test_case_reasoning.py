@@ -312,6 +312,28 @@ def test_converse_mnp_without_reason_asks_then_resolves_on_answer() -> None:
         assert done["done"] is True and done["card_id"] == "mnp-debt"
 
 
+def test_converse_informational_question_takes_the_rag_lane() -> None:
+    with TestClient(create_app()) as client:
+        body = client.post(
+            "/assistant/converse",
+            json={"message": "IMEI ro'yxatdan o'tkazish qancha turadi?", "session_id": "cv-rag"},
+        ).json()
+        # RAG lane: a finished answer (or a grounded escalation), never a tree walk.
+        assert body["done"] is True
+        assert body["card_id"] is None
+        assert body["options"] == []
+
+
+def test_converse_curated_card_beats_rag_for_a_topic_question() -> None:
+    with TestClient(create_app()) as client:
+        body = client.post(
+            "/assistant/converse",
+            json={"message": "MNP uchun qanday hujjatlar kerak?", "session_id": "cv-card"},
+        ).json()
+        # A ready resolution card answers precisely instead of free retrieval.
+        assert body["done"] is True and body["card_id"] == "mnp-docs"
+
+
 def test_understand_reports_unknowns_for_short_message() -> None:
     with TestClient(create_app()) as client:
         body = client.post(

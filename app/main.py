@@ -48,6 +48,12 @@ from app.services.governed_complaint_orchestrator import GovernedComplaintOrches
 from app.services.grounding import GroundingValidator
 from app.services.guardrails import Guardrails
 from app.services.knowledge import KnowledgeService
+from app.services.router import (
+    LLMRouter,
+    Router,
+    RuleRouter,
+    build_openai_router_complete,
+)
 from app.services.scope import ScopeService
 from app.services.usage_limits import RequestRateLimitService, UsageLimitService
 
@@ -134,6 +140,23 @@ def create_app(
             fallback=rule_extractor,
         )
     app.state.fact_extractor = fact_extractor
+    rule_router = RuleRouter()
+    turn_router: Router = rule_router
+    if (
+        app_settings.llm_provider == "openai"
+        and app_settings.llm_api_key is not None
+        and app_settings.llm_api_key.get_secret_value()
+        and app_settings.llm_model
+    ):
+        turn_router = LLMRouter(
+            build_openai_router_complete(
+                api_key=app_settings.llm_api_key.get_secret_value(),
+                model=app_settings.llm_model,
+                timeout_seconds=app_settings.llm_timeout_seconds,
+            ),
+            fallback=rule_router,
+        )
+    app.state.router = turn_router
     app.state.audit_log = InMemoryAuditLog()
     app.state.usage_limits = usage_limits
     legacy_drafts = ComplaintDraftService(app_settings.privacy_notice_version)

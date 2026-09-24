@@ -17,6 +17,10 @@ from pydantic import BaseModel, Field
 
 from app.domain.case_state import CaseState, CaseStatus, Fact, FactStatus
 from app.domain.diagnostics import DecisionTree, DiagnosticNode, ResolutionCard
+from app.domain.enums import Category, Language
+from app.domain.schemas import LLMRequest
+from app.providers.base import LLMProvider
+from app.providers.errors import ProviderError
 from app.services.case_store import CaseStore
 from app.services.diagnostic_engine import DiagnosticEngine
 from app.services.fact_extraction import (
@@ -25,6 +29,8 @@ from app.services.fact_extraction import (
     FactExtractor,
     detect_domain,
 )
+from app.services.kb_retriever import get_retriever
+from app.services.router import Route, Router
 
 router = APIRouter(prefix="/assistant", tags=["case"])
 
@@ -104,11 +110,6 @@ async def assistant_understand(payload: UnderstandRequest, request: Request) -> 
 
 # --- /assistant/converse: the full conversation brain --------------------------
 
-_SMALLTALK_TERMS = (
-    "salom", "assalom", "alaykum", "hello", "hi", "hey", "hayrli", "qandaysan",
-    "qalaysan", "yaxshimisiz", "rahmat", "tashakkur", "xayr", "how are you",
-    "thanks", "thank you", "privet", "zdravstvuy", "spasibo", "poka", "kak dela",
-)
 _GREETING = {
     "uz": "Assalomu alaykum! Men IMEI va MNP bo'yicha yordam beraman. Muammoingizni "
     "o'z so'zlaringiz bilan yozing — masalan «telefonim chetdan, ro'yxatdan o'tmayapti» "
@@ -132,6 +133,19 @@ _HANDOFF_REPLY = {
     "ru": "Передаю вопрос специалисту.",
     "en": "I'll route this to a specialist.",
 }
+_RAG_TOP_K = 5
+_LANG_ENUM = {"uz": Language.UZ, "ru": Language.RU, "en": Language.EN}
+_CATEGORY_BY_DOMAIN = {
+    "imei": Category.IMEI,
+    "mnp": Category.MNP,
+    "aloqa_sifati": Category.NETWORK_QUALITY,
+}
+_NO_EVIDENCE_REPLY = {
+    "uz": "Bu savolga tasdiqlangan manbadan aniq javob topa olmadim. "
+    "Mutaxassisga yo'naltiraman.",
+    "ru": "Не нашёл точного ответа в проверенных источниках. Передаю специалисту.",
+    "en": "I couldn't find a confirmed source for this. I'll route you to a specialist.",
+}
 
 
 class ConverseCaseRequest(BaseModel):
@@ -146,6 +160,11 @@ class OptionOut(BaseModel):
     label: str
 
 
+class SourceOut(BaseModel):
+    doc_id: str
+    title: str
+
+
 class ConverseCaseResponse(BaseModel):
     reply: str
     options: list[OptionOut]
@@ -155,11 +174,7 @@ class ConverseCaseResponse(BaseModel):
     known_facts: dict[str, str]
     unknown_facts: list[str]
     requires_human: bool
-
-
-def _is_smalltalk(message: str) -> bool:
-    norm = message.lower().replace("'", "").replace("ʻ", "").replace("`", "")
-    return any(term in norm for term in _SMALLTALK_TERMS)
+    sources: list[SourceOut] = []
 
 
 def _start_fresh_case(case: CaseState) -> None:
@@ -189,6 +204,7 @@ def _resp(
     done: bool = False,
     card_id: str | None = None,
     requires_human: bool = False,
+    sources: list[SourceOut] | None = None,
 ) -> ConverseCaseResponse:
     return ConverseCaseResponse(
         reply=reply,
@@ -199,6 +215,7 @@ def _resp(
         known_facts=case.known_facts(),
         unknown_facts=case.unknown_facts,
         requires_human=requires_human,
+        sources=sources or [],
     )
 
 
@@ -252,6 +269,35 @@ def _apply_option(
     return None
 
 
+async def _rag_answer(
+    provider: LLMProvider, case: CaseState, message: str, lang: str
+) -> ConverseCaseResponse:
+    """Answer an informational question strictly from approved KB evidence.
+
+    Retrieves the top approved passages and lets the provider answer only from
+    them, returning the sources. With no evidence (or a provider failure) it
+    escalates instead of inventing an answer - grounding-first, like /answer.
+    """
+    retriever = get_retriever()
+    results = retriever.retrieve(message, _RAG_TOP_K, domain=case.domain)
+    fallback = _NO_EVIDENCE_REPLY.get(lang, _NO_EVIDENCE_REPLY["uz"])
+    if not results:
+        return _resp(case, fallback, done=True, requires_human=True)
+    llm_request = LLMRequest(
+        language=_LANG_ENUM.get(lang, Language.UZ),
+        question=message,
+        category=_CATEGORY_BY_DOMAIN.get(results[0].chunk.domain, Category.OTHER),
+        source_ids=[r.chunk.doc_id for r in results],
+        passages=[r.chunk.text for r in results],
+    )
+    try:
+        result = await provider.generate(llm_request)
+    except ProviderError:
+        return _resp(case, fallback, done=True, requires_human=True)
+    sources = [SourceOut(doc_id=r.chunk.doc_id, title=r.chunk.title) for r in results]
+    return _resp(case, result.text, done=True, sources=sources)
+
+
 @router.post("/converse", response_model=ConverseCaseResponse)
 async def assistant_converse(
     payload: ConverseCaseRequest, request: Request
@@ -260,6 +306,8 @@ async def assistant_converse(
     store = cast(CaseStore, request.app.state.case_store)
     extractor = cast(FactExtractor, request.app.state.fact_extractor)
     engine = cast(DiagnosticEngine, request.app.state.diagnostic_engine)
+    turn_router = cast(Router, request.app.state.router)
+    provider = cast(LLMProvider, request.app.state.provider)
 
     case = store.get_or_create(
         payload.session_id, language=payload.language, channel=payload.channel
@@ -290,29 +338,53 @@ async def assistant_converse(
                 return _resp(case, _card_reply(resolved, lang), done=True, card_id=resolved.id)
             answered = True
 
-    # 3) Otherwise (re)choose the tree from the message and known facts. A new story
-    #    mid-conversation re-routes instead of repeating the open question.
+    # 3) Not an answer to an open question: pick the lane for this message.
     if not answered:
-        chosen = engine.get_tree(payload.message.strip())
-        if chosen is None:
-            matched, domain = engine.route(payload.message)
-            # Keywords may be ambiguous while an extracted decision fact names the
-            # tree (e.g. mnp_topic -> the MNP how-to tree).
-            chosen = matched or engine.tree_from_facts(case.known_facts(), domain=case.domain)
-            if chosen is None and case.active_tree is None:
-                # Nothing to walk yet: a domain menu, a greeting, or the full menu.
-                menu_domain = domain or case.domain
-                if menu_domain is not None and engine.trees_for_domain(menu_domain):
-                    by_lang = _DOMAIN_INTRO.get(lang, _DOMAIN_INTRO["uz"])
-                    intro = by_lang.get(menu_domain) or _ROUTE_INTRO.get(lang, _ROUTE_INTRO["uz"])
-                    store.save(case)
-                    return _menu(case, engine.trees_for_domain(menu_domain), intro, lang)
-                if _is_smalltalk(payload.message):
-                    store.save(case)
-                    return _resp(case, _GREETING.get(lang, _GREETING["uz"]))
+        matched, route_domain = engine.route(payload.message)
+        chosen = (
+            engine.get_tree(payload.message.strip())
+            or matched
+            or engine.tree_from_facts(case.known_facts(), domain=case.domain)
+        )
+
+        # 3a) A curated resolution card the facts already complete beats everything:
+        #     an approved answer (e.g. mnp-docs, imei-customs) wins over free RAG.
+        if chosen is not None:
+            kind, obj = engine.advance(chosen.id, chosen.root, case.known_facts())
+            if kind == "resolve" and isinstance(obj, ResolutionCard):
+                case.active_tree = None
+                case.pending_node = None
+                case.resolution_card_id = obj.id
+                case.status = CaseStatus.RESOLVED
+                if case.domain is None:
+                    case.domain = chosen.domain
                 store.save(case)
-                intro = _ROUTE_INTRO.get(lang, _ROUTE_INTRO["uz"])
-                return _menu(case, engine.trees(), intro, lang)
+                return _resp(case, _card_reply(obj, lang), done=True, card_id=obj.id)
+
+        # 3b) No ready card: the router decides greet / grounded answer / diagnose.
+        route = await turn_router.decide(payload.message, case)
+        if route is Route.GREETING and case.active_tree is None:
+            store.save(case)
+            return _resp(case, _GREETING.get(lang, _GREETING["uz"]))
+        if route is Route.RAG:
+            reply = await _rag_answer(provider, case, payload.message, lang)
+            # A standalone question leaves no residue; a question mid-diagnosis
+            # keeps the open case so the next message can still answer it.
+            if case.active_tree is None:
+                _start_fresh_case(case)
+            store.save(case)
+            return reply
+
+        # 3c) CASE: enter the chosen tree, or clarify with a menu when none fits.
+        if chosen is None and case.active_tree is None:
+            menu_domain = route_domain or case.domain
+            if menu_domain is not None and engine.trees_for_domain(menu_domain):
+                by_lang = _DOMAIN_INTRO.get(lang, _DOMAIN_INTRO["uz"])
+                intro = by_lang.get(menu_domain) or _ROUTE_INTRO.get(lang, _ROUTE_INTRO["uz"])
+                store.save(case)
+                return _menu(case, engine.trees_for_domain(menu_domain), intro, lang)
+            store.save(case)
+            return _menu(case, engine.trees(), _ROUTE_INTRO.get(lang, _ROUTE_INTRO["uz"]), lang)
         if chosen is not None and chosen.id != case.active_tree:
             case.active_tree = chosen.id
             case.pending_node = chosen.root

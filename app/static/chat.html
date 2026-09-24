@@ -205,15 +205,37 @@
     if (d.requires_human) {
       if (d.reply) bubble("ai", d.reply);
       bubble("ai", tr().human);
+      renderSources(d.sources);
       return;
     }
     if (d.done) {
-      // The reply already carries the full resolution card (cause, steps, links).
+      // The reply carries the full resolution card or a grounded answer.
       if (d.reply) bubble("ai", d.reply);
+      renderSources(d.sources);
       return;  // the case reset server-side; the same session is ready for a new problem
     }
     if (d.reply) bubble("ai", d.reply);
     renderOptions(d.options);
+  }
+
+  function renderSources(sources) {
+    if (!sources || !sources.length) return;
+    const seen = new Set();
+    const uniq = sources.filter(s => !seen.has(s.doc_id) && seen.add(s.doc_id));
+    const wrap = document.createElement("div");
+    wrap.className = "chips";
+    const label = document.createElement("span");
+    label.className = "chip";
+    label.textContent = tr().sources + ":";
+    wrap.appendChild(label);
+    for (const s of uniq) {
+      const chip = document.createElement("span");
+      chip.className = "chip";
+      chip.textContent = s.title || s.doc_id;
+      wrap.appendChild(chip);
+    }
+    log.appendChild(wrap);
+    scroll();
   }
 
   async function sendText() {
@@ -231,7 +253,7 @@
 
   function reset() {
     state.session_id = newSession();
-    log.querySelectorAll(".row, .options, .card, #typing").forEach(e => e.remove());
+    log.querySelectorAll(".row, .options, .card, .chips, #typing").forEach(e => e.remove());
     bubble("ai", tr().welcome);
   }
 
