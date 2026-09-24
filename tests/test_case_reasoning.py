@@ -350,6 +350,28 @@ def test_converse_resolution_keeps_approved_steps_and_link() -> None:
         assert "1." in done["reply"]  # the numbered action steps are present
 
 
+def test_has_strong_evidence_threshold() -> None:
+    from types import SimpleNamespace
+
+    from app.api.routes.case import _has_strong_evidence
+
+    assert _has_strong_evidence([], 4.0) is False  # no evidence
+    assert _has_strong_evidence([SimpleNamespace(score=3.9)], 4.0) is False  # too weak
+    assert _has_strong_evidence([SimpleNamespace(score=4.0)], 4.0) is True  # clears the floor
+
+
+def test_converse_abstains_on_offtopic_question() -> None:
+    with TestClient(create_app()) as client:
+        body = client.post(
+            "/assistant/converse",
+            json={"message": "bugungi ob-havo qanday", "session_id": "cv-offtopic"},
+        ).json()
+        # Weak/irrelevant evidence -> abstain and escalate, never a made-up answer.
+        assert body["requires_human"] is True
+        assert body["card_id"] is None
+        assert body["sources"] == []
+
+
 def test_understand_reports_unknowns_for_short_message() -> None:
     with TestClient(create_app()) as client:
         body = client.post(

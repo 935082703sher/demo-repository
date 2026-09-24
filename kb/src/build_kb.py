@@ -142,6 +142,40 @@ def build():
             "refs": f["refs"], "source": "MNP va IMEI FAQ (O‘zTTBRM)",
         })
 
+    # --- 3-qatlam (davomi): tasdiqlangan yechim kartalari (authority 3) -------
+    # Diagnostika daraxtlarining resolution card'lari: tasdiqlangan kontent, shu
+    # bois RAG ular haqidagi ma'lumot savollariga ham javob bera oladi.
+    cards_path = ROOT.parent / "app" / "data" / "diagnostics.json"
+    n_cards = 0
+    if cards_path.exists():
+        for c in json.loads(cards_path.read_text(encoding="utf-8")).get("cards", []):
+            cid = c["id"]
+            domain = "imei" if cid.startswith("imei") else "mnp" if cid.startswith("mnp") else "boshqa"
+            title = (c.get("title") or {}).get("uz") or cid
+            cause = (c.get("probable_cause") or {}).get("uz", "")
+            steps = [s.get("uz", "") for s in c.get("steps", [])]
+            where = (c.get("where_to_apply") or {}).get("uz", "")
+            parts = [title, cause]
+            if steps:
+                parts.append("Qadamlar: " + " ".join(f"{i}) {s}" for i, s in enumerate(steps, 1)))
+            if where:
+                parts.append("Murojaat: " + where)
+            rows.append(base(
+                id=rid("card", cid),
+                doc_id=f"card-{cid}",
+                source_type="qaror_karta",
+                source_title="Tasdiqlangan yechim kartalari (O‘zTTBRM)",
+                title=title,
+                authority=3,
+                domain=domain,
+                case_type="boshqa",
+                outcome=None,
+                text="\n".join(p for p in parts if p),
+                legal_refs=c.get("kb_refs", []),
+                tags=[],
+            ))
+            n_cards += 1
+
     # --- 4-qatlam: amaliyot (javob xatlari, authority 4) ---------------------
     letters_path = OUT / "letters.jsonl"
     n_letters = 0

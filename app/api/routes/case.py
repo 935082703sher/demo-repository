@@ -10,7 +10,7 @@ It never invents facts.
 
 from __future__ import annotations
 
-from typing import cast
+from typing import Any, cast
 
 from fastapi import APIRouter, Request
 from pydantic import BaseModel, Field
@@ -149,6 +149,10 @@ _HANDOFF_REPLY = {
     "en": "I'll route this to a specialist.",
 }
 _RAG_TOP_K = 5
+# BM25 relevance floor: below this the top hit is too weak to answer from, so the
+# assistant abstains instead of answering from irrelevant evidence. Calibrated on
+# the corpus - on-topic queries score well above it, off-topic ones well below.
+_RAG_MIN_SCORE = 4.0
 _LANG_ENUM = {"uz": Language.UZ, "ru": Language.RU, "en": Language.EN}
 _CATEGORY_BY_DOMAIN = {
     "imei": Category.IMEI,
@@ -318,6 +322,11 @@ def _apply_option(
     return None
 
 
+def _has_strong_evidence(results: list[Any], min_score: float) -> bool:
+    """True when the top retrieved passage clears the relevance floor."""
+    return bool(results) and results[0].score >= min_score
+
+
 async def _rag_answer(
     provider: LLMProvider, case: CaseState, message: str, lang: str
 ) -> ConverseCaseResponse:
@@ -330,7 +339,8 @@ async def _rag_answer(
     retriever = get_retriever()
     results = retriever.retrieve(message, _RAG_TOP_K, domain=case.domain)
     fallback = _NO_EVIDENCE_REPLY.get(lang, _NO_EVIDENCE_REPLY["uz"])
-    if not results:
+    # Abstain when there is no evidence or the best hit is too weak to trust.
+    if not _has_strong_evidence(results, _RAG_MIN_SCORE):
         return _resp(case, fallback, done=True, requires_human=True)
     llm_request = LLMRequest(
         language=_LANG_ENUM.get(lang, Language.UZ),
