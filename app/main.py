@@ -54,13 +54,13 @@ from app.services.governed_complaint_orchestrator import GovernedComplaintOrches
 from app.services.grounding import GroundingValidator
 from app.services.guardrails import Guardrails
 from app.services.knowledge import KnowledgeService
-from app.services.router import (
-    LLMRouter,
-    Router,
-    RuleRouter,
-    build_openai_router_complete,
-)
 from app.services.scope import ScopeService
+from app.services.turn_analysis import (
+    LLMTurnAnalyzer,
+    RuleTurnAnalyzer,
+    TurnAnalyzer,
+    build_openai_turn_complete,
+)
 from app.services.usage_limits import RequestRateLimitService, UsageLimitService
 
 logger = logging.getLogger(__name__)
@@ -146,23 +146,24 @@ def create_app(
             fallback=rule_extractor,
         )
     app.state.fact_extractor = fact_extractor
-    rule_router = RuleRouter()
-    turn_router: Router = rule_router
+    # One LLM call per turn does both routing and fact extraction (BLOK 3 + BLOK 1).
+    rule_analyzer = RuleTurnAnalyzer()
+    turn_analyzer: TurnAnalyzer = rule_analyzer
     if (
         app_settings.llm_provider == "openai"
         and app_settings.llm_api_key is not None
         and app_settings.llm_api_key.get_secret_value()
         and app_settings.llm_model
     ):
-        turn_router = LLMRouter(
-            build_openai_router_complete(
+        turn_analyzer = LLMTurnAnalyzer(
+            build_openai_turn_complete(
                 api_key=app_settings.llm_api_key.get_secret_value(),
                 model=app_settings.llm_model,
                 timeout_seconds=app_settings.llm_timeout_seconds,
             ),
-            fallback=rule_router,
+            fallback=rule_analyzer,
         )
-    app.state.router = turn_router
+    app.state.turn_analyzer = turn_analyzer
     card_explainer: CardExplainer = TemplateCardExplainer()
     if (
         app_settings.llm_provider == "openai"

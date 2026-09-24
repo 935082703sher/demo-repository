@@ -142,6 +142,42 @@ class RuleBasedFactExtractor:
         ]
 
 
+def parse_llm_facts(items: list[Any], turn_id: int) -> list[Fact]:
+    """Validate raw LLM fact items against the allowed schema; drop the rest.
+
+    Shared by the fact extractor and the combined turn analyzer so both apply the
+    same guardrail: an unknown fact name or an out-of-range value is rejected, and
+    nothing is invented beyond the allowed vocabulary.
+    """
+    facts: list[Fact] = []
+    for item in items:
+        if not isinstance(item, dict):
+            continue
+        name = str(item.get("name", ""))
+        if name not in _ALLOWED_VALUES:
+            continue
+        value = item.get("value")
+        value_str = str(value) if value is not None else None
+        allowed = _ALLOWED_VALUES[name]
+        if allowed and value_str not in allowed:
+            continue
+        status = (
+            FactStatus.INFERRED if str(item.get("status")) == "inferred" else FactStatus.EXPLICIT
+        )
+        confidence = float(item.get("confidence") or 0.8)
+        facts.append(
+            Fact(
+                name=name,
+                value=value_str,
+                status=status,
+                confidence=max(0.0, min(1.0, confidence)),
+                source="llm",
+                turn_id=turn_id,
+            )
+        )
+    return facts
+
+
 ExtractComplete = Callable[[str], Awaitable[str]]
 
 # Allowed values per fact; empty list means free text (e.g. country name).
@@ -228,34 +264,7 @@ class LLMFactExtractor:
 
     @staticmethod
     def _parse(raw: str, turn_id: int) -> list[Fact]:
-        data = json.loads(raw)
-        facts: list[Fact] = []
-        for item in data.get("facts", []):
-            name = str(item.get("name", ""))
-            if name not in _ALLOWED_VALUES:
-                continue
-            value = item.get("value")
-            value_str = str(value) if value is not None else None
-            allowed = _ALLOWED_VALUES[name]
-            if allowed and value_str not in allowed:
-                continue
-            status = (
-                FactStatus.INFERRED
-                if str(item.get("status")) == "inferred"
-                else FactStatus.EXPLICIT
-            )
-            confidence = float(item.get("confidence") or 0.8)
-            facts.append(
-                Fact(
-                    name=name,
-                    value=value_str,
-                    status=status,
-                    confidence=max(0.0, min(1.0, confidence)),
-                    source="llm",
-                    turn_id=turn_id,
-                )
-            )
-        return facts
+        return parse_llm_facts(json.loads(raw).get("facts", []), turn_id)
 
 
 def build_openai_fact_complete(

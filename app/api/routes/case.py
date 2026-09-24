@@ -44,7 +44,8 @@ from app.services.fact_extraction import (
     detect_domain,
 )
 from app.services.kb_retriever import get_retriever
-from app.services.router import Route, Router
+from app.services.router import Route
+from app.services.turn_analysis import TurnAnalyzer
 
 router = APIRouter(prefix="/assistant", tags=["case"])
 
@@ -352,9 +353,8 @@ async def assistant_converse(
 ) -> ConverseCaseResponse:
     """One conversation turn: greet, route, extract facts, ask only what's missing."""
     store = cast(CaseStore, request.app.state.case_store)
-    extractor = cast(FactExtractor, request.app.state.fact_extractor)
+    analyzer = cast(TurnAnalyzer, request.app.state.turn_analyzer)
     engine = cast(DiagnosticEngine, request.app.state.diagnostic_engine)
-    turn_router = cast(Router, request.app.state.router)
     provider = cast(LLMProvider, request.app.state.provider)
     explainer = cast(CardExplainer, request.app.state.card_explainer)
     audit = cast(AuditLog, request.app.state.audit_log)
@@ -369,8 +369,10 @@ async def assistant_converse(
     if case.status in (CaseStatus.RESOLVED, CaseStatus.HANDOFF):
         _start_fresh_case(case)
 
-    # 1) Understand the message every turn, so a new story is never ignored.
-    for fact in await extractor.extract(payload.message, case, turn_id=case.turn_count):
+    # 1) Understand the message every turn (route + facts in one LLM call), so a
+    #    new story is never ignored.
+    analysis = await analyzer.analyze(payload.message, case, turn_id=case.turn_count)
+    for fact in analysis.facts:
         case.upsert(fact)
     if case.domain is None:
         case.domain = detect_domain(payload.message)
@@ -417,8 +419,8 @@ async def assistant_converse(
                 card_text = await _card_reply(explainer, obj, case, lang)
                 return _resp(case, card_text, done=True, card_id=obj.id)
 
-        # 3b) No ready card: the router decides greet / grounded answer / diagnose.
-        route = await turn_router.decide(payload.message, case)
+        # 3b) No ready card: the router's decision (from step 1) picks the lane.
+        route = analysis.route
         if route is Route.GREETING and case.active_tree is None:
             store.save(case)
             await _audit(audit, case, OUTCOME_GREETING, ROUTE_GREETING)
