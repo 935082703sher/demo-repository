@@ -132,13 +132,13 @@
           cause: "Ehtimoliy sabab", steps: "Nima qilish kerak", docs: "Kerakli hujjatlar",
           where: "Qayerga murojaat", url: "Rasmiy manzil", contact: "Kontakt",
           escalate: "Operatorga yo‘naltirish", sources: "Manbalar", human: "Operatorga ulanish tavsiya etiladi.",
-          typing: "yozmoqda…" },
+          typing: "yozmoqda…", fbQ: "Muammo hal bo‘ldimi?", fbYes: "Ha 👍", fbNo: "Yo‘q 👎", fbThanks: "Rahmat!" },
     ru: { welcome: "Здравствуйте! Опишите проблему по IMEI или MNP. Например: «IMEI не регистрируется», «телефон заблокирован», «хочу перенести номер к другому оператору».",
           placeholder: "Опишите проблему…", send: "Отправить", reset: "Заново",
           cause: "Вероятная причина", steps: "Что делать", docs: "Нужные документы",
           where: "Куда обратиться", url: "Официальный адрес", contact: "Контакт",
           escalate: "Передача оператору", sources: "Источники", human: "Рекомендуется связаться с оператором.",
-          typing: "печатает…" }
+          typing: "печатает…", fbQ: "Проблема решена?", fbYes: "Да 👍", fbNo: "Нет 👎", fbThanks: "Спасибо!" }
   };
 
   function tr() { return T[state.lang]; }
@@ -225,8 +225,37 @@
 
   function finishTurn(meta) {
     if (meta.requires_human) { bubble("ai", tr().human); renderSources(meta.sources); return; }
-    if (meta.done) { renderSources(meta.sources); return; }
+    if (meta.done) { renderSources(meta.sources); renderFeedback(meta.card_id); return; }
     renderOptions(meta.options);
+  }
+
+  function renderFeedback(cardId) {
+    const wrap = document.createElement("div");
+    wrap.className = "options";
+    const q = document.createElement("span");
+    q.className = "chip"; q.textContent = tr().fbQ;
+    wrap.appendChild(q);
+    for (const [label, helpful] of [[tr().fbYes, true], [tr().fbNo, false]]) {
+      const btn = document.createElement("button");
+      btn.className = "opt";
+      btn.textContent = label;
+      btn.onclick = async () => {
+        wrap.querySelectorAll("button").forEach(b => { b.disabled = true; b.style.opacity = "0.5"; });
+        try {
+          const r = await fetch("/assistant/feedback", {
+            method: "POST", headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ session_id: state.session_id, helpful, card_id: cardId || null, language: state.lang, channel: "web" })
+          });
+          const d = await r.json();
+          const t = document.createElement("span");
+          t.className = "chip"; t.textContent = (d && d.reply) || tr().fbThanks;
+          wrap.appendChild(t);
+        } catch (e) { /* feedback is best-effort */ }
+      };
+      wrap.appendChild(btn);
+    }
+    log.appendChild(wrap);
+    scroll();
   }
 
   function renderSources(sources) {

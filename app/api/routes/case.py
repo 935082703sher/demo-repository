@@ -281,16 +281,22 @@ def _menu(
 
 _STEPS_HEADER = {"uz": "Qadamlar:", "ru": "Шаги:", "en": "Steps:"}
 _WHERE_LABEL = {"uz": "Qayerga", "ru": "Куда обратиться", "en": "Where"}
+_DOCS_HEADER = {"uz": "Kerakli hujjatlar:", "ru": "Нужные документы:", "en": "Documents needed:"}
 
 
 async def _card_reply(
     explainer: CardExplainer, card: ResolutionCard, case: CaseState, lang: str
 ) -> str:
-    """Compose the resolution: an LLM-explained cause, then the exact approved
-    steps, link and contact (never touched by the LLM)."""
+    """Compose the full resolution: an LLM-explained cause, then the exact approved
+    steps, required documents, where to apply, link and contact (never touched by
+    the LLM). Surfacing every approved field answers the likely follow-ups up front."""
     cause = await explainer.explain(card.probable_cause.get(lang), case, lang)
     lines = [cause, "", _STEPS_HEADER.get(lang, _STEPS_HEADER["uz"])]
     lines += [f"{index}. {step.get(lang)}" for index, step in enumerate(card.steps, 1)]
+    if card.documents:
+        lines.append("")
+        lines.append(_DOCS_HEADER.get(lang, _DOCS_HEADER["uz"]))
+        lines += [f"• {doc.get(lang)}" for doc in card.documents]
     if card.where_to_apply:
         where_label = _WHERE_LABEL.get(lang, _WHERE_LABEL["uz"])
         lines.append(f"{where_label}: {card.where_to_apply.get(lang)}")
@@ -569,6 +575,46 @@ async def assistant_converse(
     response = await _converse_turn(payload, request)
     await _log_interaction(request, payload, response)
     return response
+
+
+_FEEDBACK_REPLY = {
+    "uz": "Rahmat! Fikringiz xizmatni yaxshilashga yordam beradi.",
+    "ru": "Спасибо! Ваш отзыв поможет улучшить сервис.",
+    "en": "Thank you! Your feedback helps us improve.",
+}
+
+
+class FeedbackRequest(BaseModel):
+    session_id: str = Field(min_length=1, max_length=100)
+    helpful: bool
+    card_id: str | None = None
+    language: str = Field(default="uz", pattern="^(uz|ru|en)$")
+    channel: str = Field(default="web", pattern="^(web|telegram)$")
+
+
+class FeedbackResponse(BaseModel):
+    ok: bool
+    reply: str
+
+
+@router.post("/feedback", response_model=FeedbackResponse)
+async def assistant_feedback(payload: FeedbackRequest, request: Request) -> FeedbackResponse:
+    """Record whether a resolution actually solved the user's problem (CSAT)."""
+    log = getattr(request.app.state, "interaction_log", None)
+    if log is not None:
+        await log.record(
+            InteractionRecord(
+                session_id=payload.session_id,
+                channel=payload.channel,
+                language=payload.language,
+                kind="feedback",
+                outcome="feedback",
+                card_id=payload.card_id,
+                feedback="helpful" if payload.helpful else "unhelpful",
+            )
+        )
+    reply = _FEEDBACK_REPLY.get(payload.language, _FEEDBACK_REPLY["uz"])
+    return FeedbackResponse(ok=True, reply=reply)
 
 
 # --- /assistant/converse/stream: progressively render the validated reply ------

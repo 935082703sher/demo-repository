@@ -30,17 +30,32 @@ def main() -> int:
         print(f"No interactions found at {path!r}. Set INTERACTION_LOG_PATH and chat first.")
         return 0
 
-    outcomes: Counter[str] = Counter(r.get("outcome") or "?" for r in rows)
-    domains: Counter[str] = Counter(r.get("domain") or "?" for r in rows)
-    cards: Counter[str] = Counter(r["card_id"] for r in rows if r.get("card_id"))
+    turns = [r for r in rows if r.get("kind", "turn") == "turn"]
+    feedback = [r for r in rows if r.get("kind") == "feedback"]
 
-    print(f"Interactions: {len(rows)}  ({path})\n")
+    outcomes: Counter[str] = Counter(r.get("outcome") or "?" for r in turns)
+    domains: Counter[str] = Counter(r.get("domain") or "?" for r in turns)
+    cards: Counter[str] = Counter(r["card_id"] for r in turns if r.get("card_id"))
+
+    print(f"Turns: {len(turns)}   Feedback: {len(feedback)}   ({path})\n")
     print("Outcomes:", dict(outcomes))
     print("Domains: ", dict(domains))
     print("Cards:   ", dict(cards))
 
-    unresolved = [r for r in rows if (r.get("outcome") in _UNRESOLVED) or r.get("requires_human")]
-    print(f"\nImprovement candidates (unresolved): {len(unresolved)}")
+    # CSAT: did the resolution actually solve it?
+    helpful = sum(1 for r in feedback if r.get("feedback") == "helpful")
+    unhelpful = sum(1 for r in feedback if r.get("feedback") == "unhelpful")
+    if helpful + unhelpful:
+        csat = helpful / (helpful + unhelpful)
+        print(f"\nCSAT: {csat * 100:.0f}%  ({helpful} helpful / {unhelpful} unhelpful)")
+        bad_cards = Counter(
+            r.get("card_id") or "?" for r in feedback if r.get("feedback") == "unhelpful"
+        )
+        if bad_cards:
+            print("Cards rated unhelpful:", dict(bad_cards))
+
+    unresolved = [r for r in turns if (r.get("outcome") in _UNRESOLVED) or r.get("requires_human")]
+    print(f"\nImprovement candidates (unresolved turns): {len(unresolved)}")
     for r in unresolved:
         print(f"  [{r.get('outcome')}] ({r.get('domain')}) {r.get('message', '')!r}")
 

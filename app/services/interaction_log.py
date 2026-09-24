@@ -21,13 +21,19 @@ from pydantic import BaseModel, Field
 
 
 class InteractionRecord(BaseModel):
-    """One captured converse turn (message already PII-redacted)."""
+    """One captured event: a converse turn, or a feedback signal.
+
+    For a turn ``kind='turn'`` and the message is already PII-redacted. For a rating
+    ``kind='feedback'`` and ``feedback`` is 'helpful'/'unhelpful' about the turn's
+    resolution (card_id), so unhelpful ratings point straight at what to improve.
+    """
 
     session_id: str
     channel: str
     language: str
-    message: str
-    reply: str
+    kind: str = "turn"
+    message: str = ""
+    reply: str = ""
     domain: str | None = None
     outcome: str | None = None
     card_id: str | None = None
@@ -36,6 +42,7 @@ class InteractionRecord(BaseModel):
     sources: list[str] = Field(default_factory=list)
     requires_human: bool = False
     done: bool = False
+    feedback: str | None = None
     created_at: str = Field(default_factory=lambda: datetime.now(UTC).isoformat())
 
 

@@ -56,6 +56,21 @@ def test_converse_logs_a_redacted_turn(tmp_path) -> None:  # type: ignore[no-unt
     assert row["session_id"] == "log-1"
 
 
+def test_feedback_endpoint_records_rating(tmp_path) -> None:  # type: ignore[no-untyped-def]
+    path = tmp_path / "log.jsonl"
+    settings = Settings(_env_file=None, environment="test", interaction_log_path=str(path))
+    with TestClient(create_app(settings=settings)) as client:
+        body = client.post(
+            "/assistant/feedback",
+            json={"session_id": "fb-1", "helpful": False, "card_id": "imei-customs"},
+        ).json()
+        assert body["ok"] is True and body["reply"]
+    rows = read_records(path)
+    fb = [r for r in rows if r["kind"] == "feedback"]
+    assert len(fb) == 1
+    assert fb[0]["feedback"] == "unhelpful" and fb[0]["card_id"] == "imei-customs"
+
+
 def test_converse_stream_also_logs_once(tmp_path) -> None:  # type: ignore[no-untyped-def]
     path = tmp_path / "log.jsonl"
     settings = Settings(_env_file=None, environment="test", interaction_log_path=str(path))
