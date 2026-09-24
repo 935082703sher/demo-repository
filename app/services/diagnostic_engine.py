@@ -143,12 +143,20 @@ class DiagnosticEngine:
                 weights[term] = max(weights.get(term, 0.0), term_weight)
         return sum(weights.values())
 
-    def _keyword_scores(self, query: str) -> dict[str, float]:
-        """Score every tree by its weighted overlap with the query terms."""
+    def _keyword_scores(self, query: str, domain: str | None = None) -> dict[str, float]:
+        """Score trees by weighted overlap with the query terms.
+
+        With ``domain`` set, only that domain's trees are scored, so a keyword from
+        another domain cannot hijack a message whose domain is already known.
+        """
         terms = set(_TOKEN.findall(_normalize(query)))
         if not terms:
             return {}
-        return {tree.id: self._tree_score(tree, terms) for tree in self._trees.values()}
+        return {
+            tree.id: self._tree_score(tree, terms)
+            for tree in self._trees.values()
+            if domain is None or tree.domain == domain
+        }
 
     def match_tree(self, query: str) -> DecisionTree | None:
         """Pick the tree whose keywords best overlap the free-text problem."""
@@ -237,15 +245,19 @@ class DiagnosticEngine:
                 return tree
         return None
 
-    def route(self, query: str) -> tuple[DecisionTree | None, str | None]:
+    def route(
+        self, query: str, *, domain: str | None = None
+    ) -> tuple[DecisionTree | None, str | None]:
         """Route free text to a tree, or to a domain when the topic is unclear.
 
         Returns (tree, None) for one clear winner, (None, domain) when the message
         names only a domain (a generic 'imei'/'mnp' word, or several trees of one
         domain tie) so the topic must be asked, or (None, None) for no match at all
-        (offer the full menu).
+        (offer the full menu). When ``domain`` is given, only that domain's trees are
+        considered, so an already-known domain is never overridden by another's
+        keyword.
         """
-        scores = self._keyword_scores(query)
+        scores = self._keyword_scores(query, domain)
         if not scores:
             return None, None
         best = max(scores.values())

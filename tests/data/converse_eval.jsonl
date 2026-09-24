@@ -5,6 +5,7 @@
 {"id": "vague-broken-plain", "turns": [{"msg": "telfonim ishlamayapti", "expect": "menu"}]}
 {"id": "vague-broken-yoq-men", "turns": [{"msg": "yo'q men telefonim ishlamayapti", "expect": "menu"}]}
 {"id": "vague-imei", "turns": [{"msg": "imei tushunmayapman", "expect": "menu"}]}
+{"id": "imei-transfer-not-mnp-reject", "turns": [{"msg": "Men telfonimni imeida o'tkazmoqchi edim, lekin xato chiqdi", "expect": "menu", "reply_has": ["IMEI"], "reply_not": ["rad etildi"]}]}
 {"id": "mnp-domain-menu", "turns": [{"msg": "Menga MNP bo'yicha muammo bor", "expect": "menu"}]}
 {"id": "imei-block", "turns": [{"msg": "IMEI bloklandi", "expect": "question", "reply_has": ["blok"], "reply_not": ["qayerdan"]}]}
 {"id": "imei-block-phrase", "turns": [{"msg": "telefonim bloklandi nima qilay", "expect": "question", "reply_has": ["blok"]}]}

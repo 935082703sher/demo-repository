@@ -428,7 +428,9 @@ async def assistant_converse(
 
     # 3) Not an answer to an open question: pick the lane for this message.
     if not answered:
-        matched, route_domain = engine.route(message)
+        # Constrain routing to the known domain so another domain's keyword cannot
+        # hijack the message (e.g. "o'tkazmoqchi" vs the rejection word "otkaz").
+        matched, route_domain = engine.route(message, domain=case.domain)
         chosen = (
             engine.get_tree(message.strip())
             or matched

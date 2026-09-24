@@ -246,6 +246,16 @@ def test_route_ignores_short_common_words() -> None:
         assert tree is None or tree.domain == "imei"  # never the MNP tree
 
 
+def test_route_respects_known_domain() -> None:
+    engine = _engine()
+    msg = "Men telfonimni imeida o'tkazmoqchi edim, lekin xato chiqdi"
+    # Unconstrained, 'o'tkazmoqchi' collides with the MNP rejection word 'otkaz'.
+    # Constrained to the known IMEI domain, only IMEI trees are considered.
+    tree, domain = engine.route(msg, domain="imei")
+    assert tree is None or tree.domain == "imei"
+    assert domain in (None, "imei")
+
+
 def test_route_specific_word_outranks_generic_domain_word() -> None:
     engine = _engine()
     # 'IMEI bloklandi' is a block problem: the specific word must win over 'imei'.
