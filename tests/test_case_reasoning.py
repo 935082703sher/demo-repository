@@ -334,6 +334,22 @@ def test_converse_curated_card_beats_rag_for_a_topic_question() -> None:
         assert body["done"] is True and body["card_id"] == "mnp-docs"
 
 
+def test_converse_resolution_keeps_approved_steps_and_link() -> None:
+    with TestClient(create_app()) as client:
+        client.post(
+            "/assistant/converse",
+            json={"message": _DUBAI_STORY, "session_id": "cv-ground", "language": "uz"},
+        )
+        done = client.post(
+            "/assistant/converse",
+            json={"message": "Deklaratsiya qilmaganman", "session_id": "cv-ground"},
+        ).json()
+        assert done["done"] is True and done["card_id"] == "imei-customs"
+        # The explained cause never drops the exact approved steps and official link.
+        assert "uzimei" in done["reply"].lower()
+        assert "1." in done["reply"]  # the numbered action steps are present
+
+
 def test_understand_reports_unknowns_for_short_message() -> None:
     with TestClient(create_app()) as client:
         body = client.post(

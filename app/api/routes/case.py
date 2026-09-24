@@ -21,6 +21,7 @@ from app.domain.enums import Category, Language
 from app.domain.schemas import LLMRequest
 from app.providers.base import LLMProvider
 from app.providers.errors import ProviderError
+from app.services.card_explainer import CardExplainer
 from app.services.case_store import CaseStore
 from app.services.diagnostic_engine import DiagnosticEngine
 from app.services.fact_extraction import (
@@ -226,11 +227,21 @@ def _menu(
     return _resp(case, intro, options=options)
 
 
-def _card_reply(card: ResolutionCard, lang: str) -> str:
-    lines = [card.probable_cause.get(lang), "", "Qadamlar:"]
+_STEPS_HEADER = {"uz": "Qadamlar:", "ru": "Шаги:", "en": "Steps:"}
+_WHERE_LABEL = {"uz": "Qayerga", "ru": "Куда обратиться", "en": "Where"}
+
+
+async def _card_reply(
+    explainer: CardExplainer, card: ResolutionCard, case: CaseState, lang: str
+) -> str:
+    """Compose the resolution: an LLM-explained cause, then the exact approved
+    steps, link and contact (never touched by the LLM)."""
+    cause = await explainer.explain(card.probable_cause.get(lang), case, lang)
+    lines = [cause, "", _STEPS_HEADER.get(lang, _STEPS_HEADER["uz"])]
     lines += [f"{index}. {step.get(lang)}" for index, step in enumerate(card.steps, 1)]
     if card.where_to_apply:
-        lines.append("Qayerga: " + card.where_to_apply.get(lang))
+        where_label = _WHERE_LABEL.get(lang, _WHERE_LABEL["uz"])
+        lines.append(f"{where_label}: {card.where_to_apply.get(lang)}")
     if card.official_url:
         lines.append("🔗 " + card.official_url)
     if card.contact:
@@ -308,6 +319,7 @@ async def assistant_converse(
     engine = cast(DiagnosticEngine, request.app.state.diagnostic_engine)
     turn_router = cast(Router, request.app.state.router)
     provider = cast(LLMProvider, request.app.state.provider)
+    explainer = cast(CardExplainer, request.app.state.card_explainer)
 
     case = store.get_or_create(
         payload.session_id, language=payload.language, channel=payload.channel
@@ -335,7 +347,8 @@ async def assistant_converse(
             if resolved is not None:
                 _refresh_unknowns(case)
                 store.save(case)
-                return _resp(case, _card_reply(resolved, lang), done=True, card_id=resolved.id)
+                card_text = await _card_reply(explainer, resolved, case, lang)
+                return _resp(case, card_text, done=True, card_id=resolved.id)
             answered = True
 
     # 3) Not an answer to an open question: pick the lane for this message.
@@ -359,7 +372,8 @@ async def assistant_converse(
                 if case.domain is None:
                     case.domain = chosen.domain
                 store.save(case)
-                return _resp(case, _card_reply(obj, lang), done=True, card_id=obj.id)
+                card_text = await _card_reply(explainer, obj, case, lang)
+                return _resp(case, card_text, done=True, card_id=obj.id)
 
         # 3b) No ready card: the router decides greet / grounded answer / diagnose.
         route = await turn_router.decide(payload.message, case)
@@ -400,7 +414,7 @@ async def assistant_converse(
         case.active_tree = None
         case.pending_node = None
         store.save(case)
-        return _resp(case, _card_reply(obj, lang), done=True, card_id=obj.id)
+        return _resp(case, await _card_reply(explainer, obj, case, lang), done=True, card_id=obj.id)
     if kind == "ask" and isinstance(obj, DiagnosticNode):
         case.pending_node = obj.id
         case.status = CaseStatus.DIAGNOSING

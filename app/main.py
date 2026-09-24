@@ -31,6 +31,12 @@ from app.repositories.usage_repository import (
 from app.services.approved_links import stage3b_link_registry
 from app.services.assistant import AssistantService
 from app.services.audit_log import InMemoryAuditLog, PostgresAuditLog
+from app.services.card_explainer import (
+    CardExplainer,
+    LLMCardExplainer,
+    TemplateCardExplainer,
+    build_openai_card_complete,
+)
 from app.services.case_guidance import CaseGuidanceService
 from app.services.case_store import InMemoryCaseStore
 from app.services.classifier import RequestClassifier
@@ -157,6 +163,22 @@ def create_app(
             fallback=rule_router,
         )
     app.state.router = turn_router
+    card_explainer: CardExplainer = TemplateCardExplainer()
+    if (
+        app_settings.llm_provider == "openai"
+        and app_settings.llm_api_key is not None
+        and app_settings.llm_api_key.get_secret_value()
+        and app_settings.llm_model
+    ):
+        card_explainer = LLMCardExplainer(
+            build_openai_card_complete(
+                api_key=app_settings.llm_api_key.get_secret_value(),
+                model=app_settings.llm_model,
+                timeout_seconds=app_settings.llm_timeout_seconds,
+            ),
+            fallback=TemplateCardExplainer(),
+        )
+    app.state.card_explainer = card_explainer
     app.state.audit_log = InMemoryAuditLog()
     app.state.usage_limits = usage_limits
     legacy_drafts = ComplaintDraftService(app_settings.privacy_notice_version)
