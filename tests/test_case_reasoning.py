@@ -420,6 +420,29 @@ def test_converse_abstains_on_offtopic_question() -> None:
         assert body["sources"] == []
 
 
+def test_converse_stream_emits_deltas_then_done() -> None:
+    with TestClient(create_app()) as client:
+        r = client.post(
+            "/assistant/converse/stream",
+            json={"message": "MNP arizam qarzdorlik sababli rad etildi", "session_id": "cv-stream"},
+        )
+        assert r.status_code == 200
+        assert r.headers["content-type"].startswith("text/event-stream")
+        events = [
+            json.loads(line[6:]) for line in r.text.splitlines() if line.startswith("data: ")
+        ]
+        deltas = [e for e in events if e["type"] == "delta"]
+        done = [e for e in events if e["type"] == "done"]
+        assert deltas  # the reply was streamed in chunks
+        assert len(done) == 1
+        # The final event carries the validated metadata and no separate reply field.
+        assert done[0]["done"] is True and done[0]["card_id"] == "mnp-debt"
+        assert "reply" not in done[0]
+        # Reassembling the deltas reconstructs the full card reply.
+        text = "".join(d["text"] for d in deltas)
+        assert "qarz" in text.lower()
+
+
 def test_understand_reports_unknowns_for_short_message() -> None:
     with TestClient(create_app()) as client:
         body = client.post(

@@ -10,9 +10,14 @@ It never invents facts.
 
 from __future__ import annotations
 
+import asyncio
+import json
+import re
+from collections.abc import AsyncIterator
 from typing import Any, cast
 
 from fastapi import APIRouter, Request
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
 
 from app.domain.case_state import CaseState, CaseStatus, Fact, FactStatus
@@ -512,3 +517,40 @@ async def assistant_converse(
     await store.save(case)
     await _audit(audit, case, OUTCOME_HANDOFF, ROUTE_CASE, tree_id=active_tree)
     return _resp(case, _HANDOFF_REPLY.get(lang, _HANDOFF_REPLY["uz"]), requires_human=True)
+
+
+# --- /assistant/converse/stream: progressively render the validated reply ------
+
+_WORD_CHUNK = re.compile(r"\s*\S+|\s+")
+
+
+def _sse(obj: dict[str, Any]) -> str:
+    return f"data: {json.dumps(obj, ensure_ascii=False)}\n\n"
+
+
+@router.post("/converse/stream")
+async def assistant_converse_stream(
+    payload: ConverseCaseRequest, request: Request
+) -> StreamingResponse:
+    """Stream the same reply as /converse, word by word (Server-Sent Events).
+
+    The full turn - understanding, routing, grounding, PII redaction, abstention -
+    runs first and is fully validated; only then is the finished reply text
+    streamed for a natural typing effect, so no unvalidated text is ever shown.
+    """
+    response = await assistant_converse(payload, request)
+
+    async def events() -> AsyncIterator[str]:
+        for chunk in _WORD_CHUNK.findall(response.reply):
+            yield _sse({"type": "delta", "text": chunk})
+            await asyncio.sleep(0.012)
+        meta = response.model_dump()
+        meta.pop("reply", None)  # already streamed as deltas
+        meta["type"] = "done"
+        yield _sse(meta)
+
+    return StreamingResponse(
+        events(),
+        media_type="text/event-stream",
+        headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
+    )

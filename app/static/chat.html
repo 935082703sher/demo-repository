@@ -183,39 +183,50 @@
     } else if (el) { el.remove(); }
   }
 
-  async function post(message) {
+  async function streamTurn(message) {
     typing(true); sendBtn.disabled = true;
+    let aiText = null, meta = null;
+    const ensureBubble = () => {
+      if (!aiText) { typing(false); aiText = bubble("ai", "").querySelector(".bubble"); }
+      return aiText;
+    };
     try {
-      const res = await fetch("/assistant/converse", {
+      const res = await fetch("/assistant/converse/stream", {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message, session_id: state.session_id, language: state.lang, channel: "web" })
       });
-      if (!res.ok) throw new Error("http " + res.status);
-      return await res.json();
+      if (!res.ok || !res.body) throw new Error("http " + res.status);
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let buf = "";
+      for (;;) {
+        const { value, done } = await reader.read();
+        if (done) break;
+        buf += decoder.decode(value, { stream: true });
+        let idx;
+        while ((idx = buf.indexOf("\n\n")) >= 0) {
+          const line = buf.slice(0, idx).split("\n").find(l => l.startsWith("data: "));
+          buf = buf.slice(idx + 2);
+          if (!line) continue;
+          const evt = JSON.parse(line.slice(6));
+          if (evt.type === "delta") { ensureBubble().textContent += evt.text; scroll(); }
+          else if (evt.type === "done") { meta = evt; }
+        }
+      }
+      typing(false);
+      if (meta) finishTurn(meta);
     } catch (e) {
+      typing(false);
       bubble("ai", state.lang === "ru"
         ? "Ошибка связи с сервером. Попробуйте ещё раз."
         : "Server bilan bog‘lanishda xatolik. Qayta urinib ko‘ring.");
-      return null;
-    } finally { typing(false); sendBtn.disabled = false; input.focus(); }
+    } finally { sendBtn.disabled = false; input.focus(); }
   }
 
-  function handle(d) {
-    if (!d) return;
-    if (d.requires_human) {
-      if (d.reply) bubble("ai", d.reply);
-      bubble("ai", tr().human);
-      renderSources(d.sources);
-      return;
-    }
-    if (d.done) {
-      // The reply carries the full resolution card or a grounded answer.
-      if (d.reply) bubble("ai", d.reply);
-      renderSources(d.sources);
-      return;  // the case reset server-side; the same session is ready for a new problem
-    }
-    if (d.reply) bubble("ai", d.reply);
-    renderOptions(d.options);
+  function finishTurn(meta) {
+    if (meta.requires_human) { bubble("ai", tr().human); renderSources(meta.sources); return; }
+    if (meta.done) { renderSources(meta.sources); return; }
+    renderOptions(meta.options);
   }
 
   function renderSources(sources) {
@@ -243,12 +254,12 @@
     if (!text) return;
     input.value = "";
     bubble("user", text);
-    handle(await post(text));
+    await streamTurn(text);
   }
 
   async function sendOption(value, label) {
     bubble("user", label);
-    handle(await post(value));
+    await streamTurn(value);
   }
 
   function reset() {
