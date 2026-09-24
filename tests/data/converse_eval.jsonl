@@ -1,0 +1,27 @@
+{"id": "greet-salom", "turns": [{"msg": "salom", "expect": "greeting"}]}
+{"id": "greet-assalomu", "turns": [{"msg": "assalomu alaykum", "expect": "greeting"}]}
+{"id": "greet-rahmat", "turns": [{"msg": "rahmat", "expect": "greeting"}]}
+{"id": "vague-broken-meni", "turns": [{"msg": "meni telfonim ishlamayapti", "expect": "menu"}]}
+{"id": "vague-broken-plain", "turns": [{"msg": "telfonim ishlamayapti", "expect": "menu"}]}
+{"id": "vague-broken-yoq-men", "turns": [{"msg": "yo'q men telefonim ishlamayapti", "expect": "menu"}]}
+{"id": "vague-imei", "turns": [{"msg": "imei tushunmayapman", "expect": "menu"}]}
+{"id": "mnp-domain-menu", "turns": [{"msg": "Menga MNP bo'yicha muammo bor", "expect": "menu"}]}
+{"id": "imei-block", "turns": [{"msg": "IMEI bloklandi", "expect": "question", "reply_has": ["blok"], "reply_not": ["qayerdan"]}]}
+{"id": "imei-block-phrase", "turns": [{"msg": "telefonim bloklandi nima qilay", "expect": "question", "reply_has": ["blok"]}]}
+{"id": "imei-registration", "turns": [{"msg": "IMEI ro'yxatdan o'tmayapti", "expect": "question", "reply_has": ["qayerdan"]}]}
+{"id": "imei-lost", "turns": [{"msg": "telefonimni o'g'irlab ketishdi", "expect": "question", "reply_not": ["qayerdan"]}]}
+{"id": "imei-dubai-skips-origin", "turns": [{"msg": "Dubaydan telefon olib keldim, ikkinchi sim ishlamayapti", "expect": "question", "reply_has": ["me'yor"], "reply_not": ["qayerdan"]}]}
+{"id": "imei-dubai-resolves", "turns": [{"msg": "Dubaydan telefon olib keldim, ikkinchi sim ishlamayapti", "expect": "question"}, {"msg": "deklaratsiya qilmaganman", "expect": "card:imei-customs"}]}
+{"id": "imei-reroute-midtree", "turns": [{"msg": "IMEI ro'yxatdan o'tmayapti", "expect": "question", "reply_has": ["qayerdan"]}, {"msg": "aslida telefonim bloklandi", "expect": "question", "reply_has": ["blok"], "reply_not": ["qayerdan"]}]}
+{"id": "mnp-reject-debt", "turns": [{"msg": "MNP arizam qarzdorlik sababli rad etildi", "expect": "card:mnp-debt"}]}
+{"id": "mnp-reject-data", "turns": [{"msg": "arizam rad etildi, ma'lumotlarim mos kelmadi", "expect": "card:mnp-data"}]}
+{"id": "mnp-reject-no-reason", "turns": [{"msg": "MNP arizam rad etildi", "expect": "question", "reply_has": ["sabab"]}]}
+{"id": "mnp-reject-then-answer", "turns": [{"msg": "MNP arizam rad etildi", "expect": "question"}, {"msg": "qarzdorlik bor", "expect": "card:mnp-debt"}]}
+{"id": "mnp-how", "turns": [{"msg": "MNP orqali qanday ko'chiraman", "expect": "card:mnp-how"}]}
+{"id": "mnp-docs", "turns": [{"msg": "MNP uchun qanday hujjatlar kerak?", "expect": "card:mnp-docs"}]}
+{"id": "mnp-balance", "turns": [{"msg": "balansdagi pulim ko'chadimi?", "expect": "card:mnp-balance"}]}
+{"id": "mnp-return", "turns": [{"msg": "eski operatorga qaytmoqchiman", "expect": "card:mnp-30days"}]}
+{"id": "rag-imei-cost", "turns": [{"msg": "IMEI ro'yxatdan o'tkazish qancha turadi?", "expect": "rag"}]}
+{"id": "rag-mnp-duration", "turns": [{"msg": "MNP necha kun ichida amalga oshadi?", "expect": "rag"}]}
+{"id": "menu-select-tree", "turns": [{"msg": "imei-blokdan_chiqarish", "expect": "question", "reply_has": ["blok"]}]}
+{"id": "offtopic", "turns": [{"msg": "bugungi ob-havo qanday", "expect": "rag"}]}
