@@ -91,7 +91,7 @@ async def assistant_understand(payload: UnderstandRequest, request: Request) -> 
     store = cast(CaseStore, request.app.state.case_store)
     extractor = cast(FactExtractor, request.app.state.fact_extractor)
 
-    case = store.get_or_create(
+    case = await store.get_or_create(
         payload.session_id, language=payload.language, channel=payload.channel
     )
     case.turn_count += 1
@@ -100,7 +100,7 @@ async def assistant_understand(payload: UnderstandRequest, request: Request) -> 
     for fact in await extractor.extract(payload.message, case, turn_id=case.turn_count):
         case.upsert(fact)
     _refresh_unknowns(case)
-    store.save(case)
+    await store.save(case)
 
     return UnderstandResponse(
         case_id=case.case_id,
@@ -369,7 +369,7 @@ async def assistant_converse(
     explainer = cast(CardExplainer, request.app.state.card_explainer)
     audit = cast(AuditLog, request.app.state.audit_log)
 
-    case = store.get_or_create(
+    case = await store.get_or_create(
         payload.session_id, language=payload.language, channel=payload.channel
     )
     case.turn_count += 1
@@ -396,7 +396,7 @@ async def assistant_converse(
             resolved = _apply_option(engine, case, value)
             if resolved is not None:
                 _refresh_unknowns(case)
-                store.save(case)
+                await store.save(case)
                 await _audit(audit, case, OUTCOME_RESOLVED, ROUTE_CASE, card_id=resolved.id)
                 card_text = await _card_reply(explainer, resolved, case, lang)
                 return _resp(case, card_text, done=True, card_id=resolved.id)
@@ -422,7 +422,7 @@ async def assistant_converse(
                 case.status = CaseStatus.RESOLVED
                 if case.domain is None:
                     case.domain = chosen.domain
-                store.save(case)
+                await store.save(case)
                 await _audit(
                     audit, case, OUTCOME_RESOLVED, ROUTE_CASE, card_id=obj.id, tree_id=chosen.id
                 )
@@ -432,7 +432,7 @@ async def assistant_converse(
         # 3b) No ready card: the router's decision (from step 1) picks the lane.
         route = analysis.route
         if route is Route.GREETING and case.active_tree is None:
-            store.save(case)
+            await store.save(case)
             await _audit(audit, case, OUTCOME_GREETING, ROUTE_GREETING)
             return _resp(case, _GREETING.get(lang, _GREETING["uz"]))
         if route is Route.RAG:
@@ -443,7 +443,7 @@ async def assistant_converse(
             # keeps the open case so the next message can still answer it.
             if case.active_tree is None:
                 _start_fresh_case(case)
-            store.save(case)
+            await store.save(case)
             return reply
 
         # 3c) CASE: enter the chosen tree, or clarify with a menu when none fits.
@@ -452,10 +452,10 @@ async def assistant_converse(
             if menu_domain is not None and engine.trees_for_domain(menu_domain):
                 by_lang = _DOMAIN_INTRO.get(lang, _DOMAIN_INTRO["uz"])
                 intro = by_lang.get(menu_domain) or _ROUTE_INTRO.get(lang, _ROUTE_INTRO["uz"])
-                store.save(case)
+                await store.save(case)
                 await _audit(audit, case, OUTCOME_CLARIFY, ROUTE_CASE)
                 return _menu(case, engine.trees_for_domain(menu_domain), intro, lang)
-            store.save(case)
+            await store.save(case)
             await _audit(audit, case, OUTCOME_CLARIFY, ROUTE_CASE)
             return _menu(case, engine.trees(), _ROUTE_INTRO.get(lang, _ROUTE_INTRO["uz"]), lang)
         if chosen is not None and chosen.id != case.active_tree:
@@ -473,14 +473,14 @@ async def assistant_converse(
         case.status = CaseStatus.RESOLVED
         case.active_tree = None
         case.pending_node = None
-        store.save(case)
+        await store.save(case)
         await _audit(audit, case, OUTCOME_RESOLVED, ROUTE_CASE, card_id=obj.id, tree_id=active_tree)
         card_text = await _card_reply(explainer, obj, case, lang)
         return _resp(case, card_text, done=True, card_id=obj.id)
     if kind == "ask" and isinstance(obj, DiagnosticNode):
         case.pending_node = obj.id
         case.status = CaseStatus.DIAGNOSING
-        store.save(case)
+        await store.save(case)
         await _audit(audit, case, OUTCOME_QUESTION, ROUTE_CASE, tree_id=active_tree)
         options = [OptionOut(value=o.value, label=o.label.get(lang)) for o in obj.options]
         return _resp(case, obj.question.get(lang), options=options)
@@ -488,6 +488,6 @@ async def assistant_converse(
     case.status = CaseStatus.HANDOFF
     case.active_tree = None
     case.pending_node = None
-    store.save(case)
+    await store.save(case)
     await _audit(audit, case, OUTCOME_HANDOFF, ROUTE_CASE, tree_id=active_tree)
     return _resp(case, _HANDOFF_REPLY.get(lang, _HANDOFF_REPLY["uz"]), requires_human=True)

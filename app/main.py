@@ -38,7 +38,7 @@ from app.services.card_explainer import (
     build_openai_card_complete,
 )
 from app.services.case_guidance import CaseGuidanceService
-from app.services.case_store import InMemoryCaseStore
+from app.services.case_store import InMemoryCaseStore, PostgresCaseStore
 from app.services.classifier import RequestClassifier
 from app.services.complaint_drafts import ComplaintDraftService
 from app.services.complaint_workflow_adapter import GovernedComplaintWorkflowAdapter
@@ -83,6 +83,7 @@ def create_app(
     async def lifespan(application: FastAPI) -> AsyncIterator[None]:
         logger.info("event=service_start environment=%s", app_settings.environment)
         postgres_audit: PostgresAuditLog | None = None
+        postgres_cases: PostgresCaseStore | None = None
         if app_settings.database_url:
             try:
                 postgres_audit = await PostgresAuditLog.create(app_settings.database_url)
@@ -90,9 +91,19 @@ def create_app(
                 logger.info("event=audit_log_backend backend=postgres")
             except Exception:
                 logger.exception("event=audit_log_backend backend=in_memory reason=postgres_failed")
+            try:
+                postgres_cases = await PostgresCaseStore.create(app_settings.database_url)
+                application.state.case_store = postgres_cases
+                logger.info("event=case_store_backend backend=postgres")
+            except Exception:
+                logger.exception(
+                    "event=case_store_backend backend=in_memory reason=postgres_failed"
+                )
         yield
         if postgres_audit is not None:
             await postgres_audit.close()
+        if postgres_cases is not None:
+            await postgres_cases.close()
         logger.info("event=service_stop")
 
     app = FastAPI(
