@@ -71,6 +71,30 @@ def test_metrics_endpoint_reflects_diagnose_turns() -> None:
     assert metrics["categories"].get("imei", 0) >= 1
 
 
+def test_metrics_endpoint_reflects_converse_routes() -> None:
+    with TestClient(_admin_app()) as client:
+        # CASE lane -> a curated resolution card.
+        client.post(
+            "/assistant/converse",
+            json={"message": "MNP uchun qanday hujjatlar kerak?", "session_id": "a"},
+        )
+        # GREETING lane.
+        client.post("/assistant/converse", json={"message": "salom", "session_id": "b"})
+        # RAG lane (answers or escalates depending on the corpus, but routes as rag).
+        client.post(
+            "/assistant/converse",
+            json={"message": "IMEI ro'yxatdan o'tkazish qancha turadi?", "session_id": "c"},
+        )
+        metrics = client.get("/admin/metrics", auth=("admin", "s3cret")).json()
+
+    routes = metrics["routes"]
+    assert routes.get("case", 0) >= 1
+    assert routes.get("greeting", 0) >= 1
+    assert routes.get("rag", 0) >= 1
+    assert metrics["outcomes"].get("resolved", 0) >= 1
+    assert metrics["outcomes"].get("greeting", 0) >= 1
+
+
 def test_admin_metrics_requires_valid_credentials() -> None:
     with TestClient(_admin_app()) as client:
         assert client.get("/admin/metrics").status_code == 401

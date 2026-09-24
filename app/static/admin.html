@@ -62,6 +62,7 @@
 
   <div class="cards" id="cards"></div>
   <section><h2>Natijalar (outcomes)</h2><div id="outcomes" class="empty">Yuklanmoqda…</div></section>
+  <section><h2>Yo'nalishlar (router)</h2><div id="routes" class="empty">Yuklanmoqda…</div></section>
   <section><h2>Kategoriyalar</h2><div id="categories" class="empty">Yuklanmoqda…</div></section>
   <div class="err" id="err" hidden></div>
   <div class="foot" id="foot"></div>
@@ -70,7 +71,8 @@
 (() => {
   "use strict";
   const $ = (id) => document.getElementById(id);
-  const OUTCOME_LABELS = { resolved: "Hal qilindi", handoff: "Operatorga", question: "Savol berildi", clarify: "Aniqlashtirish" };
+  const OUTCOME_LABELS = { resolved: "Hal qilindi (karta)", answer: "Javob berildi (RAG)", handoff: "Operatorga", question: "Savol berildi", clarify: "Aniqlashtirish", greeting: "Salomlashish" };
+  const ROUTE_LABELS = { case: "Diagnostika (tree)", rag: "Bilim bazasi (RAG)", greeting: "Salomlashish" };
   const pct = (x) => x == null ? "—" : (x * 100).toFixed(1) + "%";
 
   function bars(container, counts, labels) {
@@ -100,6 +102,7 @@
         card("Jami suhbat turlari", m.total_events ?? 0, "") +
         card("Yakuniy natijalar", m.terminal_events ?? 0, "");
       bars($("outcomes"), m.outcomes, OUTCOME_LABELS);
+      bars($("routes"), m.routes, ROUTE_LABELS);
       bars($("categories"), m.categories, { imei: "IMEI", mnp: "MNP" });
       $("foot").textContent = "Yangilandi: " + new Date().toLocaleString();
     } catch (e) {

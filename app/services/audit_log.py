@@ -16,9 +16,16 @@ from typing import Any, Protocol, runtime_checkable
 
 # Terminal and intermediate outcomes of one assistant turn.
 OUTCOME_RESOLVED = "resolved"  # a resolution card was returned (self-service win)
+OUTCOME_ANSWER = "answer"  # a grounded KB answer was returned (self-service win)
 OUTCOME_HANDOFF = "handoff"  # escalated to a human
 OUTCOME_QUESTION = "question"  # a diagnostic question was asked (in progress)
 OUTCOME_CLARIFY = "clarify"  # a routing menu was offered
+OUTCOME_GREETING = "greeting"  # small talk was answered
+
+# Which lane handled the turn (BLOK 3 router).
+ROUTE_CASE = "case"
+ROUTE_RAG = "rag"
+ROUTE_GREETING = "greeting"
 
 
 @dataclass(frozen=True)
@@ -32,6 +39,7 @@ class AuditEvent:
     tree_id: str | None = None
     card_id: str | None = None
     session_id: str | None = None
+    route: str | None = None
     created_at: datetime = field(default_factory=lambda: datetime.now(UTC))
 
 
@@ -44,19 +52,31 @@ class AuditLog(Protocol):
     async def metrics(self) -> dict[str, object]: ...
 
 
-def compute_metrics(outcomes: Counter[str], categories: Counter[str]) -> dict[str, object]:
-    """Derive KPI figures from outcome and category counts."""
+def compute_metrics(
+    outcomes: Counter[str],
+    categories: Counter[str],
+    routes: Counter[str] | None = None,
+) -> dict[str, object]:
+    """Derive KPI figures from outcome, category and route counts."""
+    routes = routes if routes is not None else Counter()
     resolved = outcomes.get(OUTCOME_RESOLVED, 0)
+    answered = outcomes.get(OUTCOME_ANSWER, 0)
     handoff = outcomes.get(OUTCOME_HANDOFF, 0)
-    terminal = resolved + handoff
+    # A self-service win is a resolution card OR a grounded KB answer.
+    wins = resolved + answered
+    terminal = wins + handoff
     total = int(sum(outcomes.values()))
     return {
         "total_events": total,
         "outcomes": dict(outcomes),
         "categories": dict(categories),
+        "routes": dict(routes),
         "terminal_events": terminal,
-        # Self-service resolution rate: resolved out of terminal (resolved+handoff).
-        "self_service_resolution_rate": round(resolved / terminal, 4) if terminal else None,
+        "resolved_events": resolved,
+        "answered_events": answered,
+        "handoff_events": handoff,
+        # Self-service resolution rate: wins out of terminal (wins + handoff).
+        "self_service_resolution_rate": round(wins / terminal, 4) if terminal else None,
         "handoff_rate": round(handoff / terminal, 4) if terminal else None,
     }
 
@@ -67,16 +87,19 @@ class InMemoryAuditLog:
     def __init__(self) -> None:
         self._outcomes: Counter[str] = Counter()
         self._categories: Counter[str] = Counter()
+        self._routes: Counter[str] = Counter()
         self._count = 0
 
     async def record(self, event: AuditEvent) -> None:
         self._outcomes[event.outcome] += 1
         if event.category:
             self._categories[event.category] += 1
+        if event.route:
+            self._routes[event.route] += 1
         self._count += 1
 
     async def metrics(self) -> dict[str, object]:
-        return compute_metrics(self._outcomes, self._categories)
+        return compute_metrics(self._outcomes, self._categories, self._routes)
 
 
 _CREATE_TABLE_SQL = """
@@ -89,14 +112,18 @@ CREATE TABLE IF NOT EXISTS audit_events (
     tree_id TEXT,
     card_id TEXT,
     session_id TEXT,
+    route TEXT,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 )
 """
 
+# Add the route column on databases created before BLOK 5.
+_MIGRATE_ROUTE_SQL = "ALTER TABLE audit_events ADD COLUMN IF NOT EXISTS route TEXT"
+
 _INSERT_SQL = """
 INSERT INTO audit_events
-    (channel, language, outcome, category, tree_id, card_id, session_id, created_at)
-VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+    (channel, language, outcome, category, tree_id, card_id, session_id, route, created_at)
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
 """
 
 
@@ -114,6 +141,7 @@ class PostgresAuditLog:
         pool = await asyncpg.create_pool(dsn, min_size=1, max_size=5)
         async with pool.acquire() as connection:
             await connection.execute(_CREATE_TABLE_SQL)
+            await connection.execute(_MIGRATE_ROUTE_SQL)
         return cls(pool)
 
     async def record(self, event: AuditEvent) -> None:
@@ -127,6 +155,7 @@ class PostgresAuditLog:
                 event.tree_id,
                 event.card_id,
                 event.session_id,
+                event.route,
                 event.created_at,
             )
 
@@ -139,11 +168,16 @@ class PostgresAuditLog:
                 "SELECT category, count(*) AS n FROM audit_events "
                 "WHERE category IS NOT NULL GROUP BY category"
             )
+            route_rows = await connection.fetch(
+                "SELECT route, count(*) AS n FROM audit_events "
+                "WHERE route IS NOT NULL GROUP BY route"
+            )
         outcomes: Counter[str] = Counter({row["outcome"]: int(row["n"]) for row in outcome_rows})
         categories: Counter[str] = Counter(
             {row["category"]: int(row["n"]) for row in category_rows}
         )
-        return compute_metrics(outcomes, categories)
+        routes: Counter[str] = Counter({row["route"]: int(row["n"]) for row in route_rows})
+        return compute_metrics(outcomes, categories, routes)
 
     async def close(self) -> None:
         await self._pool.close()

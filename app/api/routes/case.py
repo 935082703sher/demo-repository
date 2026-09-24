@@ -21,6 +21,19 @@ from app.domain.enums import Category, Language
 from app.domain.schemas import LLMRequest
 from app.providers.base import LLMProvider
 from app.providers.errors import ProviderError
+from app.services.audit_log import (
+    OUTCOME_ANSWER,
+    OUTCOME_CLARIFY,
+    OUTCOME_GREETING,
+    OUTCOME_HANDOFF,
+    OUTCOME_QUESTION,
+    OUTCOME_RESOLVED,
+    ROUTE_CASE,
+    ROUTE_GREETING,
+    ROUTE_RAG,
+    AuditEvent,
+    AuditLog,
+)
 from app.services.card_explainer import CardExplainer
 from app.services.case_store import CaseStore
 from app.services.diagnostic_engine import DiagnosticEngine
@@ -178,6 +191,30 @@ class ConverseCaseResponse(BaseModel):
     sources: list[SourceOut] = []
 
 
+async def _audit(
+    audit: AuditLog,
+    case: CaseState,
+    outcome: str,
+    route: str,
+    *,
+    card_id: str | None = None,
+    tree_id: str | None = None,
+) -> None:
+    """Record one converse turn for the KPI metrics."""
+    await audit.record(
+        AuditEvent(
+            channel=case.channel,
+            language=case.language,
+            outcome=outcome,
+            category=case.domain,
+            tree_id=tree_id,
+            card_id=card_id,
+            session_id=case.session_id,
+            route=route,
+        )
+    )
+
+
 def _start_fresh_case(case: CaseState) -> None:
     """Clear the diagnostic slate for a new problem, keeping the session identity.
 
@@ -320,6 +357,7 @@ async def assistant_converse(
     turn_router = cast(Router, request.app.state.router)
     provider = cast(LLMProvider, request.app.state.provider)
     explainer = cast(CardExplainer, request.app.state.card_explainer)
+    audit = cast(AuditLog, request.app.state.audit_log)
 
     case = store.get_or_create(
         payload.session_id, language=payload.language, channel=payload.channel
@@ -347,6 +385,7 @@ async def assistant_converse(
             if resolved is not None:
                 _refresh_unknowns(case)
                 store.save(case)
+                await _audit(audit, case, OUTCOME_RESOLVED, ROUTE_CASE, card_id=resolved.id)
                 card_text = await _card_reply(explainer, resolved, case, lang)
                 return _resp(case, card_text, done=True, card_id=resolved.id)
             answered = True
@@ -372,6 +411,9 @@ async def assistant_converse(
                 if case.domain is None:
                     case.domain = chosen.domain
                 store.save(case)
+                await _audit(
+                    audit, case, OUTCOME_RESOLVED, ROUTE_CASE, card_id=obj.id, tree_id=chosen.id
+                )
                 card_text = await _card_reply(explainer, obj, case, lang)
                 return _resp(case, card_text, done=True, card_id=obj.id)
 
@@ -379,9 +421,12 @@ async def assistant_converse(
         route = await turn_router.decide(payload.message, case)
         if route is Route.GREETING and case.active_tree is None:
             store.save(case)
+            await _audit(audit, case, OUTCOME_GREETING, ROUTE_GREETING)
             return _resp(case, _GREETING.get(lang, _GREETING["uz"]))
         if route is Route.RAG:
             reply = await _rag_answer(provider, case, payload.message, lang)
+            outcome = OUTCOME_HANDOFF if reply.requires_human else OUTCOME_ANSWER
+            await _audit(audit, case, outcome, ROUTE_RAG)  # record before the reset
             # A standalone question leaves no residue; a question mid-diagnosis
             # keeps the open case so the next message can still answer it.
             if case.active_tree is None:
@@ -396,8 +441,10 @@ async def assistant_converse(
                 by_lang = _DOMAIN_INTRO.get(lang, _DOMAIN_INTRO["uz"])
                 intro = by_lang.get(menu_domain) or _ROUTE_INTRO.get(lang, _ROUTE_INTRO["uz"])
                 store.save(case)
+                await _audit(audit, case, OUTCOME_CLARIFY, ROUTE_CASE)
                 return _menu(case, engine.trees_for_domain(menu_domain), intro, lang)
             store.save(case)
+            await _audit(audit, case, OUTCOME_CLARIFY, ROUTE_CASE)
             return _menu(case, engine.trees(), _ROUTE_INTRO.get(lang, _ROUTE_INTRO["uz"]), lang)
         if chosen is not None and chosen.id != case.active_tree:
             case.active_tree = chosen.id
@@ -407,6 +454,7 @@ async def assistant_converse(
             _refresh_unknowns(case)
 
     # 4) Walk from the current node, skipping questions the facts already answer.
+    active_tree = case.active_tree
     kind, obj = engine.advance(case.active_tree or "", case.pending_node or "", case.known_facts())
     if kind == "resolve" and isinstance(obj, ResolutionCard):
         case.resolution_card_id = obj.id
@@ -414,11 +462,14 @@ async def assistant_converse(
         case.active_tree = None
         case.pending_node = None
         store.save(case)
-        return _resp(case, await _card_reply(explainer, obj, case, lang), done=True, card_id=obj.id)
+        await _audit(audit, case, OUTCOME_RESOLVED, ROUTE_CASE, card_id=obj.id, tree_id=active_tree)
+        card_text = await _card_reply(explainer, obj, case, lang)
+        return _resp(case, card_text, done=True, card_id=obj.id)
     if kind == "ask" and isinstance(obj, DiagnosticNode):
         case.pending_node = obj.id
         case.status = CaseStatus.DIAGNOSING
         store.save(case)
+        await _audit(audit, case, OUTCOME_QUESTION, ROUTE_CASE, tree_id=active_tree)
         options = [OptionOut(value=o.value, label=o.label.get(lang)) for o in obj.options]
         return _resp(case, obj.question.get(lang), options=options)
 
@@ -426,4 +477,5 @@ async def assistant_converse(
     case.active_tree = None
     case.pending_node = None
     store.save(case)
+    await _audit(audit, case, OUTCOME_HANDOFF, ROUTE_CASE, tree_id=active_tree)
     return _resp(case, _HANDOFF_REPLY.get(lang, _HANDOFF_REPLY["uz"]), requires_human=True)
