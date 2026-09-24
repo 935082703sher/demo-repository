@@ -54,6 +54,12 @@ from app.services.governed_complaint_orchestrator import GovernedComplaintOrches
 from app.services.grounding import GroundingValidator
 from app.services.guardrails import Guardrails
 from app.services.knowledge import KnowledgeService
+from app.services.question_explainer import (
+    LLMQuestionExplainer,
+    QuestionExplainer,
+    TemplateQuestionExplainer,
+    build_openai_question_complete,
+)
 from app.services.scope import ScopeService
 from app.services.turn_analysis import (
     LLMTurnAnalyzer,
@@ -191,6 +197,22 @@ def create_app(
             fallback=TemplateCardExplainer(),
         )
     app.state.card_explainer = card_explainer
+    question_explainer: QuestionExplainer = TemplateQuestionExplainer()
+    if (
+        app_settings.llm_provider == "openai"
+        and app_settings.llm_api_key is not None
+        and app_settings.llm_api_key.get_secret_value()
+        and app_settings.llm_model
+    ):
+        question_explainer = LLMQuestionExplainer(
+            build_openai_question_complete(
+                api_key=app_settings.llm_api_key.get_secret_value(),
+                model=app_settings.llm_model,
+                timeout_seconds=app_settings.llm_timeout_seconds,
+            ),
+            fallback=TemplateQuestionExplainer(),
+        )
+    app.state.question_explainer = question_explainer
     app.state.grounding = GroundingValidator()
     app.state.audit_log = InMemoryAuditLog()
     app.state.usage_limits = usage_limits

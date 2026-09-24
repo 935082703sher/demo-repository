@@ -46,6 +46,7 @@ from app.services.fact_extraction import (
 from app.services.grounding import GroundingValidator
 from app.services.kb_retriever import get_retriever
 from app.services.pii import redact_likely_pii
+from app.services.question_explainer import QuestionExplainer
 from app.services.router import Route
 from app.services.turn_analysis import TurnAnalyzer
 
@@ -379,6 +380,7 @@ async def assistant_converse(
     engine = cast(DiagnosticEngine, request.app.state.diagnostic_engine)
     provider = cast(LLMProvider, request.app.state.provider)
     explainer = cast(CardExplainer, request.app.state.card_explainer)
+    q_explainer = cast(QuestionExplainer, request.app.state.question_explainer)
     grounding = cast(GroundingValidator, request.app.state.grounding)
     audit = cast(AuditLog, request.app.state.audit_log)
 
@@ -499,8 +501,10 @@ async def assistant_converse(
         case.status = CaseStatus.DIAGNOSING
         await store.save(case)
         await _audit(audit, case, OUTCOME_QUESTION, ROUTE_CASE, tree_id=active_tree)
+        # Rephrase the question naturally; the options (buttons) stay exactly as-is.
+        question = await q_explainer.explain(obj.question.get(lang), case, lang)
         options = [OptionOut(value=o.value, label=o.label.get(lang)) for o in obj.options]
-        return _resp(case, obj.question.get(lang), options=options)
+        return _resp(case, question, options=options)
 
     case.status = CaseStatus.HANDOFF
     case.active_tree = None
