@@ -191,6 +191,7 @@ def create_app(
             fallback=TemplateCardExplainer(),
         )
     app.state.card_explainer = card_explainer
+    app.state.grounding = GroundingValidator()
     app.state.audit_log = InMemoryAuditLog()
     app.state.usage_limits = usage_limits
     legacy_drafts = ComplaintDraftService(app_settings.privacy_notice_version)

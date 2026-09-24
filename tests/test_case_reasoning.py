@@ -370,6 +370,34 @@ def test_converse_redacts_pii_before_use() -> None:
         assert "998901234567" not in blob
 
 
+def test_grounding_authorizes_only_supplied_sources() -> None:
+    from app.services.grounding import GroundingValidator
+
+    g = GroundingValidator()
+    # Duplicate allowed ids (chunk retrieval) are tolerated; the cite is in-set.
+    assert g.authorize("javob", ["faq-1"], ["faq-1", "faq-1", "faq-2"]) is True
+    assert g.authorize("javob", ["ghost"], ["faq-1"]) is False  # fabricated source
+    assert g.authorize("javob", [], ["faq-1"]) is False  # no citation
+    assert g.authorize("   ", ["faq-1"], ["faq-1"]) is False  # empty answer
+
+
+def test_converse_abstains_when_answer_cites_unknown_source() -> None:
+    from app.domain.schemas import LLMResult
+
+    class _UngroundedProvider:
+        async def generate(self, request: object) -> LLMResult:
+            return LLMResult(text="Ba'zi javob.", citations=["fabricated-source"])
+
+    with TestClient(create_app(provider=_UngroundedProvider())) as client:  # type: ignore[arg-type]
+        body = client.post(
+            "/assistant/converse",
+            json={"message": "IMEI ro'yxatdan o'tkazish qancha turadi?", "session_id": "cv-ug"},
+        ).json()
+        # The provider cited a source it was not given -> abstain, don't relay it.
+        assert body["requires_human"] is True
+        assert body["card_id"] is None
+
+
 def test_has_strong_evidence_threshold() -> None:
     from types import SimpleNamespace
 

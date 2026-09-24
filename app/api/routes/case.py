@@ -43,6 +43,7 @@ from app.services.fact_extraction import (
     FactExtractor,
     detect_domain,
 )
+from app.services.grounding import GroundingValidator
 from app.services.kb_retriever import get_retriever
 from app.services.pii import redact_likely_pii
 from app.services.router import Route
@@ -330,13 +331,18 @@ def _has_strong_evidence(results: list[Any], min_score: float) -> bool:
 
 
 async def _rag_answer(
-    provider: LLMProvider, case: CaseState, message: str, lang: str
+    provider: LLMProvider,
+    grounding: GroundingValidator,
+    case: CaseState,
+    message: str,
+    lang: str,
 ) -> ConverseCaseResponse:
     """Answer an informational question strictly from approved KB evidence.
 
     Retrieves the top approved passages and lets the provider answer only from
-    them, returning the sources. With no evidence (or a provider failure) it
-    escalates instead of inventing an answer - grounding-first, like /answer.
+    them. It abstains - never invents an answer - when there is no evidence, the
+    top hit is too weak, the provider fails, or the answer cites a source it was
+    not given (grounding check), returning the sources only when it answers.
     """
     retriever = get_retriever()
     results = retriever.retrieve(message, _RAG_TOP_K, domain=case.domain)
@@ -344,16 +350,20 @@ async def _rag_answer(
     # Abstain when there is no evidence or the best hit is too weak to trust.
     if not _has_strong_evidence(results, _RAG_MIN_SCORE):
         return _resp(case, fallback, done=True, requires_human=True)
+    source_ids = [r.chunk.doc_id for r in results]
     llm_request = LLMRequest(
         language=_LANG_ENUM.get(lang, Language.UZ),
         question=message,
         category=_CATEGORY_BY_DOMAIN.get(results[0].chunk.domain, Category.OTHER),
-        source_ids=[r.chunk.doc_id for r in results],
+        source_ids=source_ids,
         passages=[r.chunk.text for r in results],
     )
     try:
         result = await provider.generate(llm_request)
     except ProviderError:
+        return _resp(case, fallback, done=True, requires_human=True)
+    # Grounding: the answer must cite only sources it was actually given.
+    if not grounding.authorize(result.text, result.citations, source_ids):
         return _resp(case, fallback, done=True, requires_human=True)
     sources = [SourceOut(doc_id=r.chunk.doc_id, title=r.chunk.title) for r in results]
     return _resp(case, result.text, done=True, sources=sources)
@@ -369,6 +379,7 @@ async def assistant_converse(
     engine = cast(DiagnosticEngine, request.app.state.diagnostic_engine)
     provider = cast(LLMProvider, request.app.state.provider)
     explainer = cast(CardExplainer, request.app.state.card_explainer)
+    grounding = cast(GroundingValidator, request.app.state.grounding)
     audit = cast(AuditLog, request.app.state.audit_log)
 
     case = await store.get_or_create(
@@ -442,7 +453,7 @@ async def assistant_converse(
             await _audit(audit, case, OUTCOME_GREETING, ROUTE_GREETING)
             return _resp(case, _GREETING.get(lang, _GREETING["uz"]))
         if route is Route.RAG:
-            reply = await _rag_answer(provider, case, message, lang)
+            reply = await _rag_answer(provider, grounding, case, message, lang)
             outcome = OUTCOME_HANDOFF if reply.requires_human else OUTCOME_ANSWER
             await _audit(audit, case, outcome, ROUTE_RAG)  # record before the reset
             # A standalone question leaves no residue; a question mid-diagnosis

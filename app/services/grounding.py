@@ -18,18 +18,27 @@ class GroundingDecision:
 class GroundingValidator:
     """Reject source IDs the provider was not supplied."""
 
+    def authorize(self, text: str, citations: list[str], allowed_ids: list[str]) -> bool:
+        """True when a non-empty answer cites only supplied source IDs.
+
+        Set-based (duplicates tolerated) so it also fits chunk retrieval, where
+        several passages share one document id.
+        """
+        if not text.strip() or not citations:
+            return False
+        allowed = set(allowed_ids)
+        return all(source_id in allowed for source_id in citations)
+
     def validate(
         self,
         result: LLMResult,
         retrieved_records: list[KnowledgeRecord],
     ) -> GroundingDecision:
         """Require non-empty, unique, server-owned citations."""
-        if not result.text.strip() or not result.citations:
-            return GroundingDecision(False)
         records_by_id = {record.document_id: record for record in retrieved_records}
         if len(records_by_id) != len(retrieved_records):
             return GroundingDecision(False)
-        if any(source_id not in records_by_id for source_id in result.citations):
+        if not self.authorize(result.text, result.citations, list(records_by_id)):
             return GroundingDecision(False)
 
         cited: list[KnowledgeRecord] = []
