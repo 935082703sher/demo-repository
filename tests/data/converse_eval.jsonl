@@ -25,4 +25,4 @@
 {"id": "rag-imei-cost", "turns": [{"msg": "IMEI ro'yxatdan o'tkazish qancha turadi?", "expect": "rag"}]}
 {"id": "rag-mnp-duration", "turns": [{"msg": "MNP necha kun ichida amalga oshadi?", "expect": "rag"}]}
 {"id": "menu-select-tree", "turns": [{"msg": "imei-blokdan_chiqarish", "expect": "question", "reply_has": ["blok"]}]}
-{"id": "offtopic", "turns": [{"msg": "bugungi ob-havo qanday", "expect": "rag"}]}
+{"id": "offtopic", "turns": [{"msg": "bugungi ob-havo qanday", "expect": "menu"}]}

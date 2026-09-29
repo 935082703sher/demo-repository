@@ -187,6 +187,14 @@ _NO_EVIDENCE_REPLY = {
     "ru": "Не нашёл точного ответа в проверенных источниках. Передаю специалисту.",
     "en": "I couldn't find a confirmed source for this. I'll route you to a specialist.",
 }
+_RAG_CLARIFY = {
+    "uz": "Bunga aniq javob topa olmadim. Men IMEI va MNP bo'yicha yordam beraman — "
+    "quyidagi mavzulardan birini tanlang yoki 1170 ga murojaat qiling:",
+    "ru": "Я не нашёл точного ответа. Я помогаю по IMEI и MNP — выберите тему ниже "
+    "или обратитесь на 1170:",
+    "en": "I couldn't find an exact answer. I help with IMEI and MNP — pick a topic "
+    "below, or call 1170:",
+}
 
 
 class ConverseCaseRequest(BaseModel):
@@ -505,13 +513,19 @@ async def _converse_turn(
             return _resp(case, _GREETING.get(lang, _GREETING["uz"]))
         if route is Route.RAG:
             reply = await _rag_answer(provider, grounding, interaction_log, case, message, lang)
-            outcome = OUTCOME_HANDOFF if reply.requires_human else OUTCOME_ANSWER
-            await _audit(audit, case, outcome, ROUTE_RAG)  # record before the reset
             # A standalone question leaves no residue; a question mid-diagnosis
             # keeps the open case so the next message can still answer it.
             if case.active_tree is None:
                 _start_fresh_case(case)
+            if reply.requires_human:
+                # No grounded answer: don't dead-end - offer the topics we can help
+                # with so the user can pick one instead of only "contact a specialist".
+                await store.save(case)
+                await _audit(audit, case, OUTCOME_CLARIFY, ROUTE_RAG)
+                intro = _RAG_CLARIFY.get(lang, _RAG_CLARIFY["uz"])
+                return _menu(case, engine.trees(), intro, lang)
             await store.save(case)
+            await _audit(audit, case, OUTCOME_ANSWER, ROUTE_RAG)
             return reply
 
         # 3c) CASE: enter the chosen tree, or clarify with a menu when none fits.

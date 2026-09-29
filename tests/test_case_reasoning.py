@@ -393,9 +393,11 @@ def test_converse_abstains_when_answer_cites_unknown_source() -> None:
             "/assistant/converse",
             json={"message": "IMEI ro'yxatdan o'tkazish qancha turadi?", "session_id": "cv-ug"},
         ).json()
-        # The provider cited a source it was not given -> abstain, don't relay it.
-        assert body["requires_human"] is True
+        # The provider cited a source it was not given -> do not relay that answer;
+        # offer the topic menu instead of dead-ending.
         assert body["card_id"] is None
+        assert "Ba'zi javob" not in body["reply"]  # the ungrounded answer is withheld
+        assert {opt["value"] for opt in body["options"]}  # a recovery menu is offered
 
 
 def test_has_strong_evidence_threshold() -> None:
@@ -414,10 +416,12 @@ def test_converse_abstains_on_offtopic_question() -> None:
             "/assistant/converse",
             json={"message": "bugungi ob-havo qanday", "session_id": "cv-offtopic"},
         ).json()
-        # Weak/irrelevant evidence -> abstain and escalate, never a made-up answer.
-        assert body["requires_human"] is True
+        # Weak/irrelevant evidence -> never a made-up answer; offer the topic menu
+        # instead of dead-ending, so the user can pick something we can help with.
         assert body["card_id"] is None
         assert body["sources"] == []
+        values = {opt["value"] for opt in body["options"]}
+        assert values and all("-" in v for v in values)  # tree-id topic menu
 
 
 def test_converse_stream_emits_deltas_then_done() -> None:
