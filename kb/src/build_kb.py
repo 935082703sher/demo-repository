@@ -142,6 +142,34 @@ def build():
             "refs": f["refs"], "source": "MNP va IMEI FAQ (O‘zTTBRM)",
         })
 
+    # --- 2-qatlam (davomi): UZIMEI mijozlar bilim bazasi (uzimei.uz) ----------
+    # Rasmiy bosqichma-bosqich yo'riqnomalar (D01-D20), FAQ va ssenariylar; RAG
+    # shu boy kontentdan grounded javob beradi.
+    uzkb_path = ROOT / "data" / "uzimei_knowledge.jsonl"
+    n_uzkb = 0
+    if uzkb_path.exists():
+        for line in uzkb_path.open(encoding="utf-8"):
+            line = line.strip()
+            if not line:
+                continue
+            r = json.loads(line)
+            rows.append(base(
+                id=rid("uzkb", r["text"][:60] + str(n_uzkb)),
+                doc_id="uzimei-bilim-bazasi",
+                source_type="bilim_bazasi",
+                source_title="UZIMEI mijozlar bilim bazasi (uzimei.uz), 25.09.2026",
+                title=r.get("section", "UZIMEI bilim bazasi"),
+                authority=2,
+                domain=r.get("domain", "imei"),
+                case_type="boshqa",
+                outcome=None,
+                text=r["text"],
+                legal_refs=[],
+                tags=[],
+                valid_from="2026-09-25",
+            ))
+            n_uzkb += 1
+
     # --- 3-qatlam (davomi): tasdiqlangan yechim kartalari (authority 3) -------
     # Diagnostika daraxtlarining resolution card'lari: tasdiqlangan kontent, shu
     # bois RAG ular haqidagi ma'lumot savollariga ham javob bera oladi.
