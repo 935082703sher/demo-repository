@@ -71,6 +71,21 @@ def test_feedback_endpoint_records_rating(tmp_path) -> None:  # type: ignore[no-
     assert fb[0]["feedback"] == "unhelpful" and fb[0]["card_id"] == "imei-customs"
 
 
+def test_converse_logs_unanswered_question(tmp_path) -> None:  # type: ignore[no-untyped-def]
+    path = tmp_path / "log.jsonl"
+    settings = Settings(_env_file=None, environment="test", interaction_log_path=str(path))
+    with TestClient(create_app(settings=settings)) as client:
+        # An off-topic question the KB cannot answer -> abstain + record the gap.
+        client.post(
+            "/assistant/converse",
+            json={"message": "bugungi ob-havo qanday", "session_id": "u-1"},
+        )
+    rows = read_records(path)
+    unanswered = [r for r in rows if r["kind"] == "unanswered"]
+    assert len(unanswered) == 1
+    assert "ob-havo" in unanswered[0]["message"]
+
+
 def test_converse_stream_also_logs_once(tmp_path) -> None:  # type: ignore[no-untyped-def]
     path = tmp_path / "log.jsonl"
     settings = Settings(_env_file=None, environment="test", interaction_log_path=str(path))

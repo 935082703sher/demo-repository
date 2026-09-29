@@ -32,6 +32,7 @@ def main() -> int:
 
     turns = [r for r in rows if r.get("kind", "turn") == "turn"]
     feedback = [r for r in rows if r.get("kind") == "feedback"]
+    unanswered = [r for r in rows if r.get("kind") == "unanswered"]
 
     outcomes: Counter[str] = Counter(r.get("outcome") or "?" for r in turns)
     domains: Counter[str] = Counter(r.get("domain") or "?" for r in turns)
@@ -53,6 +54,14 @@ def main() -> int:
         )
         if bad_cards:
             print("Cards rated unhelpful:", dict(bad_cards))
+
+    # The KB gap: questions the knowledge base could not answer. Author answers for
+    # these (add to the KB / FAQ), then rebuild the corpus - the core improvement loop.
+    if unanswered:
+        by_q = Counter(r.get("message", "") for r in unanswered)
+        print(f"\n=== Bilim bazasidan javob topilmagan savollar: {len(unanswered)} ===")
+        for message, count in by_q.most_common(30):
+            print(f"  {count:>3}x  {message!r}")
 
     unresolved = [r for r in turns if (r.get("outcome") in _UNRESOLVED) or r.get("requires_human")]
     print(f"\nImprovement candidates (unresolved turns): {len(unresolved)}")

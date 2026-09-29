@@ -32,17 +32,24 @@ class TemplateCardExplainer:
 
 ExplainComplete = Callable[[str], Awaitable[str]]
 
-_LANGUAGE_NAME = {"uz": "Uzbek", "ru": "Russian", "en": "English"}
+_LANGUAGE_NAME = {
+    "uz": "Uzbek (Latin script)",
+    "uz_cyrl": "Uzbek (Cyrillic script)",
+    "ru": "Russian",
+    "en": "English",
+    "kaa": "Karakalpak",
+}
 
 _LLM_INSTRUCTIONS = (
-    "You are a calm, helpful telecom support agent. You are given the APPROVED "
-    "explanation of why a customer's IMEI/MNP case turned out the way it did, plus "
-    "the facts already known about their situation. Rewrite the explanation so it "
-    "reads warm, clear and personal, in the requested language. Rules: use ONLY the "
-    "given explanation and facts; do NOT add or change any step, fee, deadline, "
-    "phone number, link or legal detail; do NOT invent anything; keep it to two or "
-    "three short sentences and do not list action steps (those are shown "
-    'separately). Respond as JSON: {"explanation": "..."}.'
+    "You are a kind telecom helper. You are given the APPROVED reason a customer's "
+    "IMEI/MNP case turned out the way it did, plus what is already known about their "
+    "situation. Rewrite the reason so a child of about 11 could understand it, "
+    "written in the requested language. Style: use short, simple, everyday words and "
+    "short sentences; be warm and friendly; keep it to two or three short sentences "
+    "and do not list the action steps (those are shown separately). Rules: use ONLY "
+    "the given reason and facts; do NOT add or change any step, fee, deadline, phone "
+    'number, link or legal detail; invent nothing. Respond as JSON: '
+    '{"explanation": "..."}.'
 )
 
 _EXPLAIN_JSON_SCHEMA: dict[str, Any] = {

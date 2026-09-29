@@ -94,7 +94,10 @@
     </div>
     <select id="lang" aria-label="Til">
       <option value="uz">O‘zbekcha</option>
+      <option value="uz_cyrl">Ўзбекча</option>
       <option value="ru">Русский</option>
+      <option value="en">English</option>
+      <option value="kaa">Qaraqalpaqsha</option>
     </select>
     <button class="reset" id="reset">Qayta</button>
   </header>
@@ -138,7 +141,25 @@
           cause: "Вероятная причина", steps: "Что делать", docs: "Нужные документы",
           where: "Куда обратиться", url: "Официальный адрес", contact: "Контакт",
           escalate: "Передача оператору", sources: "Источники", human: "Рекомендуется связаться с оператором.",
-          typing: "печатает…", fbQ: "Проблема решена?", fbYes: "Да 👍", fbNo: "Нет 👎", fbThanks: "Спасибо!" }
+          typing: "печатает…", fbQ: "Проблема решена?", fbYes: "Да 👍", fbNo: "Нет 👎", fbThanks: "Спасибо!" },
+    uz_cyrl: { welcome: "Ассалому алайкум! IMEI ёки MNP бўйича муаммоингизни ёзинг. Масалан: «IMEI рўйхатдан ўтмаяпти», «телефоним блокланди».",
+          placeholder: "Муаммоингизни ёзинг…", send: "Юбориш", reset: "Қайта",
+          cause: "Эҳтимолий сабаб", steps: "Нима қилиш керак", docs: "Керакли ҳужжатлар",
+          where: "Қаерга мурожаат", url: "Расмий манзил", contact: "Контакт",
+          escalate: "Операторга йўналтириш", sources: "Манбалар", human: "Операторга уланиш тавсия этилади.",
+          typing: "ёзмоқда…", fbQ: "Муаммо ҳал бўлдими?", fbYes: "Ҳа 👍", fbNo: "Йўқ 👎", fbThanks: "Раҳмат!" },
+    en: { welcome: "Hello! Describe your IMEI or MNP problem. For example: “IMEI is not registering”, “my phone is blocked”.",
+          placeholder: "Describe your problem…", send: "Send", reset: "Reset",
+          cause: "Likely reason", steps: "What to do", docs: "Documents needed",
+          where: "Where to apply", url: "Official link", contact: "Contact",
+          escalate: "Route to operator", sources: "Sources", human: "It's best to contact an operator.",
+          typing: "typing…", fbQ: "Did this solve it?", fbYes: "Yes 👍", fbNo: "No 👎", fbThanks: "Thank you!" },
+    kaa: { welcome: "Assalawma áleykum! IMEI yamasa MNP boyınsha máseleńizdi jazıń. Mısalı: «IMEI dizimnen ótpey atır», «telefonım bloklandı».",
+          placeholder: "Máseleńizdi jazıń…", send: "Jiberiw", reset: "Qayta",
+          cause: "Múmkin sebep", steps: "Ne islew kerek", docs: "Kerekli hújjetler",
+          where: "Qayerge múrájat", url: "Rásmiy sıltama", contact: "Baylanıs",
+          escalate: "Operatorǵa jiberiw", sources: "Derekler", human: "Operator menen baylanısıw usınıladı.",
+          typing: "jazıp atır…", fbQ: "Másele sheshildi me?", fbYes: "Awa 👍", fbNo: "Yaq 👎", fbThanks: "Raxmet!" }
   };
 
   function tr() { return T[state.lang]; }

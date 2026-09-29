@@ -31,17 +31,23 @@ class TemplateQuestionExplainer:
 
 ExplainComplete = Callable[[str], Awaitable[str]]
 
-_LANGUAGE_NAME = {"uz": "Uzbek", "ru": "Russian", "en": "English"}
+_LANGUAGE_NAME = {
+    "uz": "Uzbek (Latin script)",
+    "uz_cyrl": "Uzbek (Cyrillic script)",
+    "ru": "Russian",
+    "en": "English",
+    "kaa": "Karakalpak",
+}
 
 _LLM_INSTRUCTIONS = (
-    "You are a calm, helpful telecom support agent gathering information. You are "
-    "given the next diagnostic QUESTION to ask the customer and the facts already "
-    "known about their situation. Rewrite the question so it reads warm and natural "
-    "in the requested language, acknowledging what is already known in at most one "
-    "short clause. Rules: keep it ONE question with the same meaning; do NOT list, "
-    "add, remove or rename any answer option (the choices are shown as separate "
-    "buttons); do NOT invent facts; keep it short. Respond as JSON: "
-    '{"question": "..."}.'
+    "You are a kind telecom helper gathering information. You are given the next "
+    "diagnostic QUESTION to ask the customer and what is already known about their "
+    "situation. Rewrite the question so a child of about 11 could understand it, in "
+    "the requested language: short, simple, everyday words; warm and friendly; you "
+    "may acknowledge what is already known in at most one short clause. Rules: keep "
+    "it ONE short question with the same meaning; do NOT list, add, remove or rename "
+    "any answer option (the choices are shown as separate buttons); invent no facts. "
+    'Respond as JSON: {"question": "..."}.'
 )
 
 _QUESTION_JSON_SCHEMA: dict[str, Any] = {

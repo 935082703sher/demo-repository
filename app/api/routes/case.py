@@ -49,7 +49,7 @@ from app.services.fact_extraction import (
     detect_domain,
 )
 from app.services.grounding import GroundingValidator
-from app.services.interaction_log import InteractionRecord
+from app.services.interaction_log import InteractionLog, InteractionRecord
 from app.services.kb_retriever import get_retriever
 from app.services.pii import redact_likely_pii
 from app.services.question_explainer import QuestionExplainer
@@ -65,7 +65,7 @@ router = APIRouter(prefix="/assistant", tags=["case"])
 class UnderstandRequest(BaseModel):
     message: str = Field(min_length=1, max_length=4000)
     session_id: str = Field(min_length=1, max_length=100)
-    language: str = Field(default="uz", pattern="^(uz|ru|en)$")
+    language: str = Field(default="uz", pattern="^(uz|uz_cyrl|ru|en|kaa)$")
     channel: str = Field(default="web", pattern="^(web|telegram)$")
 
 
@@ -163,7 +163,19 @@ _RAG_TOP_K = 5
 # assistant abstains instead of answering from irrelevant evidence. Calibrated on
 # the corpus - on-topic queries score well above it, off-topic ones well below.
 _RAG_MIN_SCORE = 4.0
-_LANG_ENUM = {"uz": Language.UZ, "ru": Language.RU, "en": Language.EN}
+# The grounded-answer request carries the base enum; the exact script/language is
+# steered by a short hint prepended to the question (see _rag_answer).
+_LANG_ENUM = {
+    "uz": Language.UZ,
+    "uz_cyrl": Language.UZ,
+    "ru": Language.RU,
+    "en": Language.EN,
+    "kaa": Language.UZ,
+}
+_ANSWER_LANG_HINT = {
+    "uz_cyrl": "(Javobni o'zbek tilida, KIRILL alifbosida yozing.) ",
+    "kaa": "(Juwaptı qaraqalpaq tilinde jazıń.) ",
+}
 _CATEGORY_BY_DOMAIN = {
     "imei": Category.IMEI,
     "mnp": Category.MNP,
@@ -180,7 +192,7 @@ _NO_EVIDENCE_REPLY = {
 class ConverseCaseRequest(BaseModel):
     message: str = Field(min_length=1, max_length=4000)
     session_id: str = Field(min_length=1, max_length=100)
-    language: str = Field(default="uz", pattern="^(uz|ru|en)$")
+    language: str = Field(default="uz", pattern="^(uz|uz_cyrl|ru|en|kaa)$")
     channel: str = Field(default="web", pattern="^(web|telegram)$")
 
 
@@ -343,9 +355,28 @@ def _has_strong_evidence(results: list[Any], min_score: float) -> bool:
     return bool(results) and results[0].score >= min_score
 
 
+async def _log_unanswered(log: InteractionLog | None, case: CaseState, message: str) -> None:
+    """Record a question the knowledge base could not answer, for the review list."""
+    if log is None:
+        return
+    await log.record(
+        InteractionRecord(
+            session_id=case.session_id,
+            channel=case.channel,
+            language=case.language,
+            kind="unanswered",
+            outcome="unanswered",
+            message=message,
+            domain=case.domain,
+            requires_human=True,
+        )
+    )
+
+
 async def _rag_answer(
     provider: LLMProvider,
     grounding: GroundingValidator,
+    log: InteractionLog | None,
     case: CaseState,
     message: str,
     lang: str,
@@ -355,18 +386,21 @@ async def _rag_answer(
     Retrieves the top approved passages and lets the provider answer only from
     them. It abstains - never invents an answer - when there is no evidence, the
     top hit is too weak, the provider fails, or the answer cites a source it was
-    not given (grounding check), returning the sources only when it answers.
+    not given (grounding check). A KB gap (no/weak evidence or an ungroundable
+    answer) is also recorded as an 'unanswered' question so it can be reviewed and
+    answered later. Sources are returned only when it actually answers.
     """
     retriever = get_retriever()
     results = retriever.retrieve(message, _RAG_TOP_K, domain=case.domain)
     fallback = _NO_EVIDENCE_REPLY.get(lang, _NO_EVIDENCE_REPLY["uz"])
     # Abstain when there is no evidence or the best hit is too weak to trust.
     if not _has_strong_evidence(results, _RAG_MIN_SCORE):
+        await _log_unanswered(log, case, message)
         return _resp(case, fallback, done=True, requires_human=True)
     source_ids = [r.chunk.doc_id for r in results]
     llm_request = LLMRequest(
         language=_LANG_ENUM.get(lang, Language.UZ),
-        question=message,
+        question=_ANSWER_LANG_HINT.get(lang, "") + message,
         category=_CATEGORY_BY_DOMAIN.get(results[0].chunk.domain, Category.OTHER),
         source_ids=source_ids,
         passages=[r.chunk.text for r in results],
@@ -374,9 +408,10 @@ async def _rag_answer(
     try:
         result = await provider.generate(llm_request)
     except ProviderError:
-        return _resp(case, fallback, done=True, requires_human=True)
+        return _resp(case, fallback, done=True, requires_human=True)  # technical, not a KB gap
     # Grounding: the answer must cite only sources it was actually given.
     if not grounding.authorize(result.text, result.citations, source_ids):
+        await _log_unanswered(log, case, message)
         return _resp(case, fallback, done=True, requires_human=True)
     sources = [SourceOut(doc_id=r.chunk.doc_id, title=r.chunk.title) for r in results]
     return _resp(case, result.text, done=True, sources=sources)
@@ -394,6 +429,7 @@ async def _converse_turn(
     q_explainer = cast(QuestionExplainer, request.app.state.question_explainer)
     grounding = cast(GroundingValidator, request.app.state.grounding)
     audit = cast(AuditLog, request.app.state.audit_log)
+    interaction_log = cast(InteractionLog, getattr(request.app.state, "interaction_log", None))
 
     case = await store.get_or_create(
         payload.session_id, language=payload.language, channel=payload.channel
@@ -468,7 +504,7 @@ async def _converse_turn(
             await _audit(audit, case, OUTCOME_GREETING, ROUTE_GREETING)
             return _resp(case, _GREETING.get(lang, _GREETING["uz"]))
         if route is Route.RAG:
-            reply = await _rag_answer(provider, grounding, case, message, lang)
+            reply = await _rag_answer(provider, grounding, interaction_log, case, message, lang)
             outcome = OUTCOME_HANDOFF if reply.requires_human else OUTCOME_ANSWER
             await _audit(audit, case, outcome, ROUTE_RAG)  # record before the reset
             # A standalone question leaves no residue; a question mid-diagnosis
@@ -588,7 +624,7 @@ class FeedbackRequest(BaseModel):
     session_id: str = Field(min_length=1, max_length=100)
     helpful: bool
     card_id: str | None = None
-    language: str = Field(default="uz", pattern="^(uz|ru|en)$")
+    language: str = Field(default="uz", pattern="^(uz|uz_cyrl|ru|en|kaa)$")
     channel: str = Field(default="web", pattern="^(web|telegram)$")
 
 
