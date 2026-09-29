@@ -173,8 +173,8 @@ _LANG_ENUM = {
     "kaa": Language.UZ,
 }
 _ANSWER_LANG_HINT = {
-    "uz_cyrl": "(Javobni o'zbek tilida, KIRILL alifbosida yozing.) ",
-    "kaa": "(Juwaptı qaraqalpaq tilinde jazıń.) ",
+    "uz_cyrl": "(Write the answer in Uzbek using the CYRILLIC alphabet.) ",
+    "kaa": "(Write the answer in the Karakalpak language.) ",
 }
 _CATEGORY_BY_DOMAIN = {
     "imei": Category.IMEI,
