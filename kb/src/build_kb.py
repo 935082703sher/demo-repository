@@ -145,15 +145,19 @@ def build():
     # --- 2-qatlam (davomi): UZIMEI mijozlar bilim bazasi (uzimei.uz) ----------
     # Rasmiy bosqichma-bosqich yo'riqnomalar (D01-D20), FAQ va ssenariylar; RAG
     # shu boy kontentdan grounded javob beradi.
-    uzkb_path = ROOT / "data" / "uzimei_knowledge.jsonl"
+    # (lang=None auto-detects; the English file forces lang="en" so English
+    #  questions retrieve English content.)
     n_uzkb = 0
-    if uzkb_path.exists():
+    for fname, force_lang in (("uzimei_knowledge.jsonl", None), ("uzimei_knowledge_en.jsonl", "en")):
+        uzkb_path = ROOT / "data" / fname
+        if not uzkb_path.exists():
+            continue
         for line in uzkb_path.open(encoding="utf-8"):
             line = line.strip()
             if not line:
                 continue
             r = json.loads(line)
-            rows.append(base(
+            kw = dict(
                 id=rid("uzkb", r["text"][:60] + str(n_uzkb)),
                 doc_id="uzimei-bilim-bazasi",
                 source_type="bilim_bazasi",
@@ -167,7 +171,10 @@ def build():
                 legal_refs=[],
                 tags=[],
                 valid_from="2026-09-25",
-            ))
+            )
+            if force_lang:
+                kw["lang"] = force_lang
+            rows.append(base(**kw))
             n_uzkb += 1
 
     # --- 3-qatlam (davomi): tasdiqlangan yechim kartalari (authority 3) -------
