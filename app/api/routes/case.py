@@ -149,8 +149,10 @@ _ROUTE_INTRO = {
     "en": "Let's narrow it down. Please pick the closest option:",
 }
 _DOMAIN_INTRO = {
-    "uz": {"imei": "IMEI bo'yicha aynan qanday yordam kerak?",
-           "mnp": "MNP bo'yicha aynan qanday yordam kerak?"},
+    "uz": {
+        "imei": "IMEI bo'yicha aynan qanday yordam kerak?",
+        "mnp": "MNP bo'yicha aynan qanday yordam kerak?",
+    },
     "ru": {"imei": "Что именно нужно по IMEI?", "mnp": "Что именно нужно по MNP?"},
 }
 _HANDOFF_REPLY = {
@@ -182,8 +184,7 @@ _CATEGORY_BY_DOMAIN = {
     "aloqa_sifati": Category.NETWORK_QUALITY,
 }
 _NO_EVIDENCE_REPLY = {
-    "uz": "Bu savolga tasdiqlangan manbadan aniq javob topa olmadim. "
-    "Mutaxassisga yo'naltiraman.",
+    "uz": "Bu savolga tasdiqlangan manbadan aniq javob topa olmadim. Mutaxassisga yo'naltiraman.",
     "ru": "Не нашёл точного ответа в проверенных источниках. Передаю специалисту.",
     "en": "I couldn't find a confirmed source for this. I'll route you to a specialist.",
 }
@@ -214,6 +215,24 @@ class SourceOut(BaseModel):
     title: str
 
 
+class ImageOut(BaseModel):
+    url: str
+    caption: str
+
+
+# Approved UZIMEI screenshots shown with the matching resolution, so the user sees
+# exactly which block to use on the site.
+_IMG_REGISTER = ImageOut(
+    url="/media/uzimei-register.png", caption="IMEI onlayn ro'yxatdan o'tkazish"
+)
+_IMG_PAYMENT = ImageOut(url="/media/uzimei-payment.png", caption="Ariza raqami bo'yicha to'lov")
+_CARD_IMAGES: dict[str, list[ImageOut]] = {
+    "imei-register": [_IMG_REGISTER, _IMG_PAYMENT],
+    "imei-customs": [_IMG_REGISTER, _IMG_PAYMENT],
+    "imei-clone": [_IMG_REGISTER],
+}
+
+
 class ConverseCaseResponse(BaseModel):
     reply: str
     options: list[OptionOut]
@@ -224,6 +243,7 @@ class ConverseCaseResponse(BaseModel):
     unknown_facts: list[str]
     requires_human: bool
     sources: list[SourceOut] = []
+    images: list[ImageOut] = []
 
 
 async def _audit(
@@ -289,6 +309,7 @@ def _resp(
         unknown_facts=case.unknown_facts,
         requires_human=requires_human,
         sources=sources or [],
+        images=_CARD_IMAGES.get(card_id or "", []),
     )
 
 
@@ -327,9 +348,7 @@ async def _card_reply(
     return "\n".join(lines)
 
 
-def _apply_option(
-    engine: DiagnosticEngine, case: CaseState, value: str
-) -> ResolutionCard | None:
+def _apply_option(engine: DiagnosticEngine, case: CaseState, value: str) -> ResolutionCard | None:
     """Apply the chosen option on the pending node: set its fact, advance/resolve."""
     node = engine.get_node(case.active_tree or "", case.pending_node or "")
     if node is None:
@@ -425,9 +444,7 @@ async def _rag_answer(
     return _resp(case, result.text, done=True, sources=sources)
 
 
-async def _converse_turn(
-    payload: ConverseCaseRequest, request: Request
-) -> ConverseCaseResponse:
+async def _converse_turn(payload: ConverseCaseRequest, request: Request) -> ConverseCaseResponse:
     """One conversation turn: greet, route, extract facts, ask only what's missing."""
     store = cast(CaseStore, request.app.state.case_store)
     analyzer = cast(TurnAnalyzer, request.app.state.turn_analyzer)
@@ -459,7 +476,8 @@ async def _converse_turn(
     for fact in analysis.facts:
         case.upsert(fact)
     if case.domain is None:
-        case.domain = detect_domain(message)
+        # The analyzer's domain understands typos/dialect; keyword detection is the net.
+        case.domain = analysis.domain or detect_domain(message)
     _refresh_unknowns(case)
 
     # 2) If a question is open and this message answers it, take that answer.

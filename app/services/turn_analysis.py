@@ -15,16 +15,17 @@ from dataclasses import dataclass
 from typing import Any, Protocol
 
 from app.domain.case_state import CaseState, Fact
-from app.services.fact_extraction import RuleBasedFactExtractor, parse_llm_facts
+from app.services.fact_extraction import RuleBasedFactExtractor, detect_domain, parse_llm_facts
 from app.services.router import Route, RuleRouter
 
 
 @dataclass(frozen=True)
 class TurnAnalysis:
-    """What one turn's message means: its route and any extracted facts."""
+    """What one turn's message means: its route, domain and any extracted facts."""
 
     route: Route
     facts: list[Fact]
+    domain: str | None = None
 
 
 class TurnAnalyzer(Protocol):
@@ -43,7 +44,7 @@ class RuleTurnAnalyzer:
     async def analyze(self, message: str, case: CaseState, *, turn_id: int) -> TurnAnalysis:
         facts = await self._extractor.extract(message, case, turn_id=turn_id)
         route = await self._router.decide(message, case)
-        return TurnAnalysis(route=route, facts=facts)
+        return TurnAnalysis(route=route, facts=facts, domain=detect_domain(message))
 
 
 AnalyzeComplete = Callable[[str], Awaitable[str]]
@@ -65,14 +66,19 @@ _LLM_INSTRUCTIONS = (
     "previously_working(true|false), imei_notification_received(true|false), "
     "mnp_rejection_reason(data_mismatch|debt|within_30_days|blocked), "
     "mnp_topic(process|documents|balance|return_operator).\n"
-    'Respond as JSON: {"route": "case|rag|greeting", "facts": [{"name": ..., '
-    '"value": ..., "status": "explicit|inferred", "confidence": 0..1}]}.'
+    "3) domain: which service the message is about - 'imei', 'mnp', or 'none' if "
+    "unclear. Infer it from meaning even when the words are misspelled or in a "
+    "dialect (e.g. a broken/blocked/registration phone issue is 'imei').\n"
+    'Respond as JSON: {"route": "case|rag|greeting", "domain": "imei|mnp|none", '
+    '"facts": [{"name": ..., "value": ..., "status": "explicit|inferred", '
+    '"confidence": 0..1}]}.'
 )
 
 _ANALYSIS_JSON_SCHEMA: dict[str, Any] = {
     "type": "object",
     "properties": {
         "route": {"type": "string", "enum": ["case", "rag", "greeting"]},
+        "domain": {"type": "string", "enum": ["imei", "mnp", "none"]},
         "facts": {
             "type": "array",
             "items": {
@@ -88,7 +94,7 @@ _ANALYSIS_JSON_SCHEMA: dict[str, Any] = {
             },
         },
     },
-    "required": ["route", "facts"],
+    "required": ["route", "domain", "facts"],
     "additionalProperties": False,
 }
 
@@ -118,7 +124,10 @@ class LLMTurnAnalyzer:
             route = Route(route_value)
         else:
             route = await self._rule_router.decide(message, case)
-        return TurnAnalysis(route=route, facts=list(merged.values()))
+        # LLM domain understands typos/dialect; fall back to keyword detection.
+        domain_value = str(data.get("domain", ""))
+        domain = domain_value if domain_value in ("imei", "mnp") else detect_domain(message)
+        return TurnAnalysis(route=route, facts=list(merged.values()), domain=domain)
 
     @staticmethod
     def _prompt(message: str, case: CaseState) -> str:

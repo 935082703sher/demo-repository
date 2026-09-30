@@ -7,18 +7,16 @@ import json
 
 from app.domain.case_state import CaseState
 from app.services.router import Route
-from app.services.turn_analysis import LLMTurnAnalyzer, RuleTurnAnalyzer
+from app.services.turn_analysis import LLMTurnAnalyzer, RuleTurnAnalyzer, TurnAnalysis
 
-_DUBAI = (
-    "Dubaydan telefon olib kelgandim, ikkinchi sim ishlamay qoldi, IMEI SMS keldi."
-)
+_DUBAI = "Dubaydan telefon olib kelgandim, ikkinchi sim ishlamay qoldi, IMEI SMS keldi."
 
 
 def _case() -> CaseState:
     return CaseState(case_id="c", session_id="s", domain="imei")
 
 
-def _run(analyzer: RuleTurnAnalyzer | LLMTurnAnalyzer, message: str):
+def _run(analyzer: RuleTurnAnalyzer | LLMTurnAnalyzer, message: str) -> TurnAnalysis:
     return asyncio.run(analyzer.analyze(message, _case(), turn_id=1))
 
 
@@ -40,11 +38,19 @@ def test_llm_analyzer_merges_facts_and_uses_llm_route() -> None:
                 "route": "rag",
                 "facts": [
                     # Rules already know device_origin=imported; the LLM guess must lose.
-                    {"name": "device_origin", "value": "local", "status": "inferred",
-                     "confidence": 0.6},
+                    {
+                        "name": "device_origin",
+                        "value": "local",
+                        "status": "inferred",
+                        "confidence": 0.6,
+                    },
                     # A fact the rules missed is added.
-                    {"name": "declaration_status", "value": "not_declared",
-                     "status": "explicit", "confidence": 0.9},
+                    {
+                        "name": "declaration_status",
+                        "value": "not_declared",
+                        "status": "explicit",
+                        "confidence": 0.9,
+                    },
                 ],
             }
         )

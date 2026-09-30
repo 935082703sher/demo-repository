@@ -68,6 +68,10 @@
   .card .meta { margin-top: 10px; font-size: 0.82rem; }
   .card .meta div { margin: 3px 0; }
   .card a { color: var(--brand); }
+  .imgs { display: flex; flex-wrap: wrap; gap: 10px; margin: 6px 0 10px 0; }
+  .shot { margin: 0; max-width: 240px; }
+  .shot img { max-width: 100%; border-radius: 10px; border: 1px solid var(--line); display: block; }
+  .shot figcaption { color: var(--muted); font-size: 0.72rem; margin-top: 4px; }
   .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
   .chip { font-size: 0.72rem; padding: 3px 8px; border-radius: 6px; border: 1px solid var(--line); color: var(--muted); }
   .escalate { color: #b45309; }
@@ -246,8 +250,26 @@
 
   function finishTurn(meta) {
     if (meta.requires_human) { bubble("ai", tr().human); renderSources(meta.sources); return; }
-    if (meta.done) { renderSources(meta.sources); renderFeedback(meta.card_id); return; }
+    if (meta.done) { renderImages(meta.images); renderSources(meta.sources); renderFeedback(meta.card_id); return; }
     renderOptions(meta.options);
+  }
+
+  function renderImages(images) {
+    if (!images || !images.length) return;
+    const wrap = document.createElement("div");
+    wrap.className = "imgs";
+    for (const im of images) {
+      const fig = document.createElement("figure");
+      fig.className = "shot";
+      const img = document.createElement("img");
+      img.src = im.url; img.alt = im.caption || ""; img.loading = "lazy";
+      const cap = document.createElement("figcaption");
+      cap.textContent = im.caption || "";
+      fig.appendChild(img); fig.appendChild(cap);
+      wrap.appendChild(fig);
+    }
+    log.appendChild(wrap);
+    scroll();
   }
 
   function renderFeedback(cardId) {
@@ -314,7 +336,7 @@
 
   function reset() {
     state.session_id = newSession();
-    log.querySelectorAll(".row, .options, .card, .chips, #typing").forEach(e => e.remove());
+    log.querySelectorAll(".row, .options, .card, .chips, .imgs, #typing").forEach(e => e.remove());
     bubble("ai", tr().welcome);
   }
 

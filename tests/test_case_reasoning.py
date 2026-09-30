@@ -80,11 +80,19 @@ def test_llm_extractor_merges_and_prefers_rule_matches() -> None:
             {
                 "facts": [
                     # Rules already say imported; the LLM's weaker guess must not win.
-                    {"name": "device_origin", "value": "local", "status": "inferred",
-                     "confidence": 0.6},
+                    {
+                        "name": "device_origin",
+                        "value": "local",
+                        "status": "inferred",
+                        "confidence": 0.6,
+                    },
                     # A fact the rules missed is added.
-                    {"name": "declaration_status", "value": "not_declared",
-                     "status": "explicit", "confidence": 0.9},
+                    {
+                        "name": "declaration_status",
+                        "value": "not_declared",
+                        "status": "explicit",
+                        "confidence": 0.9,
+                    },
                 ]
             }
         )
@@ -110,10 +118,18 @@ def test_llm_extractor_rejects_invalid_or_unknown_facts() -> None:
         return json.dumps(
             {
                 "facts": [
-                    {"name": "affected_sim", "value": "third", "status": "explicit",
-                     "confidence": 0.9},  # invalid value -> rejected (rule keeps 'second')
-                    {"name": "made_up_field", "value": "x", "status": "explicit",
-                     "confidence": 1.0},  # unknown fact -> rejected
+                    {
+                        "name": "affected_sim",
+                        "value": "third",
+                        "status": "explicit",
+                        "confidence": 0.9,
+                    },  # invalid value -> rejected (rule keeps 'second')
+                    {
+                        "name": "made_up_field",
+                        "value": "x",
+                        "status": "explicit",
+                        "confidence": 1.0,
+                    },  # unknown fact -> rejected
                 ]
             }
         )
@@ -356,8 +372,7 @@ def test_converse_redacts_pii_before_use() -> None:
             "/assistant/converse",
             json={
                 "message": (
-                    "IMEI raqamim 356938035643809, telefon +998901234567, "
-                    "ro'yxatdan o'tmayapti"
+                    "IMEI raqamim 356938035643809, telefon +998901234567, ro'yxatdan o'tmayapti"
                 ),
                 "session_id": "cv-pii",
             },
@@ -388,7 +403,7 @@ def test_converse_abstains_when_answer_cites_unknown_source() -> None:
         async def generate(self, request: object) -> LLMResult:
             return LLMResult(text="Ba'zi javob.", citations=["fabricated-source"])
 
-    with TestClient(create_app(provider=_UngroundedProvider())) as client:  # type: ignore[arg-type]
+    with TestClient(create_app(provider=_UngroundedProvider())) as client:
         body = client.post(
             "/assistant/converse",
             json={"message": "IMEI ro'yxatdan o'tkazish qancha turadi?", "session_id": "cv-ug"},
@@ -432,9 +447,7 @@ def test_converse_stream_emits_deltas_then_done() -> None:
         )
         assert r.status_code == 200
         assert r.headers["content-type"].startswith("text/event-stream")
-        events = [
-            json.loads(line[6:]) for line in r.text.splitlines() if line.startswith("data: ")
-        ]
+        events = [json.loads(line[6:]) for line in r.text.splitlines() if line.startswith("data: ")]
         deltas = [e for e in events if e["type"] == "delta"]
         done = [e for e in events if e["type"] == "done"]
         assert deltas  # the reply was streamed in chunks
