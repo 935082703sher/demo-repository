@@ -213,9 +213,7 @@ class KBRetriever:
     def case_guidance(self, case_type: str, limit: int = 2) -> list[KBChunk]:
         """Return anonymized practice letters (layer 4) for a case type as style."""
         letters = [
-            chunk
-            for chunk in self._chunks
-            if chunk.authority == 4 and chunk.case_type == case_type
+            chunk for chunk in self._chunks if chunk.authority == 4 and chunk.case_type == case_type
         ]
         return letters[:limit]
 

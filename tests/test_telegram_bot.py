@@ -105,8 +105,13 @@ def test_handle_update_uses_chat_id_as_session() -> None:
     bot = TelegramBot(fake.converse, fake.send)
 
     # Turn 1: a free-text message; the chat id becomes the session id (no client state).
-    text_update = {"message": {"chat": {"id": 555}, "from": {"language_code": "uz"},
-                               "text": "telefonim bloklandi"}}
+    text_update = {
+        "message": {
+            "chat": {"id": 555},
+            "from": {"language_code": "uz"},
+            "text": "telefonim bloklandi",
+        }
+    }
     asyncio.run(bot.handle_update(text_update))
     assert fake.calls[0] == ("telefonim bloklandi", "555", "uz")
     assert fake.sent[0]["chat_id"] == 555

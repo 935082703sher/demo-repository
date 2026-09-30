@@ -348,10 +348,28 @@ def _domain_menu(engine: DiagnosticEngine, domain: str, lang: str) -> ConverseRe
 
 
 _SMALLTALK_TERMS = (
-    "salom", "assalom", "alaykum", "hello", "hi", "hey", "hayrli",
-    "qandaysan", "qalaysan", "yaxshimisiz", "rahmat", "tashakkur", "xayr",
-    "how are you", "thanks", "thank you", "privet", "zdravstvuy", "spasibo",
-    "poka", "kak dela", "salomat",
+    "salom",
+    "assalom",
+    "alaykum",
+    "hello",
+    "hi",
+    "hey",
+    "hayrli",
+    "qandaysan",
+    "qalaysan",
+    "yaxshimisiz",
+    "rahmat",
+    "tashakkur",
+    "xayr",
+    "how are you",
+    "thanks",
+    "thank you",
+    "privet",
+    "zdravstvuy",
+    "spasibo",
+    "poka",
+    "kak dela",
+    "salomat",
 )
 
 _SMALLTALK_REPLY = {

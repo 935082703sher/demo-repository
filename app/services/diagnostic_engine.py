@@ -73,9 +73,7 @@ class DiagnosticEngine:
     def __init__(self, bundle: DiagnosticBundle) -> None:
         self._trees = {tree.id: tree for tree in bundle.trees}
         self._cards = {card.id: card for card in bundle.cards}
-        self._nodes = {
-            (tree.id, node.id): node for tree in bundle.trees for node in tree.nodes
-        }
+        self._nodes = {(tree.id, node.id): node for tree in bundle.trees for node in tree.nodes}
         self._validate()
 
     @classmethod
@@ -98,9 +96,7 @@ class DiagnosticEngine:
                             f"{tree.id}/{node.id}: unknown next_node '{option.next_node}'"
                         )
                     if option.card and option.card not in self._cards:
-                        raise DiagnosticError(
-                            f"{tree.id}/{node.id}: unknown card '{option.card}'"
-                        )
+                        raise DiagnosticError(f"{tree.id}/{node.id}: unknown card '{option.card}'")
 
     def trees(self) -> list[DecisionTree]:
         return list(self._trees.values())
@@ -289,9 +285,7 @@ class DiagnosticEngine:
             return None, None
         for option in node.options:
             if option.value == value:
-                next_node = (
-                    self.get_node(tree_id, option.next_node) if option.next_node else None
-                )
+                next_node = self.get_node(tree_id, option.next_node) if option.next_node else None
                 card = self.get_card(option.card) if option.card else None
                 return next_node, card
         return None, None

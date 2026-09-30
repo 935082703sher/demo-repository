@@ -1,5 +1,5 @@
 {
-  "average_latency_ms": 1.223,
+  "average_latency_ms": 4.865,
   "by_language": {
     "en": {
       "passed": 20,
@@ -26,7 +26,7 @@
   "language_correctness": 1.0,
   "out_of_scope_refusal_accuracy": 1.0,
   "output_tokens": 108,
-  "p95_latency_ms": 1.714,
+  "p95_latency_ms": 5.44,
   "passed_cases": 60,
   "provider_calls": 20,
   "scenario_counts": {

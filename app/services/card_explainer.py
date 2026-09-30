@@ -48,7 +48,7 @@ _LLM_INSTRUCTIONS = (
     "short sentences; be warm and friendly; keep it to two or three short sentences "
     "and do not list the action steps (those are shown separately). Rules: use ONLY "
     "the given reason and facts; do NOT add or change any step, fee, deadline, phone "
-    'number, link or legal detail; invent nothing. Respond as JSON: '
+    "number, link or legal detail; invent nothing. Respond as JSON: "
     '{"explanation": "..."}.'
 )
 

@@ -148,18 +148,29 @@ def diagnostic_step(payload: StepRequest, request: Request) -> StepResponse:
         next_node, card = engine.answer(payload.tree_id, payload.node_id, payload.answer)
         if next_node is not None:
             return StepResponse(
-                tree_id=payload.tree_id, node=_node_out(payload.tree_id, next_node, lang),
-                card=None, done=False, requires_human=False, message=None,
+                tree_id=payload.tree_id,
+                node=_node_out(payload.tree_id, next_node, lang),
+                card=None,
+                done=False,
+                requires_human=False,
+                message=None,
             )
         if card is not None and tree is not None:
             return StepResponse(
-                tree_id=payload.tree_id, node=None,
+                tree_id=payload.tree_id,
+                node=None,
                 card=_card_out(card, tree.case_type, lang),
-                done=True, requires_human=False, message=None,
+                done=True,
+                requires_human=False,
+                message=None,
             )
         return StepResponse(
-            tree_id=payload.tree_id, node=None, card=None, done=False,
-            requires_human=True, message="invalid_answer",
+            tree_id=payload.tree_id,
+            node=None,
+            card=None,
+            done=False,
+            requires_human=True,
+            message="invalid_answer",
         )
 
     # Start a new diagnosis: match the problem to a tree, or use an explicit tree.
@@ -168,12 +179,20 @@ def diagnostic_step(payload: StepRequest, request: Request) -> StepResponse:
         tree = engine.match_tree(payload.query)
     if tree is None:
         return StepResponse(
-            tree_id=None, node=None, card=None, done=False,
-            requires_human=True, message="no_matching_tree",
+            tree_id=None,
+            node=None,
+            card=None,
+            done=False,
+            requires_human=True,
+            message="no_matching_tree",
         )
     root = engine.get_node(tree.id, tree.root)
     assert root is not None  # integrity-checked at load
     return StepResponse(
-        tree_id=tree.id, node=_node_out(tree.id, root, lang),
-        card=None, done=False, requires_human=False, message=None,
+        tree_id=tree.id,
+        node=_node_out(tree.id, root, lang),
+        card=None,
+        done=False,
+        requires_human=False,
+        message=None,
     )

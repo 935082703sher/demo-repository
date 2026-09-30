@@ -157,9 +157,7 @@ def test_answer_without_match_escalates_without_llm(corpus_client: TestClient) -
     assert body["reason"] == "no_approved_source"
 
 
-def test_answer_handles_provider_failure(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_answer_handles_provider_failure(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     from app.domain.schemas import LLMRequest, LLMResult
     from app.providers.errors import ProviderUnavailableError
 

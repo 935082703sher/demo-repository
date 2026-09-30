@@ -20,14 +20,30 @@ from app.services.interaction_log import (
 def test_jsonl_log_appends_and_reads_back(tmp_path) -> None:  # type: ignore[no-untyped-def]
     path = tmp_path / "interactions.jsonl"
     log = JsonlInteractionLog(path)
-    asyncio.run(log.record(InteractionRecord(
-        session_id="s", channel="web", language="uz", message="salom", reply="Assalomu",
-        outcome="greeting",
-    )))
-    asyncio.run(log.record(InteractionRecord(
-        session_id="s", channel="web", language="uz", message="rahmat", reply="Xayr",
-        outcome="greeting",
-    )))
+    asyncio.run(
+        log.record(
+            InteractionRecord(
+                session_id="s",
+                channel="web",
+                language="uz",
+                message="salom",
+                reply="Assalomu",
+                outcome="greeting",
+            )
+        )
+    )
+    asyncio.run(
+        log.record(
+            InteractionRecord(
+                session_id="s",
+                channel="web",
+                language="uz",
+                message="rahmat",
+                reply="Xayr",
+                outcome="greeting",
+            )
+        )
+    )
     rows = read_records(path)
     assert len(rows) == 2
     assert rows[0]["message"] == "salom" and rows[0]["outcome"] == "greeting"
