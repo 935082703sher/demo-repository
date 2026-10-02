@@ -168,6 +168,37 @@
 
   function tr() { return T[state.lang]; }
 
+  // Confirmation shown when the user switches language by typing (not the dropdown).
+  const SWITCHED = {
+    uz: "Til o‘zbekchaga (lotin) o‘zgartirildi. Savolingizni yozing.",
+    uz_cyrl: "Тил ўзбекчага (кирилл) ўзгартирилди. Саволингизни ёзинг.",
+    ru: "Язык переключён на русский. Напишите ваш вопрос.",
+    en: "Language switched to English. Please type your question.",
+    kaa: "Til qaraqalpaqshaǵa ózgertirildi. Sorawıńızdı jazıń."
+  };
+
+  // Mirror of the Telegram bot: a plain message like "qoraqalpoqcha gapir" switches
+  // language only when a language name appears with a short message or a switch
+  // intent, so an ordinary sentence that merely mentions a word does not flip it.
+  function requestedLanguage(text) {
+    const low = text.toLowerCase().replace(/[‘’`]/g, "'");
+    const stripped = low.trim();
+    if (["uz", "uz_cyrl", "ru", "en", "kaa"].includes(stripped)) return stripped;
+    const short = stripped.split(/\s+/).length <= 3;
+    const intent = ["gapir","til","javob","yoz","speak","write","answer","reply",
+      "switch","language","язык","ответ","перейд","напиш","пиши"].some(w => low.includes(w));
+    if (!(short || intent)) return null;
+    const tokens = [
+      ["kaa", ["qoraqalp","qaraqalp","karakalp","қарақалп","каракалп"]],
+      ["ru", ["ruscha","rus tili","русск","по-русски","по русски"]],
+      ["en", ["inglizcha","ingliz tili","english","английск"]],
+      ["uz_cyrl", ["kirill","кирилл","uzcyrl"]],
+      ["uz", ["o'zbekcha","ozbekcha","узбекча","lotincha","lotin tili","latin"]]
+    ];
+    for (const [code, toks] of tokens) if (toks.some(t => low.includes(t))) return code;
+    return null;
+  }
+
   function scroll() { log.scrollTop = log.scrollHeight; }
 
   function bubble(role, text) {
@@ -326,6 +357,14 @@
     if (!text) return;
     input.value = "";
     bubble("user", text);
+    // A typed language request switches the selector instead of asking the brain.
+    const req = requestedLanguage(text);
+    if (req) {
+      langSel.value = req;
+      applyLang();
+      bubble("ai", SWITCHED[req]);
+      return;
+    }
     await streamTurn(text);
   }
 
