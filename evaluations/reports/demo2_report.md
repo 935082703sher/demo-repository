@@ -25,8 +25,8 @@ real citizen data is used.
 
 ## Performance and usage
 
-- Average end-to-end test latency: 4.884 ms
-- P95 end-to-end test latency: 15.858 ms
+- Average end-to-end test latency: 4.543 ms
+- P95 end-to-end test latency: 11.027 ms
 - Provider attempts: 20
 - Input tokens reported by the deterministic provider: 216
 - Output tokens reported by the deterministic provider: 108

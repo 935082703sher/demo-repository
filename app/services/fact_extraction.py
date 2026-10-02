@@ -409,3 +409,25 @@ def detect_domain(message: str) -> str | None:
     if imei_hits:
         return "imei"
     return None
+
+
+# Domain-specific cues only - no generic "telefon"/"qurilma", which name neither
+# service. Used to decide whether a clarifying menu is one domain or both.
+_IMEI_STRONG = ("imei", "royxat", "registratsiya", "blok", "ogirla", "yoqol", "bojxona")
+_MNP_STRONG = ("mnp", "kochir", "operator", "perenos", "raqamni bosh", "raqam kochir")
+
+
+def strong_domain(message: str) -> str | None:
+    """Return imei/mnp only when the message clearly names one service, else None.
+
+    A bare "telefonim ishlamayapti" names neither, and a message touching both
+    returns None too, so the caller can offer both domains instead of guessing.
+    """
+    norm = _normalize(message)
+    imei_hit = any(term in norm for term in _IMEI_STRONG)
+    mnp_hit = any(term in norm for term in _MNP_STRONG)
+    if imei_hit and not mnp_hit:
+        return "imei"
+    if mnp_hit and not imei_hit:
+        return "mnp"
+    return None

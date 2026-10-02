@@ -47,6 +47,7 @@ from app.services.fact_extraction import (
     MNP_FACT_FIELDS,
     FactExtractor,
     detect_domain,
+    strong_domain,
 )
 from app.services.grounding import GroundingValidator
 from app.services.interaction_log import InteractionLog, InteractionRecord
@@ -612,7 +613,9 @@ async def _converse_turn(payload: ConverseCaseRequest, request: Request) -> Conv
 
         # 3c) CASE: enter the chosen tree, or clarify with a menu when none fits.
         if chosen is None and case.active_tree is None:
-            menu_domain = route_domain or case.domain
+            # Only narrow the menu to one domain when the message clearly names it;
+            # a vague "telefonim ishlamayapti" names neither, so offer both domains.
+            menu_domain = route_domain or strong_domain(message)
             if menu_domain is not None and engine.trees_for_domain(menu_domain):
                 by_lang = _DOMAIN_INTRO.get(lang, _DOMAIN_INTRO["uz"])
                 intro = by_lang.get(menu_domain) or _ROUTE_INTRO.get(lang, _ROUTE_INTRO["uz"])

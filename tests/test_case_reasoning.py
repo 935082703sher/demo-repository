@@ -214,7 +214,7 @@ def test_converse_generic_imei_message_offers_topic_menu_not_a_tree() -> None:
         assert values and all(v.startswith("imei-") for v in values)
 
 
-def test_converse_vague_broken_phone_asks_topic_not_lost_tree() -> None:
+def test_converse_vague_broken_phone_offers_both_domains() -> None:
     with TestClient(create_app()) as client:
         body = client.post(
             "/assistant/converse",
@@ -224,7 +224,10 @@ def test_converse_vague_broken_phone_asks_topic_not_lost_tree() -> None:
         values = {opt["value"] for opt in body["options"]}
         # 'yo'q' must not drop the user into the lost/stolen tree; ask the topic.
         assert "lost" not in values and "stolen" not in values
-        assert all(v.startswith("imei-") for v in values)
+        # A vague "my phone doesn't work" names neither service, so offer both
+        # IMEI and MNP topics instead of guessing a single domain.
+        assert any(v.startswith("imei-") for v in values)
+        assert any(v.startswith("mnp-") for v in values)
 
 
 def test_converse_block_message_routes_to_unblock_not_registration() -> None:
