@@ -5,6 +5,11 @@ the server holds the case state, so the bot only forwards the message and render
 the reply - a topic menu, a diagnostic question with inline buttons, or a finished
 answer/resolution card. Network I/O (calling converse, sending messages) is
 injected, so the logic is tested without Telegram or a server.
+
+Telegram has no language selector like the web page, so the bot lets each chat
+choose its language - with /til (a keyboard), the /uz /uzc /ru /en /kaa commands,
+or a plain request like "qoraqalpoqcha gapir" - and remembers the choice for that
+chat. Until a choice is made it falls back to the Telegram client's own locale.
 """
 
 from __future__ import annotations
@@ -16,10 +21,99 @@ from typing import Any
 ConverseFn = Callable[[str, str, str], Awaitable[dict[str, Any]]]
 SendFn = Callable[[dict[str, Any]], Awaitable[None]]
 
+_SUPPORTED = {"uz", "uz_cyrl", "ru", "en", "kaa"}
+
+# Native language names for the picker keyboard.
+_LANG_NAMES = {
+    "uz": "O'zbekcha",
+    "uz_cyrl": "Ўзбекча (кирилл)",
+    "ru": "Русский",
+    "kaa": "Qaraqalpaqsha",
+    "en": "English",
+}
+_LANG_MENU_ORDER = ["uz", "uz_cyrl", "ru", "kaa", "en"]
+
+# Short confirmation shown in the newly chosen language.
+_LANG_SET_REPLY = {
+    "uz": "Til o'zbekchaga (lotin) o'zgartirildi. Savolingizni yozing.",
+    "uz_cyrl": "Тил ўзбекчага (кирилл) ўзгартирилди. Саволингизни ёзинг.",
+    "ru": "Язык переключён на русский. Напишите ваш вопрос.",
+    "en": "Language switched to English. Please type your question.",
+    "kaa": "Til qaraqalpaqshaǵa ózgertirildi. Sorawıńızdı jazıń.",
+}
+_CHOOSE_LANG = "Tilni tanlang / Выберите язык / Tildi saylań:"
+
+# Slash commands that set a language outright.
+_SLASH_LANG = {
+    "/uz": "uz",
+    "/uzc": "uz_cyrl",
+    "/uz_cyrl": "uz_cyrl",
+    "/ru": "ru",
+    "/en": "en",
+    "/kaa": "kaa",
+    "/kk": "kaa",
+}
+# Commands that open the language picker.
+_MENU_COMMANDS = {"/til", "/lang", "/language", "/start"}
+
+# A plain-language request switches language only when a language name appears AND
+# the message is short or carries a switch intent, so an ordinary sentence that
+# merely mentions a language (e.g. "o'zbekistondan keldim") does not flip it.
+_LANG_TOKENS: list[tuple[str, tuple[str, ...]]] = [
+    ("kaa", ("qoraqalp", "qaraqalp", "karakalp", "қарақалп", "каракалп")),
+    ("ru", ("ruscha", "rus tili", "русск", "по-русски", "по русски")),
+    ("en", ("inglizcha", "ingliz tili", "english", "английск")),
+    ("uz_cyrl", ("kirill", "кирилл", "uzcyrl")),
+    ("uz", ("o'zbekcha", "ozbekcha", "узбекча", "lotincha", "lotin tili", "latin")),
+]
+_INTENT_WORDS = (
+    "gapir",
+    "til",
+    "javob",
+    "yoz",
+    "speak",
+    "write",
+    "answer",
+    "reply",
+    "switch",
+    "language",
+    "язык",
+    "ответ",
+    "перейд",
+    "напиш",
+    "пиши",
+)
+
 
 def detect_language(code: str | None) -> str:
     """Map a Telegram language_code to a supported language (uz default)."""
     return "ru" if (code or "").lower().startswith("ru") else "uz"
+
+
+def requested_language(text: str) -> str | None:
+    """Return the language a plain message asks to switch to, or None."""
+    low = text.lower()
+    stripped = low.strip()
+    if stripped in _SUPPORTED:
+        return stripped
+    short = len(stripped.split()) <= 3
+    intent = any(word in low for word in _INTENT_WORDS)
+    if not (short or intent):
+        return None
+    for code, tokens in _LANG_TOKENS:
+        if any(token in low for token in tokens):
+            return code
+    return None
+
+
+def language_keyboard() -> dict[str, Any]:
+    """Inline keyboard of the supported languages (callback data ``lang:<code>``)."""
+    return {
+        "inline_keyboard": [
+            [{"text": _LANG_NAMES[code], "callback_data": f"lang:{code}"}]
+            for code in _LANG_MENU_ORDER
+        ]
+    }
 
 
 def render(response: dict[str, Any]) -> dict[str, Any]:
@@ -54,29 +148,60 @@ class TelegramBot:
     def __init__(self, converse: ConverseFn, send: SendFn) -> None:
         self._converse = converse
         self._send = send
+        # Per-chat language choice; defaults to the client locale until the user picks.
+        self._language_by_chat: dict[int, str] = {}
 
     async def handle_update(self, update: dict[str, Any]) -> None:
-        parsed = self._parse(update)
-        if parsed is None:
-            return
-        chat_id, text, language = parsed
-        response = await self._converse(text, str(chat_id), language)
-        payload = render(response)
-        payload["chat_id"] = chat_id
-        await self._send(payload)
-
-    @staticmethod
-    def _parse(update: dict[str, Any]) -> tuple[int, str, str] | None:
         callback = update.get("callback_query")
         if callback and callback.get("data"):
-            chat_id = callback["message"]["chat"]["id"]
-            language = detect_language((callback.get("from") or {}).get("language_code"))
-            return int(chat_id), str(callback["data"]), language
+            chat_id = int(callback["message"]["chat"]["id"])
+            data = str(callback["data"])
+            if data.startswith("lang:"):
+                await self._set_language(chat_id, data[len("lang:") :])
+                return
+            lang = self._language_for(chat_id, (callback.get("from") or {}).get("language_code"))
+            await self._forward(chat_id, data, lang)
+            return
 
         message = update.get("message")
         if message and message.get("text"):
-            chat_id = message["chat"]["id"]
-            language = detect_language((message.get("from") or {}).get("language_code"))
-            return int(chat_id), str(message["text"]), language
+            chat_id = int(message["chat"]["id"])
+            text = str(message["text"])
+            lang = self._language_for(chat_id, (message.get("from") or {}).get("language_code"))
+            command = text.strip().lower().split()[0].split("@")[0] if text.strip() else ""
+            if command in _MENU_COMMANDS:
+                await self._send(
+                    {
+                        "chat_id": chat_id,
+                        "text": _CHOOSE_LANG,
+                        "reply_markup": language_keyboard(),
+                    }
+                )
+                return
+            if command in _SLASH_LANG:
+                await self._set_language(chat_id, _SLASH_LANG[command])
+                return
+            requested = requested_language(text)
+            if requested is not None:
+                await self._set_language(chat_id, requested)
+                return
+            await self._forward(chat_id, text, lang)
+            return
 
-        return None
+    def _language_for(self, chat_id: int, locale: str | None) -> str:
+        """The chat's chosen language, defaulting to the client locale on first contact."""
+        if chat_id not in self._language_by_chat:
+            self._language_by_chat[chat_id] = detect_language(locale)
+        return self._language_by_chat[chat_id]
+
+    async def _set_language(self, chat_id: int, code: str) -> None:
+        if code not in _SUPPORTED:
+            return
+        self._language_by_chat[chat_id] = code
+        await self._send({"chat_id": chat_id, "text": _LANG_SET_REPLY[code]})
+
+    async def _forward(self, chat_id: int, text: str, lang: str) -> None:
+        response = await self._converse(text, str(chat_id), lang)
+        payload = render(response)
+        payload["chat_id"] = chat_id
+        await self._send(payload)
