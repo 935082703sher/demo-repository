@@ -51,6 +51,7 @@ from app.services.fact_extraction import (
 from app.services.grounding import GroundingValidator
 from app.services.interaction_log import InteractionLog, InteractionRecord
 from app.services.kb_retriever import get_retriever
+from app.services.localizer import Localizer
 from app.services.pii import redact_likely_pii
 from app.services.question_explainer import QuestionExplainer
 from app.services.router import Route
@@ -139,26 +140,44 @@ _GREETING = {
     "uz": "Assalomu alaykum! Men IMEI va MNP bo'yicha yordam beraman. Muammoingizni "
     "o'z so'zlaringiz bilan yozing — masalan «telefonim chetdan, ro'yxatdan o'tmayapti» "
     "yoki «raqamni boshqa operatorga ko'chirmoqchiman».",
+    "uz_cyrl": "Ассалому алайкум! Мен IMEI ва MNP бўйича ёрдам бераман. Муаммоингизни "
+    "ўз сўзларингиз билан ёзинг — масалан «телефоним четдан, рўйхатдан ўтмаяпти» "
+    "ёки «рақамни бошқа операторга кўчирмоқчиман».",
     "ru": "Здравствуйте! Я помогаю по IMEI и MNP. Опишите проблему своими словами — "
     "например «телефон из-за границы, не регистрируется» или «хочу перенести номер».",
     "en": "Hello! I help with IMEI and MNP. Describe your problem in your own words.",
+    "kaa": "Assalawma áleykum! Men IMEI hám MNP boyınsha járdem beremen. Máseleńizdi óz "
+    "sózlerińiz benen jazıń — mısalı «telefonım shet elden, dizimnen ótpey atır» "
+    "yáki «nomerimdi basqa operatorǵa kóshirmekshimen».",
 }
 _ROUTE_INTRO = {
     "uz": "Muammoingizni aniqlashtiraylik. Quyidagilardan mos bo'lganini tanlang:",
+    "uz_cyrl": "Муаммоингизни аниқлаштирайлик. Қуйидагилардан мос бўлганини танланг:",
     "ru": "Уточним вашу проблему. Выберите подходящий пункт:",
     "en": "Let's narrow it down. Please pick the closest option:",
+    "kaa": "Máseleńizdi anıqlastırayıq. Tómendegilerden sáykesin saylań:",
 }
 _DOMAIN_INTRO = {
     "uz": {
         "imei": "IMEI bo'yicha aynan qanday yordam kerak?",
         "mnp": "MNP bo'yicha aynan qanday yordam kerak?",
     },
+    "uz_cyrl": {
+        "imei": "IMEI бўйича айнан қандай ёрдам керак?",
+        "mnp": "MNP бўйича айнан қандай ёрдам керак?",
+    },
     "ru": {"imei": "Что именно нужно по IMEI?", "mnp": "Что именно нужно по MNP?"},
+    "kaa": {
+        "imei": "IMEI boyınsha tap qanday járdem kerek?",
+        "mnp": "MNP boyınsha tap qanday járdem kerek?",
+    },
 }
 _HANDOFF_REPLY = {
     "uz": "Bu masalani mutaxassisga yo'naltiraman.",
+    "uz_cyrl": "Бу масалани мутахассисга йўналтираман.",
     "ru": "Передаю вопрос специалисту.",
     "en": "I'll route this to a specialist.",
+    "kaa": "Bul máseleni qániygege jiberemen.",
 }
 _RAG_TOP_K = 5
 # BM25 relevance floor: below this the top hit is too weak to answer from, so the
@@ -185,16 +204,23 @@ _CATEGORY_BY_DOMAIN = {
 }
 _NO_EVIDENCE_REPLY = {
     "uz": "Bu savolga tasdiqlangan manbadan aniq javob topa olmadim. Mutaxassisga yo'naltiraman.",
+    "uz_cyrl": "Бу саволга тасдиқланган манбадан аниқ жавоб топа олмадим. "
+    "Мутахассисга йўналтираман.",
     "ru": "Не нашёл точного ответа в проверенных источниках. Передаю специалисту.",
     "en": "I couldn't find a confirmed source for this. I'll route you to a specialist.",
+    "kaa": "Bul sorawǵa tastıyıqlanǵan derekten anıq juwap taba almadım. Qániygege jiberemen.",
 }
 _RAG_CLARIFY = {
     "uz": "Bunga aniq javob topa olmadim. Men IMEI va MNP bo'yicha yordam beraman — "
     "quyidagi mavzulardan birini tanlang yoki 1170 ga murojaat qiling:",
+    "uz_cyrl": "Бунга аниқ жавоб топа олмадим. Мен IMEI ва MNP бўйича ёрдам бераман — "
+    "қуйидаги мавзулардан бирини танланг ёки 1170 га мурожаат қилинг:",
     "ru": "Я не нашёл точного ответа. Я помогаю по IMEI и MNP — выберите тему ниже "
     "или обратитесь на 1170:",
     "en": "I couldn't find an exact answer. I help with IMEI and MNP — pick a topic "
     "below, or call 1170:",
+    "kaa": "Buǵan anıq juwap taba almadım. Men IMEI hám MNP boyınsha járdem beremen — "
+    "tómendegi temalardan birin saylań yáki 1170 ge xabarlasıń:",
 }
 
 
@@ -313,16 +339,53 @@ def _resp(
     )
 
 
-def _menu(
-    case: CaseState, trees: list[DecisionTree], intro: str, lang: str
+# Languages the trees/cards have no native labels for, so menu titles and answer
+# buttons (never facts) are translated on demand; uz/ru/en resolve from the data.
+_LOCALIZE_LANGS = {"uz_cyrl", "kaa"}
+
+
+async def _localize_labels(localizer: Localizer, labels: list[str], lang: str) -> list[str]:
+    """Translate navigation labels for a script the data has no native text for."""
+    if lang not in _LOCALIZE_LANGS or not labels:
+        return labels
+    return await localizer.localize(labels, lang)
+
+
+async def _menu(
+    case: CaseState,
+    trees: list[DecisionTree],
+    intro: str,
+    lang: str,
+    localizer: Localizer,
 ) -> ConverseCaseResponse:
-    options = [OptionOut(value=tree.id, label=tree.title.get(lang)) for tree in trees]
+    labels = await _localize_labels(localizer, [tree.title.get(lang) for tree in trees], lang)
+    options = [
+        OptionOut(value=tree.id, label=label) for tree, label in zip(trees, labels, strict=True)
+    ]
     return _resp(case, intro, options=options)
 
 
-_STEPS_HEADER = {"uz": "Qadamlar:", "ru": "Шаги:", "en": "Steps:"}
-_WHERE_LABEL = {"uz": "Qayerga", "ru": "Куда обратиться", "en": "Where"}
-_DOCS_HEADER = {"uz": "Kerakli hujjatlar:", "ru": "Нужные документы:", "en": "Documents needed:"}
+_STEPS_HEADER = {
+    "uz": "Qadamlar:",
+    "uz_cyrl": "Қадамлар:",
+    "ru": "Шаги:",
+    "en": "Steps:",
+    "kaa": "Qádemler:",
+}
+_WHERE_LABEL = {
+    "uz": "Qayerga",
+    "uz_cyrl": "Қаерга",
+    "ru": "Куда обратиться",
+    "en": "Where",
+    "kaa": "Qayerge",
+}
+_DOCS_HEADER = {
+    "uz": "Kerakli hujjatlar:",
+    "uz_cyrl": "Керакли ҳужжатлар:",
+    "ru": "Нужные документы:",
+    "en": "Documents needed:",
+    "kaa": "Kerekli hújjetler:",
+}
 
 
 async def _card_reply(
@@ -452,6 +515,7 @@ async def _converse_turn(payload: ConverseCaseRequest, request: Request) -> Conv
     provider = cast(LLMProvider, request.app.state.provider)
     explainer = cast(CardExplainer, request.app.state.card_explainer)
     q_explainer = cast(QuestionExplainer, request.app.state.question_explainer)
+    localizer = cast(Localizer, request.app.state.localizer)
     grounding = cast(GroundingValidator, request.app.state.grounding)
     audit = cast(AuditLog, request.app.state.audit_log)
     interaction_log = cast(InteractionLog, getattr(request.app.state, "interaction_log", None))
@@ -541,7 +605,7 @@ async def _converse_turn(payload: ConverseCaseRequest, request: Request) -> Conv
                 await store.save(case)
                 await _audit(audit, case, OUTCOME_CLARIFY, ROUTE_RAG)
                 intro = _RAG_CLARIFY.get(lang, _RAG_CLARIFY["uz"])
-                return _menu(case, engine.trees(), intro, lang)
+                return await _menu(case, engine.trees(), intro, lang, localizer)
             await store.save(case)
             await _audit(audit, case, OUTCOME_ANSWER, ROUTE_RAG)
             return reply
@@ -554,10 +618,14 @@ async def _converse_turn(payload: ConverseCaseRequest, request: Request) -> Conv
                 intro = by_lang.get(menu_domain) or _ROUTE_INTRO.get(lang, _ROUTE_INTRO["uz"])
                 await store.save(case)
                 await _audit(audit, case, OUTCOME_CLARIFY, ROUTE_CASE)
-                return _menu(case, engine.trees_for_domain(menu_domain), intro, lang)
+                return await _menu(
+                    case, engine.trees_for_domain(menu_domain), intro, lang, localizer
+                )
             await store.save(case)
             await _audit(audit, case, OUTCOME_CLARIFY, ROUTE_CASE)
-            return _menu(case, engine.trees(), _ROUTE_INTRO.get(lang, _ROUTE_INTRO["uz"]), lang)
+            return await _menu(
+                case, engine.trees(), _ROUTE_INTRO.get(lang, _ROUTE_INTRO["uz"]), lang, localizer
+            )
         if chosen is not None and chosen.id != case.active_tree:
             case.active_tree = chosen.id
             case.pending_node = chosen.root
@@ -582,9 +650,14 @@ async def _converse_turn(payload: ConverseCaseRequest, request: Request) -> Conv
         case.status = CaseStatus.DIAGNOSING
         await store.save(case)
         await _audit(audit, case, OUTCOME_QUESTION, ROUTE_CASE, tree_id=active_tree)
-        # Rephrase the question naturally; the options (buttons) stay exactly as-is.
+        # Rephrase the question naturally; option values never change, but their
+        # display labels are localized for scripts the tree has no native text for.
         question = await q_explainer.explain(obj.question.get(lang), case, lang)
-        options = [OptionOut(value=o.value, label=o.label.get(lang)) for o in obj.options]
+        labels = await _localize_labels(localizer, [o.label.get(lang) for o in obj.options], lang)
+        options = [
+            OptionOut(value=o.value, label=label)
+            for o, label in zip(obj.options, labels, strict=True)
+        ]
         return _resp(case, question, options=options)
 
     case.status = CaseStatus.HANDOFF
@@ -647,8 +720,10 @@ async def assistant_converse(
 
 _FEEDBACK_REPLY = {
     "uz": "Rahmat! Fikringiz xizmatni yaxshilashga yordam beradi.",
+    "uz_cyrl": "Раҳмат! Фикрингиз хизматни яхшилашга ёрдам беради.",
     "ru": "Спасибо! Ваш отзыв поможет улучшить сервис.",
     "en": "Thank you! Your feedback helps us improve.",
+    "kaa": "Raxmet! Pikirińiz xızmetti jaqsılawǵa járdem beredi.",
 }
 
 

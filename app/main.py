@@ -55,6 +55,12 @@ from app.services.grounding import GroundingValidator
 from app.services.guardrails import Guardrails
 from app.services.interaction_log import build_interaction_log
 from app.services.knowledge import KnowledgeService
+from app.services.localizer import (
+    LLMLocalizer,
+    Localizer,
+    TemplateLocalizer,
+    build_openai_localize_complete,
+)
 from app.services.question_explainer import (
     LLMQuestionExplainer,
     QuestionExplainer,
@@ -214,6 +220,22 @@ def create_app(
             fallback=TemplateQuestionExplainer(),
         )
     app.state.question_explainer = question_explainer
+    localizer: Localizer = TemplateLocalizer()
+    if (
+        app_settings.llm_provider == "openai"
+        and app_settings.llm_api_key is not None
+        and app_settings.llm_api_key.get_secret_value()
+        and app_settings.llm_model
+    ):
+        localizer = LLMLocalizer(
+            build_openai_localize_complete(
+                api_key=app_settings.llm_api_key.get_secret_value(),
+                model=app_settings.llm_model,
+                timeout_seconds=app_settings.llm_timeout_seconds,
+            ),
+            fallback=TemplateLocalizer(),
+        )
+    app.state.localizer = localizer
     app.state.grounding = GroundingValidator()
     app.state.interaction_log = build_interaction_log(app_settings.interaction_log_path)
     app.state.audit_log = InMemoryAuditLog()
