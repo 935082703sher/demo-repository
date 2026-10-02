@@ -45,11 +45,13 @@ _LLM_INSTRUCTIONS = (
     ASSISTANT_VOICE + " "
     "You are given the APPROVED reason a customer's IMEI/MNP case turned out the way "
     "it did, plus what is already known about their situation. Explain just that "
-    "reason, written in the requested language, in two or three short sentences so "
-    "they understand why this is happening - the action steps are shown separately, "
-    "so do not list them here. Rules: use ONLY the given reason and facts; do NOT add "
-    "or change any step, fee, deadline, phone number, link or legal detail; invent "
-    'nothing. Respond as JSON: {"explanation": "..."}.'
+    "reason, written in the requested language, in two or three short sentences as "
+    "the problem and its impact - what is missing or does not match, and why that "
+    "stops or delays the process - so they understand why this is happening. The "
+    "fix (the action steps) is shown separately, so do not list the steps here. "
+    "Rules: use ONLY the given reason and facts; do NOT add or change any step, fee, "
+    "deadline, phone number, link or legal detail; invent nothing. Respond as JSON: "
+    '{"explanation": "..."}.'
 )
 
 _EXPLAIN_JSON_SCHEMA: dict[str, Any] = {
