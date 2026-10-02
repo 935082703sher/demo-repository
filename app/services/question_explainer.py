@@ -14,6 +14,7 @@ from collections.abc import Awaitable, Callable
 from typing import Any, Protocol
 
 from app.domain.case_state import CaseState
+from app.services.assistant_voice import ASSISTANT_VOICE
 
 
 class QuestionExplainer(Protocol):
@@ -40,14 +41,14 @@ _LANGUAGE_NAME = {
 }
 
 _LLM_INSTRUCTIONS = (
-    "You are a kind telecom helper gathering information. You are given the next "
-    "diagnostic QUESTION to ask the customer and what is already known about their "
-    "situation. Rewrite the question so a child of about 11 could understand it, in "
-    "the requested language: short, simple, everyday words; warm and friendly; you "
-    "may acknowledge what is already known in at most one short clause. Rules: keep "
-    "it ONE short question with the same meaning; do NOT list, add, remove or rename "
-    "any answer option (the choices are shown as separate buttons); invent no facts. "
-    'Respond as JSON: {"question": "..."}.'
+    ASSISTANT_VOICE + " "
+    "You are gathering the one missing detail needed to move the case forward. You "
+    "are given the next diagnostic QUESTION to ask and what is already known. Ask it "
+    "as ONE short, friendly question with the same meaning, in the requested "
+    "language; you may acknowledge what is already known in at most one short clause, "
+    "but never re-ask it. Rules: keep it to that one question; do NOT list, add, "
+    "remove or rename any answer option (the choices are shown as separate buttons); "
+    'invent no facts. Respond as JSON: {"question": "..."}.'
 )
 
 _QUESTION_JSON_SCHEMA: dict[str, Any] = {

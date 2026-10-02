@@ -15,6 +15,7 @@ from collections.abc import Awaitable, Callable
 from typing import Any, Protocol
 
 from app.domain.case_state import CaseState
+from app.services.assistant_voice import ASSISTANT_VOICE
 
 
 class CardExplainer(Protocol):
@@ -41,15 +42,14 @@ _LANGUAGE_NAME = {
 }
 
 _LLM_INSTRUCTIONS = (
-    "You are a kind telecom helper. You are given the APPROVED reason a customer's "
-    "IMEI/MNP case turned out the way it did, plus what is already known about their "
-    "situation. Rewrite the reason so a child of about 11 could understand it, "
-    "written in the requested language. Style: use short, simple, everyday words and "
-    "short sentences; be warm and friendly; keep it to two or three short sentences "
-    "and do not list the action steps (those are shown separately). Rules: use ONLY "
-    "the given reason and facts; do NOT add or change any step, fee, deadline, phone "
-    "number, link or legal detail; invent nothing. Respond as JSON: "
-    '{"explanation": "..."}.'
+    ASSISTANT_VOICE + " "
+    "You are given the APPROVED reason a customer's IMEI/MNP case turned out the way "
+    "it did, plus what is already known about their situation. Explain just that "
+    "reason, written in the requested language, in two or three short sentences so "
+    "they understand why this is happening - the action steps are shown separately, "
+    "so do not list them here. Rules: use ONLY the given reason and facts; do NOT add "
+    "or change any step, fee, deadline, phone number, link or legal detail; invent "
+    'nothing. Respond as JSON: {"explanation": "..."}.'
 )
 
 _EXPLAIN_JSON_SCHEMA: dict[str, Any] = {
