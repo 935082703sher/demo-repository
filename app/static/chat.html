@@ -73,6 +73,11 @@
   .shot img { max-width: 100%; border-radius: 10px; border: 1px solid var(--line); display: block; }
   .shot figcaption { color: var(--muted); font-size: 0.72rem; margin-top: 4px; }
   .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+  .callwrap { margin: 8px 0 12px 0; }
+  .call-btn { display: inline-flex; align-items: center; gap: 6px; background: var(--brand);
+    color: var(--brand-ink); text-decoration: none; padding: 10px 16px; border-radius: 10px;
+    font-weight: 600; font-size: 0.95rem; }
+  .call-btn:hover { filter: brightness(0.95); }
   .chip { font-size: 0.72rem; padding: 3px 8px; border-radius: 6px; border: 1px solid var(--line); color: var(--muted); }
   .escalate { color: #b45309; }
   footer {
@@ -167,6 +172,15 @@
   };
 
   function tr() { return T[state.lang]; }
+
+  // Label for the final 1170 call button (the number itself comes from the server).
+  const CALL_LABEL = {
+    uz: "ga qo‘ng‘iroq qilish",
+    uz_cyrl: "га қўнғироқ қилиш",
+    ru: "— позвонить",
+    en: "— call",
+    kaa: "ge qońıraw qılıw"
+  };
 
   // Confirmation shown when the user switches language by typing (not the dropdown).
   const SWITCHED = {
@@ -280,9 +294,23 @@
   }
 
   function finishTurn(meta) {
+    if (meta.call_1170) { renderCall1170(meta.phone); renderFeedback(meta.card_id); return; }
     if (meta.requires_human) { bubble("ai", tr().human); renderSources(meta.sources); return; }
     if (meta.done) { renderImages(meta.images); renderSources(meta.sources); renderFeedback(meta.card_id); return; }
     renderOptions(meta.options);
+  }
+
+  function renderCall1170(phone) {
+    if (!phone) return;
+    const wrap = document.createElement("div");
+    wrap.className = "callwrap";
+    const a = document.createElement("a");
+    a.className = "call-btn";
+    a.href = "tel:" + phone;
+    a.textContent = "📞 " + phone + " " + (CALL_LABEL[state.lang] || CALL_LABEL.uz);
+    wrap.appendChild(a);
+    log.appendChild(wrap);
+    scroll();
   }
 
   function renderImages(images) {
@@ -375,7 +403,7 @@
 
   function reset() {
     state.session_id = newSession();
-    log.querySelectorAll(".row, .options, .card, .chips, .imgs, #typing").forEach(e => e.remove());
+    log.querySelectorAll(".row, .options, .card, .chips, .imgs, .callwrap, #typing").forEach(e => e.remove());
     bubble("ai", tr().welcome);
   }
 
