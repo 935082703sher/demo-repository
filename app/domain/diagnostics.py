@@ -8,11 +8,21 @@ ids) so the answer layer can cite the approved fact.
 
 from __future__ import annotations
 
+from enum import StrEnum
+
 from pydantic import BaseModel, ConfigDict, Field
 
 
 class _Model(BaseModel):
     model_config = ConfigDict(extra="forbid")
+
+
+class RiskLevel(StrEnum):
+    """How cautious a resolution's steps are; gates what may be auto-offered."""
+
+    LOW = "low"
+    MEDIUM = "medium"
+    HIGH = "high"
 
 
 class LocalizedText(_Model):
@@ -24,6 +34,32 @@ class LocalizedText(_Model):
 
     def get(self, language: str) -> str:
         return {"uz": self.uz, "ru": self.ru, "en": self.en}.get(language) or self.uz
+
+
+class SuccessCheck(_Model):
+    """How to tell, from the customer's next reply, whether a card worked.
+
+    The signals are lowercase keyword hints for the deterministic fallback; the
+    LLM outcome analyzer reads the reply directly. Either may decide the outcome.
+    """
+
+    question: LocalizedText | None = None
+    positive_signals: list[str] = Field(default_factory=list)
+    negative_signals: list[str] = Field(default_factory=list)
+
+
+class OutcomeBranch(_Model):
+    """Where the lifecycle goes after one outcome of a card.
+
+    ``status`` sets a terminal CaseStatus value (e.g. "resolved"); ``next_node``
+    or ``next_card`` continues diagnosis; ``request_evidence`` asks the customer
+    for the exact on-screen or SMS error text. All optional and backward-safe.
+    """
+
+    status: str | None = None
+    next_node: str | None = None
+    next_card: str | None = None
+    request_evidence: bool = False
 
 
 class DiagnosticOption(_Model):
@@ -58,7 +94,14 @@ class DecisionTree(_Model):
 
 
 class ResolutionCard(_Model):
-    """An approved, structured resolution for one diagnostic outcome."""
+    """An approved, structured resolution for one diagnostic outcome.
+
+    The base fields (title, probable_cause, steps, ...) are unchanged. The
+    lifecycle fields below are all optional, so existing cards keep validating:
+    when a card defines ``success_check`` and outcome branches, the resolution
+    orchestrator can follow success/failure/partial/unclear paths; otherwise the
+    card behaves exactly as before (a one-shot answer).
+    """
 
     id: str = Field(min_length=1)
     title: LocalizedText
@@ -70,6 +113,17 @@ class ResolutionCard(_Model):
     contact: str | None = None
     escalate_when: LocalizedText | None = None
     kb_refs: list[str] = Field(default_factory=list)
+    # Resolution lifecycle (all optional, backward-compatible).
+    risk: RiskLevel = RiskLevel.LOW
+    cause_key: str | None = None  # stable id of the probable cause, for exclusion
+    success_check: SuccessCheck | None = None
+    on_success: OutcomeBranch | None = None
+    on_failure: OutcomeBranch | None = None
+    on_partial: OutcomeBranch | None = None
+    on_unclear: OutcomeBranch | None = None
+    request_evidence: bool = False
+    stop_conditions: list[str] = Field(default_factory=list)
+    call_1170_when: list[str] = Field(default_factory=list)
 
 
 class DiagnosticBundle(_Model):
