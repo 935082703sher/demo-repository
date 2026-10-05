@@ -82,13 +82,20 @@ class DiagnosticNode(_Model):
 
 
 class DecisionTree(_Model):
-    """A per-case decision tree rooted at ``root``."""
+    """A per-case decision tree rooted at ``root``.
+
+    ``covers`` lists the specific sub-issues this tree actually resolves (e.g.
+    "secondary_imei_registration"). The coverage gate enters a tree for such an
+    issue only when the tree declares it, so a mere domain/keyword match never
+    pulls a specific problem into a generic tree's root.
+    """
 
     id: str = Field(min_length=1)
     domain: str = Field(min_length=1)
     case_type: str = Field(min_length=1)
     title: LocalizedText
     keywords: list[str] = Field(default_factory=list)
+    covers: list[str] = Field(default_factory=list)
     root: str = Field(min_length=1)
     nodes: list[DiagnosticNode] = Field(min_length=1)
 

@@ -104,6 +104,12 @@ class DiagnosticEngine:
     def get_tree(self, tree_id: str) -> DecisionTree | None:
         return self._trees.get(tree_id)
 
+    def tree_covering(self, issue: str | None) -> DecisionTree | None:
+        """The tree that directly covers a specific sub-issue, or None if none do."""
+        if not issue:
+            return None
+        return next((tree for tree in self._trees.values() if issue in tree.covers), None)
+
     def get_node(self, tree_id: str, node_id: str) -> DiagnosticNode | None:
         return self._nodes.get((tree_id, node_id))
 

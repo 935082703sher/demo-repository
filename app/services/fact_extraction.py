@@ -431,3 +431,28 @@ def strong_domain(message: str) -> str | None:
     if mnp_hit and not imei_hit:
         return "mnp"
     return None
+
+
+# Words that mark the "second / other" device code (normalize() transliterates
+# Cyrillic to Latin, so markers are written in their normalized Latin form).
+_SECOND_MARKERS = ("ikkinchi", "ikkala", "ikkita", "second", "vtoroy", "vtoraya")
+# Words that mark a registration intent (not merely a network/SIM complaint).
+_REG_MARKERS = ("royxat", "registr", "otkaz", "register", "zaregistr", "dizim")
+
+
+def specific_issue(message: str) -> str | None:
+    """Return a specific sub-issue a generic domain tree must not swallow, else None.
+
+    Today it recognises second-IMEI (dual-SIM) registration: a bare registration
+    keyword is not enough to pull this into the generic registration tree, so the
+    caller can require a tree that actually covers it. A dual-SIM network complaint
+    with no registration intent ("ikkinchi sim tarmoqni ko'rmayapti") is NOT this
+    issue, so it is left to the normal flow.
+    """
+    norm = _normalize(message)
+    has_imei = "imei" in norm
+    second = any(marker in norm for marker in _SECOND_MARKERS)
+    registering = any(marker in norm for marker in _REG_MARKERS)
+    if has_imei and second and registering:
+        return "secondary_imei_registration"
+    return None

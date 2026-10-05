@@ -53,6 +53,7 @@ from app.services.fact_extraction import (
     MNP_FACT_FIELDS,
     FactExtractor,
     detect_domain,
+    specific_issue,
     strong_domain,
 )
 from app.services.grounding import GroundingValidator
@@ -538,6 +539,20 @@ _CALL_1170_SCRIPT = {
     "ru": "Не смог решить проблему, выполненные шаги не помогли",
     "en": "I couldn't resolve the issue; the steps I tried did not help",
 }
+# Shown when a specific issue is covered by neither a tree nor the knowledge base:
+# never guess, never fall into a generic tree root - say so and recommend 1170.
+_UNSUPPORTED_1170 = {
+    "uz": "Bu savol bo'yicha tasdiqlangan bilim bazamda aniq yechim topilmadi. "
+    "Noto'g'ri yo'l ko'rsatmaslik uchun {phone} raqamiga qo'ng'iroq qiling.",
+    "uz_cyrl": "Бу савол бўйича тасдиқланган билим базамда аниқ ечим топилмади. "
+    "Нотўғри йўл кўрсатмаслик учун {phone} рақамига қўнғироқ қилинг.",
+    "ru": "По этому вопросу в проверенной базе знаний нет точного решения. "
+    "Чтобы не дать неверный совет, позвоните по номеру {phone}.",
+    "en": "I don't have a confirmed answer for this in the knowledge base. "
+    "To avoid giving wrong guidance, please call {phone}.",
+    "kaa": "Bul soraw boyınsha tastıyıqlanǵan bilim bazamda anıq sheshim tabılmadı. "
+    "Qáte baǵdar bermew ushın {phone} nomerine qońıraw etiń.",
+}
 
 
 def _result_options(lang: str) -> list[OptionOut]:
@@ -936,9 +951,36 @@ async def _converse_turn(payload: ConverseCaseRequest, request: Request) -> Conv
 
     # 3) Not an answer to an open question: pick the lane for this message.
     if not answered:
+        # 3-gate) Coverage gate: a specific sub-issue (e.g. second-IMEI registration)
+        #   may only enter a tree that ACTUALLY covers it. Domain/keyword match is not
+        #   enough: if no tree covers the issue, do not fall into a generic tree root -
+        #   try the knowledge base, and when there is no grounded answer, say so and
+        #   recommend 1170 rather than asking a generic question.
+        issue = specific_issue(message) if case.active_tree is None else None
+        covering = engine.tree_covering(issue)
+        if issue is not None and covering is None and case.active_tree is None:
+            reply = await _rag_answer(provider, grounding, interaction_log, case, message, lang)
+            _start_fresh_case(case)
+            if not reply.requires_human:
+                await store.save(case)
+                await _audit(audit, case, OUTCOME_ANSWER, ROUTE_RAG, detail=issue)
+                return reply
+            case.status = CaseStatus.CALL_1170_RECOMMENDED
+            case.call_1170_reason = f"no_coverage:{issue}"
+            await store.save(case)
+            await _audit(audit, case, OUTCOME_CALL_1170, ROUTE_CASE, detail=f"no_coverage:{issue}")
+            text = _UNSUPPORTED_1170.get(lang, _UNSUPPORTED_1170["uz"]).format(phone=phone)
+            return _resp(case, text, done=True, requires_human=True, call_1170=True, phone=phone)
+
         # Constrain routing to the known domain so another domain's keyword cannot
-        # hijack the message (e.g. "o'tkazmoqchi" vs the rejection word "otkaz").
-        matched, route_domain = engine.route(message, domain=case.domain)
+        # hijack the message (e.g. "o'tkazmoqchi" vs the rejection word "otkaz"). A
+        # covered specific issue goes straight to its tree, never a generic root.
+        matched: DecisionTree | None
+        route_domain: str | None
+        if covering is not None:
+            matched, route_domain = covering, covering.domain
+        else:
+            matched, route_domain = engine.route(message, domain=case.domain)
         chosen = (
             engine.get_tree(message.strip())
             or matched
@@ -968,12 +1010,13 @@ async def _converse_turn(payload: ConverseCaseRequest, request: Request) -> Conv
                 )
 
         # 3b) No ready card: the router's decision (from step 1) picks the lane.
+        #     A covered specific issue always enters its tree, never RAG/greeting.
         route = analysis.route
-        if route is Route.GREETING and case.active_tree is None:
+        if route is Route.GREETING and case.active_tree is None and covering is None:
             await store.save(case)
             await _audit(audit, case, OUTCOME_GREETING, ROUTE_GREETING)
             return _resp(case, _GREETING.get(lang, _GREETING["uz"]))
-        if route is Route.RAG:
+        if route is Route.RAG and covering is None:
             reply = await _rag_answer(provider, grounding, interaction_log, case, message, lang)
             # A standalone question leaves no residue; a question mid-diagnosis
             # keeps the open case so the next message can still answer it.

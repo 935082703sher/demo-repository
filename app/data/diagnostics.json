@@ -436,19 +436,9 @@
         "uz": "Ikkinchi IMEI (ikki SIM) ro'yxatdan o'tmayapti",
         "ru": "Второй IMEI (две SIM) не регистрируется"
       },
-      "keywords": [
-        "ikkinchi imei royxat",
-        "ikkinchi imeini royxat",
-        "ikkala imei royxat",
-        "ikki imei royxat",
-        "2 imei royxat",
-        "2-imei royxat",
-        "ikkinchi imei registrat",
-        "ikkinchi imei otkaz",
-        "second imei register",
-        "register second imei",
-        "второй imei регистрац",
-        "второй imei зарегистр"
+      "keywords": [],
+      "covers": [
+        "secondary_imei_registration"
       ],
       "root": "declaration",
       "nodes": [
