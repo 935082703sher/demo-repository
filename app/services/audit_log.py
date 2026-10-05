@@ -22,6 +22,13 @@ OUTCOME_QUESTION = "question"  # a diagnostic question was asked (in progress)
 OUTCOME_CLARIFY = "clarify"  # a routing menu was offered
 OUTCOME_GREETING = "greeting"  # small talk was answered
 
+# Resolution-lifecycle outcomes: the customer's result on an offered card.
+OUTCOME_LC_SUCCESS = "lc_success"  # the offered card resolved it (self-service win)
+OUTCOME_LC_FAILURE = "lc_failure"  # it did not; an alternative/1170 followed
+OUTCOME_LC_PARTIAL = "lc_partial"  # it helped; a remaining problem continues
+OUTCOME_LC_UNCLEAR = "lc_unclear"  # the reply did not say; asked/re-explained
+OUTCOME_CALL_1170 = "call_1170"  # safe paths exhausted -> recommended the phone line
+
 # Which lane handled the turn (BLOK 3 router).
 ROUTE_CASE = "case"
 ROUTE_RAG = "rag"
@@ -40,6 +47,8 @@ class AuditEvent:
     card_id: str | None = None
     session_id: str | None = None
     route: str | None = None
+    style: str | None = None  # explanation style in use (for style distribution)
+    detail: str | None = None  # free detail, e.g. the 1170 recommendation reason
     created_at: datetime = field(default_factory=lambda: datetime.now(UTC))
 
 
@@ -52,21 +61,36 @@ class AuditLog(Protocol):
     async def metrics(self) -> dict[str, object]: ...
 
 
+def _rate(numerator: int, denominator: int) -> float | None:
+    return round(numerator / denominator, 4) if denominator else None
+
+
 def compute_metrics(
     outcomes: Counter[str],
     categories: Counter[str],
     routes: Counter[str] | None = None,
+    *,
+    failure_cards: Counter[str] | None = None,
+    styles: Counter[str] | None = None,
+    call_1170_reasons: Counter[str] | None = None,
 ) -> dict[str, object]:
     """Derive KPI figures from outcome, category and route counts."""
     routes = routes if routes is not None else Counter()
     resolved = outcomes.get(OUTCOME_RESOLVED, 0)
     answered = outcomes.get(OUTCOME_ANSWER, 0)
     handoff = outcomes.get(OUTCOME_HANDOFF, 0)
-    # A self-service win is a resolution card OR a grounded KB answer.
-    wins = resolved + answered
-    terminal = wins + handoff
+    lc_success = outcomes.get(OUTCOME_LC_SUCCESS, 0)
+    lc_failure = outcomes.get(OUTCOME_LC_FAILURE, 0)
+    lc_partial = outcomes.get(OUTCOME_LC_PARTIAL, 0)
+    lc_unclear = outcomes.get(OUTCOME_LC_UNCLEAR, 0)
+    call_1170 = outcomes.get(OUTCOME_CALL_1170, 0)
+    lc_results = lc_success + lc_failure + lc_partial + lc_unclear
+    # A self-service win is a resolution card, a grounded KB answer, or a lifecycle
+    # success; 1170 is a terminal non-win (never a human-chat handoff).
+    wins = resolved + answered + lc_success
+    terminal = wins + handoff + call_1170
     total = int(sum(outcomes.values()))
-    return {
+    metrics: dict[str, object] = {
         "total_events": total,
         "outcomes": dict(outcomes),
         "categories": dict(categories),
@@ -75,10 +99,23 @@ def compute_metrics(
         "resolved_events": resolved,
         "answered_events": answered,
         "handoff_events": handoff,
-        # Self-service resolution rate: wins out of terminal (wins + handoff).
-        "self_service_resolution_rate": round(wins / terminal, 4) if terminal else None,
-        "handoff_rate": round(handoff / terminal, 4) if terminal else None,
+        "self_service_resolution_rate": _rate(wins, terminal),
+        "handoff_rate": _rate(handoff, terminal),
+        # Resolution-lifecycle KPIs.
+        "lifecycle_results": lc_results,
+        "ai_resolution_rate": _rate(lc_success, lc_success + call_1170),
+        "first_result_success_rate": _rate(lc_success, lc_results),
+        "unclear_outcome_rate": _rate(lc_unclear, lc_results),
+        "call_1170_count": call_1170,
+        "call_1170_rate": _rate(call_1170, terminal),
     }
+    if failure_cards is not None:
+        metrics["cards_failing_most"] = dict(failure_cards.most_common(10))
+    if styles is not None:
+        metrics["explanation_style_distribution"] = dict(styles)
+    if call_1170_reasons is not None:
+        metrics["call_1170_reasons"] = dict(call_1170_reasons)
+    return metrics
 
 
 class InMemoryAuditLog:
@@ -88,6 +125,9 @@ class InMemoryAuditLog:
         self._outcomes: Counter[str] = Counter()
         self._categories: Counter[str] = Counter()
         self._routes: Counter[str] = Counter()
+        self._failure_cards: Counter[str] = Counter()
+        self._styles: Counter[str] = Counter()
+        self._call_reasons: Counter[str] = Counter()
         self._count = 0
 
     async def record(self, event: AuditEvent) -> None:
@@ -96,10 +136,23 @@ class InMemoryAuditLog:
             self._categories[event.category] += 1
         if event.route:
             self._routes[event.route] += 1
+        if event.outcome == OUTCOME_LC_FAILURE and event.card_id:
+            self._failure_cards[event.card_id] += 1
+        if event.style:
+            self._styles[event.style] += 1
+        if event.outcome == OUTCOME_CALL_1170 and event.detail:
+            self._call_reasons[event.detail] += 1
         self._count += 1
 
     async def metrics(self) -> dict[str, object]:
-        return compute_metrics(self._outcomes, self._categories, self._routes)
+        return compute_metrics(
+            self._outcomes,
+            self._categories,
+            self._routes,
+            failure_cards=self._failure_cards,
+            styles=self._styles,
+            call_1170_reasons=self._call_reasons,
+        )
 
 
 _CREATE_TABLE_SQL = """
@@ -113,17 +166,22 @@ CREATE TABLE IF NOT EXISTS audit_events (
     card_id TEXT,
     session_id TEXT,
     route TEXT,
+    style TEXT,
+    detail TEXT,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 )
 """
 
-# Add the route column on databases created before BLOK 5.
+# Add columns on databases created before these columns existed.
 _MIGRATE_ROUTE_SQL = "ALTER TABLE audit_events ADD COLUMN IF NOT EXISTS route TEXT"
+_MIGRATE_STYLE_SQL = "ALTER TABLE audit_events ADD COLUMN IF NOT EXISTS style TEXT"
+_MIGRATE_DETAIL_SQL = "ALTER TABLE audit_events ADD COLUMN IF NOT EXISTS detail TEXT"
 
 _INSERT_SQL = """
 INSERT INTO audit_events
-    (channel, language, outcome, category, tree_id, card_id, session_id, route, created_at)
-VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+    (channel, language, outcome, category, tree_id, card_id, session_id, route,
+     style, detail, created_at)
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
 """
 
 
@@ -142,6 +200,8 @@ class PostgresAuditLog:
         async with pool.acquire() as connection:
             await connection.execute(_CREATE_TABLE_SQL)
             await connection.execute(_MIGRATE_ROUTE_SQL)
+            await connection.execute(_MIGRATE_STYLE_SQL)
+            await connection.execute(_MIGRATE_DETAIL_SQL)
         return cls(pool)
 
     async def record(self, event: AuditEvent) -> None:
@@ -156,6 +216,8 @@ class PostgresAuditLog:
                 event.card_id,
                 event.session_id,
                 event.route,
+                event.style,
+                event.detail,
                 event.created_at,
             )
 
@@ -172,12 +234,38 @@ class PostgresAuditLog:
                 "SELECT route, count(*) AS n FROM audit_events "
                 "WHERE route IS NOT NULL GROUP BY route"
             )
+            failure_rows = await connection.fetch(
+                "SELECT card_id, count(*) AS n FROM audit_events "
+                "WHERE outcome = $1 AND card_id IS NOT NULL GROUP BY card_id",
+                OUTCOME_LC_FAILURE,
+            )
+            style_rows = await connection.fetch(
+                "SELECT style, count(*) AS n FROM audit_events "
+                "WHERE style IS NOT NULL GROUP BY style"
+            )
+            reason_rows = await connection.fetch(
+                "SELECT detail, count(*) AS n FROM audit_events "
+                "WHERE outcome = $1 AND detail IS NOT NULL GROUP BY detail",
+                OUTCOME_CALL_1170,
+            )
         outcomes: Counter[str] = Counter({row["outcome"]: int(row["n"]) for row in outcome_rows})
         categories: Counter[str] = Counter(
             {row["category"]: int(row["n"]) for row in category_rows}
         )
         routes: Counter[str] = Counter({row["route"]: int(row["n"]) for row in route_rows})
-        return compute_metrics(outcomes, categories, routes)
+        failure_cards: Counter[str] = Counter(
+            {row["card_id"]: int(row["n"]) for row in failure_rows}
+        )
+        styles: Counter[str] = Counter({row["style"]: int(row["n"]) for row in style_rows})
+        reasons: Counter[str] = Counter({row["detail"]: int(row["n"]) for row in reason_rows})
+        return compute_metrics(
+            outcomes,
+            categories,
+            routes,
+            failure_cards=failure_cards,
+            styles=styles,
+            call_1170_reasons=reasons,
+        )
 
     async def close(self) -> None:
         await self._pool.close()

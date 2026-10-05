@@ -28,9 +28,14 @@ from app.providers.base import LLMProvider
 from app.providers.errors import ProviderError
 from app.services.audit_log import (
     OUTCOME_ANSWER,
+    OUTCOME_CALL_1170,
     OUTCOME_CLARIFY,
     OUTCOME_GREETING,
     OUTCOME_HANDOFF,
+    OUTCOME_LC_FAILURE,
+    OUTCOME_LC_PARTIAL,
+    OUTCOME_LC_SUCCESS,
+    OUTCOME_LC_UNCLEAR,
     OUTCOME_QUESTION,
     OUTCOME_RESOLVED,
     ROUTE_CASE,
@@ -292,6 +297,8 @@ async def _audit(
     *,
     card_id: str | None = None,
     tree_id: str | None = None,
+    style: str | None = None,
+    detail: str | None = None,
 ) -> None:
     """Record one converse turn for the KPI metrics."""
     await audit.record(
@@ -304,6 +311,8 @@ async def _audit(
             card_id=card_id,
             session_id=case.session_id,
             route=route,
+            style=style,
+            detail=detail,
         )
     )
 
@@ -740,12 +749,20 @@ def _wants_phone(message: str) -> bool:
     return any(term in low for term in _PHONE_REQUEST)
 
 
-def _lifecycle_audit(decision: OrchestratorDecision) -> str:
-    """Map a lifecycle decision to an audit outcome label."""
-    if decision.kind == "resolved":
-        return OUTCOME_RESOLVED
+_LIFECYCLE_OUTCOME_LABELS = {
+    Outcome.SUCCESS: OUTCOME_LC_SUCCESS,
+    Outcome.FAILURE: OUTCOME_LC_FAILURE,
+    Outcome.PARTIAL: OUTCOME_LC_PARTIAL,
+    Outcome.UNCLEAR: OUTCOME_LC_UNCLEAR,
+}
+
+
+def _lifecycle_outcome_label(decision: OrchestratorDecision, result: Outcome | None) -> str:
+    """Audit label for a lifecycle turn: the classified result, or the 1170 fallback."""
     if decision.kind == "call_1170":
-        return OUTCOME_HANDOFF
+        return OUTCOME_CALL_1170
+    if result is not None:
+        return _LIFECYCLE_OUTCOME_LABELS[result]
     return OUTCOME_QUESTION
 
 
@@ -847,6 +864,7 @@ async def _converse_turn(payload: ConverseCaseRequest, request: Request) -> Conv
         case.last_customer_reply = message
         card = engine.get_card(case.resolution_card_id)
         forced = _result_from_value(payload.message.strip())
+        result_outcome: Outcome | None = None
         if forced is None and _wants_phone(message):
             decision = orchestrator.recommend_1170(case, CALL_1170_REQUESTED)
         else:
@@ -859,10 +877,17 @@ async def _converse_turn(payload: ConverseCaseRequest, request: Request) -> Conv
                 )
             for fact in outcome.extracted_facts:
                 case.upsert(fact)
+            result_outcome = outcome.outcome
             decision = orchestrator.advance(case, outcome)
         await store.save(case)
         await _audit(
-            audit, case, _lifecycle_audit(decision), ROUTE_CASE, card_id=card.id if card else None
+            audit,
+            case,
+            _lifecycle_outcome_label(decision, result_outcome),
+            ROUTE_CASE,
+            card_id=card.id if card else None,
+            style=case.explanation.style.value,
+            detail=case.call_1170_reason if decision.kind == "call_1170" else None,
         )
         return await _render_decision(
             decision,
