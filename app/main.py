@@ -61,12 +61,19 @@ from app.services.localizer import (
     TemplateLocalizer,
     build_openai_localize_complete,
 )
+from app.services.outcome_analyzer import (
+    LLMOutcomeAnalyzer,
+    OutcomeAnalyzer,
+    RuleOutcomeAnalyzer,
+    build_openai_outcome_complete,
+)
 from app.services.question_explainer import (
     LLMQuestionExplainer,
     QuestionExplainer,
     TemplateQuestionExplainer,
     build_openai_question_complete,
 )
+from app.services.resolution_orchestrator import ResolutionOrchestrator
 from app.services.scope import ScopeService
 from app.services.turn_analysis import (
     LLMTurnAnalyzer,
@@ -236,6 +243,27 @@ def create_app(
             fallback=TemplateLocalizer(),
         )
     app.state.localizer = localizer
+    # Resolution lifecycle: the orchestrator drives offer -> outcome -> alternative /
+    # 1170; the outcome analyzer classifies the customer's result (rules by default,
+    # LLM when configured, always with the deterministic analyzer as the safety net).
+    app.state.resolution_orchestrator = ResolutionOrchestrator(app.state.diagnostic_engine)
+    rule_outcome = RuleOutcomeAnalyzer()
+    outcome_analyzer: OutcomeAnalyzer = rule_outcome
+    if (
+        app_settings.llm_provider == "openai"
+        and app_settings.llm_api_key is not None
+        and app_settings.llm_api_key.get_secret_value()
+        and app_settings.llm_model
+    ):
+        outcome_analyzer = LLMOutcomeAnalyzer(
+            build_openai_outcome_complete(
+                api_key=app_settings.llm_api_key.get_secret_value(),
+                model=app_settings.llm_model,
+                timeout_seconds=app_settings.llm_timeout_seconds,
+            ),
+            fallback=rule_outcome,
+        )
+    app.state.outcome_analyzer = outcome_analyzer
     app.state.grounding = GroundingValidator()
     app.state.interaction_log = build_interaction_log(app_settings.interaction_log_path)
     app.state.audit_log = InMemoryAuditLog()

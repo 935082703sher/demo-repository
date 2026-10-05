@@ -473,6 +473,25 @@
       "kb_refs": [
         "faq-mnp-imei",
         "VMQ 778-son"
+      ],
+      "cause_key": "registration_payment_or_term",
+      "success_check": {
+        "question": {
+          "uz": "To'lovni amalga oshirib, qurilmani qayta yoqdingizmi? IMEI ro'yxatdan o'tdimi?",
+          "ru": "Вы оплатили и перезагрузили устройство? IMEI зарегистрировался?",
+          "en": "Did you pay and restart the device? Is the IMEI registered now?"
+        },
+        "positive_signals": ["royxatdan otdi", "registratsiya boldi", "otkazildi"],
+        "negative_signals": ["hali ham", "otmadi", "otmayapti"]
+      },
+      "on_failure": {
+        "next_card": "imei-clone"
+      },
+      "on_unclear": {
+        "request_evidence": true
+      },
+      "call_1170_when": [
+        "payment_done_status_unchanged_24h"
       ]
     },
     {

@@ -20,7 +20,7 @@ from fastapi import APIRouter, Request
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
 
-from app.domain.case_state import CaseState, CaseStatus, Fact, FactStatus
+from app.domain.case_state import CaseState, CaseStatus, Fact, FactStatus, Outcome
 from app.domain.diagnostics import DecisionTree, DiagnosticNode, ResolutionCard
 from app.domain.enums import Category, Language
 from app.domain.schemas import LLMRequest
@@ -53,8 +53,15 @@ from app.services.grounding import GroundingValidator
 from app.services.interaction_log import InteractionLog, InteractionRecord
 from app.services.kb_retriever import get_retriever
 from app.services.localizer import Localizer
+from app.services.outcome_analyzer import OutcomeAnalysis, OutcomeAnalyzer
 from app.services.pii import redact_likely_pii
 from app.services.question_explainer import QuestionExplainer
+from app.services.resolution_orchestrator import (
+    AWAITING_OUTCOME,
+    CALL_1170_REQUESTED,
+    OrchestratorDecision,
+    ResolutionOrchestrator,
+)
 from app.services.router import Route
 from app.services.turn_analysis import TurnAnalyzer
 
@@ -271,6 +278,9 @@ class ConverseCaseResponse(BaseModel):
     requires_human: bool
     sources: list[SourceOut] = []
     images: list[ImageOut] = []
+    status: str | None = None
+    call_1170: bool = False
+    phone: str | None = None
 
 
 async def _audit(
@@ -314,6 +324,16 @@ def _start_fresh_case(case: CaseState) -> None:
     case.active_tree = None
     case.pending_node = None
     case.status = CaseStatus.UNDERSTANDING
+    # A new problem starts with a clean resolution lifecycle, but the explanation
+    # profile (how this person likes to be talked to) is kept across problems.
+    case.current_cause = None
+    case.excluded_causes = []
+    case.remaining_causes = []
+    case.tried_card_ids = []
+    case.attempts = []
+    case.last_question = None
+    case.last_customer_reply = None
+    case.call_1170_reason = None
 
 
 def _resp(
@@ -325,6 +345,8 @@ def _resp(
     card_id: str | None = None,
     requires_human: bool = False,
     sources: list[SourceOut] | None = None,
+    call_1170: bool = False,
+    phone: str | None = None,
 ) -> ConverseCaseResponse:
     return ConverseCaseResponse(
         reply=reply,
@@ -337,6 +359,9 @@ def _resp(
         requires_human=requires_human,
         sources=sources or [],
         images=_CARD_IMAGES.get(card_id or "", []),
+        status=case.status.value,
+        call_1170=call_1170,
+        phone=phone,
     )
 
 
@@ -412,6 +437,139 @@ async def _card_reply(
     return "\n".join(lines)
 
 
+# --- Resolution lifecycle rendering (BLOK: offer -> result -> alternative / 1170) ---
+
+# Result buttons shown under an offered card; values are read back as outcomes.
+_RESULT_SUCCESS = "outcome:success"
+_RESULT_FAILURE = "outcome:failure"
+_RESULT_UNCLEAR = "outcome:unclear"
+_RESULT_LABELS = {
+    "uz": [
+        ("Ha, hal bo'ldi", _RESULT_SUCCESS),
+        ("Yo'q, muammo qoldi", _RESULT_FAILURE),
+        ("Tushunmadim", _RESULT_UNCLEAR),
+    ],
+    "uz_cyrl": [
+        ("Ҳа, ҳал бўлди", _RESULT_SUCCESS),
+        ("Йўқ, муаммо қолди", _RESULT_FAILURE),
+        ("Тушунмадим", _RESULT_UNCLEAR),
+    ],
+    "ru": [
+        ("Да, решилось", _RESULT_SUCCESS),
+        ("Нет, проблема осталась", _RESULT_FAILURE),
+        ("Не понял", _RESULT_UNCLEAR),
+    ],
+    "en": [
+        ("Yes, it's fixed", _RESULT_SUCCESS),
+        ("No, still a problem", _RESULT_FAILURE),
+        ("I didn't understand", _RESULT_UNCLEAR),
+    ],
+    "kaa": [
+        ("Awa, sheshildi", _RESULT_SUCCESS),
+        ("Yaq, másele qaldı", _RESULT_FAILURE),
+        ("Túsinbedim", _RESULT_UNCLEAR),
+    ],
+}
+_RESOLVED_REPLY = {
+    "uz": "Zo'r! Muammo hal bo'lganiga xursandman. Yana savol bo'lsa, yozavering.",
+    "uz_cyrl": "Зўр! Муаммо ҳал бўлганига хурсандман. Яна савол бўлса, ёзаверинг.",
+    "ru": "Отлично! Рад, что проблема решилась. Если будут вопросы — пишите.",
+    "en": "Great! I'm glad it's resolved. Write again if anything else comes up.",
+    "kaa": "Zor! Máseleniń sheshilgenine quwanaman. Taǵı sorawıńız bolsa, jazıń.",
+}
+_REQUEST_EVIDENCE = {
+    "uz": "Aniqlashtirish uchun: ekranda yoki SMSda chiqqan xato matnini yozib yuboring "
+    "(shaxsiy ma'lumotlarni yopib qo'ying).",
+    "uz_cyrl": "Аниқлаштириш учун: экранда ёки SMSда чиққан хато матнини ёзиб юборинг "
+    "(шахсий маълумотларни ёпиб қўйинг).",
+    "ru": "Чтобы уточнить: пришлите текст ошибки с экрана или из SMS (личные данные закройте).",
+    "en": "To narrow it down: send the exact error text from the screen or SMS "
+    "(hide any personal data).",
+    "kaa": "Anıqlaw ushın: ekranda yaki SMSda shıqqan qáte matnin jazıń "
+    "(jeke maǵlıwmatlardı jawıp qoyıń).",
+}
+_PARTIAL_CLARIFY = {
+    "uz": "Qaysi qism hali ham hal bo'lmayapti? Qisqa yozing.",
+    "uz_cyrl": "Қайси қисм ҳали ҳам ҳал бўлмаяпти? Қисқа ёзинг.",
+    "ru": "Какая часть ещё не решена? Напишите коротко.",
+    "en": "Which part is still not resolved? A short note is enough.",
+    "kaa": "Qaysı bólim ele sheshilmedi? Qısqa jazıń.",
+}
+_CHECK_QUESTION = {
+    "uz": "Shu qadamni bajarib ko'ring. Muammo hal bo'ldimi?",
+    "uz_cyrl": "Шу қадамни бажариб кўринг. Муаммо ҳал бўлдими?",
+    "ru": "Выполните этот шаг. Проблема решилась?",
+    "en": "Try this step. Did it fix the problem?",
+    "kaa": "Usı qádemdi orınlań. Másele sheshildi me?",
+}
+# 1170 summary wrapper; the tried-step list and the operator script are filled in.
+_CALL_1170 = {
+    "uz": (
+        "Mavjud xavfsiz yechimlarni tekshirdik, ammo muammo saqlanib qoldi.\n\n"
+        "Tekshirilganlar:\n{tried}\n\n"
+        "Bu holat individual tekshiruvni talab qiladi. {phone} raqamiga qo'ng'iroq qiling.\n\n"
+        "Operatorga shunday ayting: «{script}»."
+    ),
+    "ru": (
+        "Мы проверили доступные безопасные решения, но проблема осталась.\n\n"
+        "Проверено:\n{tried}\n\n"
+        "Этот случай требует индивидуальной проверки. Позвоните по номеру {phone}.\n\n"
+        "Скажите оператору: «{script}»."
+    ),
+    "en": (
+        "We tried the available safe fixes, but the problem remains.\n\n"
+        "Checked:\n{tried}\n\n"
+        "This needs an individual review. Please call {phone}.\n\n"
+        'Tell the operator: "{script}".'
+    ),
+}
+_CALL_1170_SCRIPT = {
+    "uz": "Muammoni hal qila olmadim, sinab ko'rilgan qadamlar yordam bermadi",
+    "ru": "Не смог решить проблему, выполненные шаги не помогли",
+    "en": "I couldn't resolve the issue; the steps I tried did not help",
+}
+
+
+def _result_options(lang: str) -> list[OptionOut]:
+    labels = _RESULT_LABELS.get(lang, _RESULT_LABELS["uz"])
+    return [OptionOut(value=value, label=text) for text, value in labels]
+
+
+def _result_from_value(value: str) -> Outcome | None:
+    """Map a result button value to an Outcome, or None for free text."""
+    return {
+        _RESULT_SUCCESS: Outcome.SUCCESS,
+        _RESULT_FAILURE: Outcome.FAILURE,
+        _RESULT_UNCLEAR: Outcome.UNCLEAR,
+    }.get(value)
+
+
+async def _offer_reply(
+    explainer: CardExplainer, card: ResolutionCard, case: CaseState, lang: str
+) -> str:
+    """The card's full resolution text followed by its success-check question."""
+    body = await _card_reply(explainer, card, case, lang)
+    check = card.success_check
+    question = (
+        check.question.get(lang) if check and check.question else None
+    ) or _CHECK_QUESTION.get(lang, _CHECK_QUESTION["uz"])
+    return f"{body}\n\n{question}"
+
+
+def _build_1170_reply(case: CaseState, engine: DiagnosticEngine, lang: str, phone: str) -> str:
+    """A useful summary before the 1170 number: what was checked and what to say."""
+    template = _CALL_1170.get(lang, _CALL_1170["uz"])
+    tried_titles: list[str] = []
+    for card_id in case.tried_card_ids:
+        card = engine.get_card(card_id)
+        title = card.title.get(lang) if card else card_id
+        if title not in tried_titles:
+            tried_titles.append(title)
+    tried = "\n".join(f"• {title}" for title in tried_titles) or "• —"
+    script = _CALL_1170_SCRIPT.get(lang, _CALL_1170_SCRIPT["uz"])
+    return template.format(tried=tried, phone=phone, script=script)
+
+
 def _apply_option(engine: DiagnosticEngine, case: CaseState, value: str) -> ResolutionCard | None:
     """Apply the chosen option on the pending node: set its fact, advance/resolve."""
     node = engine.get_node(case.active_tree or "", case.pending_node or "")
@@ -431,10 +589,10 @@ def _apply_option(engine: DiagnosticEngine, case: CaseState, value: str) -> Reso
             )
         )
     if option.card is not None:
+        # Record which card the answer leads to; the caller finalizes it (a one-shot
+        # card is closed; a lifecycle card is offered with its active tree kept so an
+        # alternative can be found later).
         case.resolution_card_id = option.card
-        case.status = CaseStatus.RESOLVED
-        case.active_tree = None
-        case.pending_node = None
         return engine.get_card(option.card)
     if option.next_node is not None:
         case.pending_node = option.next_node
@@ -508,6 +666,122 @@ async def _rag_answer(
     return _resp(case, result.text, done=True, sources=sources)
 
 
+async def _render_decision(
+    decision: OrchestratorDecision,
+    case: CaseState,
+    *,
+    engine: DiagnosticEngine,
+    explainer: CardExplainer,
+    q_explainer: QuestionExplainer,
+    localizer: Localizer,
+    lang: str,
+    phone: str,
+) -> ConverseCaseResponse:
+    """Turn one orchestrator decision into the customer-facing response."""
+    if decision.kind == "resolved":
+        card_id = decision.card.id if decision.card else None
+        return _resp(
+            case, _RESOLVED_REPLY.get(lang, _RESOLVED_REPLY["uz"]), done=True, card_id=card_id
+        )
+    if decision.kind == "call_1170":
+        reply = _build_1170_reply(case, engine, lang, phone)
+        return _resp(case, reply, done=True, requires_human=True, call_1170=True, phone=phone)
+    if decision.kind in ("offer_card", "reexplain") and decision.card is not None:
+        reply = await _offer_reply(explainer, decision.card, case, lang)
+        return _resp(
+            case, reply, options=_result_options(lang), card_id=decision.card.id, done=False
+        )
+    if decision.kind == "request_evidence":
+        return _resp(case, _REQUEST_EVIDENCE.get(lang, _REQUEST_EVIDENCE["uz"]), done=False)
+    if decision.kind == "ask_node" and decision.node is not None:
+        node = decision.node
+        question = await q_explainer.explain(node.question.get(lang), case, lang)
+        labels = await _localize_labels(localizer, [o.label.get(lang) for o in node.options], lang)
+        options = [
+            OptionOut(value=o.value, label=label)
+            for o, label in zip(node.options, labels, strict=True)
+        ]
+        return _resp(case, question, options=options, done=False)
+    # clarify / fallback: ask what remains without closing the case.
+    return _resp(case, _PARTIAL_CLARIFY.get(lang, _PARTIAL_CLARIFY["uz"]), done=False)
+
+
+# Phrases where the customer asks for phone help directly (then 1170 is appropriate).
+_PHONE_REQUEST = (
+    "1170",
+    "qongiroq",
+    "qo'ng'iroq",
+    "telefon qil",
+    "operator",
+    "jonli",
+    "позвони",
+    "оператор",
+    "call ",
+    "phone",
+)
+
+
+def _wants_phone(message: str) -> bool:
+    """True when the customer explicitly asks for phone/operator help."""
+    low = message.lower()
+    return any(term in low for term in _PHONE_REQUEST)
+
+
+def _lifecycle_audit(decision: OrchestratorDecision) -> str:
+    """Map a lifecycle decision to an audit outcome label."""
+    if decision.kind == "resolved":
+        return OUTCOME_RESOLVED
+    if decision.kind == "call_1170":
+        return OUTCOME_HANDOFF
+    return OUTCOME_QUESTION
+
+
+async def _finalize_card(
+    card: ResolutionCard,
+    case: CaseState,
+    *,
+    engine: DiagnosticEngine,
+    orchestrator: ResolutionOrchestrator,
+    explainer: CardExplainer,
+    q_explainer: QuestionExplainer,
+    localizer: Localizer,
+    store: CaseStore,
+    audit: AuditLog,
+    lang: str,
+    phone: str,
+    tree_id: str | None = None,
+) -> ConverseCaseResponse:
+    """Offer a reached card through the lifecycle, or close it as a one-shot answer.
+
+    A card with a success_check enters the result-tracking loop (offered, then its
+    result awaited); any other card keeps the previous behaviour: closed at once.
+    """
+    if orchestrator.uses_lifecycle(card):
+        if tree_id and case.active_tree is None:
+            case.active_tree = tree_id  # keep the tree so alternatives can be found
+        decision = orchestrator.offer_card(case, card)
+        await store.save(case)
+        await _audit(audit, case, OUTCOME_QUESTION, ROUTE_CASE, card_id=card.id, tree_id=tree_id)
+        return await _render_decision(
+            decision,
+            case,
+            engine=engine,
+            explainer=explainer,
+            q_explainer=q_explainer,
+            localizer=localizer,
+            lang=lang,
+            phone=phone,
+        )
+    case.active_tree = None
+    case.pending_node = None
+    case.resolution_card_id = card.id
+    case.status = CaseStatus.RESOLVED
+    await store.save(case)
+    await _audit(audit, case, OUTCOME_RESOLVED, ROUTE_CASE, card_id=card.id, tree_id=tree_id)
+    card_text = await _card_reply(explainer, card, case, lang)
+    return _resp(case, card_text, done=True, card_id=card.id)
+
+
 async def _converse_turn(payload: ConverseCaseRequest, request: Request) -> ConverseCaseResponse:
     """One conversation turn: greet, route, extract facts, ask only what's missing."""
     store = cast(CaseStore, request.app.state.case_store)
@@ -520,6 +794,12 @@ async def _converse_turn(payload: ConverseCaseRequest, request: Request) -> Conv
     grounding = cast(GroundingValidator, request.app.state.grounding)
     audit = cast(AuditLog, request.app.state.audit_log)
     interaction_log = cast(InteractionLog, getattr(request.app.state, "interaction_log", None))
+    orchestrator = cast(ResolutionOrchestrator, request.app.state.resolution_orchestrator)
+    outcome_analyzer = cast(OutcomeAnalyzer, request.app.state.outcome_analyzer)
+    phone = str(
+        getattr(getattr(request.app.state, "settings", None), "approved_support_phone", None)
+        or "1170"
+    )
 
     case = await store.get_or_create(
         payload.session_id, language=payload.language, channel=payload.channel
@@ -532,8 +812,42 @@ async def _converse_turn(payload: ConverseCaseRequest, request: Request) -> Conv
     message = redact_likely_pii(payload.message)
 
     # A previously closed case starts fresh so old facts don't auto-complete a new one.
-    if case.status in (CaseStatus.RESOLVED, CaseStatus.HANDOFF):
+    if case.status in (CaseStatus.RESOLVED, CaseStatus.HANDOFF, CaseStatus.CALL_1170_RECOMMENDED):
         _start_fresh_case(case)
+
+    # 0) A case awaiting a result: this message is the outcome of the offered card,
+    #    not a new problem. Classify it and let the orchestrator decide what's next.
+    if case.status in AWAITING_OUTCOME and case.resolution_card_id:
+        case.last_customer_reply = message
+        card = engine.get_card(case.resolution_card_id)
+        forced = _result_from_value(payload.message.strip())
+        if forced is None and _wants_phone(message):
+            decision = orchestrator.recommend_1170(case, CALL_1170_REQUESTED)
+        else:
+            if forced is not None:
+                outcome = OutcomeAnalysis(outcome=forced, confidence=1.0)
+            else:
+                check = card.success_check if card else None
+                outcome = await outcome_analyzer.analyze(
+                    message, case, check=check, turn_id=case.turn_count
+                )
+            for fact in outcome.extracted_facts:
+                case.upsert(fact)
+            decision = orchestrator.advance(case, outcome)
+        await store.save(case)
+        await _audit(
+            audit, case, _lifecycle_audit(decision), ROUTE_CASE, card_id=card.id if card else None
+        )
+        return await _render_decision(
+            decision,
+            case,
+            engine=engine,
+            explainer=explainer,
+            q_explainer=q_explainer,
+            localizer=localizer,
+            lang=lang,
+            phone=phone,
+        )
 
     # 1) Understand the message every turn (route + facts in one LLM call), so a
     #    new story is never ignored.
@@ -553,10 +867,20 @@ async def _converse_turn(payload: ConverseCaseRequest, request: Request) -> Conv
             resolved = _apply_option(engine, case, value)
             if resolved is not None:
                 _refresh_unknowns(case)
-                await store.save(case)
-                await _audit(audit, case, OUTCOME_RESOLVED, ROUTE_CASE, card_id=resolved.id)
-                card_text = await _card_reply(explainer, resolved, case, lang)
-                return _resp(case, card_text, done=True, card_id=resolved.id)
+                return await _finalize_card(
+                    resolved,
+                    case,
+                    engine=engine,
+                    orchestrator=orchestrator,
+                    explainer=explainer,
+                    q_explainer=q_explainer,
+                    localizer=localizer,
+                    store=store,
+                    audit=audit,
+                    lang=lang,
+                    phone=phone,
+                    tree_id=case.active_tree,
+                )
             answered = True
 
     # 3) Not an answer to an open question: pick the lane for this message.
@@ -575,18 +899,22 @@ async def _converse_turn(payload: ConverseCaseRequest, request: Request) -> Conv
         if chosen is not None:
             kind, obj = engine.advance(chosen.id, chosen.root, case.known_facts())
             if kind == "resolve" and isinstance(obj, ResolutionCard):
-                case.active_tree = None
-                case.pending_node = None
-                case.resolution_card_id = obj.id
-                case.status = CaseStatus.RESOLVED
                 if case.domain is None:
                     case.domain = chosen.domain
-                await store.save(case)
-                await _audit(
-                    audit, case, OUTCOME_RESOLVED, ROUTE_CASE, card_id=obj.id, tree_id=chosen.id
+                return await _finalize_card(
+                    obj,
+                    case,
+                    engine=engine,
+                    orchestrator=orchestrator,
+                    explainer=explainer,
+                    q_explainer=q_explainer,
+                    localizer=localizer,
+                    store=store,
+                    audit=audit,
+                    lang=lang,
+                    phone=phone,
+                    tree_id=chosen.id,
                 )
-                card_text = await _card_reply(explainer, obj, case, lang)
-                return _resp(case, card_text, done=True, card_id=obj.id)
 
         # 3b) No ready card: the router's decision (from step 1) picks the lane.
         route = analysis.route
@@ -640,14 +968,20 @@ async def _converse_turn(payload: ConverseCaseRequest, request: Request) -> Conv
     active_tree = case.active_tree
     kind, obj = engine.advance(case.active_tree or "", case.pending_node or "", case.known_facts())
     if kind == "resolve" and isinstance(obj, ResolutionCard):
-        case.resolution_card_id = obj.id
-        case.status = CaseStatus.RESOLVED
-        case.active_tree = None
-        case.pending_node = None
-        await store.save(case)
-        await _audit(audit, case, OUTCOME_RESOLVED, ROUTE_CASE, card_id=obj.id, tree_id=active_tree)
-        card_text = await _card_reply(explainer, obj, case, lang)
-        return _resp(case, card_text, done=True, card_id=obj.id)
+        return await _finalize_card(
+            obj,
+            case,
+            engine=engine,
+            orchestrator=orchestrator,
+            explainer=explainer,
+            q_explainer=q_explainer,
+            localizer=localizer,
+            store=store,
+            audit=audit,
+            lang=lang,
+            phone=phone,
+            tree_id=active_tree,
+        )
     if kind == "ask" and isinstance(obj, DiagnosticNode):
         case.pending_node = obj.id
         case.status = CaseStatus.DIAGNOSING
