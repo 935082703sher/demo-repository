@@ -73,6 +73,7 @@ def test_engine_loads_and_validates() -> None:
     engine = _engine()  # raises DiagnosticError on any broken reference
     assert {t.id for t in engine.trees()} == {
         "imei-royxatdan_otkazish",
+        "imei-ikkinchi_imei",
         "mnp-mnp_ariza_rad",
         "imei-blokdan_chiqarish",
         "imei-yoqotilgan_ogirlangan",
@@ -213,7 +214,7 @@ def test_diagnose_vague_problem_offers_routing_menu(corpus_client: TestClient) -
     body = _diagnose(corpus_client, message="telefonim ishlamayapti")
     assert body["requires_human"] is False
     assert body["reason"] == "clarify"
-    assert len(body["options"]) == 5  # every tree offered as a choice
+    assert len(body["options"]) == 6  # every tree offered as a choice
     assert all(o["value"].startswith(("imei-", "mnp-")) for o in body["options"])
 
 

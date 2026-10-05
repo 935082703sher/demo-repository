@@ -427,6 +427,65 @@
           ]
         }
       ]
+    },
+    {
+      "id": "imei-ikkinchi_imei",
+      "domain": "imei",
+      "case_type": "ikkinchi_imei",
+      "title": {
+        "uz": "Ikkinchi IMEI (ikki SIM) ro'yxatdan o'tmayapti",
+        "ru": "Второй IMEI (две SIM) не регистрируется"
+      },
+      "keywords": [
+        "ikkinchi imei royxat",
+        "ikkinchi imeini royxat",
+        "ikkala imei royxat",
+        "ikki imei royxat",
+        "2 imei royxat",
+        "2-imei royxat",
+        "ikkinchi imei registrat",
+        "ikkinchi imei otkaz",
+        "second imei register",
+        "register second imei",
+        "второй imei регистрац",
+        "второй imei зарегистр"
+      ],
+      "root": "declaration",
+      "nodes": [
+        {
+          "id": "declaration",
+          "question": {
+            "uz": "Ikki SIMli telefonda ikkita IMEI bo'ladi. Bojxona deklaratsiyasida ikkala IMEI ham qayd etilganmi?",
+            "ru": "В телефоне с двумя SIM два IMEI. Оба IMEI указаны в таможенной декларации?"
+          },
+          "options": [
+            {
+              "value": "both",
+              "label": {
+                "uz": "Ha, ikkala IMEI ham qayd etilgan",
+                "ru": "Да, оба IMEI указаны"
+              },
+              "card": "imei-second-online"
+            },
+            {
+              "value": "one",
+              "label": {
+                "uz": "Yo'q, faqat bitta IMEI qayd etilgan",
+                "ru": "Нет, указан только один IMEI"
+              },
+              "card": "imei-second-office"
+            },
+            {
+              "value": "unknown",
+              "label": {
+                "uz": "Bilmayman / deklaratsiyani tekshirishim kerak",
+                "ru": "Не знаю / нужно проверить декларацию"
+              },
+              "card": "imei-second-checkdecl"
+            }
+          ]
+        }
+      ]
     }
   ],
   "cards": [
@@ -1177,6 +1236,124 @@
       },
       "official_url": null,
       "contact": null,
+      "escalate_when": null,
+      "kb_refs": [
+        "faq-mnp-imei"
+      ]
+    },
+    {
+      "id": "imei-second-online",
+      "title": {
+        "uz": "Ikkinchi IMEIni onlayn ro'yxatdan o'tkazish",
+        "ru": "Регистрация второго IMEI онлайн"
+      },
+      "probable_cause": {
+        "uz": "Bojxona deklaratsiyasida ikkala IMEI ham qayd etilgan, shuning uchun ikkinchi IMEIni ham onlayn ro'yxatdan o'tkazsa bo'ladi.",
+        "ru": "Оба IMEI указаны в таможенной декларации, поэтому второй IMEI можно зарегистрировать онлайн."
+      },
+      "steps": [
+        {
+          "uz": "www.uzimei.uz saytida ikkinchi IMEIni kiriting va ro'yxatdan o'tkazing.",
+          "ru": "На сайте www.uzimei.uz введите второй IMEI и зарегистрируйте его."
+        },
+        {
+          "uz": "Ariza 10 kalendar kun ichida ko'rib chiqiladi.",
+          "ru": "Заявление рассматривается в течение 10 календарных дней."
+        },
+        {
+          "uz": "Holatni *1170# orqali yoki saytda tekshiring.",
+          "ru": "Проверьте статус через *1170# или на сайте."
+        }
+      ],
+      "documents": [
+        {
+          "uz": "15 raqamli ikkinchi IMEI kodi",
+          "ru": "15-значный код второго IMEI"
+        }
+      ],
+      "where_to_apply": {
+        "uz": "UZIMEI tizimi (www.uzimei.uz)",
+        "ru": "Система UZIMEI (www.uzimei.uz)"
+      },
+      "official_url": "https://www.uzimei.uz",
+      "contact": "1170",
+      "escalate_when": null,
+      "kb_refs": [
+        "faq-mnp-imei"
+      ]
+    },
+    {
+      "id": "imei-second-office",
+      "title": {
+        "uz": "Ikkinchi IMEIni ofisda ro'yxatdan o'tkazish",
+        "ru": "Регистрация второго IMEI в офисе"
+      },
+      "probable_cause": {
+        "uz": "Deklaratsiyada faqat bitta IMEI qayd etilgan. Onlayn faqat bitta IMEIni ro'yxatdan o'tkazadi, shuning uchun ikkinchi IMEIni ro'yxatga olish ofisida amalga oshirish kerak.",
+        "ru": "В декларации указан только один IMEI. Онлайн регистрирует только один IMEI, поэтому второй IMEI нужно зарегистрировать в офисе."
+      },
+      "steps": [
+        {
+          "uz": "IMEI ro'yxatdan o'tkazish ofisiga shaxsan boring.",
+          "ru": "Обратитесь лично в офис регистрации IMEI."
+        },
+        {
+          "uz": "Ikkinchi IMEIni ofisda ro'yxatdan o'tkazing.",
+          "ru": "Зарегистрируйте второй IMEI в офисе."
+        }
+      ],
+      "documents": [
+        {
+          "uz": "Shaxsni tasdiqlovchi hujjat",
+          "ru": "Документ, удостоверяющий личность"
+        },
+        {
+          "uz": "Bojxona deklaratsiyasi",
+          "ru": "Таможенная декларация"
+        }
+      ],
+      "where_to_apply": {
+        "uz": "IMEI ro'yxatdan o'tkazish ofisi",
+        "ru": "Офис регистрации IMEI"
+      },
+      "official_url": "https://www.uzimei.uz",
+      "contact": "1170",
+      "escalate_when": null,
+      "kb_refs": [
+        "faq-mnp-imei"
+      ]
+    },
+    {
+      "id": "imei-second-checkdecl",
+      "title": {
+        "uz": "Deklaratsiyada nechta IMEI borligini tekshirish",
+        "ru": "Проверка, сколько IMEI в декларации"
+      },
+      "probable_cause": {
+        "uz": "Ikkinchi IMEIni qayerda ro'yxatdan o'tkazish deklaratsiyada nechta IMEI qayd etilganiga bog'liq.",
+        "ru": "Где регистрировать второй IMEI, зависит от того, сколько IMEI указано в декларации."
+      },
+      "steps": [
+        {
+          "uz": "Bojxona deklaratsiyangizni oching (onlayn: imei.customs.uz/form-tpo yoki bojxonadan olingan).",
+          "ru": "Откройте таможенную декларацию (онлайн: imei.customs.uz/form-tpo или полученную на таможне)."
+        },
+        {
+          "uz": "Unda ikkala IMEI ham ko'rsatilganini tekshiring.",
+          "ru": "Проверьте, указаны ли в ней оба IMEI."
+        },
+        {
+          "uz": "Ikkalasi bo'lsa — onlayn ro'yxatdan o'tkazing; faqat bittasi bo'lsa — ofisda.",
+          "ru": "Если оба — зарегистрируйте онлайн; если один — в офисе."
+        }
+      ],
+      "documents": [],
+      "where_to_apply": {
+        "uz": "Bojxona (imei.customs.uz/form-tpo) / UZIMEI",
+        "ru": "Таможня (imei.customs.uz/form-tpo) / UZIMEI"
+      },
+      "official_url": "https://imei.customs.uz/form-tpo",
+      "contact": "1170",
       "escalate_when": null,
       "kb_refs": [
         "faq-mnp-imei"
