@@ -1106,6 +1106,43 @@ async def assistant_converse(
     return response
 
 
+class CaseStateOut(BaseModel):
+    exists: bool
+    session_id: str
+    status: str | None = None
+    domain: str | None = None
+    resolution_card_id: str | None = None
+    awaiting_result: bool = False
+    done: bool = False
+
+
+@router.get("/case/{session_id}", response_model=CaseStateOut)
+async def assistant_case(session_id: str, request: Request) -> CaseStateOut:
+    """The current case state for a session, so a reopened page continues the case.
+
+    Only the server-held state is returned (status, domain, the open card); message
+    history is never stored, so nothing personal is kept to rehydrate.
+    """
+    store = cast(CaseStore, request.app.state.case_store)
+    case = await store.get(session_id)
+    if case is None:
+        return CaseStateOut(exists=False, session_id=session_id)
+    done = case.status in (
+        CaseStatus.RESOLVED,
+        CaseStatus.CALL_1170_RECOMMENDED,
+        CaseStatus.HANDOFF,
+    )
+    return CaseStateOut(
+        exists=True,
+        session_id=session_id,
+        status=case.status.value,
+        domain=case.domain,
+        resolution_card_id=case.resolution_card_id,
+        awaiting_result=case.status in AWAITING_OUTCOME,
+        done=done,
+    )
+
+
 _FEEDBACK_REPLY = {
     "uz": "Rahmat! Fikringiz xizmatni yaxshilashga yordam beradi.",
     "uz_cyrl": "Раҳмат! Фикрингиз хизматни яхшилашга ёрдам беради.",

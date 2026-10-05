@@ -74,3 +74,31 @@ def test_unclear_requests_evidence_and_keeps_the_case() -> None:
         assert out["done"] is False
         assert out["status"] == "waiting_for_result"  # card not discarded
         assert "xato" in out["reply"].lower()  # asks for the error text
+
+
+def test_case_state_endpoint_reports_awaiting_result() -> None:
+    with TestClient(create_app()) as client:
+        _walk_to_register(client, "life-state")
+        state = client.get("/assistant/case/life-state").json()
+        assert state["exists"] is True
+        assert state["status"] == "waiting_for_result"
+        assert state["awaiting_result"] is True
+        assert state["resolution_card_id"] == "imei-register"
+
+
+def test_case_state_endpoint_unknown_session() -> None:
+    with TestClient(create_app()) as client:
+        state = client.get("/assistant/case/never-seen").json()
+        assert state["exists"] is False
+
+
+def test_session_restore_continues_the_open_case() -> None:
+    # A reopened page reuses the same session id, so the server continues the case:
+    # the awaited result resolves it without walking the tree again. One app (one
+    # store), two clients = the same session reopened in a new page.
+    app = create_app()
+    with TestClient(app) as first_page:
+        _walk_to_register(first_page, "life-restore")
+    with TestClient(app) as reopened_page:
+        done = _post(reopened_page, "outcome:success", "life-restore")
+        assert done["done"] is True and done["status"] == "resolved"
