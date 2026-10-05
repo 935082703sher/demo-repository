@@ -7,17 +7,9 @@ from typing import Any
 
 from app.services.telegram_bot import (
     TelegramBot,
-    detect_language,
     render,
     requested_language,
 )
-
-
-def test_detect_language() -> None:
-    assert detect_language("ru") == "ru"
-    assert detect_language("ru-RU") == "ru"
-    assert detect_language("uz") == "uz"
-    assert detect_language(None) == "uz"
 
 
 def test_requested_language_switches_on_plain_request() -> None:
@@ -156,6 +148,22 @@ def test_handle_update_ignores_non_text() -> None:
     bot = TelegramBot(fake.converse, fake.send)
     asyncio.run(bot.handle_update({"message": {"chat": {"id": 1}, "sticker": {}}}))
     assert fake.calls == [] and fake.sent == []
+
+
+def test_defaults_to_uzbek_regardless_of_client_locale() -> None:
+    answer: dict[str, Any] = {"reply": "...", "options": [], "card_id": None}
+    fake = _Fake([answer])
+    bot = TelegramBot(fake.converse, fake.send)
+    # A Russian-locale Telegram client still gets Uzbek by default (until it switches).
+    update = {
+        "message": {
+            "chat": {"id": 42},
+            "from": {"language_code": "ru-RU"},
+            "text": "telefonim bloklandi",
+        }
+    }
+    asyncio.run(bot.handle_update(update))
+    assert fake.calls[0][2] == "uz"
 
 
 def test_plain_request_switches_language_and_sticks() -> None:

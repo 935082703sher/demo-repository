@@ -9,7 +9,7 @@ injected, so the logic is tested without Telegram or a server.
 Telegram has no language selector like the web page, so the bot lets each chat
 choose its language - with /til (a keyboard), the /uz /uzc /ru /en /kaa commands,
 or a plain request like "qoraqalpoqcha gapir" - and remembers the choice for that
-chat. Until a choice is made it falls back to the Telegram client's own locale.
+chat. Until a choice is made it answers in Uzbek by default.
 """
 
 from __future__ import annotations
@@ -22,6 +22,8 @@ ConverseFn = Callable[[str, str, str], Awaitable[dict[str, Any]]]
 SendFn = Callable[[dict[str, Any]], Awaitable[None]]
 
 _SUPPORTED = {"uz", "uz_cyrl", "ru", "en", "kaa"}
+# New chats answer in Uzbek until the user explicitly picks another language.
+_DEFAULT_LANGUAGE = "uz"
 
 # Native language names for the picker keyboard.
 _LANG_NAMES = {
@@ -85,11 +87,6 @@ _INTENT_WORDS = (
 )
 
 
-def detect_language(code: str | None) -> str:
-    """Map a Telegram language_code to a supported language (uz default)."""
-    return "ru" if (code or "").lower().startswith("ru") else "uz"
-
-
 def requested_language(text: str) -> str | None:
     """Return the language a plain message asks to switch to, or None."""
     low = text.lower()
@@ -148,7 +145,7 @@ class TelegramBot:
     def __init__(self, converse: ConverseFn, send: SendFn) -> None:
         self._converse = converse
         self._send = send
-        # Per-chat language choice; defaults to the client locale until the user picks.
+        # Per-chat language choice; Uzbek by default until the user picks another.
         self._language_by_chat: dict[int, str] = {}
 
     async def handle_update(self, update: dict[str, Any]) -> None:
@@ -159,15 +156,14 @@ class TelegramBot:
             if data.startswith("lang:"):
                 await self._set_language(chat_id, data[len("lang:") :])
                 return
-            lang = self._language_for(chat_id, (callback.get("from") or {}).get("language_code"))
-            await self._forward(chat_id, data, lang)
+            await self._forward(chat_id, data, self._language_for(chat_id))
             return
 
         message = update.get("message")
         if message and message.get("text"):
             chat_id = int(message["chat"]["id"])
             text = str(message["text"])
-            lang = self._language_for(chat_id, (message.get("from") or {}).get("language_code"))
+            lang = self._language_for(chat_id)
             command = text.strip().lower().split()[0].split("@")[0] if text.strip() else ""
             if command in _MENU_COMMANDS:
                 await self._send(
@@ -188,11 +184,9 @@ class TelegramBot:
             await self._forward(chat_id, text, lang)
             return
 
-    def _language_for(self, chat_id: int, locale: str | None) -> str:
-        """The chat's chosen language, defaulting to the client locale on first contact."""
-        if chat_id not in self._language_by_chat:
-            self._language_by_chat[chat_id] = detect_language(locale)
-        return self._language_by_chat[chat_id]
+    def _language_for(self, chat_id: int) -> str:
+        """The chat's chosen language; new chats default to Uzbek until the user picks."""
+        return self._language_by_chat.setdefault(chat_id, _DEFAULT_LANGUAGE)
 
     async def _set_language(self, chat_id: int, code: str) -> None:
         if code not in _SUPPORTED:
