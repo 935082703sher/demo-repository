@@ -20,7 +20,7 @@ from fastapi import APIRouter, Request
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
 
-from app.domain.case_state import CaseState, CaseStatus, Fact, FactStatus, Outcome
+from app.domain.case_state import CaseState, CaseStatus, ExplanationStyle, Fact, FactStatus, Outcome
 from app.domain.diagnostics import DecisionTree, DiagnosticNode, ResolutionCard
 from app.domain.enums import Category, Language
 from app.domain.schemas import LLMRequest
@@ -42,6 +42,7 @@ from app.services.audit_log import (
 from app.services.card_explainer import CardExplainer
 from app.services.case_store import CaseStore
 from app.services.diagnostic_engine import DiagnosticEngine
+from app.services.explanation import detect_style, reexplain_leadin, style_for_confusion
 from app.services.fact_extraction import (
     IMEI_FACT_FIELDS,
     MNP_FACT_FIELDS,
@@ -686,7 +687,19 @@ async def _render_decision(
     if decision.kind == "call_1170":
         reply = _build_1170_reply(case, engine, lang, phone)
         return _resp(case, reply, done=True, requires_human=True, call_1170=True, phone=phone)
-    if decision.kind in ("offer_card", "reexplain") and decision.card is not None:
+    if decision.kind == "reexplain" and decision.card is not None:
+        # Don't repeat the same words: escalate the style and lead with a fresh line.
+        case.explanation.style = style_for_confusion(case.explanation.confusion_count)
+        leadin = reexplain_leadin(case.explanation.style, lang)
+        body = await _offer_reply(explainer, decision.card, case, lang)
+        return _resp(
+            case,
+            f"{leadin}\n\n{body}",
+            options=_result_options(lang),
+            card_id=decision.card.id,
+            done=False,
+        )
+    if decision.kind == "offer_card" and decision.card is not None:
         reply = await _offer_reply(explainer, decision.card, case, lang)
         return _resp(
             case, reply, options=_result_options(lang), card_id=decision.card.id, done=False
@@ -734,6 +747,16 @@ def _lifecycle_audit(decision: OrchestratorDecision) -> str:
     if decision.kind == "call_1170":
         return OUTCOME_HANDOFF
     return OUTCOME_QUESTION
+
+
+def _apply_style_cue(case: CaseState, message: str, lang: str) -> None:
+    """Adapt how the customer is addressed from their words (facts never change)."""
+    case.explanation.language = lang
+    style = detect_style(message)
+    if style is not None:
+        case.explanation.style = style
+        if style is ExplanationStyle.EXAMPLE:
+            case.explanation.needs_examples = True
 
 
 async def _finalize_card(
@@ -810,6 +833,9 @@ async def _converse_turn(payload: ConverseCaseRequest, request: Request) -> Conv
     # or the logs. Only labelled/structured identifiers are redacted, so tariffs
     # and short official numbers pass through untouched.
     message = redact_likely_pii(payload.message)
+    # Adapt the explanation style to the customer's words before anything else, so a
+    # "explain simply" or "give an example" takes effect on this very turn.
+    _apply_style_cue(case, message, lang)
 
     # A previously closed case starts fresh so old facts don't auto-complete a new one.
     if case.status in (CaseStatus.RESOLVED, CaseStatus.HANDOFF, CaseStatus.CALL_1170_RECOMMENDED):

@@ -50,8 +50,10 @@ _LLM_INSTRUCTIONS = (
     "stops or delays the process - so they understand why this is happening. The "
     "fix (the action steps) is shown separately, so do not list the steps here. "
     "Rules: use ONLY the given reason and facts; do NOT add or change any step, fee, "
-    "deadline, phone number, link or legal detail; invent nothing. Respond as JSON: "
-    '{"explanation": "..."}.'
+    "deadline, phone number, link or legal detail; invent nothing. Match the "
+    "requested 'style' (concise / simple / step_by_step / example / detailed / "
+    "technical / visual / reassuring): it changes only HOW you say it, never the "
+    'facts. Respond as JSON: {"explanation": "..."}.'
 )
 
 _EXPLAIN_JSON_SCHEMA: dict[str, Any] = {
@@ -82,6 +84,7 @@ class LLMCardExplainer:
         return json.dumps(
             {
                 "language": _LANGUAGE_NAME.get(lang, "Uzbek"),
+                "style": case.explanation.style.value,
                 "approved_explanation": cause,
                 "known_facts": case.known_facts(),
             },
