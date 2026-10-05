@@ -173,8 +173,14 @@ def test_converse_dubai_skips_known_facts_then_resolves() -> None:
             "/assistant/converse",
             json={"message": "Deklaratsiya qilmaganman", "session_id": "cv1", "language": "uz"},
         ).json()
-        assert turn2["done"] is True
-        assert turn2["card_id"] == "imei-customs"
+        # imei-customs is a lifecycle card: it is offered (with its steps) and its
+        # result awaited, then confirmed as resolved.
+        assert turn2["done"] is False and turn2["card_id"] == "imei-customs"
+        done = client.post(
+            "/assistant/converse",
+            json={"message": "outcome:success", "session_id": "cv1", "language": "uz"},
+        ).json()
+        assert done["done"] is True and done["status"] == "resolved"
 
 
 def test_converse_greets_small_talk_without_a_menu() -> None:
@@ -269,11 +275,16 @@ def test_converse_new_problem_after_resolve_does_not_reuse_facts() -> None:
             "/assistant/converse",
             json={"message": _DUBAI_STORY, "session_id": "cv-reuse", "language": "uz"},
         )
-        done = client.post(
+        offer = client.post(
             "/assistant/converse",
             json={"message": "Deklaratsiya qilmaganman", "session_id": "cv-reuse"},
         ).json()
-        assert done["done"] is True and done["card_id"] == "imei-customs"
+        assert offer["card_id"] == "imei-customs"  # offered (lifecycle)
+        done = client.post(
+            "/assistant/converse",
+            json={"message": "outcome:success", "session_id": "cv-reuse"},
+        ).json()
+        assert done["done"] is True and done["status"] == "resolved"
 
         # A brand-new problem must start fresh, not auto-resolve on the old facts.
         fresh = client.post(
@@ -302,7 +313,13 @@ def test_converse_mnp_rejection_reason_resolves_without_a_menu() -> None:
             "/assistant/converse",
             json={"message": "MNP arizam qarzdorlik sababli rad etildi", "session_id": "cv-rej"},
         ).json()
-        assert body["done"] is True and body["card_id"] == "mnp-debt"  # understood, not asked
+        # Understood (not asked), then offered as a lifecycle card and confirmed.
+        assert body["card_id"] == "mnp-debt"
+        done = client.post(
+            "/assistant/converse",
+            json={"message": "outcome:success", "session_id": "cv-rej"},
+        ).json()
+        assert done["done"] is True and done["status"] == "resolved"
 
 
 def test_converse_mnp_topic_selects_tree_when_keywords_are_ambiguous() -> None:
@@ -324,11 +341,16 @@ def test_converse_mnp_without_reason_asks_then_resolves_on_answer() -> None:
         assert ask["done"] is False
         assert {o["value"] for o in ask["options"]} >= {"data", "debt", "days30", "blocked"}
 
-        done = client.post(
+        offer = client.post(
             "/assistant/converse",
             json={"message": "debt", "session_id": "cv-mnp-ask"},
         ).json()
-        assert done["done"] is True and done["card_id"] == "mnp-debt"
+        assert offer["card_id"] == "mnp-debt"  # offered (lifecycle)
+        done = client.post(
+            "/assistant/converse",
+            json={"message": "outcome:success", "session_id": "cv-mnp-ask"},
+        ).json()
+        assert done["done"] is True and done["status"] == "resolved"
 
 
 def test_converse_informational_question_takes_the_rag_lane() -> None:
@@ -359,14 +381,14 @@ def test_converse_resolution_keeps_approved_steps_and_link() -> None:
             "/assistant/converse",
             json={"message": _DUBAI_STORY, "session_id": "cv-ground", "language": "uz"},
         )
-        done = client.post(
+        offer = client.post(
             "/assistant/converse",
             json={"message": "Deklaratsiya qilmaganman", "session_id": "cv-ground"},
         ).json()
-        assert done["done"] is True and done["card_id"] == "imei-customs"
-        # The explained cause never drops the exact approved steps and official link.
-        assert "uzimei" in done["reply"].lower()
-        assert "1." in done["reply"]  # the numbered action steps are present
+        assert offer["card_id"] == "imei-customs"
+        # The offered card still carries the exact approved steps and official link.
+        assert "uzimei" in offer["reply"].lower()
+        assert "1." in offer["reply"]  # the numbered action steps are present
 
 
 def test_converse_redacts_pii_before_use() -> None:
@@ -456,9 +478,11 @@ def test_converse_stream_emits_deltas_then_done() -> None:
         assert deltas  # the reply was streamed in chunks
         assert len(done) == 1
         # The final event carries the validated metadata and no separate reply field.
-        assert done[0]["done"] is True and done[0]["card_id"] == "mnp-debt"
+        # mnp-debt is a lifecycle card, so it is offered (done is False) and its result
+        # awaited, with the card id carried through.
+        assert done[0]["done"] is False and done[0]["card_id"] == "mnp-debt"
         assert "reply" not in done[0]
-        # Reassembling the deltas reconstructs the full card reply.
+        # Reassembling the deltas reconstructs the offered card's reply.
         text = "".join(d["text"] for d in deltas)
         assert "qarz" in text.lower()
 

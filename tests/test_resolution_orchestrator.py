@@ -146,6 +146,17 @@ def test_exhaustion_recommends_1170() -> None:
     assert case.call_1170_reason == "all_safe_paths_exhausted"
 
 
+def test_on_failure_status_call_1170_skips_auto_search() -> None:
+    other = _card("c_b", "b")  # an untried sibling exists in the tree
+    card = _card("c_a", "a", on_failure=OutcomeBranch(status="call_1170"))
+    orch = ResolutionOrchestrator(_engine([card, other]))
+    case = _case()
+    orch.offer_card(case, card)
+    d = orch.advance(case, _out(Outcome.FAILURE))
+    assert d.kind == "call_1170" and case.status is CaseStatus.CALL_1170_RECOMMENDED
+    assert not case.card_tried("c_b")  # the unrelated sibling is never offered
+
+
 def test_failure_records_new_facts_in_attempt() -> None:
     card = _card("c_a", "a")
     orch = ResolutionOrchestrator(_engine([card]))

@@ -12,12 +12,12 @@
 {"id": "imei-registration", "turns": [{"msg": "IMEI ro'yxatdan o'tmayapti", "expect": "question", "reply_has": ["qayerdan"]}]}
 {"id": "imei-lost", "turns": [{"msg": "telefonimni o'g'irlab ketishdi", "expect": "question", "reply_not": ["qayerdan"]}]}
 {"id": "imei-dubai-skips-origin", "turns": [{"msg": "Dubaydan telefon olib keldim, ikkinchi sim ishlamayapti", "expect": "question", "reply_has": ["me'yor"], "reply_not": ["qayerdan"]}]}
-{"id": "imei-dubai-resolves", "turns": [{"msg": "Dubaydan telefon olib keldim, ikkinchi sim ishlamayapti", "expect": "question"}, {"msg": "deklaratsiya qilmaganman", "expect": "card:imei-customs"}]}
+{"id": "imei-dubai-resolves", "turns": [{"msg": "Dubaydan telefon olib keldim, ikkinchi sim ishlamayapti", "expect": "question"}, {"msg": "deklaratsiya qilmaganman", "expect": "question"}, {"msg": "outcome:success", "expect": "card:imei-customs"}]}
 {"id": "imei-reroute-midtree", "turns": [{"msg": "IMEI ro'yxatdan o'tmayapti", "expect": "question", "reply_has": ["qayerdan"]}, {"msg": "aslida telefonim bloklandi", "expect": "question", "reply_has": ["blok"], "reply_not": ["qayerdan"]}]}
-{"id": "mnp-reject-debt", "turns": [{"msg": "MNP arizam qarzdorlik sababli rad etildi", "expect": "card:mnp-debt"}]}
-{"id": "mnp-reject-data", "turns": [{"msg": "arizam rad etildi, ma'lumotlarim mos kelmadi", "expect": "card:mnp-data"}]}
+{"id": "mnp-reject-debt", "turns": [{"msg": "MNP arizam qarzdorlik sababli rad etildi", "expect": "question"}, {"msg": "outcome:success", "expect": "card:mnp-debt"}]}
+{"id": "mnp-reject-data", "turns": [{"msg": "arizam rad etildi, ma'lumotlarim mos kelmadi", "expect": "question"}, {"msg": "outcome:success", "expect": "card:mnp-data"}]}
 {"id": "mnp-reject-no-reason", "turns": [{"msg": "MNP arizam rad etildi", "expect": "question", "reply_has": ["sabab"]}]}
-{"id": "mnp-reject-then-answer", "turns": [{"msg": "MNP arizam rad etildi", "expect": "question"}, {"msg": "qarzdorlik bor", "expect": "card:mnp-debt"}]}
+{"id": "mnp-reject-then-answer", "turns": [{"msg": "MNP arizam rad etildi", "expect": "question"}, {"msg": "qarzdorlik bor", "expect": "question"}, {"msg": "outcome:success", "expect": "card:mnp-debt"}]}
 {"id": "mnp-how", "turns": [{"msg": "MNP orqali qanday ko'chiraman", "expect": "card:mnp-how"}]}
 {"id": "mnp-docs", "turns": [{"msg": "MNP uchun qanday hujjatlar kerak?", "expect": "card:mnp-docs"}]}
 {"id": "mnp-balance", "turns": [{"msg": "balansdagi pulim ko'chadimi?", "expect": "card:mnp-balance"}]}

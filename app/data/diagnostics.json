@@ -530,8 +530,16 @@
           "ru": "Вы оплатили и перезагрузили устройство? IMEI зарегистрировался?",
           "en": "Did you pay and restart the device? Is the IMEI registered now?"
         },
-        "positive_signals": ["royxatdan otdi", "registratsiya boldi", "otkazildi"],
-        "negative_signals": ["hali ham", "otmadi", "otmayapti"]
+        "positive_signals": [
+          "royxatdan otdi",
+          "registratsiya boldi",
+          "otkazildi"
+        ],
+        "negative_signals": [
+          "hali ham",
+          "otmadi",
+          "otmayapti"
+        ]
       },
       "on_failure": {
         "next_card": "imei-clone"
@@ -587,7 +595,38 @@
         "faq-mnp-imei",
         "VMQ 463-son",
         "VMQ 778-son"
-      ]
+      ],
+      "cause_key": "over_norm_customs",
+      "success_check": {
+        "question": {
+          "uz": "Bojxona orderini olib, ro'yxatdan o'tkaza oldingizmi?",
+          "ru": "Удалось оформить ордер и зарегистрировать?"
+        },
+        "positive_signals": [
+          "otdi",
+          "boldi",
+          "ishladi",
+          "hal boldi",
+          "kochdi",
+          "chiqdi",
+          "tuzaldi",
+          "otkazildi"
+        ],
+        "negative_signals": [
+          "otmadi",
+          "bolmadi",
+          "ishlamadi",
+          "hali ham",
+          "xato",
+          "chiqmadi"
+        ]
+      },
+      "on_failure": {
+        "status": "call_1170"
+      },
+      "on_unclear": {
+        "request_evidence": true
+      }
     },
     {
       "id": "imei-clone",
@@ -627,7 +666,38 @@
       "kb_refs": [
         "VMQ 778-son",
         "faq-mnp-imei"
-      ]
+      ],
+      "cause_key": "clone_detected",
+      "success_check": {
+        "question": {
+          "uz": "Holat o'zgardimi, qurilma ro'yxatdan o'tdimi?",
+          "ru": "Статус изменился, устройство зарегистрировано?"
+        },
+        "positive_signals": [
+          "otdi",
+          "boldi",
+          "ishladi",
+          "hal boldi",
+          "kochdi",
+          "chiqdi",
+          "tuzaldi",
+          "otkazildi"
+        ],
+        "negative_signals": [
+          "otmadi",
+          "bolmadi",
+          "ishlamadi",
+          "hali ham",
+          "xato",
+          "chiqmadi"
+        ]
+      },
+      "on_failure": {
+        "status": "call_1170"
+      },
+      "on_unclear": {
+        "request_evidence": true
+      }
     },
     {
       "id": "imei-retailer",
@@ -672,7 +742,38 @@
       "kb_refs": [
         "VMQ 778-son",
         "VMQ 828-son, 31.12.2020, 61-band"
-      ]
+      ],
+      "cause_key": "retailer_not_registered",
+      "success_check": {
+        "question": {
+          "uz": "Sotuvchi ro'yxatdan o'tkazdimi yoki holat o'zgardimi?",
+          "ru": "Продавец зарегистрировал или статус изменился?"
+        },
+        "positive_signals": [
+          "otdi",
+          "boldi",
+          "ishladi",
+          "hal boldi",
+          "kochdi",
+          "chiqdi",
+          "tuzaldi",
+          "otkazildi"
+        ],
+        "negative_signals": [
+          "otmadi",
+          "bolmadi",
+          "ishlamadi",
+          "hali ham",
+          "xato",
+          "chiqmadi"
+        ]
+      },
+      "on_failure": {
+        "next_card": "imei-register"
+      },
+      "on_unclear": {
+        "request_evidence": true
+      }
     },
     {
       "id": "imei-post",
@@ -716,7 +817,38 @@
       },
       "kb_refs": [
         "faq-mnp-imei"
-      ]
+      ],
+      "cause_key": "postal_device",
+      "success_check": {
+        "question": {
+          "uz": "Qurilma ro'yxatdan o'tdimi?",
+          "ru": "Устройство зарегистрировалось?"
+        },
+        "positive_signals": [
+          "otdi",
+          "boldi",
+          "ishladi",
+          "hal boldi",
+          "kochdi",
+          "chiqdi",
+          "tuzaldi",
+          "otkazildi"
+        ],
+        "negative_signals": [
+          "otmadi",
+          "bolmadi",
+          "ishlamadi",
+          "hali ham",
+          "xato",
+          "chiqmadi"
+        ]
+      },
+      "on_failure": {
+        "status": "call_1170"
+      },
+      "on_unclear": {
+        "request_evidence": true
+      }
     },
     {
       "id": "mnp-data",
@@ -760,7 +892,38 @@
       },
       "kb_refs": [
         "faq-mnp-imei"
-      ]
+      ],
+      "cause_key": "data_mismatch",
+      "success_check": {
+        "question": {
+          "uz": "Ma'lumotlarni to'g'irlab qayta topshirdingizmi, ariza o'tdimi?",
+          "ru": "Исправили данные и подали снова, прошло?"
+        },
+        "positive_signals": [
+          "otdi",
+          "boldi",
+          "ishladi",
+          "hal boldi",
+          "kochdi",
+          "chiqdi",
+          "tuzaldi",
+          "otkazildi"
+        ],
+        "negative_signals": [
+          "otmadi",
+          "bolmadi",
+          "ishlamadi",
+          "hali ham",
+          "xato",
+          "chiqmadi"
+        ]
+      },
+      "on_failure": {
+        "status": "call_1170"
+      },
+      "on_unclear": {
+        "request_evidence": true
+      }
     },
     {
       "id": "mnp-debt",
@@ -799,7 +962,38 @@
       },
       "kb_refs": [
         "faq-mnp-imei"
-      ]
+      ],
+      "cause_key": "debt",
+      "success_check": {
+        "question": {
+          "uz": "Qarzni to'lab, raqamni ko'chira oldingizmi?",
+          "ru": "Погасили долг и перенесли номер?"
+        },
+        "positive_signals": [
+          "otdi",
+          "boldi",
+          "ishladi",
+          "hal boldi",
+          "kochdi",
+          "chiqdi",
+          "tuzaldi",
+          "otkazildi"
+        ],
+        "negative_signals": [
+          "otmadi",
+          "bolmadi",
+          "ishlamadi",
+          "hali ham",
+          "xato",
+          "chiqmadi"
+        ]
+      },
+      "on_failure": {
+        "status": "call_1170"
+      },
+      "on_unclear": {
+        "request_evidence": true
+      }
     },
     {
       "id": "mnp-30days",
@@ -878,7 +1072,38 @@
       },
       "kb_refs": [
         "faq-mnp-imei"
-      ]
+      ],
+      "cause_key": "number_blocked",
+      "success_check": {
+        "question": {
+          "uz": "Raqam blokdan chiqdi, ko'chira oldingizmi?",
+          "ru": "Номер разблокирован, перенос удался?"
+        },
+        "positive_signals": [
+          "otdi",
+          "boldi",
+          "ishladi",
+          "hal boldi",
+          "kochdi",
+          "chiqdi",
+          "tuzaldi",
+          "otkazildi"
+        ],
+        "negative_signals": [
+          "otmadi",
+          "bolmadi",
+          "ishlamadi",
+          "hali ham",
+          "xato",
+          "chiqmadi"
+        ]
+      },
+      "on_failure": {
+        "status": "call_1170"
+      },
+      "on_unclear": {
+        "request_evidence": true
+      }
     },
     {
       "id": "mnp-checkreason",
@@ -957,7 +1182,38 @@
       "kb_refs": [
         "faq-mnp-imei",
         "VMQ 778-son"
-      ]
+      ],
+      "cause_key": "device_blocked",
+      "success_check": {
+        "question": {
+          "uz": "Blok olindi, qurilma ishladimi?",
+          "ru": "Блокировка снята, устройство заработало?"
+        },
+        "positive_signals": [
+          "otdi",
+          "boldi",
+          "ishladi",
+          "hal boldi",
+          "kochdi",
+          "chiqdi",
+          "tuzaldi",
+          "otkazildi"
+        ],
+        "negative_signals": [
+          "otmadi",
+          "bolmadi",
+          "ishlamadi",
+          "hali ham",
+          "xato",
+          "chiqmadi"
+        ]
+      },
+      "on_failure": {
+        "status": "call_1170"
+      },
+      "on_unclear": {
+        "request_evidence": true
+      }
     },
     {
       "id": "imei-lost-blocked",
@@ -997,7 +1253,38 @@
       "kb_refs": [
         "VMQ 778-son",
         "faq-mnp-imei"
-      ]
+      ],
+      "cause_key": "blocked_as_lost",
+      "success_check": {
+        "question": {
+          "uz": "Blok olindimi?",
+          "ru": "Блокировка снята?"
+        },
+        "positive_signals": [
+          "otdi",
+          "boldi",
+          "ishladi",
+          "hal boldi",
+          "kochdi",
+          "chiqdi",
+          "tuzaldi",
+          "otkazildi"
+        ],
+        "negative_signals": [
+          "otmadi",
+          "bolmadi",
+          "ishlamadi",
+          "hali ham",
+          "xato",
+          "chiqmadi"
+        ]
+      },
+      "on_failure": {
+        "status": "call_1170"
+      },
+      "on_unclear": {
+        "request_evidence": true
+      }
     },
     {
       "id": "imei-check-status",
@@ -1077,7 +1364,38 @@
       },
       "kb_refs": [
         "faq-mnp-imei"
-      ]
+      ],
+      "cause_key": "report_lost",
+      "success_check": {
+        "question": {
+          "uz": "Arizani yubora oldingizmi?",
+          "ru": "Удалось отправить заявление?"
+        },
+        "positive_signals": [
+          "otdi",
+          "boldi",
+          "ishladi",
+          "hal boldi",
+          "kochdi",
+          "chiqdi",
+          "tuzaldi",
+          "otkazildi"
+        ],
+        "negative_signals": [
+          "otmadi",
+          "bolmadi",
+          "ishlamadi",
+          "hali ham",
+          "xato",
+          "chiqmadi"
+        ]
+      },
+      "on_failure": {
+        "status": "call_1170"
+      },
+      "on_unclear": {
+        "request_evidence": true
+      }
     },
     {
       "id": "imei-find-imei",

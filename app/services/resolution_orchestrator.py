@@ -114,6 +114,10 @@ class ResolutionOrchestrator:
         # FAILURE: rule out this cause, then take the next safe path.
         case.exclude_cause(case.current_cause or card.cause_key or card.id)
         branch = card.on_failure
+        if branch is not None and branch.status == "call_1170":
+            # The card declares no safe alternative: recommend 1170 without searching
+            # the tree for an unrelated sibling card.
+            return self.recommend_1170(case, CALL_1170_EXHAUSTED)
         nxt = self._branch_card(branch.next_card if branch else None, case)
         if nxt is not None:
             return self.offer_card(case, nxt, status=CaseStatus.TRYING_ALTERNATIVE)
