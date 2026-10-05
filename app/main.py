@@ -75,6 +75,7 @@ from app.services.question_explainer import (
 )
 from app.services.resolution_orchestrator import ResolutionOrchestrator
 from app.services.scope import ScopeService
+from app.services.tree_coverage import TreeCoverageEvaluator
 from app.services.turn_analysis import (
     LLMTurnAnalyzer,
     RuleTurnAnalyzer,
@@ -247,6 +248,8 @@ def create_app(
     # 1170; the outcome analyzer classifies the customer's result (rules by default,
     # LLM when configured, always with the deterministic analyzer as the safety net).
     app.state.resolution_orchestrator = ResolutionOrchestrator(app.state.diagnostic_engine)
+    # Coverage gate: evaluates, for every tree, whether it directly covers a message.
+    app.state.tree_coverage = TreeCoverageEvaluator(app.state.diagnostic_engine)
     rule_outcome = RuleOutcomeAnalyzer()
     outcome_analyzer: OutcomeAnalyzer = rule_outcome
     if (
