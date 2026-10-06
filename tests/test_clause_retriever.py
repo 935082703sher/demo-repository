@@ -90,3 +90,36 @@ def test_retrieval_expands_along_the_rule_graph() -> None:
 
 def test_offtopic_message_retrieves_nothing() -> None:
     assert _retriever().retrieve("bugun ob-havo qanday") == []
+
+
+# --- semantic (embedding) retrieval: meaning, not shared words ---
+
+
+def test_semantic_vector_recalls_a_clause_with_no_shared_word() -> None:
+    # Give clause 44 a vector and query with an aligned vector but a message that
+    # shares NO keyword with clause 44 - it is still recalled by meaning.
+    bundle = ClauseBundle.from_json(_CLAUSES)
+    vec = [1.0, 0.0, 0.0]
+    vectors = {"44": vec, "7": [0.0, 1.0, 0.0]}
+    r = ClauseRetriever(bundle, clause_vectors=vectors)
+    assert r.has_vectors
+    hits = r.retrieve("mutlaqo aloqasiz ibora xyz", query_vector=[0.99, 0.01, 0.0], expand=False)
+    assert "44" in {h.clause.clause for h in hits}  # recalled semantically
+    assert "7" not in {h.clause.clause for h in hits}  # orthogonal clause not recalled
+
+
+def test_without_vectors_retrieval_is_purely_lexical() -> None:
+    # No vectors: a query_vector is simply ignored, behaviour is the lexical baseline.
+    r = _retriever()
+    assert r.has_vectors is False
+    assert "44" in _clauses(r, "ikkinchi IMEI uchun to'lov")  # lexical still works
+    assert r.retrieve("bugun ob-havo qanday", query_vector=[1.0, 0.0]) == []
+
+
+def test_committed_clause_embeddings_cover_every_clause() -> None:
+    import json
+
+    vectors = json.loads(Path("app/data/vmq778_embeddings.json").read_text(encoding="utf-8"))
+    clauses = {c.clause for c in ClauseBundle.from_json(_CLAUSES).rules}
+    assert set(vectors) == clauses  # every clause has a precomputed vector
+    assert all(len(v) == 256 for v in vectors.values())

@@ -811,7 +811,8 @@ async def _maybe_policy_answer(
     documents) plus the retrieved clauses form the legal basis; the composer writes the
     natural answer and a legal-grounding check confirms every cited clause is from it.
     """
-    reasoning = engine.reason(case, message)
+    query_vector = await engine.embed(message)  # semantic recall when configured, else None
+    reasoning = engine.reason(case, message, query_vector=query_vector)
     trigger = set(reasoning.case_facts.signals) - {"user_is_resident"}
     specific = [
         rule

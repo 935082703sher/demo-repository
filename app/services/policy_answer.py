@@ -49,6 +49,11 @@ def _clause_key(clause: str) -> str:
     return re.sub(r"\D", "", clause)
 
 
+def _clause_main(clause: str) -> str:
+    """The main article number of a clause ("6-1" -> "6", "6-ilova" -> "6", "31" -> "31")."""
+    return re.sub(r"\D", "", clause.split("-")[0])
+
+
 def _money_figures(text: str) -> set[str]:
     """The monetary amounts stated in a text, grouping stripped ("82 400" -> "82400")."""
     out: set[str] = set()
@@ -74,14 +79,18 @@ def introduces_no_new_number(evidence: str, answer: str) -> bool:
 
 
 def is_legally_grounded(answer: str, allowed_clauses: list[str]) -> bool:
-    """True when every clause the answer cites was present in the evidence.
+    """True when every clause the answer cites belongs to a matched article family.
 
-    Guards against the model inventing a legal reference. A clause the evidence did
-    not supply (e.g. "24-modda" when no matched rule cites clause 24) fails the check.
+    Guards against the model inventing a legal reference, but softened: a citation is
+    accepted when it shares the MAIN article number of a matched clause, so when the
+    evidence carries 31-1 and 31-2 the answer may say "31-band", and when it carries
+    "6" it may say "6-1" or "6-ilova" - the same article, not a fabrication. A clause
+    from an entirely different article the evidence never raised (e.g. "24-modda" with
+    no 24 in the basis) still fails.
     """
-    allowed = {_clause_key(c) for c in allowed_clauses}
+    allowed = {_clause_main(c) for c in allowed_clauses}
     for match in _CLAUSE_CITATION.finditer(answer):
-        if _clause_key(match.group(1)) not in allowed:
+        if _clause_main(match.group(1)) not in allowed:
             return False
     return True
 

@@ -19,7 +19,6 @@ from app.api.router import api_router
 from app.core.config import Settings, get_settings
 from app.core.errors import AppError
 from app.core.logging import configure_logging
-from app.domain.legal_clauses import ClauseBundle
 from app.domain.schemas import ErrorBody, ErrorResponse
 from app.domain.tariffs import TariffConfig
 from app.providers.base import LLMProvider
@@ -52,6 +51,7 @@ from app.services.clause_retriever import ClauseRetriever
 from app.services.complaint_drafts import ComplaintDraftService
 from app.services.complaint_workflow_adapter import GovernedComplaintWorkflowAdapter
 from app.services.diagnostic_engine import DiagnosticEngine
+from app.services.embeddings import EmbedText, build_openai_embed
 from app.services.fact_extraction import (
     FactExtractor,
     LLMFactExtractor,
@@ -181,11 +181,23 @@ def create_app(
         Path(__file__).parent / "data" / "policy_rules.json"
     )
     app.state.tariffs = TariffConfig.from_json(Path(__file__).parent / "data" / "tariffs.json")
-    app.state.clause_retriever = ClauseRetriever(
-        ClauseBundle.from_json(Path(__file__).parent / "data" / "vmq778_clauses.json")
+    app.state.clause_retriever = ClauseRetriever.from_json(
+        Path(__file__).parent / "data" / "vmq778_clauses.json",
+        Path(__file__).parent / "data" / "vmq778_embeddings.json",
     )
+    embed_query: EmbedText | None = None
+    if (
+        app_settings.llm_provider == "openai"
+        and app_settings.llm_api_key is not None
+        and app_settings.llm_api_key.get_secret_value()
+        and app.state.clause_retriever.has_vectors
+    ):
+        embed_query = build_openai_embed(
+            api_key=app_settings.llm_api_key.get_secret_value(),
+            timeout_seconds=app_settings.llm_timeout_seconds,
+        )
     app.state.legal_reasoning = LegalReasoningEngine(
-        app.state.clause_retriever, app.state.policy_matcher, app.state.tariffs
+        app.state.clause_retriever, app.state.policy_matcher, app.state.tariffs, embed_query
     )
     app.state.case_store = InMemoryCaseStore()
     rule_extractor = RuleBasedFactExtractor()

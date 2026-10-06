@@ -27,6 +27,7 @@ from app.domain.legal_clauses import Clause
 from app.domain.policy import PolicyRule
 from app.domain.tariffs import ResolvedPayment, TariffConfig
 from app.services.clause_retriever import ClauseHit, ClauseRetriever
+from app.services.embeddings import EmbedText
 from app.services.policy_matcher import PolicyMatcher, derive_signals
 
 # Clause subjects that are definitions/scope/operator-internal: real evidence, but
@@ -69,16 +70,30 @@ class LegalReasoningEngine:
     """Assemble the grounded SolutionPlan evidence for a case (no fixed scenarios)."""
 
     def __init__(
-        self, retriever: ClauseRetriever, matcher: PolicyMatcher, tariffs: TariffConfig
+        self,
+        retriever: ClauseRetriever,
+        matcher: PolicyMatcher,
+        tariffs: TariffConfig,
+        embed_query: EmbedText | None = None,
     ) -> None:
         self._retriever = retriever
         self._matcher = matcher
         self._tariffs = tariffs
+        self._embed_query = embed_query
         self._by_clause = {clause.clause: clause for clause in retriever.clauses}
 
     def clause(self, label: str) -> Clause | None:
         """The full clause record for a clause label, if present."""
         return self._by_clause.get(label)
+
+    async def embed(self, message: str) -> list[float] | None:
+        """Embed the query for semantic retrieval, or None when unavailable/failed."""
+        if self._embed_query is None or not self._retriever.has_vectors:
+            return None
+        try:
+            return await self._embed_query(message)
+        except Exception:  # pragma: no cover - network failure -> lexical-only
+            return None
 
     def case_facts(self, case: CaseState, message: str) -> CaseFacts:
         return CaseFacts(
@@ -87,13 +102,21 @@ class LegalReasoningEngine:
             signals=sorted(derive_signals(case, message)),
         )
 
-    def reason(self, case: CaseState, message: str, *, when: date | None = None) -> Reasoning:
+    def reason(
+        self,
+        case: CaseState,
+        message: str,
+        *,
+        when: date | None = None,
+        query_vector: list[float] | None = None,
+    ) -> Reasoning:
         on = when or date.today()
         facts = self.case_facts(case, message)
         # Retrieve over the full law using the message and the known facts, so the
-        # situation (not just the exact words) drives which clauses surface.
+        # situation (not just the exact words) drives which clauses surface. A query
+        # vector, when supplied, adds semantic recall on top of the lexical match.
         query = " ".join([message, *facts.known_facts.values()])
-        candidates = self._retriever.retrieve(query)
+        candidates = self._retriever.retrieve(query, query_vector=query_vector)
 
         # Operative clauses lead; definitions/scope/operator clauses are background.
         operative = [h for h in candidates if h.clause.rule_type not in _BACKGROUND_TYPES]
