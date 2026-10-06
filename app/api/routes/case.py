@@ -44,6 +44,7 @@ from app.services.audit_log import (
     AuditEvent,
     AuditLog,
 )
+from app.services.card_answer import CardAnswerComposer
 from app.services.card_explainer import CardExplainer
 from app.services.case_store import CaseStore
 from app.services.diagnostic_engine import DiagnosticEngine
@@ -437,13 +438,10 @@ _DOCS_HEADER = {
 }
 
 
-async def _card_reply(
-    explainer: CardExplainer, card: ResolutionCard, case: CaseState, lang: str
-) -> str:
-    """Compose the full resolution: an LLM-explained cause, then the exact approved
-    steps, required documents, where to apply, link and contact (never touched by
-    the LLM). Surfacing every approved field answers the likely follow-ups up front."""
-    cause = await explainer.explain(card.probable_cause.get(lang), case, lang)
+def _card_body(card: ResolutionCard, cause: str, lang: str) -> str:
+    """The deterministic approved resolution: cause, then the exact steps, documents,
+    place to apply, link and contact. This is the ground truth the composer must
+    preserve - and the fallback whenever the LLM composition is unavailable."""
     lines = [cause, "", _STEPS_HEADER.get(lang, _STEPS_HEADER["uz"])]
     lines += [f"{index}. {step.get(lang)}" for index, step in enumerate(card.steps, 1)]
     if card.documents:
@@ -458,6 +456,26 @@ async def _card_reply(
     if card.contact:
         lines.append("📞 " + card.contact)
     return "\n".join(lines)
+
+
+async def _card_reply(
+    explainer: CardExplainer,
+    composer: CardAnswerComposer,
+    card: ResolutionCard,
+    case: CaseState,
+    lang: str,
+) -> str:
+    """Compose the final answer from the approved card used as evidence.
+
+    The deterministic body (LLM-explained cause plus the exact approved steps,
+    documents, place, link and contact) is built first; the composer then turns it
+    into one natural, situation-aware message, but only when every fact is preserved
+    - otherwise that exact body is returned. So the wording is never a fixed form,
+    yet the engine and knowledge base still own every fee, deadline, link and number.
+    """
+    cause = await explainer.explain(card.probable_cause.get(lang), case, lang)
+    body = _card_body(card, cause, lang)
+    return await composer.compose(card, case, lang, body)
 
 
 # --- Resolution lifecycle rendering (BLOK: offer -> result -> alternative / 1170) ---
@@ -615,10 +633,14 @@ def _result_from_value(value: str) -> Outcome | None:
 
 
 async def _offer_reply(
-    explainer: CardExplainer, card: ResolutionCard, case: CaseState, lang: str
+    explainer: CardExplainer,
+    composer: CardAnswerComposer,
+    card: ResolutionCard,
+    case: CaseState,
+    lang: str,
 ) -> str:
     """The card's full resolution text followed by its success-check question."""
-    body = await _card_reply(explainer, card, case, lang)
+    body = await _card_reply(explainer, composer, card, case, lang)
     check = card.success_check
     question = (
         check.question.get(lang) if check and check.question else None
@@ -742,6 +764,7 @@ async def _render_decision(
     *,
     engine: DiagnosticEngine,
     explainer: CardExplainer,
+    composer: CardAnswerComposer,
     q_explainer: QuestionExplainer,
     localizer: Localizer,
     lang: str,
@@ -760,7 +783,7 @@ async def _render_decision(
         # Don't repeat the same words: escalate the style and lead with a fresh line.
         case.explanation.style = style_for_confusion(case.explanation.confusion_count)
         leadin = reexplain_leadin(case.explanation.style, lang)
-        body = await _offer_reply(explainer, decision.card, case, lang)
+        body = await _offer_reply(explainer, composer, decision.card, case, lang)
         return _resp(
             case,
             f"{leadin}\n\n{body}",
@@ -769,7 +792,7 @@ async def _render_decision(
             done=False,
         )
     if decision.kind == "offer_card" and decision.card is not None:
-        reply = await _offer_reply(explainer, decision.card, case, lang)
+        reply = await _offer_reply(explainer, composer, decision.card, case, lang)
         return _resp(
             case, reply, options=_result_options(lang), card_id=decision.card.id, done=False
         )
@@ -843,6 +866,7 @@ async def _finalize_card(
     engine: DiagnosticEngine,
     orchestrator: ResolutionOrchestrator,
     explainer: CardExplainer,
+    composer: CardAnswerComposer,
     q_explainer: QuestionExplainer,
     localizer: Localizer,
     store: CaseStore,
@@ -867,6 +891,7 @@ async def _finalize_card(
             case,
             engine=engine,
             explainer=explainer,
+            composer=composer,
             q_explainer=q_explainer,
             localizer=localizer,
             lang=lang,
@@ -878,7 +903,7 @@ async def _finalize_card(
     case.status = CaseStatus.RESOLVED
     await store.save(case)
     await _audit(audit, case, OUTCOME_RESOLVED, ROUTE_CASE, card_id=card.id, tree_id=tree_id)
-    card_text = await _card_reply(explainer, card, case, lang)
+    card_text = await _card_reply(explainer, composer, card, case, lang)
     return _resp(case, card_text, done=True, card_id=card.id)
 
 
@@ -889,6 +914,7 @@ async def _converse_turn(payload: ConverseCaseRequest, request: Request) -> Conv
     engine = cast(DiagnosticEngine, request.app.state.diagnostic_engine)
     provider = cast(LLMProvider, request.app.state.provider)
     explainer = cast(CardExplainer, request.app.state.card_explainer)
+    composer = cast(CardAnswerComposer, request.app.state.card_answer)
     q_explainer = cast(QuestionExplainer, request.app.state.question_explainer)
     localizer = cast(Localizer, request.app.state.localizer)
     grounding = cast(GroundingValidator, request.app.state.grounding)
@@ -973,6 +999,7 @@ async def _converse_turn(payload: ConverseCaseRequest, request: Request) -> Conv
             case,
             engine=engine,
             explainer=explainer,
+            composer=composer,
             q_explainer=q_explainer,
             localizer=localizer,
             lang=lang,
@@ -1048,6 +1075,7 @@ async def _converse_turn(payload: ConverseCaseRequest, request: Request) -> Conv
                     engine=engine,
                     orchestrator=orchestrator,
                     explainer=explainer,
+                    composer=composer,
                     q_explainer=q_explainer,
                     localizer=localizer,
                     store=store,
@@ -1102,6 +1130,7 @@ async def _converse_turn(payload: ConverseCaseRequest, request: Request) -> Conv
                     engine=engine,
                     orchestrator=orchestrator,
                     explainer=explainer,
+                    composer=composer,
                     q_explainer=q_explainer,
                     localizer=localizer,
                     store=store,
@@ -1173,6 +1202,7 @@ async def _converse_turn(payload: ConverseCaseRequest, request: Request) -> Conv
             engine=engine,
             orchestrator=orchestrator,
             explainer=explainer,
+            composer=composer,
             q_explainer=q_explainer,
             localizer=localizer,
             store=store,

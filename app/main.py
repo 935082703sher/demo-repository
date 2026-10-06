@@ -31,6 +31,12 @@ from app.repositories.usage_repository import (
 from app.services.approved_links import stage3b_link_registry
 from app.services.assistant import AssistantService
 from app.services.audit_log import InMemoryAuditLog, PostgresAuditLog
+from app.services.card_answer import (
+    CardAnswerComposer,
+    LLMCardAnswer,
+    TemplateCardAnswer,
+    build_openai_card_answer_complete,
+)
 from app.services.card_explainer import (
     CardExplainer,
     LLMCardExplainer,
@@ -212,6 +218,21 @@ def create_app(
             fallback=TemplateCardExplainer(),
         )
     app.state.card_explainer = card_explainer
+    card_answer: CardAnswerComposer = TemplateCardAnswer()
+    if (
+        app_settings.llm_provider == "openai"
+        and app_settings.llm_api_key is not None
+        and app_settings.llm_api_key.get_secret_value()
+        and app_settings.llm_model
+    ):
+        card_answer = LLMCardAnswer(
+            build_openai_card_answer_complete(
+                api_key=app_settings.llm_api_key.get_secret_value(),
+                model=app_settings.llm_model,
+                timeout_seconds=app_settings.llm_timeout_seconds,
+            )
+        )
+    app.state.card_answer = card_answer
     question_explainer: QuestionExplainer = TemplateQuestionExplainer()
     if (
         app_settings.llm_provider == "openai"
