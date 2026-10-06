@@ -88,9 +88,20 @@ _IMEI_RULES: tuple[tuple[str, str, tuple[str, ...]], ...] = (
         ("royxatdan otma", "royxatga olinmadi", "registratsiya xato", "otmadi", "bolmadi"),
     ),
     (
+        # An ACTUAL attempt or inability - not a mere intent. "registratsiya qilishim
+        # kerak" (I need to register) is a need, not an attempt, so it must not be
+        # labelled "attempted" (which the explainer would voice as "you tried").
         "registration_status",
         "attempted",
-        ("royxatdan otkaz", "registratsiya qil", "saytda", "royxatdan otmoqchi"),
+        (
+            "otkaza olma",
+            "otkazolma",
+            "otkaz olma",
+            "royxatdan otkazdim",
+            "registratsiya qildim",
+            "saytda urin",
+            "qayta royxatdan otkaz",
+        ),
     ),
     ("previously_working", "true", ("avval ishla", "oldin ishla", "ishlayotgandi", "ishlagan")),
     (
