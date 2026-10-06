@@ -23,6 +23,7 @@ from dataclasses import dataclass, field
 from datetime import date
 
 from app.domain.case_state import CaseState
+from app.domain.legal_clauses import Clause
 from app.domain.policy import PolicyRule
 from app.domain.tariffs import ResolvedPayment, TariffConfig
 from app.services.clause_retriever import ClauseHit, ClauseRetriever
@@ -73,6 +74,11 @@ class LegalReasoningEngine:
         self._retriever = retriever
         self._matcher = matcher
         self._tariffs = tariffs
+        self._by_clause = {clause.clause: clause for clause in retriever.clauses}
+
+    def clause(self, label: str) -> Clause | None:
+        """The full clause record for a clause label, if present."""
+        return self._by_clause.get(label)
 
     def case_facts(self, case: CaseState, message: str) -> CaseFacts:
         return CaseFacts(

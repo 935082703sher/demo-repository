@@ -19,6 +19,7 @@ from app.api.router import api_router
 from app.core.config import Settings, get_settings
 from app.core.errors import AppError
 from app.core.logging import configure_logging
+from app.domain.legal_clauses import ClauseBundle
 from app.domain.schemas import ErrorBody, ErrorResponse
 from app.domain.tariffs import TariffConfig
 from app.providers.base import LLMProvider
@@ -47,6 +48,7 @@ from app.services.card_explainer import (
 from app.services.case_guidance import CaseGuidanceService
 from app.services.case_store import InMemoryCaseStore, PostgresCaseStore
 from app.services.classifier import RequestClassifier
+from app.services.clause_retriever import ClauseRetriever
 from app.services.complaint_drafts import ComplaintDraftService
 from app.services.complaint_workflow_adapter import GovernedComplaintWorkflowAdapter
 from app.services.diagnostic_engine import DiagnosticEngine
@@ -62,6 +64,7 @@ from app.services.grounding import GroundingValidator
 from app.services.guardrails import Guardrails
 from app.services.interaction_log import build_interaction_log
 from app.services.knowledge import KnowledgeService
+from app.services.legal_reasoning import LegalReasoningEngine
 from app.services.localizer import (
     LLMLocalizer,
     Localizer,
@@ -178,6 +181,12 @@ def create_app(
         Path(__file__).parent / "data" / "policy_rules.json"
     )
     app.state.tariffs = TariffConfig.from_json(Path(__file__).parent / "data" / "tariffs.json")
+    app.state.clause_retriever = ClauseRetriever(
+        ClauseBundle.from_json(Path(__file__).parent / "data" / "vmq778_clauses.json")
+    )
+    app.state.legal_reasoning = LegalReasoningEngine(
+        app.state.clause_retriever, app.state.policy_matcher, app.state.tariffs
+    )
     app.state.case_store = InMemoryCaseStore()
     rule_extractor = RuleBasedFactExtractor()
     fact_extractor: FactExtractor = rule_extractor
