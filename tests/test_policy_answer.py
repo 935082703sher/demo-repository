@@ -16,6 +16,7 @@ from app.services.policy_answer import (
     LLMPolicyAnswer,
     TemplatePolicyAnswer,
     build_policy_summary,
+    introduces_no_new_number,
     is_legally_grounded,
 )
 from app.services.policy_matcher import PolicyMatch, PolicyMatcher
@@ -44,6 +45,25 @@ def test_grounding_rejects_an_invented_clause() -> None:
 def test_grounding_handles_sub_clause_numbers() -> None:
     assert is_legally_grounded("Chakana sotuvchi 6-1 band bo'yicha javobgar.", ["6-1"]) is True
     assert is_legally_grounded("Bu 10-1 bandga asosan.", ["6-1"]) is False
+
+
+# --- numeric grounding: approved constants and clause citations are not "new numbers" ---
+
+
+def test_number_check_allows_approved_constants() -> None:
+    # *#06# and 1170 are published safe references, not facts; they may appear freely.
+    assert introduces_no_new_number(
+        "IMEI holatini tekshiring.", "*#06# ni tering, 1170 ga qo'ng'iroq qiling."
+    )
+
+
+def test_number_check_ignores_clause_citations() -> None:
+    # Citing "28-band" is governed by the legal-grounding check, not the number check.
+    assert introduces_no_new_number("Xorijiy fuqaro kanallari.", "Bu 28-band va 2-bandga asosan.")
+
+
+def test_number_check_still_rejects_a_hallucinated_deadline() -> None:
+    assert not introduces_no_new_number("30 kalendar kun ichida.", "90 kun ichida (28-band).")
 
 
 # --- composer behaviour ---

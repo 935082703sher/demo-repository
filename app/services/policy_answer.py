@@ -38,6 +38,13 @@ _LANGUAGE_NAME = {
 }
 
 
+# Approved, non-fact constants the answer may state freely: the 1170 hotline, the
+# *#06# IMEI check code, the +998 country code, and the regulation number 778. These
+# are published safe references (the spec permits the official phone and the clause
+# number), not facts that could mislead - unlike a fee, a deadline or a case number.
+_SAFE_NUMBERS = frozenset({"1170", "06", "998", "778"})
+
+
 def _clause_key(clause: str) -> str:
     """Normalise a clause label to digits for comparison ("6-1" -> "61", "6" -> "6")."""
     return re.sub(r"\D", "", clause)
@@ -46,12 +53,15 @@ def _clause_key(clause: str) -> str:
 def introduces_no_new_number(evidence: str, answer: str) -> bool:
     """True when the answer invents no numeric figure absent from the evidence.
 
-    One-directional (subset), unlike the card check: the composed answer may mention
-    only the figures relevant to the situation and omit the rest, but every number it
-    does state - a fee, a percentage, a day count - must come from the evidence. A
-    hallucinated amount or deadline (e.g. "90 000 so'm", "90 kun") fails the check.
+    Clause citations ("28-band", "6-ilova") are removed first: those are governed by
+    :func:`is_legally_grounded`, not treated as facts here, so citing a clause does
+    not look like a new number. What remains are the real figures - fees, percentages,
+    day counts - and every one the answer states must come from the evidence (subset),
+    with the approved constants (hotline, *#06#, country code, regulation number)
+    always allowed. A hallucinated amount or deadline ("90 000 so'm", "90 kun") fails.
     """
-    return _fact_numbers(answer) <= _fact_numbers(evidence)
+    evidence_numbers = _fact_numbers(_CLAUSE_CITATION.sub(" ", evidence)) | _SAFE_NUMBERS
+    return _fact_numbers(_CLAUSE_CITATION.sub(" ", answer)) <= evidence_numbers
 
 
 def is_legally_grounded(answer: str, allowed_clauses: list[str]) -> bool:
