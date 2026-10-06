@@ -230,6 +230,25 @@ class DiagnosticEngine:
     def trees_for_domain(self, domain: str) -> list[DecisionTree]:
         return [tree for tree in self._trees.values() if tree.domain == domain]
 
+    def primary_tree_for_domain(self, domain: str) -> DecisionTree | None:
+        """The domain's main diagnostic entry tree, used when the LLM has classified a
+        concrete problem in this domain but keywords did not pick a specific tree.
+
+        Preference goes to a registration/procedure tree (the common entry point),
+        then to the first tree declared for the domain; None when the domain has none.
+        This is an entry tree chosen from the model's understanding, not a default
+        branch within a tree - the diagnosis still proceeds fact by fact from the root.
+        """
+        trees = self.trees_for_domain(domain)
+        if not trees:
+            return None
+        preferred = ("royxatdan_otkazish", "tartib")
+        for key in preferred:
+            for tree in trees:
+                if key in tree.case_type:
+                    return tree
+        return trees[0]
+
     def tree_from_facts(
         self, facts: dict[str, str], *, domain: str | None = None
     ) -> DecisionTree | None:

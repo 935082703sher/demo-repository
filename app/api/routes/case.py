@@ -1290,6 +1290,25 @@ async def _converse_turn(payload: ConverseCaseRequest, request: Request) -> Conv
         # not (so an informational question is still answered from the KB).
         route_domain = coverage.domain_hint
         chosen = engine.get_tree(message.strip()) or coverage.tree
+        # The model's understanding, not just keywords, may select the tree: when it
+        # reads the message as a concrete problem in a known domain but the wording
+        # (typos, paraphrase) matched no tree's keywords, enter that domain's
+        # diagnostic tree rather than dead-ending at a topic menu. The gate is a
+        # concrete issue fact extracted from THIS message (e.g. registration_status) -
+        # a vague domain mention ("imei tushunmayapman") extracts none and still gets
+        # the topic menu. A decision fact pins the exact tree; else the domain's entry
+        # tree, from whose root the diagnosis still proceeds fact by fact.
+        if (
+            chosen is None
+            and case.active_tree is None
+            and analysis.route is Route.CASE
+            and analysis.facts
+        ):
+            inferred_domain = analysis.domain or route_domain
+            if inferred_domain is not None:
+                chosen = engine.tree_from_facts(
+                    case.known_facts(), domain=inferred_domain
+                ) or engine.primary_tree_for_domain(inferred_domain)
 
         # 3a) A curated resolution card the facts already complete beats everything:
         #     an approved answer (e.g. mnp-docs, imei-customs) wins over free RAG.
