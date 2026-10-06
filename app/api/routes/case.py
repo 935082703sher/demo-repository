@@ -72,7 +72,7 @@ from app.services.meta_intent import (
     RESTART,
     conversation_act,
     is_new_request,
-    is_permission_question,
+    wants_reasoned_answer,
 )
 from app.services.outcome_analyzer import OutcomeAnalysis, OutcomeAnalyzer
 from app.services.pii import redact_likely_pii
@@ -800,6 +800,8 @@ async def _maybe_policy_answer(
     lang: str,
     store: CaseStore,
     audit: AuditLog,
+    *,
+    require_trigger: bool = True,
 ) -> ConverseCaseResponse | None:
     """Answer a standalone legal question with the Legal Reasoning Engine, or None.
 
@@ -813,14 +815,22 @@ async def _maybe_policy_answer(
     """
     query_vector = await engine.embed(message)  # semantic recall when configured, else None
     reasoning = engine.reason(case, message, query_vector=query_vector)
-    trigger = set(reasoning.case_facts.signals) - {"user_is_resident"}
-    specific = [
-        rule
-        for rule in reasoning.situation_rules
-        if rule.specificity() >= 1 and rule.applies_if != ["user_is_resident"]
-    ]
-    if not trigger or not specific or not reasoning.has_grounds():
+    if not reasoning.has_grounds():
         return None
+    # Conservative engagement for the RAG / no-coverage lanes: require a real situation
+    # signal and a situation-specific rule, so an off-topic or bare question falls
+    # through. The caller lifts this (require_trigger=False) when it already knows the
+    # message wants a reasoned answer - a permission question or an admin-action request
+    # - where grounds alone are enough and there may be no device-origin signal.
+    if require_trigger:
+        trigger = set(reasoning.case_facts.signals) - {"user_is_resident"}
+        specific = [
+            rule
+            for rule in reasoning.situation_rules
+            if rule.specificity() >= 1 and rule.applies_if != ["user_is_resident"]
+        ]
+        if not trigger or not specific:
+            return None
 
     # Legal basis: the curated situation rules first (they carry steps/documents),
     # then the clauses the engine retrieved from the whole law, de-duplicated.
@@ -1315,13 +1325,21 @@ async def _converse_turn(payload: ConverseCaseRequest, request: Request) -> Conv
                     case.known_facts(), domain=inferred_domain
                 ) or engine.primary_tree_for_domain(inferred_domain)
 
-        # 3a-pre) A permission/possibility question ("...bo'ladimi?") wants a reasoned
-        #     legal answer, not a diagnostic walk - so the engine answers it from the
-        #     law even when a tree's keywords matched. Only when not already mid-tree
-        #     and the engine actually has grounds; otherwise fall through to the tree.
-        if case.active_tree is None and is_permission_question(message):
+        # 3a-pre) A permission question ("...bo'ladimi?") or an administrative request
+        #     (cancel/correct/re-submit an application) wants a reasoned legal answer,
+        #     not a diagnostic walk - so the engine answers it from the law even when a
+        #     tree's keywords matched. Only when not already mid-tree and the engine
+        #     actually has grounds; otherwise fall through to the tree.
+        if case.active_tree is None and wants_reasoned_answer(message):
             policy_reply = await _maybe_policy_answer(
-                reasoning_engine, policy_composer, case, message, lang, store, audit
+                reasoning_engine,
+                policy_composer,
+                case,
+                message,
+                lang,
+                store,
+                audit,
+                require_trigger=False,
             )
             if policy_reply is not None:
                 return policy_reply

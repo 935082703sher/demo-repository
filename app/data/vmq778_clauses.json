@@ -376,7 +376,11 @@
         "deklaratsiya",
         "31-ustun",
         "bojxona hujjati",
-        "10 kun"
+        "10 kun",
+        "arizani tuzatish",
+        "kamchilik tuzatilsa",
+        "qayta ariza",
+        "10 kun ichida qayta"
       ],
       "related_rules": [
         "11",
@@ -1112,7 +1116,12 @@
         "esim",
         "каждый imei",
         "второй imei",
-        "отдельно"
+        "отдельно",
+        "faqat bitta imei",
+        "bitta imei",
+        "1 ta imei",
+        "ikkita emas bitta",
+        "bitta imei uchun"
       ],
       "related_rules": [
         "42",
@@ -1250,7 +1259,14 @@
         "birovning nomiga",
         "uchinchi shaxs nomiga",
         "boshqa odam nomidan",
-        "boshqa odamga registratsiya"
+        "boshqa odamga registratsiya",
+        "bekor qilish",
+        "arizani bekor",
+        "otmen",
+        "notogri ariza",
+        "xato ariza",
+        "adashib yuborgan",
+        "zayavkani bekor"
       ],
       "related_rules": [
         "49-3"

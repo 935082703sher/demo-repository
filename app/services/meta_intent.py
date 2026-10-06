@@ -136,6 +136,38 @@ _PERMISSION_MARKERS = (
 )
 
 
+# Requests for an administrative action on a submitted application (cancel, correct,
+# change, re-submit). A diagnostic tree cannot do these - they need the legal basis
+# and, usually, the 1170 operator - so they belong to the reasoning engine, not the
+# "where did you buy it?" walk.
+_ADMIN_ACTION_MARKERS = (
+    "bekor qil",
+    "bekor qilsangiz",
+    "bekor qilib",
+    "otmen",
+    "otmenit",
+    "annulir",
+    "arizani bekor",
+    "arizamni bekor",
+    "zayavkani bekor",
+    "zayavkamni bekor",
+    "arizani otmen",
+    "zayavkani otmen",
+    "arizamni",
+    "zayavkamni",
+    "notogri ariza",
+    "xato ariza",
+    "notogri zayavka",
+    "xato zayavka",
+    "adashib yubor",
+    "qayta yubor",
+    "arizani tuzat",
+    "arizani ozgartir",
+    "otmenite",
+    "otmenyu",
+)
+
+
 def is_permission_question(message: str) -> bool:
     """True when the message asks whether something is allowed or possible.
 
@@ -144,6 +176,18 @@ def is_permission_question(message: str) -> bool:
     answer over walking a tree even when a tree's keywords match.
     """
     return any(marker in _normalize(message) for marker in _PERMISSION_MARKERS)
+
+
+def wants_reasoned_answer(message: str) -> bool:
+    """True when the message wants the law applied, not a diagnostic walk.
+
+    Covers permission/possibility questions ("...bo'ladimi?") and administrative
+    action requests (cancel, correct or re-submit an application). Both are answered
+    by the reasoning engine from the legal basis - the registration tree can only ask
+    a fact-gathering question that does not address the request.
+    """
+    norm = _normalize(message)
+    return is_permission_question(message) or any(m in norm for m in _ADMIN_ACTION_MARKERS)
 
 
 def is_new_request(message: str) -> bool:
