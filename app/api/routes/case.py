@@ -63,6 +63,7 @@ from app.services.fact_extraction import (
 from app.services.grounding import GroundingValidator
 from app.services.interaction_log import InteractionLog, InteractionRecord
 from app.services.kb_retriever import get_retriever
+from app.services.language_detect import detect_language
 from app.services.legal_reasoning import LegalReasoningEngine
 from app.services.localizer import Localizer
 from app.services.meta_intent import (
@@ -1111,11 +1112,14 @@ async def _converse_turn(payload: ConverseCaseRequest, request: Request) -> Conv
         payload.session_id, language=payload.language, channel=payload.channel
     )
     case.turn_count += 1
-    lang = payload.language
     # Redact PII up front: nothing raw reaches the LLM, the KB, the persisted case
     # or the logs. Only labelled/structured identifiers are redacted, so tariffs
     # and short official numbers pass through untouched.
     message = redact_likely_pii(payload.message)
+    # Reply in the language the customer actually wrote: weigh the message and switch
+    # only on a clear lead, keeping the incoming language for a short/ambiguous message
+    # (a button value, a terse reply) so the language never flips on thin evidence.
+    lang = detect_language(message, default=payload.language)
     # Adapt the explanation style to the customer's words before anything else, so a
     # "explain simply" or "give an example" takes effect on this very turn.
     _apply_style_cue(case, message, lang)
