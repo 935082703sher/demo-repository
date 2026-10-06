@@ -14,6 +14,7 @@ import asyncio
 import json
 import re
 from collections.abc import AsyncIterator
+from datetime import date
 from typing import Any, cast
 
 from fastapi import APIRouter, Request
@@ -24,6 +25,7 @@ from app.domain.case_state import CaseState, CaseStatus, ExplanationStyle, Fact,
 from app.domain.diagnostics import DecisionTree, DiagnosticNode, ResolutionCard
 from app.domain.enums import Category, Language
 from app.domain.schemas import LLMRequest
+from app.domain.tariffs import ResolvedPayment, TariffConfig
 from app.providers.base import LLMProvider
 from app.providers.errors import ProviderError
 from app.services.audit_log import (
@@ -40,6 +42,7 @@ from app.services.audit_log import (
     OUTCOME_RESOLVED,
     ROUTE_CASE,
     ROUTE_GREETING,
+    ROUTE_POLICY,
     ROUTE_RAG,
     AuditEvent,
     AuditLog,
@@ -70,6 +73,8 @@ from app.services.meta_intent import (
 )
 from app.services.outcome_analyzer import OutcomeAnalysis, OutcomeAnalyzer
 from app.services.pii import redact_likely_pii
+from app.services.policy_answer import PolicyAnswerComposer, build_policy_summary
+from app.services.policy_matcher import PolicyMatcher
 from app.services.question_explainer import QuestionExplainer
 from app.services.resolution_orchestrator import (
     AWAITING_OUTCOME,
@@ -714,6 +719,65 @@ async def _log_unanswered(log: InteractionLog | None, case: CaseState, message: 
     )
 
 
+def _resolve_payments(match: Any, tariffs: TariffConfig, when: date) -> list[ResolvedPayment]:
+    """Compute the payment for each distinct formula the matched rules carry."""
+    payments: list[ResolvedPayment] = []
+    seen: set[str] = set()
+    for rule in match.rules:
+        if rule.payment_ref and rule.payment_ref not in seen:
+            seen.add(rule.payment_ref)
+            resolved = tariffs.resolve(rule.payment_ref, when)
+            if resolved is not None:
+                payments.append(resolved)
+    return payments
+
+
+async def _maybe_policy_answer(
+    matcher: PolicyMatcher,
+    tariffs: TariffConfig,
+    composer: PolicyAnswerComposer,
+    case: CaseState,
+    message: str,
+    lang: str,
+    store: CaseStore,
+    audit: AuditLog,
+) -> ConverseCaseResponse | None:
+    """Answer from the matched VMQ-778 rules, or None to let other lanes handle it.
+
+    Engages only when a SITUATION-SPECIFIC rule fits (one with conditions, not just
+    the general requirement), so an unrelated or vague message falls through to the
+    knowledge base / 1170 unchanged. The matched rules and the computed payment are
+    the evidence; the composer writes the natural answer and a legal-grounding check
+    confirms every cited clause came from that evidence.
+    """
+    match = matcher.match(case, message)
+    # Engage only on a real situation signal, not the resident default that every
+    # message carries - otherwise an off-topic or vague question would be captured.
+    # A rule conditioned on nothing but residency does not count as situation-specific.
+    trigger = match.signals - {"user_is_resident"}
+    specific = [
+        rule
+        for rule in match.rules
+        if rule.specificity() >= 1 and rule.applies_if != ["user_is_resident"]
+    ]
+    if not trigger or not specific:
+        return None
+    payments = _resolve_payments(match, tariffs, date.today())
+    summary = build_policy_summary(match, payments, lang, match.rules[0].source_url)
+    text = await composer.compose(match, payments, lang, message, summary)
+    sources = [
+        SourceOut(doc_id=f"{rule.document} {rule.clause}-band", title=rule.document)
+        for rule in match.rules
+    ]
+    _start_fresh_case(case)
+    case.domain = case.domain or "imei"
+    case.status = CaseStatus.RESOLVED
+    await store.save(case)
+    detail = "policy:" + ",".join(rule.rule_id for rule in specific[:3])
+    await _audit(audit, case, OUTCOME_ANSWER, ROUTE_POLICY, detail=detail)
+    return _resp(case, text, done=True, sources=sources)
+
+
 async def _rag_answer(
     provider: LLMProvider,
     grounding: GroundingValidator,
@@ -923,6 +987,9 @@ async def _converse_turn(payload: ConverseCaseRequest, request: Request) -> Conv
     orchestrator = cast(ResolutionOrchestrator, request.app.state.resolution_orchestrator)
     outcome_analyzer = cast(OutcomeAnalyzer, request.app.state.outcome_analyzer)
     coverage_eval = cast(TreeCoverageEvaluator, request.app.state.tree_coverage)
+    policy_matcher = cast(PolicyMatcher, request.app.state.policy_matcher)
+    tariffs = cast(TariffConfig, request.app.state.tariffs)
+    policy_composer = cast(PolicyAnswerComposer, request.app.state.policy_answer)
     phone = str(
         getattr(getattr(request.app.state, "settings", None), "approved_support_phone", None)
         or "1170"
@@ -1096,6 +1163,13 @@ async def _converse_turn(payload: ConverseCaseRequest, request: Request) -> Conv
             message, domain=case.domain, known_facts=case.known_facts()
         )
         if coverage.level == "none" and case.active_tree is None:
+            # The law first: when a VMQ-778 rule fits the situation, answer from it
+            # (natural, clause-cited) before the generic KB / 1170 fallback.
+            policy_reply = await _maybe_policy_answer(
+                policy_matcher, tariffs, policy_composer, case, message, lang, store, audit
+            )
+            if policy_reply is not None:
+                return policy_reply
             reply = await _rag_answer(provider, grounding, interaction_log, case, message, lang)
             _start_fresh_case(case)
             if not reply.requires_human:
@@ -1148,6 +1222,15 @@ async def _converse_turn(payload: ConverseCaseRequest, request: Request) -> Conv
             await _audit(audit, case, OUTCOME_GREETING, ROUTE_GREETING)
             return _resp(case, _GREETING.get(lang, _GREETING["uz"]))
         if route is Route.RAG and coverage.issue is None:
+            # Prefer the authoritative law: a situation-specific VMQ-778 rule answers
+            # a standalone legal question before the looser KB retrieval does (the KB
+            # can mis-hit, e.g. return a stolen-phone FAQ to a residency question).
+            if case.active_tree is None:
+                policy_reply = await _maybe_policy_answer(
+                    policy_matcher, tariffs, policy_composer, case, message, lang, store, audit
+                )
+                if policy_reply is not None:
+                    return policy_reply
             reply = await _rag_answer(provider, grounding, interaction_log, case, message, lang)
             # A standalone question leaves no residue; a question mid-diagnosis
             # keeps the open case so the next message can still answer it.

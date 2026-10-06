@@ -33,6 +33,7 @@ OUTCOME_CALL_1170 = "call_1170"  # safe paths exhausted -> recommended the phone
 ROUTE_CASE = "case"
 ROUTE_RAG = "rag"
 ROUTE_GREETING = "greeting"
+ROUTE_POLICY = "policy"  # answered from matched VMQ-778 policy rules (legal basis)
 
 
 @dataclass(frozen=True)

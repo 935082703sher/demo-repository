@@ -53,7 +53,7 @@
       "clause": "2",
       "effective_from": "2019-09-17",
       "topic": "registration_deadline",
-      "applies_if": ["user_is_resident"],
+      "applies_if": ["user_is_resident", "personal_import"],
       "excludes_if": ["user_is_nonresident"],
       "legal_rule": "Oq yoki qora ro'yxatga kiritilmagan qurilma (kul rang ro'yxat) birinchi tarmoq hodisasidan boshlab 30 kalendar kundan ko'p bo'lmagan muddatda xizmatdan foydalanadi; shu muddat ichida ro'yxatdan o'tkazish kerak.",
       "recommended_actions": ["register_within_30_days"],

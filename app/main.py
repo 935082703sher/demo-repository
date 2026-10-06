@@ -20,6 +20,7 @@ from app.core.config import Settings, get_settings
 from app.core.errors import AppError
 from app.core.logging import configure_logging
 from app.domain.schemas import ErrorBody, ErrorResponse
+from app.domain.tariffs import TariffConfig
 from app.providers.base import LLMProvider
 from app.providers.configured import build_configured_provider
 from app.repositories.usage_repository import (
@@ -73,6 +74,13 @@ from app.services.outcome_analyzer import (
     RuleOutcomeAnalyzer,
     build_openai_outcome_complete,
 )
+from app.services.policy_answer import (
+    LLMPolicyAnswer,
+    PolicyAnswerComposer,
+    TemplatePolicyAnswer,
+    build_openai_policy_answer_complete,
+)
+from app.services.policy_matcher import PolicyMatcher
 from app.services.question_explainer import (
     LLMQuestionExplainer,
     QuestionExplainer,
@@ -166,6 +174,10 @@ def create_app(
     app.state.settings = app_settings
     app.state.provider = selected_provider
     app.state.diagnostic_engine = DiagnosticEngine.from_json(diagnostics_path)
+    app.state.policy_matcher = PolicyMatcher.from_json(
+        Path(__file__).parent / "data" / "policy_rules.json"
+    )
+    app.state.tariffs = TariffConfig.from_json(Path(__file__).parent / "data" / "tariffs.json")
     app.state.case_store = InMemoryCaseStore()
     rule_extractor = RuleBasedFactExtractor()
     fact_extractor: FactExtractor = rule_extractor
@@ -233,6 +245,21 @@ def create_app(
             )
         )
     app.state.card_answer = card_answer
+    policy_answer: PolicyAnswerComposer = TemplatePolicyAnswer()
+    if (
+        app_settings.llm_provider == "openai"
+        and app_settings.llm_api_key is not None
+        and app_settings.llm_api_key.get_secret_value()
+        and app_settings.llm_model
+    ):
+        policy_answer = LLMPolicyAnswer(
+            build_openai_policy_answer_complete(
+                api_key=app_settings.llm_api_key.get_secret_value(),
+                model=app_settings.llm_model,
+                timeout_seconds=app_settings.llm_timeout_seconds,
+            )
+        )
+    app.state.policy_answer = policy_answer
     question_explainer: QuestionExplainer = TemplateQuestionExplainer()
     if (
         app_settings.llm_provider == "openai"
