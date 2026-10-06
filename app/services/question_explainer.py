@@ -10,11 +10,25 @@ wording. It never invents facts or adds choices.
 from __future__ import annotations
 
 import json
+import re
 from collections.abc import Awaitable, Callable
 from typing import Any, Protocol
 
 from app.domain.case_state import CaseState
 from app.services.assistant_voice import ASSISTANT_VOICE
+
+# A run of 7+ digits is likely personal data (IMEI, phone, passport): the model sees
+# it only as its last 4 digits, so it can acknowledge "IMEI ...0302" without ever
+# echoing the full number back.
+_LONG_DIGITS = re.compile(r"\d[\d  -]{5,}\d")
+
+
+def _mask_pii(text: str) -> str:
+    def repl(match: re.Match[str]) -> str:
+        digits = re.sub(r"\D", "", match.group(0))
+        return f"…{digits[-4:]}" if len(digits) >= 7 else match.group(0)
+
+    return _LONG_DIGITS.sub(repl, text)
 
 
 class QuestionExplainer(Protocol):
@@ -42,13 +56,16 @@ _LANGUAGE_NAME = {
 
 _LLM_INSTRUCTIONS = (
     ASSISTANT_VOICE + " "
-    "You are gathering the one missing detail needed to move the case forward. You "
-    "are given the next diagnostic QUESTION to ask and what is already known. Ask it "
-    "as ONE short, friendly question with the same meaning, in the requested "
-    "language; you may acknowledge what is already known in at most one short clause, "
-    "but never re-ask it. Rules: keep it to that one question; do NOT list, add, "
-    "remove or rename any answer option (the choices are shown as separate buttons); "
-    'invent no facts. Respond as JSON: {"question": "..."}.'
+    "You are a warm, competent support agent gathering the ONE missing detail needed "
+    "to help. You are given the customer's problem, what is already known, and the "
+    "next diagnostic QUESTION to ask. Reply like a real person, in the requested "
+    "language, in two or three short sentences: first briefly acknowledge their "
+    "specific situation so they feel heard; if it helps, say in a few words why this "
+    "detail decides the answer; then ask the given question in natural words. "
+    "Rules: ask only this one question; do NOT list, add, remove or rename any answer "
+    "option (the choices are shown as separate buttons); never re-ask what is already "
+    "known; invent no facts; never repeat back full personal data - refer to an IMEI "
+    'only by its last 4 digits. Respond as JSON: {"question": "..."}.'
 )
 
 _QUESTION_JSON_SCHEMA: dict[str, Any] = {
@@ -76,11 +93,14 @@ class LLMQuestionExplainer:
 
     @staticmethod
     def _prompt(question: str, case: CaseState, lang: str) -> str:
+        problem = case.original_problem or case.problem_summary or ""
+        facts = {name: _mask_pii(str(value)) for name, value in case.known_facts().items()}
         return json.dumps(
             {
                 "language": _LANGUAGE_NAME.get(lang, "Uzbek"),
+                "problem": _mask_pii(problem),
                 "question": question,
-                "known_facts": case.known_facts(),
+                "known_facts": facts,
             },
             ensure_ascii=False,
         )
@@ -98,7 +118,7 @@ def build_openai_question_complete(
             "store": False,
             "instructions": _LLM_INSTRUCTIONS,
             "input": prompt,
-            "max_output_tokens": 200,
+            "max_output_tokens": 320,
             "text": {
                 "format": {
                     "type": "json_schema",
