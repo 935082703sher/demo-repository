@@ -112,6 +112,40 @@ _EVIDENCE_MARKERS = (
 )
 
 
+# "Is X allowed / possible?" markers. These signal a permission/possibility question
+# that wants a reasoned legal answer, not a diagnostic walk - distinct from "nima
+# qilay" (what do I do) or "kim javobgar" (who), which a tree can handle.
+_PERMISSION_MARKERS = (
+    "boladimi",
+    "bolarmikan",
+    "mumkinmi",
+    "mumkin mi",
+    "mumkinmikan",
+    "maylimi",
+    "ruxsatmi",
+    "ruxsat beriladimi",
+    "qilsa boladi",
+    "qilsak boladi",
+    "qilish mumkinmi",
+    "mozhno li",
+    "razreshaetsya li",
+    "is it allowed",
+    "is it possible",
+    "can i",
+    "can we",
+)
+
+
+def is_permission_question(message: str) -> bool:
+    """True when the message asks whether something is allowed or possible.
+
+    Such a question wants the reasoning engine to apply the law and answer, not a
+    diagnostic tree that gathers a fact - so the caller prefers the grounded policy
+    answer over walking a tree even when a tree's keywords match.
+    """
+    return any(marker in _normalize(message) for marker in _PERMISSION_MARKERS)
+
+
 def is_new_request(message: str) -> bool:
     """True when a message is a new, self-contained request, not an answer to the
     pending question - e.g. a standalone pricing question while the bot is waiting

@@ -122,6 +122,36 @@ def build_policy_summary(
     return "\n".join(lines)
 
 
+_ESCALATE = {
+    "uz": "Aniq holatingiz bo'yicha 1170 ga murojaat qiling.",
+    "uz_cyrl": "Аниқ ҳолатингиз бўйича 1170 га мурожаат қилинг.",
+    "ru": "По вашему конкретному случаю обратитесь по номеру 1170.",
+    "en": "For your specific case, please call 1170.",
+    "kaa": "Anıq jaǵdayıńız boyınsha 1170 ge múrájat etiń.",
+}
+
+
+def concise_fallback(match: PolicyMatch, payments: list[ResolvedPayment], lang: str) -> str:
+    """A short, human fallback when the composed answer is unavailable or ungrounded.
+
+    Two leading legal points in prose (not a long bullet dump), any computed payment,
+    a nudge to 1170 for the specific case, and the source. Still fully grounded - it
+    is built from the matched rules - but reads like a brief reply, so the worst case
+    is never a robotic wall of clauses.
+    """
+    if not match.rules:
+        return _ESCALATE.get(lang, _ESCALATE["uz"])
+    parts = [
+        f"{r.legal_rule.split('.')[0].strip()} ({r.document} {r.clause}-band)."
+        for r in match.rules[:2]
+    ]
+    if payments:
+        parts.append(_payment_line(payments[0], lang))
+    parts.append(_ESCALATE.get(lang, _ESCALATE["uz"]))
+    parts.append(f"Asos: {match.rules[0].document} — {match.rules[0].source_url}")
+    return " ".join(parts)
+
+
 def answer_plan(match: PolicyMatch, payments: list[ResolvedPayment]) -> dict[str, Any]:
     """The structured evidence handed to the LLM: rules, clauses, actions, payment."""
     return {
@@ -219,6 +249,10 @@ class LLMPolicyAnswer:
         message: str,
         summary: str,
     ) -> str:
+        # Grounding compares against the full summary; the user-facing fallback, when
+        # the composed answer is unavailable or ungrounded, is a short human reply -
+        # never the long bullet dump, which is what reads as robotic.
+        fallback = concise_fallback(match, payments, lang)
         prompt = json.dumps(
             {
                 "language": _LANGUAGE_NAME.get(lang, "Uzbek"),
@@ -230,17 +264,17 @@ class LLMPolicyAnswer:
         try:
             raw = await self._complete(prompt)
             text = str(json.loads(raw).get("answer", "")).strip()
-        except Exception:  # pragma: no cover - network/parse failure -> grounded summary
-            return summary
+        except Exception:  # pragma: no cover - network/parse failure -> concise fallback
+            return fallback
         if not text:
-            return summary
+            return fallback
         if not is_legally_grounded(text, match.clauses()):
-            return summary  # invented a clause -> fall back to the grounded summary
+            return fallback  # invented a clause -> concise grounded fallback
         # The customer's own figures (a price they paid, a date) are not invented
         # facts, so they count as allowed alongside the evidence; only a number from
         # neither the evidence nor the customer is a hallucinated fact.
         if not introduces_no_new_number(summary + "\n" + message, text):
-            return summary
+            return fallback
         return text
 
 

@@ -16,6 +16,7 @@ from app.services.policy_answer import (
     LLMPolicyAnswer,
     TemplatePolicyAnswer,
     build_policy_summary,
+    concise_fallback,
     introduces_no_new_number,
     is_legally_grounded,
 )
@@ -110,7 +111,8 @@ def test_llm_composer_falls_back_on_invented_clause() -> None:
         return '{"answer": "Bu 44-moddaga asosan 90 kun ishlaydi."}'  # invented clause + figure
 
     out = asyncio.run(LLMPolicyAnswer(complete).compose(match, [], "uz", "msg", summary))
-    assert out == summary  # ungrounded -> deterministic summary
+    assert out == concise_fallback(match, [], "uz")  # ungrounded -> concise grounded fallback
+    assert "44" not in out and "1170" in out  # the invented clause is gone; a real nudge remains
 
 
 def test_llm_composer_falls_back_on_altered_payment() -> None:
@@ -129,4 +131,5 @@ def test_llm_composer_falls_back_on_altered_payment() -> None:
         return '{"answer": "To\'lov 90 000 so\'m (6-ilova)."}'  # altered the fee
 
     out = asyncio.run(LLMPolicyAnswer(complete).compose(match, [payment], "uz", "msg", summary))
-    assert out == summary
+    assert out == concise_fallback(match, [payment], "uz")  # altered fee rejected -> fallback
+    assert "90 000" not in out and "90000" not in out  # the fabricated fee is not shown

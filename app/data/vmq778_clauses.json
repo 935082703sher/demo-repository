@@ -682,7 +682,10 @@
         "yidxp",
         "biometrik",
         "jshshir",
-        "5b-ilova"
+        "5b-ilova",
+        "boshqa odam nomiga",
+        "kimning nomiga",
+        "nomiga royxatdan"
       ],
       "related_rules": [
         "29"
@@ -822,7 +825,14 @@
         "personalizatsiya",
         "otish sanasi",
         "bojxona",
-        "chegaradan ortiq"
+        "chegaradan ortiq",
+        "chetga chiqib",
+        "chet elga chiqqan",
+        "chet elga chiqib kelgan",
+        "chegaradan otgan",
+        "6 oy ichida",
+        "otib kelgan",
+        "chiqib kelgan bolishi"
       ],
       "related_rules": [
         "29-1",
@@ -1235,7 +1245,12 @@
         "bekor",
         "sud qarori",
         "tolov qaytmaydi",
-        "uchinchi shaxs"
+        "uchinchi shaxs",
+        "boshqa odam nomiga",
+        "birovning nomiga",
+        "uchinchi shaxs nomiga",
+        "boshqa odam nomidan",
+        "boshqa odamga registratsiya"
       ],
       "related_rules": [
         "49-3"

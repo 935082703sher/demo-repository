@@ -72,6 +72,7 @@ from app.services.meta_intent import (
     RESTART,
     conversation_act,
     is_new_request,
+    is_permission_question,
 )
 from app.services.outcome_analyzer import OutcomeAnalysis, OutcomeAnalyzer
 from app.services.pii import redact_likely_pii
@@ -1312,6 +1313,17 @@ async def _converse_turn(payload: ConverseCaseRequest, request: Request) -> Conv
                 chosen = engine.tree_from_facts(
                     case.known_facts(), domain=inferred_domain
                 ) or engine.primary_tree_for_domain(inferred_domain)
+
+        # 3a-pre) A permission/possibility question ("...bo'ladimi?") wants a reasoned
+        #     legal answer, not a diagnostic walk - so the engine answers it from the
+        #     law even when a tree's keywords matched. Only when not already mid-tree
+        #     and the engine actually has grounds; otherwise fall through to the tree.
+        if case.active_tree is None and is_permission_question(message):
+            policy_reply = await _maybe_policy_answer(
+                reasoning_engine, policy_composer, case, message, lang, store, audit
+            )
+            if policy_reply is not None:
+                return policy_reply
 
         # 3a) A curated resolution card the facts already complete beats everything:
         #     an approved answer (e.g. mnp-docs, imei-customs) wins over free RAG.
