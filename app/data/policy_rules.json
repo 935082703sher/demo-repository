@@ -1,0 +1,146 @@
+{
+  "source": "VMQ-778",
+  "source_url": "https://lex.uz/docs/-4517458",
+  "rules": [
+    {
+      "rule_id": "mandatory_registration_requirement",
+      "clause": "6",
+      "effective_from": "2019-09-17",
+      "topic": "registration_requirement",
+      "applies_if": [],
+      "excludes_if": ["roaming_only_no_local_network_event"],
+      "legal_rule": "O'zbekiston hududiga olib kirilgan, hududida ishlab chiqarilgan va foydalanilayotgan mobil qurilmalarni Tizimda ro'yxatdan o'tkazish majburiy. Roumingda bo'lib, mahalliy tarmoqda ilgari tarmoq hodisasi qayd etilmagan qurilmalar bundan mustasno.",
+      "recommended_actions": ["register_on_uzimei", "check_status_ussd_1170"],
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "check_imei_before_purchase",
+      "clause": "5",
+      "effective_from": "2019-09-17",
+      "topic": "pre_purchase_check",
+      "applies_if": [],
+      "legal_rule": "Import qiluvchilar va jismoniy shaxslar qurilmani xarid qilishdan avval IMEI-kod maqomini — aniqlanmagan, klonlangan, yo'qotilgan yoki o'g'irlangan emasligini — SMS/USSD so'rov yoki www.uzimei.uz orqali tekshirishi mumkin.",
+      "recommended_actions": ["check_imei_on_uzimei", "check_status_ussd_1170", "read_imei_with_star06"],
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "retail_seller_registration_responsibility",
+      "clause": "6-1",
+      "effective_from": "2019-09-17",
+      "topic": "local_device_purchase",
+      "applies_if": ["local_purchase"],
+      "excludes_if": ["personal_import", "bought_from_private_person"],
+      "legal_rule": "O'zbekiston hududida mobil qurilmalar chakana savdosi bilan shug'ullanuvchi tadbirkorlik subyektlari, qurilmani respublika hududiga olib kirish sanasidan qat'i nazar, uni ro'yxatdan o'tkazish uchun javobgardir.",
+      "required_evidence": ["purchase_receipt_or_document"],
+      "recommended_actions": ["check_both_imei_statuses", "contact_seller_with_purchase_documents"],
+      "escalation_conditions": ["seller_refuses_or_unreachable"],
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "personal_import_registration",
+      "clause": "6",
+      "effective_from": "2019-09-17",
+      "topic": "personal_import",
+      "applies_if": ["personal_import", "user_is_resident"],
+      "excludes_if": ["local_purchase"],
+      "legal_rule": "O'zbekistonga shaxsan olib kirilgan qurilmani jismoniy shaxsning o'zi Tizimda ro'yxatdan o'tkazadi; to'lov har bir IMEI-kod uchun alohida olinadi.",
+      "required_documents": ["identity_document", "customs_declaration_if_applicable"],
+      "recommended_actions": ["register_on_uzimei"],
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "resident_registration_deadline_30_days",
+      "clause": "2",
+      "effective_from": "2019-09-17",
+      "topic": "registration_deadline",
+      "applies_if": ["user_is_resident"],
+      "excludes_if": ["user_is_nonresident"],
+      "legal_rule": "Oq yoki qora ro'yxatga kiritilmagan qurilma (kul rang ro'yxat) birinchi tarmoq hodisasidan boshlab 30 kalendar kundan ko'p bo'lmagan muddatda xizmatdan foydalanadi; shu muddat ichida ro'yxatdan o'tkazish kerak.",
+      "recommended_actions": ["register_within_30_days"],
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "nonresident_registration_window_60_days",
+      "clause": "2",
+      "effective_from": "2019-09-17",
+      "topic": "nonresident_registration",
+      "applies_if": ["user_is_nonresident"],
+      "legal_rule": "Norezident qurilmalar bir kalendar yil davomida 60 kalendar kun xizmatdan foydalanishi mumkin (kul rang ro'yxat); shundan keyin ro'yxatga olish talab etiladi.",
+      "required_documents": ["identity_document_nonresident"],
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "payment_physical_person_within_30_days",
+      "clause": "6-ilova",
+      "effective_from": "2019-09-17",
+      "topic": "registration_payment",
+      "applies_if": ["user_is_resident", "within_30_days_of_first_network_event"],
+      "excludes_if": ["user_is_nonresident"],
+      "legal_rule": "Jismoniy shaxs dastlabki tarmoq hodisasidan 30 kalendar kun ichida ro'yxatga olsa, har bir IMEI-kod uchun BHMning 20% to'laydi.",
+      "payment_ref": "physical_person_within_30_days",
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "payment_physical_person_after_30_days",
+      "clause": "6-ilova",
+      "effective_from": "2019-09-17",
+      "topic": "registration_payment",
+      "applies_if": ["user_is_resident", "after_30_days_of_first_network_event"],
+      "excludes_if": ["user_is_nonresident"],
+      "legal_rule": "Jismoniy shaxs dastlabki tarmoq hodisasidan 30 kalendar kun o'tgach ro'yxatga olsa, har bir IMEI-kod uchun BHMning 25% to'laydi.",
+      "payment_ref": "physical_person_after_30_days",
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "per_imei_separate_payment",
+      "clause": "6-ilova",
+      "effective_from": "2019-09-17",
+      "topic": "multi_imei_payment",
+      "applies_if": ["multi_imei_device"],
+      "legal_rule": "To'lov qurilmaning har bir IMEI-kodi uchun alohida hisoblanadi. Ikki IMEI-li (masalan ikki SIM yoki eSIM) qurilmada har bir IMEI uchun to'lov alohida chiqadi.",
+      "recommended_actions": ["read_both_imei_with_star06", "check_both_imei_statuses"],
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "commercial_importer_registration_im40",
+      "clause": "11",
+      "effective_from": "2019-09-17",
+      "topic": "commercial_import",
+      "applies_if": ["imported_by_commercial_importer"],
+      "legal_rule": "Import qiluvchilar olib kirgan qurilmalarni «erkin muomalaga chiqarish» (IM-40) bojxona rejimi rasmiylashtirilgach uch kun ichida ro'yxatga oladi; IMEI-kodlar bojxona yuk deklaratsiyasining 31-ustunida majburiy ko'rsatiladi.",
+      "payment_ref": "commercial_importer",
+      "required_documents": ["customs_cargo_declaration"],
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "clone_or_undetermined_not_registered",
+      "clause": "7",
+      "effective_from": "2019-09-17",
+      "topic": "clone_undetermined_restriction",
+      "applies_if": ["imei_cloned_or_undetermined"],
+      "legal_rule": "Klonlangan va aniqlanmagan IMEI-kodli mobil qurilmalar Tizimda ro'yxatga olinmaydi; klon aniqlanganda tizim qurilmani avtomatik «qora ro'yxat»ga kiritadi.",
+      "escalation_conditions": ["device_cannot_be_registered_individual_review"],
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "blacklist_service_restriction",
+      "clause": "2",
+      "effective_from": "2019-09-17",
+      "topic": "blacklist_restriction",
+      "applies_if": ["imei_blacklisted"],
+      "legal_rule": "Qora ro'yxatga kiritilgan IMEI-kod mobil aloqa xizmatlaridan foydalanishi cheklanadi; abonentga sababi haqida SMS ogohlantirish yuboriladi.",
+      "escalation_conditions": ["blacklisted_requires_individual_review"],
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "diplomatic_mission_special_order",
+      "clause": "10-1",
+      "effective_from": "2019-09-17",
+      "topic": "diplomatic_registration",
+      "applies_if": ["diplomatic_mission"],
+      "legal_rule": "Akkreditatsiyadan o'tgan diplomatik vakolatxonalar, konsullik muassasalari va ularga tenglashtirilgan tashkilotlar mobil qurilmalarni ro'yxatga olishning alohida (belgilangan) tartibidan foydalanadi.",
+      "payment_ref": "diplomatic",
+      "source_url": "https://lex.uz/docs/-4517458"
+    }
+  ]
+}

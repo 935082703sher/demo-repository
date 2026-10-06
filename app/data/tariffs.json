@@ -1,0 +1,43 @@
+{
+  "bhm": [
+    {
+      "amount": 412000,
+      "currency": "UZS",
+      "effective_from": "2024-09-01",
+      "effective_to": null,
+      "source": "BHM value consistent with the approved resolution-card figures (20% = 82 400, 25% = 103 000). Confirm against the official source before production."
+    }
+  ],
+  "formulas": {
+    "commercial_importer": {
+      "percent": 20,
+      "per_imei": true,
+      "note": "VMQ-778 6-ilova: import qiluvchi uchun har bir IMEI-kod uchun BHMning 20%."
+    },
+    "manufacturer": {
+      "percent": 10,
+      "per_imei": true,
+      "note": "VMQ-778 6-ilova: ishlab chiqaruvchi uchun har bir IMEI-kod uchun BHMning 10%."
+    },
+    "physical_person_within_30_days": {
+      "percent": 20,
+      "per_imei": true,
+      "note": "VMQ-778 6-ilova: jismoniy shaxs, dastlabki tarmoq hodisasidan 30 kalendar kun ichida ro'yxatga olinsa, har bir IMEI uchun BHMning 20%."
+    },
+    "physical_person_after_30_days": {
+      "percent": 25,
+      "per_imei": true,
+      "note": "VMQ-778 6-ilova: jismoniy shaxs, dastlabki tarmoq hodisasidan 30 kalendar kun o'tgach ro'yxatga olinsa, har bir IMEI uchun BHMning 25%."
+    },
+    "diplomatic": {
+      "percent": 20,
+      "per_imei": true,
+      "note": "VMQ-778 6-ilova: diplomatik korpus/elchixona/konsullik uchun har bir IMEI-kod uchun BHMning 20%."
+    },
+    "roaming_subscriber": {
+      "percent": 0,
+      "per_imei": true,
+      "note": "VMQ-778 6-ilova: Nizomning 6-bandi shartlari bajarilganda rouming abonenti uchun bepul."
+    }
+  }
+}
