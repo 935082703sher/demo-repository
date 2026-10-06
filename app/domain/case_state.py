@@ -144,6 +144,10 @@ class CaseState(BaseModel):
     last_customer_reply: str | None = None
     call_1170_reason: str | None = None
     explanation: ExplanationProfile = Field(default_factory=ExplanationProfile)
+    # Conversation state: the first problem (kept so a menu rejection re-examines it)
+    # and whether the previous turn offered a topic menu awaiting a selection.
+    original_problem: str | None = None
+    awaiting_menu: bool = False
 
     def known_facts(self) -> dict[str, str]:
         """Return name -> value for facts that carry a real (non-unknown) value."""

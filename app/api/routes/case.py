@@ -59,6 +59,13 @@ from app.services.grounding import GroundingValidator
 from app.services.interaction_log import InteractionLog, InteractionRecord
 from app.services.kb_retriever import get_retriever
 from app.services.localizer import Localizer
+from app.services.meta_intent import (
+    CORRECTION,
+    NONE_OF_ABOVE,
+    OTHER_ISSUE,
+    RESTART,
+    conversation_act,
+)
 from app.services.outcome_analyzer import OutcomeAnalysis, OutcomeAnalyzer
 from app.services.pii import redact_likely_pii
 from app.services.question_explainer import QuestionExplainer
@@ -345,6 +352,10 @@ def _start_fresh_case(case: CaseState) -> None:
     case.last_question = None
     case.last_customer_reply = None
     case.call_1170_reason = None
+    case.awaiting_menu = False
+    # original_problem is intentionally NOT cleared here: the RAG lane resets the
+    # diagnostic slate between turns, but a menu shown next must still re-examine the
+    # original problem. It is cleared only when a genuinely new problem begins.
 
 
 def _resp(
@@ -552,6 +563,39 @@ _UNSUPPORTED_1170 = {
     "To avoid giving wrong guidance, please call {phone}.",
     "kaa": "Bul soraw boyınsha tastıyıqlanǵan bilim bazamda anıq sheshim tabılmadı. "
     "Qáte baǵdar bermew ushın {phone} nomerine qońıraw etiń.",
+}
+# Shown after the customer rejects the offered menu and the knowledge base still has
+# no grounded answer for the original problem: acknowledge, then recommend 1170.
+_MENU_REJECTED_1170 = {
+    "uz": "Taklif qilingan variantlar sizning holatingizga mos kelmaganini tushundim. "
+    "Tasdiqlangan bilim bazamda bu holat bo'yicha aniq yechim topilmadi. "
+    "Noto'g'ri yo'l ko'rsatmaslik uchun {phone} raqamiga qo'ng'iroq qiling.",
+    "uz_cyrl": "Таклиф қилинган вариантлар сизнинг ҳолатингизга мос келмаганини тушундим. "
+    "Тасдиқланган билим базамда бу ҳолат бўйича аниқ ечим топилмади. "
+    "Нотўғри йўл кўрсатмаслик учун {phone} рақамига қўнғироқ қилинг.",
+    "ru": "Понял, что предложенные варианты вам не подходят. В проверенной базе знаний "
+    "нет точного решения для этого случая. Чтобы не дать неверный совет, "
+    "позвоните по номеру {phone}.",
+    "en": "I understand none of the offered options fit your case. I don't have a "
+    "confirmed answer for this in the knowledge base. To avoid wrong guidance, "
+    "please call {phone}.",
+    "kaa": "Usınılǵan variantlar sizge sáykes kelmegenin túsindim. Tastıyıqlanǵan bilim "
+    "bazamda bul jaǵday boyınsha anıq sheshim joq. Qáte baǵdar bermew ushın "
+    "{phone} nomerine qońıraw etiń.",
+}
+_OTHER_ISSUE_PROMPT = {
+    "uz": "Tushundim, boshqa muammo. Uni o'z so'zingiz bilan yozing.",
+    "uz_cyrl": "Тушундим, бошқа муаммо. Уни ўз сўзингиз билан ёзинг.",
+    "ru": "Понял, другая проблема. Опишите её своими словами.",
+    "en": "Understood, a different problem. Describe it in your own words.",
+    "kaa": "Túsindim, basqa másele. Onı óz sózińiz benen jazıń.",
+}
+_CORRECTION_PROMPT = {
+    "uz": "Kechirasiz, noto'g'ri tushundim. Muammoni o'z so'zingiz bilan qisqa qaytaring.",
+    "uz_cyrl": "Кечирасиз, нотўғри тушундим. Муаммони ўз сўзингиз билан қисқа қайтаринг.",
+    "ru": "Извините, я понял неверно. Опишите проблему своими словами ещё раз, коротко.",
+    "en": "Sorry, I misunderstood. Please restate the problem in your own words, briefly.",
+    "kaa": "Keshiriń, qáte túsindim. Máseleni óz sózińiz benen qısqa qaytalań.",
 }
 
 
@@ -869,10 +913,16 @@ async def _converse_turn(payload: ConverseCaseRequest, request: Request) -> Conv
     # Adapt the explanation style to the customer's words before anything else, so a
     # "explain simply" or "give an example" takes effect on this very turn.
     _apply_style_cue(case, message, lang)
+    # Whether a menu was awaiting a choice on the PREVIOUS turn (so a rejection like
+    # "muammom ro'yxatda yo'q" is read as rejecting it, not as a new problem). Reset
+    # now; a menu shown this turn sets it again before returning.
+    was_awaiting_menu = case.awaiting_menu
+    case.awaiting_menu = False
 
     # A previously closed case starts fresh so old facts don't auto-complete a new one.
     if case.status in (CaseStatus.RESOLVED, CaseStatus.HANDOFF, CaseStatus.CALL_1170_RECOMMENDED):
         _start_fresh_case(case)
+        case.original_problem = None  # a genuinely new problem follows
 
     # 0) A case awaiting a result: this message is the outcome of the offered card,
     #    not a new problem. Classify it and let the orchestrator decide what's next.
@@ -925,6 +975,51 @@ async def _converse_turn(payload: ConverseCaseRequest, request: Request) -> Conv
         # The analyzer's domain understands typos/dialect; keyword detection is the net.
         case.domain = analysis.domain or detect_domain(message)
     _refresh_unknowns(case)
+    # Keep the first real problem so a later menu rejection re-examines it, not the
+    # rejection text (whose "ro'yxatda" would otherwise look like a registration intent).
+    if case.original_problem is None and analysis.route is not Route.GREETING:
+        case.original_problem = message
+
+    # 1-meta) A conversation act ABOUT the dialogue (restart / correction / menu
+    #   rejection / other problem) is handled before the message is read as a tree
+    #   answer or routed by keyword, so a menu rejection never enters a tree root.
+    act = conversation_act(message)
+    pending = was_awaiting_menu or (case.active_tree is not None and case.pending_node is not None)
+    if act == RESTART:
+        _start_fresh_case(case)
+        case.original_problem = None
+        await store.save(case)
+        await _audit(audit, case, OUTCOME_GREETING, ROUTE_GREETING, detail="restart")
+        return _resp(case, _GREETING.get(lang, _GREETING["uz"]))
+    if act == OTHER_ISSUE:
+        _start_fresh_case(case)  # a genuinely new problem; the old one is forgotten
+        case.original_problem = None
+        await store.save(case)
+        await _audit(audit, case, OUTCOME_CLARIFY, ROUTE_CASE, detail="other_issue")
+        return _resp(case, _OTHER_ISSUE_PROMPT.get(lang, _OTHER_ISSUE_PROMPT["uz"]))
+    if pending and act == CORRECTION:
+        case.active_tree = None
+        case.pending_node = None
+        await store.save(case)
+        await _audit(audit, case, OUTCOME_CLARIFY, ROUTE_CASE, detail="correction")
+        return _resp(case, _CORRECTION_PROMPT.get(lang, _CORRECTION_PROMPT["uz"]))
+    if pending and act == NONE_OF_ABOVE:
+        # The menu did not fit. Re-examine the ORIGINAL problem from the knowledge
+        # base - never the rejection text, never a generic tree root.
+        case.active_tree = None
+        case.pending_node = None
+        original = case.original_problem or message
+        reply = await _rag_answer(provider, grounding, interaction_log, case, original, lang)
+        if not reply.requires_human:
+            await store.save(case)
+            await _audit(audit, case, OUTCOME_ANSWER, ROUTE_RAG, detail="none_of_above")
+            return reply
+        case.status = CaseStatus.CALL_1170_RECOMMENDED
+        case.call_1170_reason = "menu_rejected_no_coverage"
+        await store.save(case)
+        await _audit(audit, case, OUTCOME_CALL_1170, ROUTE_CASE, detail="menu_rejected_no_coverage")
+        text = _MENU_REJECTED_1170.get(lang, _MENU_REJECTED_1170["uz"]).format(phone=phone)
+        return _resp(case, text, done=True, requires_human=True, call_1170=True, phone=phone)
 
     # 2) If a question is open and this message answers it, take that answer.
     answered = False
@@ -1019,6 +1114,7 @@ async def _converse_turn(payload: ConverseCaseRequest, request: Request) -> Conv
             if reply.requires_human:
                 # No grounded answer: don't dead-end - offer the topics we can help
                 # with so the user can pick one instead of only "contact a specialist".
+                case.awaiting_menu = True
                 await store.save(case)
                 await _audit(audit, case, OUTCOME_CLARIFY, ROUTE_RAG)
                 intro = _RAG_CLARIFY.get(lang, _RAG_CLARIFY["uz"])
@@ -1035,11 +1131,13 @@ async def _converse_turn(payload: ConverseCaseRequest, request: Request) -> Conv
             if menu_domain is not None and engine.trees_for_domain(menu_domain):
                 by_lang = _DOMAIN_INTRO.get(lang, _DOMAIN_INTRO["uz"])
                 intro = by_lang.get(menu_domain) or _ROUTE_INTRO.get(lang, _ROUTE_INTRO["uz"])
+                case.awaiting_menu = True
                 await store.save(case)
                 await _audit(audit, case, OUTCOME_CLARIFY, ROUTE_CASE)
                 return await _menu(
                     case, engine.trees_for_domain(menu_domain), intro, lang, localizer
                 )
+            case.awaiting_menu = True
             await store.save(case)
             await _audit(audit, case, OUTCOME_CLARIFY, ROUTE_CASE)
             return await _menu(
