@@ -1,0 +1,1398 @@
+{
+  "document": "VMQ-778",
+  "source_url": "https://lex.uz/docs/-4517458",
+  "revision_note": "LexUZ amaldagi tahrir (lex.uz/docs/-4517458) asosida; mahalliy .doc faqat ilovalarni saqlaydi.",
+  "rules": [
+    {
+      "rule_id": "vmq778_clause_1",
+      "source": "VMQ-778",
+      "clause": "1",
+      "display": "1",
+      "rule_type": "scope",
+      "subject": "registration_scope",
+      "legal_rule": "Nizom O'zbekiston hududidagi mobil qurilmalar va aloqa moduli bo'lgan qurilmalarni ro'yxatga olish tartibini belgilaydi.",
+      "keywords": [
+        "nizom",
+        "tartib",
+        "qamrov",
+        "maqsad"
+      ],
+      "related_rules": [
+        "8"
+      ],
+      "payment_ref": null,
+      "deadline": null,
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "vmq778_clause_2",
+      "source": "VMQ-778",
+      "clause": "2",
+      "display": "2",
+      "rule_type": "definition",
+      "subject": "definitions",
+      "legal_rule": "Asosiy tushunchalar: GSMA, IMEI, MSISDN, SIM, SMS/USSD, abonent, import qiluvchi, Tizim bazasi, oq/kul rang/qora ro'yxat, bog'langan oq ro'yxat, klonlangan IMEI, aniqlanmagan IMEI, operator, norezident, xorijiy fuqaro, rouming, rezidentlik guvohnomasi.",
+      "keywords": [
+        "imei",
+        "gsma",
+        "ta'rif",
+        "tushuncha",
+        "oq royxat",
+        "qora royxat",
+        "kul rang",
+        "klon",
+        "rouming",
+        "norezident",
+        "определение",
+        "чёрный список",
+        "серый список"
+      ],
+      "related_rules": [
+        "7",
+        "39",
+        "6"
+      ],
+      "payment_ref": null,
+      "deadline": null,
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "vmq778_clause_3",
+      "source": "VMQ-778",
+      "clause": "3",
+      "display": "3",
+      "rule_type": "scope",
+      "subject": "system_purpose",
+      "legal_rule": "Tizimning maqsadi — IMEI-kodlarning yagona bazasini yaratish va ro'yxatlarni (oq, kul rang, qora, bog'langan oq) boshqarish.",
+      "keywords": [
+        "tizim",
+        "baza",
+        "maqsad"
+      ],
+      "related_rules": [
+        "2"
+      ],
+      "payment_ref": null,
+      "deadline": null,
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "vmq778_clause_4",
+      "source": "VMQ-778",
+      "clause": "4",
+      "display": "4",
+      "rule_type": "procedure",
+      "subject": "verification_via_system",
+      "legal_rule": "Barcha IMEI tekshiruv va ro'yxatga olish jarayonlari Tizim orqali amalga oshiriladi.",
+      "keywords": [
+        "tekshiruv",
+        "tizim orqali"
+      ],
+      "related_rules": [],
+      "payment_ref": null,
+      "deadline": null,
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "vmq778_clause_5",
+      "source": "VMQ-778",
+      "clause": "5",
+      "display": "5",
+      "rule_type": "procedure",
+      "subject": "pre_purchase_check",
+      "legal_rule": "Foydalanuvchi xariddan oldin IMEI maqomini SMS/USSD yoki sayt orqali tekshirishi mumkin; SMS so'rov operatorlar orqali bepul.",
+      "keywords": [
+        "tekshirish",
+        "xariddan oldin",
+        "sms",
+        "ussd",
+        "*1170#",
+        "uzimei",
+        "проверить",
+        "перед покупкой"
+      ],
+      "related_rules": [
+        "2"
+      ],
+      "payment_ref": null,
+      "deadline": null,
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "vmq778_clause_6",
+      "source": "VMQ-778",
+      "clause": "6",
+      "display": "6",
+      "rule_type": "requirement",
+      "subject": "registration_requirement",
+      "legal_rule": "Hududdagi barcha qurilmalarni ro'yxatdan o'tkazish majburiy; mahalliy tarmoqda ilgari tarmoq hodisasi bo'lmagan rouming qurilmalari mustasno.",
+      "keywords": [
+        "majburiy",
+        "royxatdan otkazish",
+        "ro'yxat kerak",
+        "обязательно",
+        "регистрация"
+      ],
+      "related_rules": [
+        "6-1",
+        "24",
+        "26",
+        "8"
+      ],
+      "payment_ref": null,
+      "deadline": null,
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "vmq778_clause_6_1",
+      "source": "VMQ-778",
+      "clause": "6-1",
+      "display": "6¹",
+      "rule_type": "responsibility",
+      "subject": "retail_seller_responsibility",
+      "legal_rule": "O'zbekiston hududida chakana savdo bilan shug'ullanuvchi tadbirkorlar qurilmani olib kirish sanasidan qat'i nazar ro'yxatdan o'tkazish uchun javobgardir.",
+      "keywords": [
+        "chakana",
+        "sotuvchi",
+        "dokon",
+        "dokondan",
+        "magazin",
+        "tadbirkor",
+        "javobgar",
+        "продавец",
+        "магазин",
+        "розничный"
+      ],
+      "related_rules": [
+        "6",
+        "24",
+        "44"
+      ],
+      "payment_ref": null,
+      "deadline": null,
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "vmq778_clause_7",
+      "source": "VMQ-778",
+      "clause": "7",
+      "display": "7",
+      "rule_type": "restriction",
+      "subject": "clone_undetermined_not_registered",
+      "legal_rule": "Klonlangan va aniqlanmagan IMEI-kodli qurilmalar Tizimda ro'yxatga olinmaydi.",
+      "keywords": [
+        "klon",
+        "klonlangan",
+        "aniqlanmagan",
+        "royxatga olinmaydi",
+        "клон",
+        "не регистрируется"
+      ],
+      "related_rules": [
+        "2",
+        "39"
+      ],
+      "payment_ref": null,
+      "deadline": null,
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "vmq778_clause_8",
+      "source": "VMQ-778",
+      "clause": "8",
+      "display": "8",
+      "rule_type": "scope",
+      "subject": "device_types",
+      "legal_rule": "Ro'yxatga olinadigan qurilma turlari 1-ilovada; ro'yxatga olish 4–5-boblar talablariga muvofiq.",
+      "keywords": [
+        "qurilma turlari",
+        "ilova 1"
+      ],
+      "related_rules": [
+        "1-ilova",
+        "6"
+      ],
+      "payment_ref": null,
+      "deadline": null,
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "vmq778_clause_9",
+      "source": "VMQ-778",
+      "clause": "9",
+      "display": "9",
+      "rule_type": "exception",
+      "subject": "no_reregistration",
+      "legal_rule": "Ilgari ro'yxatdan o'tgan qurilmalar qayta ro'yxatga olinmaydi.",
+      "keywords": [
+        "qayta royxat",
+        "qayta otkazish",
+        "повторно"
+      ],
+      "related_rules": [
+        "24"
+      ],
+      "payment_ref": null,
+      "deadline": null,
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "vmq778_clause_10",
+      "source": "VMQ-778",
+      "clause": "10",
+      "display": "10",
+      "rule_type": "procedure",
+      "subject": "protected_persons",
+      "legal_rule": "Maxsus himoyalanadigan shaxslar qurilmalari vakolatli organ so'rovi bo'yicha alohida ro'yxatga olinadi.",
+      "keywords": [
+        "himoyalangan shaxs",
+        "maxsus"
+      ],
+      "related_rules": [],
+      "payment_ref": null,
+      "deadline": null,
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "vmq778_clause_10_1",
+      "source": "VMQ-778",
+      "clause": "10-1",
+      "display": "10¹",
+      "rule_type": "procedure",
+      "subject": "diplomatic_registration",
+      "legal_rule": "Diplomatik korpus qurilmalari TIV Diplomatik xizmati orqali, to'lov bilan, 3 ish kunida ro'yxatga olinadi.",
+      "keywords": [
+        "diplomat",
+        "elchixona",
+        "konsul",
+        "tiv",
+        "дипломат",
+        "посольство"
+      ],
+      "related_rules": [
+        "6-ilova",
+        "42"
+      ],
+      "payment_ref": "diplomatic",
+      "deadline": "3 ish kuni",
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "vmq778_clause_10_2",
+      "source": "VMQ-778",
+      "clause": "10-2",
+      "display": "10²",
+      "rule_type": "procedure",
+      "subject": "court_confiscated",
+      "legal_rule": "Sud tomonidan musodara qilingan qurilmalar davlat ijrochisi hujjatlari asosida 3 ish kunida ro'yxatga olinadi.",
+      "keywords": [
+        "sud",
+        "musodara",
+        "ijrochi",
+        "davlat egaligi"
+      ],
+      "related_rules": [],
+      "payment_ref": null,
+      "deadline": "3 ish kuni",
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "vmq778_clause_11",
+      "source": "VMQ-778",
+      "clause": "11",
+      "display": "11",
+      "rule_type": "procedure",
+      "subject": "importer_manufacturer_registration",
+      "legal_rule": "Import qiluvchilar va ishlab chiqaruvchilar qurilmalarni 2-ilova sxemasi bo'yicha, IM-40 «erkin muomalaga chiqarish» rasmiylashtirilgach 3 kun ichida ro'yxatga oladi.",
+      "keywords": [
+        "import qiluvchi",
+        "importchi",
+        "ishlab chiqaruvchi",
+        "im-40",
+        "im40",
+        "erkin muomala",
+        "импортёр",
+        "производитель"
+      ],
+      "related_rules": [
+        "13",
+        "14",
+        "2-ilova",
+        "6-ilova"
+      ],
+      "payment_ref": null,
+      "deadline": "3 kun",
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "vmq778_clause_12",
+      "source": "VMQ-778",
+      "clause": "12",
+      "display": "12",
+      "rule_type": "exception",
+      "subject": "export_not_registered",
+      "legal_rule": "Eksport uchun ishlab chiqarilgan qurilmalar ro'yxatga olinmaydi.",
+      "keywords": [
+        "eksport",
+        "export"
+      ],
+      "related_rules": [],
+      "payment_ref": null,
+      "deadline": null,
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "vmq778_clause_13",
+      "source": "VMQ-778",
+      "clause": "13",
+      "display": "13",
+      "rule_type": "channel",
+      "subject": "importer_channels",
+      "legal_rule": "Import qiluvchi/ishlab chiqaruvchi Tizim operatori ofisi yoki YaIDXP portali orqali ro'yxatga oladi.",
+      "keywords": [
+        "ofis",
+        "portal",
+        "yidxp",
+        "kanal"
+      ],
+      "related_rules": [
+        "11",
+        "14"
+      ],
+      "payment_ref": null,
+      "deadline": null,
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "vmq778_clause_14",
+      "source": "VMQ-778",
+      "clause": "14",
+      "display": "14",
+      "rule_type": "procedure",
+      "subject": "importer_application",
+      "legal_rule": "Ariza beruvchi anketa va qurilma ma'lumotlarini topshiradi; import qiluvchi bojxona hujjati ma'lumotlarini (deklaratsiya 31-ustun) ko'rsatadi; kamchilik tuzatilsa 10 kun ichida qayta ariza berish mumkin.",
+      "keywords": [
+        "anketa",
+        "deklaratsiya",
+        "31-ustun",
+        "bojxona hujjati",
+        "10 kun"
+      ],
+      "related_rules": [
+        "11",
+        "13",
+        "17"
+      ],
+      "payment_ref": null,
+      "deadline": "10 kun (qayta ariza)",
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "vmq778_clause_15",
+      "source": "VMQ-778",
+      "clause": "15",
+      "display": "15",
+      "rule_type": "procedure",
+      "subject": "importer_intake",
+      "legal_rule": "Arizalarni operator/ro'yxatga oluvchi xodimlari qabul qiladi; YaIDXP elektron arizalari avtomatik ro'yxatga olinadi.",
+      "keywords": [
+        "qabul",
+        "avtomatik",
+        "yidxp"
+      ],
+      "related_rules": [
+        "13"
+      ],
+      "payment_ref": null,
+      "deadline": null,
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "vmq778_clause_16",
+      "source": "VMQ-778",
+      "clause": "16",
+      "display": "16",
+      "rule_type": "procedure",
+      "subject": "no_device_limit_importer",
+      "legal_rule": "Bir arizadagi qurilmalar soniga cheklov yo'q.",
+      "keywords": [
+        "cheklov yoq",
+        "soni"
+      ],
+      "related_rules": [],
+      "payment_ref": null,
+      "deadline": null,
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "vmq778_clause_17",
+      "source": "VMQ-778",
+      "clause": "17",
+      "display": "17",
+      "rule_type": "restriction",
+      "subject": "no_extra_documents_importer",
+      "legal_rule": "Operator 14-bandda ko'rsatilgandan ortiq hujjat talab qila olmaydi.",
+      "keywords": [
+        "ortiqcha hujjat yoq",
+        "talab qilmaydi"
+      ],
+      "related_rules": [
+        "14",
+        "32"
+      ],
+      "payment_ref": null,
+      "deadline": null,
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "vmq778_clause_18",
+      "source": "VMQ-778",
+      "clause": "18",
+      "display": "18",
+      "rule_type": "procedure",
+      "subject": "interagency_data_importer",
+      "legal_rule": "Operator qo'shimcha ma'lumotni vakolatli organlardan mustaqil oladi; organlar 1 ish kunida beradi.",
+      "keywords": [
+        "idoralararo",
+        "organ",
+        "1 ish kuni"
+      ],
+      "related_rules": [
+        "33"
+      ],
+      "payment_ref": null,
+      "deadline": "1 ish kuni",
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "vmq778_clause_19",
+      "source": "VMQ-778",
+      "clause": "19",
+      "display": "19",
+      "rule_type": "liability",
+      "subject": "false_info_liability_importer",
+      "legal_rule": "Ariza beruvchi noto'g'ri ma'lumot uchun qonun bo'yicha javobgar.",
+      "keywords": [
+        "notogri malumot",
+        "javobgarlik"
+      ],
+      "related_rules": [
+        "34",
+        "50"
+      ],
+      "payment_ref": null,
+      "deadline": null,
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "vmq778_clause_20",
+      "source": "VMQ-778",
+      "clause": "20",
+      "display": "20",
+      "rule_type": "deadline",
+      "subject": "importer_review_3_days",
+      "legal_rule": "Ariza ko'rib chiqish va IMEI ro'yxatga olish 3 ish kunida yakunlanadi.",
+      "keywords": [
+        "korib chiqish",
+        "3 ish kuni",
+        "muddat"
+      ],
+      "related_rules": [
+        "21",
+        "22"
+      ],
+      "payment_ref": null,
+      "deadline": "3 ish kuni",
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "vmq778_clause_21",
+      "source": "VMQ-778",
+      "clause": "21",
+      "display": "21",
+      "rule_type": "payment",
+      "subject": "importer_invoice",
+      "legal_rule": "Ro'yxat yakunlangach 1 ish kunida to'lov uchun hisob (invoys) beriladi.",
+      "keywords": [
+        "hisob",
+        "invoys",
+        "tolov"
+      ],
+      "related_rules": [
+        "22",
+        "42"
+      ],
+      "payment_ref": null,
+      "deadline": "1 ish kuni",
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "vmq778_clause_22",
+      "source": "VMQ-778",
+      "clause": "22",
+      "display": "22",
+      "rule_type": "procedure",
+      "subject": "importer_whitelist_after_payment",
+      "legal_rule": "To'lovdan keyin 10 ish kuni ichida barcha IMEIlar 1 ish kunida oq ro'yxatga kiritiladi va ariza beruvchi xabardor qilinadi.",
+      "keywords": [
+        "oq royxat",
+        "tolovdan keyin",
+        "10 ish kuni"
+      ],
+      "related_rules": [
+        "21"
+      ],
+      "payment_ref": null,
+      "deadline": "10 ish kuni",
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "vmq778_clause_23",
+      "source": "VMQ-778",
+      "clause": "23",
+      "display": "23",
+      "rule_type": "procedure",
+      "subject": "dual_sim_second_slot",
+      "legal_rule": "2019-yil 1-noyabrgача tarmoqda faol qurilmalar avtomatik ro'yxatga olingan; birinchi SIM-slot IMEIsi ro'yxatda bo'lsa, ikkinchi slot shaxsan murojaat (ID, *#06#, 5a-ilova) bilan 3 ish soatida BEPUL; 1-noyabrdan keyin ro'yxatga olingan bo'lsa ikkinchi slot to'lov bilan.",
+      "keywords": [
+        "ikki sim",
+        "ikkinchi slot",
+        "ikkinchi imei",
+        "*#06#",
+        "5a-ilova",
+        "avtomatik",
+        "dual sim",
+        "вторая сим"
+      ],
+      "related_rules": [
+        "44",
+        "6-ilova"
+      ],
+      "payment_ref": null,
+      "deadline": "3 ish soati",
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "vmq778_clause_24",
+      "source": "VMQ-778",
+      "clause": "24",
+      "display": "24",
+      "rule_type": "exception",
+      "subject": "no_reregistration_by_individual",
+      "legal_rule": "Jismoniy shaxs import qiluvchi/ishlab chiqaruvchi tomonidan allaqachon ro'yxatga olingan va bazada mavjud qurilmani qayta ro'yxatdan o'tkazishi shart emas.",
+      "keywords": [
+        "qayta royxat shart emas",
+        "allaqachon royxatda",
+        "mavjud baza",
+        "повторно не нужно"
+      ],
+      "related_rules": [
+        "6-1",
+        "9",
+        "6"
+      ],
+      "payment_ref": null,
+      "deadline": null,
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "vmq778_clause_25",
+      "source": "VMQ-778",
+      "clause": "25",
+      "display": "25",
+      "rule_type": "procedure",
+      "subject": "individual_import_schema",
+      "legal_rule": "Jismoniy shaxslarning qurilma importi 4-ilova sxemasi bo'yicha ro'yxatga olinadi.",
+      "keywords": [
+        "jismoniy shaxs import",
+        "4-ilova"
+      ],
+      "related_rules": [
+        "26",
+        "28"
+      ],
+      "payment_ref": null,
+      "deadline": null,
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "vmq778_clause_26",
+      "source": "VMQ-778",
+      "clause": "26",
+      "display": "26",
+      "rule_type": "deadline",
+      "subject": "postal_30_days",
+      "legal_rule": "Pochta/kuryer orqali olib kirilgan qurilmalar birinchi muvaffaqiyatli tarmoq ulanishidan 30 kalendar kun ichida ro'yxatga olinadi.",
+      "keywords": [
+        "pochta",
+        "kuryer",
+        "posilka",
+        "uzpost",
+        "ozon",
+        "jonatma",
+        "30 kun",
+        "почта",
+        "посылка",
+        "международное отправление",
+        "почтовое отправление",
+        "почтой",
+        "chet eldan"
+      ],
+      "related_rules": [
+        "27",
+        "31",
+        "38"
+      ],
+      "payment_ref": null,
+      "deadline": "30 kalendar kun",
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "vmq778_clause_27",
+      "source": "VMQ-778",
+      "clause": "27",
+      "display": "27",
+      "rule_type": "procedure",
+      "subject": "deadline_notifications",
+      "legal_rule": "Operator 30 kunlik majburiyat haqida davlat, rus va ingliz tillarida SMS yuboradi — birinchi ulanishda va muddat tugashidan 5 kun oldin.",
+      "keywords": [
+        "sms ogohlantirish",
+        "30 kun",
+        "5 kun oldin"
+      ],
+      "related_rules": [
+        "26"
+      ],
+      "payment_ref": null,
+      "deadline": null,
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "vmq778_clause_28",
+      "source": "VMQ-778",
+      "clause": "28",
+      "display": "28",
+      "rule_type": "channel",
+      "subject": "citizen_registration_channels",
+      "legal_rule": "O'zbekiston fuqarolari: (1) shaxsan operator/ro'yxatga oluvchida ID va 5b-ilova; (2) YaIDXP (ERI/Mobile-ID); (3) sayt orqali IMEI+JSHSHIR+telefon; (4) biometrik identifikatsiya + IMEI.",
+      "keywords": [
+        "kanal",
+        "shaxsan",
+        "sayt",
+        "yidxp",
+        "biometrik",
+        "jshshir",
+        "5b-ilova"
+      ],
+      "related_rules": [
+        "29"
+      ],
+      "payment_ref": null,
+      "deadline": null,
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "vmq778_clause_28_1",
+      "source": "VMQ-778",
+      "clause": "28-1",
+      "display": "28¹",
+      "rule_type": "channel",
+      "subject": "foreign_resident_channels",
+      "legal_rule": "Xorijiy fuqarolar, doimiy yashovchi xorijiy fuqarolar va fuqaroligi yo'q doimiy rezidentlar: shaxsan (kirish hujjati+5b-ilova), YaIDXP, sayt (IMEI, shaxsiy raqam, kirish hujjati raqami, rezidentlik guvohnomasi), yoki biometrik.",
+      "keywords": [
+        "xorijiy fuqaro",
+        "chet el fuqaro",
+        "chet ellik",
+        "chet el fuqarosi",
+        "norezident",
+        "rezidentlik guvohnomasi",
+        "kirish hujjati",
+        "иностранный",
+        "нерезидент",
+        "вид на жительство"
+      ],
+      "related_rules": [
+        "28",
+        "29"
+      ],
+      "payment_ref": null,
+      "deadline": null,
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "vmq778_clause_29",
+      "source": "VMQ-778",
+      "clause": "29",
+      "display": "29",
+      "rule_type": "procedure",
+      "subject": "individual_application_form",
+      "legal_rule": "Jismoniy shaxslar 5-ilova shaklini (belgilar, model, soni, IMEI) topshiradi; shaxsan — JSHSHIR asosidagi ID; YaIDXP — pasport talab qilinmaydi; sayt — IMEI+JSHSHIR+telefon; biometrik identifikatsiya.",
+      "keywords": [
+        "5-ilova",
+        "anketa",
+        "jshshir",
+        "ariza shakli"
+      ],
+      "related_rules": [
+        "28",
+        "28-1"
+      ],
+      "payment_ref": null,
+      "deadline": null,
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "vmq778_clause_29_1",
+      "source": "VMQ-778",
+      "clause": "29-1",
+      "display": "29¹",
+      "rule_type": "payment",
+      "subject": "no_customs_duty_individual",
+      "legal_rule": "Bojsiz import chegarasidan qat'i nazar bojxona bojlari olinmaydi; bojxona deklaratsiyasi talab qilinadi.",
+      "keywords": [
+        "bojsiz",
+        "boj olinmaydi",
+        "deklaratsiya",
+        "таможенная пошлина"
+      ],
+      "related_rules": [
+        "31-1",
+        "31-2"
+      ],
+      "payment_ref": null,
+      "deadline": null,
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "vmq778_clause_30",
+      "source": "VMQ-778",
+      "clause": "30",
+      "display": "30",
+      "rule_type": "procedure",
+      "subject": "individual_intake",
+      "legal_rule": "Shaxsan arizalarni xodimlar qabul qiladi; YaIDXP elektron arizalari avtomatik ro'yxatga olinadi va raqam beriladi.",
+      "keywords": [
+        "qabul",
+        "avtomatik",
+        "raqam"
+      ],
+      "related_rules": [
+        "28"
+      ],
+      "payment_ref": null,
+      "deadline": null,
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "vmq778_clause_31",
+      "source": "VMQ-778",
+      "clause": "31",
+      "display": "31",
+      "rule_type": "procedure",
+      "subject": "postal_registration_channel",
+      "legal_rule": "Pochta/kuryer importi shaxsan operator/ro'yxatga oluvchida yoki sayt orqali — pochta ID shtrix-kodi, kalendar muhri va JSHSHIRli ID bilan ro'yxatga olinadi.",
+      "keywords": [
+        "pochta",
+        "shtrix kod",
+        "pochta id",
+        "sayt orqali",
+        "posilka",
+        "международное отправление",
+        "kuryer"
+      ],
+      "related_rules": [
+        "26",
+        "31-1",
+        "31-2"
+      ],
+      "payment_ref": null,
+      "deadline": null,
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "vmq778_clause_31_1",
+      "source": "VMQ-778",
+      "clause": "31-1",
+      "display": "31¹",
+      "rule_type": "verification",
+      "subject": "border_crossing_check",
+      "legal_rule": "Jismoniy shaxsning chegaradan o'tishi Personalizatsiya agentligi bilan elektron ma'lumot almashinuvi orqali tekshiriladi (o'tish sanasi, usuli, pasport); pochta ma'lumoti «O'zbekiston pochtasi» va bojxona orqali; bojsiz chegaradan ortiq qurilmalar boj to'langach ro'yxatga olinadi.",
+      "keywords": [
+        "chegara",
+        "personalizatsiya",
+        "otish sanasi",
+        "bojxona",
+        "chegaradan ortiq"
+      ],
+      "related_rules": [
+        "29-1",
+        "31-2"
+      ],
+      "payment_ref": null,
+      "deadline": null,
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "vmq778_clause_31_2",
+      "source": "VMQ-778",
+      "clause": "31-2",
+      "display": "31²",
+      "rule_type": "payment",
+      "subject": "excess_duty_and_fee",
+      "legal_rule": "Tizim ortiqcha/deklaratsiya qilinmagan qurilmalar uchun bojxona boji va ro'yxat to'lovini hisoblaydi; bojlar byudjetga, ro'yxat to'lovi operator hisobiga.",
+      "keywords": [
+        "ortiqcha",
+        "deklaratsiya qilinmagan",
+        "boj",
+        "tolov hisobi"
+      ],
+      "related_rules": [
+        "29-1",
+        "31-1",
+        "42"
+      ],
+      "payment_ref": null,
+      "deadline": null,
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "vmq778_clause_32",
+      "source": "VMQ-778",
+      "clause": "32",
+      "display": "32",
+      "rule_type": "restriction",
+      "subject": "no_extra_documents_individual",
+      "legal_rule": "Operator Nizomda ko'rsatilgandan ortiq hujjat talab qila olmaydi.",
+      "keywords": [
+        "ortiqcha hujjat yoq"
+      ],
+      "related_rules": [
+        "17"
+      ],
+      "payment_ref": null,
+      "deadline": null,
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "vmq778_clause_33",
+      "source": "VMQ-778",
+      "clause": "33",
+      "display": "33",
+      "rule_type": "procedure",
+      "subject": "interagency_data_individual",
+      "legal_rule": "Operator kerakli ma'lumotni vakolatli organlardan mustaqil oladi; organlar 1 ish kunida beradi.",
+      "keywords": [
+        "idoralararo",
+        "1 ish kuni"
+      ],
+      "related_rules": [
+        "18"
+      ],
+      "payment_ref": null,
+      "deadline": "1 ish kuni",
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "vmq778_clause_34",
+      "source": "VMQ-778",
+      "clause": "34",
+      "display": "34",
+      "rule_type": "liability",
+      "subject": "false_info_liability_individual",
+      "legal_rule": "Jismoniy shaxs noto'g'ri ma'lumot uchun qonun bo'yicha javobgar.",
+      "keywords": [
+        "notogri malumot",
+        "javobgar"
+      ],
+      "related_rules": [
+        "19",
+        "50"
+      ],
+      "payment_ref": null,
+      "deadline": null,
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "vmq778_clause_35",
+      "source": "VMQ-778",
+      "clause": "35",
+      "display": "35",
+      "rule_type": "deadline",
+      "subject": "individual_review_3_hours",
+      "legal_rule": "Ariza ko'rib chiqish va IMEI ro'yxatga olish 3 ish soatida yakunlanadi.",
+      "keywords": [
+        "3 ish soati",
+        "korib chiqish",
+        "muddat"
+      ],
+      "related_rules": [
+        "36",
+        "37"
+      ],
+      "payment_ref": null,
+      "deadline": "3 ish soati",
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "vmq778_clause_36",
+      "source": "VMQ-778",
+      "clause": "36",
+      "display": "36",
+      "rule_type": "payment",
+      "subject": "individual_invoice",
+      "legal_rule": "Ro'yxat yakunlangach 1 ish soatida hisob (invoys) beriladi.",
+      "keywords": [
+        "hisob",
+        "invoys",
+        "1 ish soati"
+      ],
+      "related_rules": [
+        "37",
+        "42"
+      ],
+      "payment_ref": null,
+      "deadline": "1 ish soati",
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "vmq778_clause_37",
+      "source": "VMQ-778",
+      "clause": "37",
+      "display": "37",
+      "rule_type": "procedure",
+      "subject": "individual_whitelist_after_payment",
+      "legal_rule": "To'lovdan keyin 1 ish soatida barcha IMEIlar oq ro'yxatga kiritiladi va xabar beriladi.",
+      "keywords": [
+        "oq royxat",
+        "tolovdan keyin",
+        "1 ish soati"
+      ],
+      "related_rules": [
+        "36"
+      ],
+      "payment_ref": null,
+      "deadline": "1 ish soati",
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "vmq778_clause_38",
+      "source": "VMQ-778",
+      "clause": "38",
+      "display": "38",
+      "rule_type": "procedure",
+      "subject": "gray_list_during_review",
+      "legal_rule": "30 kun ichida berilgan ariza davomida qurilma kul rang ro'yxatda bo'lib, ko'rib chiqish davrida xizmat cheklanmaydi.",
+      "keywords": [
+        "kul rang",
+        "cheklanmaydi",
+        "korib chiqish",
+        "серый список"
+      ],
+      "related_rules": [
+        "26",
+        "38-1"
+      ],
+      "payment_ref": null,
+      "deadline": null,
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "vmq778_clause_38_1",
+      "source": "VMQ-778",
+      "clause": "38-1",
+      "display": "38¹",
+      "rule_type": "payment",
+      "subject": "payment_within_10_days",
+      "legal_rule": "Ro'yxat to'lovi ariza berilgan kundan 10 kalendar kun ichida to'lanadi; to'lov odatiy usullar yoki telefon balansidan yechish orqali.",
+      "keywords": [
+        "tolov",
+        "10 kalendar kun",
+        "balansdan",
+        "10 kun"
+      ],
+      "related_rules": [
+        "42",
+        "36"
+      ],
+      "payment_ref": null,
+      "deadline": "10 kalendar kun",
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "vmq778_clause_39",
+      "source": "VMQ-778",
+      "clause": "39",
+      "display": "39",
+      "rule_type": "restriction",
+      "subject": "clone_auto_blacklist",
+      "legal_rule": "Klonlangan IMEIlar avtomatik tahlil qilinib qora ro'yxatga kiritiladi.",
+      "keywords": [
+        "klon",
+        "qora royxat",
+        "avtomatik",
+        "blok",
+        "чёрный список"
+      ],
+      "related_rules": [
+        "7",
+        "2"
+      ],
+      "payment_ref": null,
+      "deadline": null,
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "vmq778_clause_42",
+      "source": "VMQ-778",
+      "clause": "42",
+      "display": "42",
+      "rule_type": "payment",
+      "subject": "fee_amounts_appendix6",
+      "legal_rule": "Ro'yxatga olish to'lovi miqdorlari 6-ilovada belgilangan.",
+      "keywords": [
+        "tolov miqdori",
+        "6-ilova",
+        "tarif",
+        "narx",
+        "стоимость",
+        "тариф"
+      ],
+      "related_rules": [
+        "6-ilova",
+        "44",
+        "21",
+        "36"
+      ],
+      "payment_ref": null,
+      "deadline": null,
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "vmq778_clause_43",
+      "source": "VMQ-778",
+      "clause": "43",
+      "display": "43",
+      "rule_type": "payment",
+      "subject": "fee_distribution",
+      "legal_rule": "To'lovlar operator hisobiga tushadi: operator xarajatlari, davlat IT loyihalari, Telekom rivojlantirish jamg'armasi, chekka/turistik hududlar infratuzilmasi uchun.",
+      "keywords": [
+        "tolov taqsimoti",
+        "jamgarma"
+      ],
+      "related_rules": [
+        "42"
+      ],
+      "payment_ref": null,
+      "deadline": null,
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "vmq778_clause_44",
+      "source": "VMQ-778",
+      "clause": "44",
+      "display": "44",
+      "rule_type": "payment",
+      "subject": "per_imei_separate_payment",
+      "legal_rule": "Bir nechta IMEIli qurilmalarda to'lov har bir IMEI uchun alohida olinadi.",
+      "keywords": [
+        "har bir imei",
+        "alohida tolov",
+        "ikki imei",
+        "ikkinchi imei",
+        "esim",
+        "каждый imei",
+        "второй imei",
+        "отдельно"
+      ],
+      "related_rules": [
+        "42",
+        "23",
+        "6-1"
+      ],
+      "payment_ref": null,
+      "deadline": null,
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "vmq778_clause_45",
+      "source": "VMQ-778",
+      "clause": "45",
+      "display": "45",
+      "rule_type": "authority",
+      "subject": "operator_rights",
+      "legal_rule": "Tizim operatori huquqlari: kirish tartibini belgilash, integratsiya, operatorlardan texnik ma'lumot so'rash, faoliyatni muvofiqlashtirish.",
+      "keywords": [
+        "operator huquqi",
+        "integratsiya"
+      ],
+      "related_rules": [
+        "46"
+      ],
+      "payment_ref": null,
+      "deadline": null,
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "vmq778_clause_46",
+      "source": "VMQ-778",
+      "clause": "46",
+      "display": "46",
+      "rule_type": "authority",
+      "subject": "operator_obligations",
+      "legal_rule": "Tizim operatori majburiyatlari: integratsiya, uzluksiz ishlash va axborot xavfsizligi, operatorlarni xabardor qilish, Bojxona qo'mitasiga oylik hisobot.",
+      "keywords": [
+        "operator majburiyati",
+        "hisobot",
+        "xavfsizlik"
+      ],
+      "related_rules": [
+        "45",
+        "47"
+      ],
+      "payment_ref": null,
+      "deadline": null,
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "vmq778_clause_47",
+      "source": "VMQ-778",
+      "clause": "47",
+      "display": "47",
+      "rule_type": "liability",
+      "subject": "operator_liability",
+      "legal_rule": "Tizim operatori uzluksiz ishlash, axborot xavfsizligi va ma'lumotlarni himoya qilish uchun javobgar.",
+      "keywords": [
+        "operator javobgarligi"
+      ],
+      "related_rules": [
+        "46"
+      ],
+      "payment_ref": null,
+      "deadline": null,
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "vmq778_clause_48",
+      "source": "VMQ-778",
+      "clause": "48",
+      "display": "48",
+      "rule_type": "procedure",
+      "subject": "interagency_agreements",
+      "legal_rule": "Tizimning boshqa idoralar bilan muvofiqlashuvi alohida hamkorlik kelishuvlari bilan tartibga solinadi.",
+      "keywords": [
+        "kelishuv",
+        "hamkorlik"
+      ],
+      "related_rules": [],
+      "payment_ref": null,
+      "deadline": null,
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "vmq778_clause_49",
+      "source": "VMQ-778",
+      "clause": "49",
+      "display": "49",
+      "rule_type": "restriction",
+      "subject": "suspend_by_law_enforcement",
+      "legal_rule": "Operator huquqni muhofaza qiluvchi organlar so'rovi bo'yicha xavfsizlik/mudofaa maqsadida qurilma ishini to'xtatishi/tiklashi mumkin.",
+      "keywords": [
+        "toxtatish",
+        "tiklash",
+        "xavfsizlik",
+        "organ sorovi"
+      ],
+      "related_rules": [],
+      "payment_ref": null,
+      "deadline": null,
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "vmq778_clause_49_1",
+      "source": "VMQ-778",
+      "clause": "49-1",
+      "display": "49¹",
+      "rule_type": "procedure",
+      "subject": "contract_services",
+      "legal_rule": "Operator qonun taqiqlamagan xizmatlarni shartnoma asosida ko'rsatishi mumkin.",
+      "keywords": [
+        "shartnoma xizmat"
+      ],
+      "related_rules": [],
+      "payment_ref": null,
+      "deadline": null,
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "vmq778_clause_49_2",
+      "source": "VMQ-778",
+      "clause": "49-2",
+      "display": "49²",
+      "rule_type": "restriction",
+      "subject": "cancel_by_court",
+      "legal_rule": "Ilgari ro'yxatga olingan IMEIlar sud qarori bilan bekor qilinadi; talablar buzilsa yoki uchinchi shaxs ma'lumoti berilsa to'lov qaytarilmaydi.",
+      "keywords": [
+        "bekor",
+        "sud qarori",
+        "tolov qaytmaydi",
+        "uchinchi shaxs"
+      ],
+      "related_rules": [
+        "49-3"
+      ],
+      "payment_ref": null,
+      "deadline": null,
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "vmq778_clause_49_3",
+      "source": "VMQ-778",
+      "clause": "49-3",
+      "display": "49³",
+      "rule_type": "procedure",
+      "subject": "appeal_rights",
+      "legal_rule": "Ariza beruvchilar operator, ro'yxatga oluvchi yoki mansabdor shaxs qarorlari ustidan belgilangan tartibda shikoyat qilishi mumkin.",
+      "keywords": [
+        "shikoyat",
+        "ustidan",
+        "qaror"
+      ],
+      "related_rules": [
+        "49-2"
+      ],
+      "payment_ref": null,
+      "deadline": null,
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "vmq778_clause_50",
+      "source": "VMQ-778",
+      "clause": "50",
+      "display": "50",
+      "rule_type": "liability",
+      "subject": "violation_liability",
+      "legal_rule": "Qoidabuzarlar qonun hujjatlariga muvofiq javobgar.",
+      "keywords": [
+        "javobgarlik",
+        "qoidabuzar"
+      ],
+      "related_rules": [
+        "19",
+        "34"
+      ],
+      "payment_ref": null,
+      "deadline": null,
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "vmq778_clause_1_ilova",
+      "source": "VMQ-778",
+      "clause": "1-ilova",
+      "display": "1-ilova",
+      "rule_type": "appendix",
+      "subject": "device_types_list",
+      "legal_rule": "Ro'yxatga olinadigan 14 qurilma turi (planshet, smartfon, oddiy telefon, portativ, dongle, router, IoT, transport moduli, elektron kitob, modul, kompyuter, modem, kiyiladigan qurilma).",
+      "keywords": [
+        "qurilma turlari",
+        "smartfon",
+        "planshet",
+        "modem",
+        "soat"
+      ],
+      "related_rules": [
+        "8"
+      ],
+      "payment_ref": null,
+      "deadline": null,
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "vmq778_clause_2_ilova",
+      "source": "VMQ-778",
+      "clause": "2-ilova",
+      "display": "2-ilova",
+      "rule_type": "appendix",
+      "subject": "importer_schema",
+      "legal_rule": "Import qiluvchi/ishlab chiqaruvchi ro'yxatga olish sxemasi (blok-sxema).",
+      "keywords": [
+        "sxema",
+        "import"
+      ],
+      "related_rules": [
+        "11"
+      ],
+      "payment_ref": null,
+      "deadline": null,
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "vmq778_clause_3a_ilova",
+      "source": "VMQ-778",
+      "clause": "3a-ilova",
+      "display": "3a-ilova",
+      "rule_type": "appendix",
+      "subject": "diplomatic_form",
+      "legal_rule": "Diplomatik korpus uchun ro'yxatga olish ariza (anketa) namunasi.",
+      "keywords": [
+        "anketa",
+        "diplomat"
+      ],
+      "related_rules": [
+        "10-1"
+      ],
+      "payment_ref": null,
+      "deadline": null,
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "vmq778_clause_5_ilova",
+      "source": "VMQ-778",
+      "clause": "5-ilova",
+      "display": "5-ilova",
+      "rule_type": "appendix",
+      "subject": "individual_form",
+      "legal_rule": "Jismoniy shaxs uchun ro'yxatga olish ariza (anketa) namunasi (5, 5a, 5b).",
+      "keywords": [
+        "anketa",
+        "jismoniy shaxs",
+        "5b",
+        "5a"
+      ],
+      "related_rules": [
+        "29",
+        "23"
+      ],
+      "payment_ref": null,
+      "deadline": null,
+      "source_url": "https://lex.uz/docs/-4517458"
+    },
+    {
+      "rule_id": "vmq778_clause_6_ilova",
+      "source": "VMQ-778",
+      "clause": "6-ilova",
+      "display": "6-ilova",
+      "rule_type": "payment",
+      "subject": "fee_table",
+      "legal_rule": "To'lov miqdorlari jadvali (har bir IMEI uchun): import qiluvchi BHM 20%, ishlab chiqaruvchi 10%, jismoniy shaxs 30 kun ichida 20% / keyin 25%, diplomatik 20%, rouming bepul.",
+      "keywords": [
+        "tolov jadvali",
+        "bhm",
+        "foiz",
+        "20%",
+        "25%",
+        "10%",
+        "tarif",
+        "narx",
+        "тариф"
+      ],
+      "related_rules": [
+        "42",
+        "44",
+        "38-1"
+      ],
+      "payment_ref": null,
+      "deadline": null,
+      "source_url": "https://lex.uz/docs/-4517458"
+    }
+  ]
+}
