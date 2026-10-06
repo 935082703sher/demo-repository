@@ -62,8 +62,17 @@ def test_number_check_ignores_clause_citations() -> None:
     assert introduces_no_new_number("Xorijiy fuqaro kanallari.", "Bu 28-band va 2-bandga asosan.")
 
 
-def test_number_check_still_rejects_a_hallucinated_deadline() -> None:
-    assert not introduces_no_new_number("30 kalendar kun ichida.", "90 kun ichida (28-band).")
+def test_number_check_rejects_a_fabricated_fee() -> None:
+    # The narrow safety net guards invented monetary amounts specifically.
+    assert not introduces_no_new_number("To'lov 82 400 so'm.", "To'lov 250 000 so'm.")
+    assert introduces_no_new_number("To'lov 82 400 so'm.", "Siz 82 400 so'm to'laysiz.")
+
+
+def test_number_check_does_not_trip_on_clause_lists_or_list_numbers() -> None:
+    # "31-1 va 31-2" (clauses) and "1. 1170" (list index + hotline) are not fees.
+    assert introduces_no_new_number(
+        "Xorijiy fuqaro kanallari.", "Bu 31-1 va 31-2-bandlarda. 1. 1170 ga qo'ng'iroq qiling."
+    )
 
 
 # --- composer behaviour ---

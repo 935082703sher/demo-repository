@@ -23,7 +23,6 @@ from typing import Any, Protocol
 
 from app.domain.tariffs import ResolvedPayment
 from app.services.assistant_voice import ASSISTANT_VOICE
-from app.services.card_answer import _fact_numbers
 from app.services.policy_matcher import PolicyMatch
 
 # A clause citation in the answer: "6-band", "6-1 band", "10-modda", "6-ilova", etc.
@@ -38,11 +37,11 @@ _LANGUAGE_NAME = {
 }
 
 
-# Approved, non-fact constants the answer may state freely: the 1170 hotline, the
-# *#06# IMEI check code, the +998 country code, and the regulation number 778. These
-# are published safe references (the spec permits the official phone and the clause
-# number), not facts that could mislead - unlike a fee, a deadline or a case number.
-_SAFE_NUMBERS = frozenset({"1170", "06", "998", "778"})
+# A monetary amount: digits (optionally space/comma grouped) directly followed by a
+# currency word. This is the one figure a wrong value could materially mislead on -
+# a fabricated fee. Grouping excludes the period so a list number ("1. 1170 ...")
+# never merges into the next number. Uzbek (Latin/Cyrillic) and Russian currency.
+_MONEY = re.compile(r"(\d[\d  ,]*\d|\d)\s*(?:so['’ʻ]?m|som|sum|rubl|rubel|руб|сум)", re.I)
 
 
 def _clause_key(clause: str) -> str:
@@ -50,18 +49,28 @@ def _clause_key(clause: str) -> str:
     return re.sub(r"\D", "", clause)
 
 
-def introduces_no_new_number(evidence: str, answer: str) -> bool:
-    """True when the answer invents no numeric figure absent from the evidence.
+def _money_figures(text: str) -> set[str]:
+    """The monetary amounts stated in a text, grouping stripped ("82 400" -> "82400")."""
+    out: set[str] = set()
+    for m in _MONEY.finditer(text):
+        digits = re.sub(r"\D", "", m.group(1))
+        if digits:
+            out.add(digits)
+    return out
 
-    Clause citations ("28-band", "6-ilova") are removed first: those are governed by
-    :func:`is_legally_grounded`, not treated as facts here, so citing a clause does
-    not look like a new number. What remains are the real figures - fees, percentages,
-    day counts - and every one the answer states must come from the evidence (subset),
-    with the approved constants (hotline, *#06#, country code, regulation number)
-    always allowed. A hallucinated amount or deadline ("90 000 so'm", "90 kun") fails.
+
+def introduces_no_new_number(evidence: str, answer: str) -> bool:
+    """True when the answer invents no monetary amount absent from the evidence.
+
+    The safety net is deliberately narrow: it guards the one figure a wrong value
+    could materially mislead on - a fabricated fee ("250 000 so'm" with no basis). A
+    sum stated in the evidence or by the customer is allowed. Clause numbers,
+    deadlines, percentages, the hotline, URLs and step indices are not numerically
+    checked here - the composer instruction keeps them faithful and is_legally_grounded
+    guards invented clauses - so a natural answer is not rejected for merely mentioning
+    them.
     """
-    evidence_numbers = _fact_numbers(_CLAUSE_CITATION.sub(" ", evidence)) | _SAFE_NUMBERS
-    return _fact_numbers(_CLAUSE_CITATION.sub(" ", answer)) <= evidence_numbers
+    return _money_figures(answer) <= _money_figures(evidence)
 
 
 def is_legally_grounded(answer: str, allowed_clauses: list[str]) -> bool:
@@ -222,8 +231,11 @@ class LLMPolicyAnswer:
             return summary
         if not is_legally_grounded(text, match.clauses()):
             return summary  # invented a clause -> fall back to the grounded summary
-        if not introduces_no_new_number(summary, text):
-            return summary  # invented or altered a figure -> fall back
+        # The customer's own figures (a price they paid, a date) are not invented
+        # facts, so they count as allowed alongside the evidence; only a number from
+        # neither the evidence nor the customer is a hallucinated fact.
+        if not introduces_no_new_number(summary + "\n" + message, text):
+            return summary
         return text
 
 

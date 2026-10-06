@@ -761,12 +761,15 @@ def _legal_footer(rules: list[PolicyRule], lang: str) -> str:
 
 
 def _policy_sources(rules: list[PolicyRule]) -> list[SourceOut]:
-    """Clause-level sources for the trace, one per distinct cited clause."""
+    """Clause-level sources for the trace: one per distinct clause, titled by clause.
+
+    Titling each by its clause (not a bare "VMQ-778" repeated) keeps the sources list
+    informative instead of showing the same document name many times. Capped to the
+    few leading clauses so the citation stays readable.
+    """
     document = rules[0].document if rules else "VMQ-778"
-    return [
-        SourceOut(doc_id=f"{document} {_fmt_clause(clause)}", title=document)
-        for clause in _distinct_clauses(rules)
-    ]
+    cited = f"{document} ({', '.join(_fmt_clause(c) for c in _distinct_clauses(rules)[:5])})"
+    return [SourceOut(doc_id=cited, title=cited)]
 
 
 def _clause_to_rule(clause: Clause) -> PolicyRule:
