@@ -120,6 +120,11 @@ class ResolutionCard(_Model):
     contact: str | None = None
     escalate_when: LocalizedText | None = None
     kb_refs: list[str] = Field(default_factory=list)
+    # The VMQ-778 PolicyRule ids this resolution is grounded in. They bind the tree
+    # outcome to the authoritative law: the matched subset becomes the legal basis
+    # for the final answer and is recorded in the trace/audit. Empty when the card is
+    # not governed by VMQ-778 (e.g. MNP cards).
+    policy_rule_ids: list[str] = Field(default_factory=list)
     # Resolution lifecycle (all optional, backward-compatible).
     risk: RiskLevel = RiskLevel.LOW
     cause_key: str | None = None  # stable id of the probable cause, for exclusion

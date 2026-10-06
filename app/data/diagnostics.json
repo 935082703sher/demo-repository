@@ -481,6 +481,7 @@
   "cards": [
     {
       "id": "imei-register",
+      "policy_rule_ids": ["mandatory_registration_requirement", "payment_physical_person_within_30_days", "payment_physical_person_after_30_days", "per_imei_separate_payment"],
       "title": {
         "uz": "IMEI'ni ro'yxatdan o'tkazish (to'lov va muddat)",
         "ru": "Регистрация IMEI (оплата и срок)"
@@ -553,6 +554,7 @@
     },
     {
       "id": "imei-customs",
+      "policy_rule_ids": ["personal_import_registration", "payment_physical_person_within_30_days", "payment_physical_person_after_30_days"],
       "title": {
         "uz": "Me'yordan ortiq qurilma — bojxona kirim orderi",
         "ru": "Устройство сверх нормы — таможенный ордер"
@@ -630,6 +632,7 @@
     },
     {
       "id": "imei-clone",
+      "policy_rule_ids": ["clone_or_undetermined_not_registered"],
       "title": {
         "uz": "Klonlangan yoki aniqlanmagan IMEI",
         "ru": "Клонированный или неопределённый IMEI"
@@ -701,6 +704,7 @@
     },
     {
       "id": "imei-retailer",
+      "policy_rule_ids": ["retail_seller_registration_responsibility", "per_imei_separate_payment"],
       "title": {
         "uz": "Sotuvchi ro'yxatdan o'tkazmagan",
         "ru": "Продавец не зарегистрировал"
@@ -777,6 +781,7 @@
     },
     {
       "id": "imei-post",
+      "policy_rule_ids": ["personal_import_registration", "payment_physical_person_within_30_days", "payment_physical_person_after_30_days"],
       "title": {
         "uz": "Pochta/kuryer orqali kelgan qurilma",
         "ru": "Устройство пришло почтой/курьером"
@@ -1146,6 +1151,7 @@
     },
     {
       "id": "imei-unblock",
+      "policy_rule_ids": ["blacklist_service_restriction"],
       "title": {
         "uz": "Blokdan chiqarish — ro'yxatdan o'tkazish",
         "ru": "Разблокировка — регистрация"
@@ -1217,6 +1223,7 @@
     },
     {
       "id": "imei-lost-blocked",
+      "policy_rule_ids": ["blacklist_service_restriction"],
       "title": {
         "uz": "Yo'qolgan/o'g'irlangan deb bloklangan",
         "ru": "Заблокировано как утерянное/краденое"
@@ -1288,6 +1295,7 @@
     },
     {
       "id": "imei-check-status",
+      "policy_rule_ids": ["check_imei_before_purchase"],
       "title": {
         "uz": "IMEI holatini tekshirish",
         "ru": "Проверка статуса IMEI"
@@ -1399,6 +1407,7 @@
     },
     {
       "id": "imei-find-imei",
+      "policy_rule_ids": ["check_imei_before_purchase"],
       "title": {
         "uz": "IMEI raqamini topish",
         "ru": "Как найти номер IMEI"
@@ -1551,6 +1560,7 @@
     },
     {
       "id": "imei-second-online",
+      "policy_rule_ids": ["per_imei_separate_payment", "mandatory_registration_requirement"],
       "title": {
         "uz": "Ikkinchi IMEIni onlayn ro'yxatdan o'tkazish",
         "ru": "Регистрация второго IMEI онлайн"
@@ -1592,6 +1602,7 @@
     },
     {
       "id": "imei-second-office",
+      "policy_rule_ids": ["per_imei_separate_payment", "mandatory_registration_requirement"],
       "title": {
         "uz": "Ikkinchi IMEIni ofisda ro'yxatdan o'tkazish",
         "ru": "Регистрация второго IMEI в офисе"
@@ -1633,6 +1644,7 @@
     },
     {
       "id": "imei-second-checkdecl",
+      "policy_rule_ids": ["per_imei_separate_payment", "personal_import_registration"],
       "title": {
         "uz": "Deklaratsiyada nechta IMEI borligini tekshirish",
         "ru": "Проверка, сколько IMEI в декларации"

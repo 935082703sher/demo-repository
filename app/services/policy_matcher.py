@@ -157,6 +157,29 @@ class PolicyMatcher:
     def rules(self) -> list[PolicyRule]:
         return list(self._bundle.rules)
 
+    def rules_for_ids(
+        self, rule_ids: list[str], case: CaseState, message: str, *, when: date | None = None
+    ) -> list[PolicyRule]:
+        """The named rules that ground a decision-tree card, in the card's order.
+
+        The card author has already asserted these rules are the legal basis for the
+        resolution, so a rule is kept unless its ``excludes_if`` actually conflicts
+        with the known situation (e.g. a resident-only rule when the customer is a
+        non-resident). Unlike :meth:`match`, a missing ``applies_if`` signal does not
+        drop a declared rule - the resolution is this card precisely because these
+        clauses apply. Out-of-force rules are still excluded.
+        """
+        on = when or date.today()
+        signals = derive_signals(case, message)
+        by_id = {rule.rule_id: rule for rule in self._bundle.rules}
+        return [
+            rule
+            for rule_id in rule_ids
+            if (rule := by_id.get(rule_id)) is not None
+            and rule.is_effective_on(on)
+            and not any(signal in signals for signal in rule.excludes_if)
+        ]
+
     def match(self, case: CaseState, message: str, *, when: date | None = None) -> PolicyMatch:
         """Return the in-force rules whose conditions the situation satisfies.
 

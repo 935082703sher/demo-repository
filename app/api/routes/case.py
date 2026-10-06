@@ -24,6 +24,7 @@ from pydantic import BaseModel, Field
 from app.domain.case_state import CaseState, CaseStatus, ExplanationStyle, Fact, FactStatus, Outcome
 from app.domain.diagnostics import DecisionTree, DiagnosticNode, ResolutionCard
 from app.domain.enums import Category, Language
+from app.domain.policy import PolicyRule
 from app.domain.schemas import LLMRequest
 from app.domain.tariffs import ResolvedPayment, TariffConfig
 from app.providers.base import LLMProvider
@@ -719,6 +720,54 @@ async def _log_unanswered(log: InteractionLog | None, case: CaseState, message: 
     )
 
 
+# The legal-basis footer: a clause citation (not a canned answer) appended to a
+# policy-grounded tree resolution, so the customer sees which law it rests on.
+_LEGAL_BASIS = {
+    "uz": "⚖️ Huquqiy asos: VMQ-778 — {clauses}. To'liq matn: {url}",
+    "uz_cyrl": "⚖️ Ҳуқуқий асос: ВМҚ-778 — {clauses}. Тўлиқ матн: {url}",
+    "ru": "⚖️ Правовая основа: ВМК-778 — {clauses}. Полный текст: {url}",
+    "en": "⚖️ Legal basis: Reg. 778 — {clauses}. Full text: {url}",
+    "kaa": "⚖️ Nızamlıq tiykarı: VMQ-778 — {clauses}. Tolıq matn: {url}",
+}
+_SUPERSCRIPT = {"1": "¹", "2": "²", "3": "³"}
+
+
+def _fmt_clause(clause: str) -> str:
+    """Render a clause label: "6" -> "6-band", "6-1" -> "6¹-band", "6-ilova" kept."""
+    if clause.endswith("ilova"):
+        return clause
+    base, _, sub = clause.partition("-")
+    if sub and sub.isdigit():
+        return base + "".join(_SUPERSCRIPT.get(d, d) for d in sub) + "-band"
+    return f"{clause}-band"
+
+
+def _distinct_clauses(rules: list[PolicyRule]) -> list[str]:
+    seen: list[str] = []
+    for rule in rules:
+        if rule.clause not in seen:
+            seen.append(rule.clause)
+    return seen
+
+
+def _legal_footer(rules: list[PolicyRule], lang: str) -> str:
+    """A concise clause-and-source citation for the rules a card is grounded in."""
+    if not rules:
+        return ""
+    clauses = ", ".join(_fmt_clause(c) for c in _distinct_clauses(rules))
+    template = _LEGAL_BASIS.get(lang, _LEGAL_BASIS["uz"])
+    return template.format(clauses=clauses, url=rules[0].source_url)
+
+
+def _policy_sources(rules: list[PolicyRule]) -> list[SourceOut]:
+    """Clause-level sources for the trace, one per distinct cited clause."""
+    document = rules[0].document if rules else "VMQ-778"
+    return [
+        SourceOut(doc_id=f"{document} {_fmt_clause(clause)}", title=document)
+        for clause in _distinct_clauses(rules)
+    ]
+
+
 def _resolve_payments(match: Any, tariffs: TariffConfig, when: date) -> list[ResolvedPayment]:
     """Compute the payment for each distinct formula the matched rules carry."""
     payments: list[ResolvedPayment] = []
@@ -923,6 +972,22 @@ def _apply_style_cue(case: CaseState, message: str, lang: str) -> None:
             case.explanation.needs_examples = True
 
 
+def _attach_legal_basis(
+    resp: ConverseCaseResponse, rules: list[PolicyRule], lang: str
+) -> ConverseCaseResponse:
+    """Append the clause-and-source citation and add the clause-level sources.
+
+    Binds a tree resolution to the law the customer can see: a short legal-basis line
+    and one source per cited clause. The answer body stays LLM-composed; this only
+    adds the citation the spec asks for ("band va manbani ko'rsatish").
+    """
+    footer = _legal_footer(rules, lang)
+    if not footer:
+        return resp
+    sources = (resp.sources or []) + _policy_sources(rules)
+    return resp.model_copy(update={"reply": f"{resp.reply}\n\n{footer}", "sources": sources})
+
+
 async def _finalize_card(
     card: ResolutionCard,
     case: CaseState,
@@ -938,19 +1003,32 @@ async def _finalize_card(
     lang: str,
     phone: str,
     tree_id: str | None = None,
+    policy_rules: list[PolicyRule] | None = None,
 ) -> ConverseCaseResponse:
     """Offer a reached card through the lifecycle, or close it as a one-shot answer.
 
     A card with a success_check enters the result-tracking loop (offered, then its
     result awaited); any other card keeps the previous behaviour: closed at once.
+    The card's grounding rules (``policy_rules``) are cited on the resolution shown
+    and recorded in the audit trail, so every outcome is tied to the law.
     """
+    rules = policy_rules or []
+    detail = ("policy:" + ",".join(r.rule_id for r in rules)) if rules else None
     if orchestrator.uses_lifecycle(card):
         if tree_id and case.active_tree is None:
             case.active_tree = tree_id  # keep the tree so alternatives can be found
         decision = orchestrator.offer_card(case, card)
         await store.save(case)
-        await _audit(audit, case, OUTCOME_QUESTION, ROUTE_CASE, card_id=card.id, tree_id=tree_id)
-        return await _render_decision(
+        await _audit(
+            audit,
+            case,
+            OUTCOME_QUESTION,
+            ROUTE_CASE,
+            card_id=card.id,
+            tree_id=tree_id,
+            detail=detail,
+        )
+        resp = await _render_decision(
             decision,
             case,
             engine=engine,
@@ -961,14 +1039,18 @@ async def _finalize_card(
             lang=lang,
             phone=phone,
         )
+        # Cite the legal basis only on the offered resolution itself.
+        return _attach_legal_basis(resp, rules, lang) if resp.card_id == card.id else resp
     case.active_tree = None
     case.pending_node = None
     case.resolution_card_id = card.id
     case.status = CaseStatus.RESOLVED
     await store.save(case)
-    await _audit(audit, case, OUTCOME_RESOLVED, ROUTE_CASE, card_id=card.id, tree_id=tree_id)
+    await _audit(
+        audit, case, OUTCOME_RESOLVED, ROUTE_CASE, card_id=card.id, tree_id=tree_id, detail=detail
+    )
     card_text = await _card_reply(explainer, composer, card, case, lang)
-    return _resp(case, card_text, done=True, card_id=card.id)
+    return _attach_legal_basis(_resp(case, card_text, done=True, card_id=card.id), rules, lang)
 
 
 async def _converse_turn(payload: ConverseCaseRequest, request: Request) -> ConverseCaseResponse:
@@ -1150,6 +1232,9 @@ async def _converse_turn(payload: ConverseCaseRequest, request: Request) -> Conv
                     lang=lang,
                     phone=phone,
                     tree_id=case.active_tree,
+                    policy_rules=policy_matcher.rules_for_ids(
+                        resolved.policy_rule_ids, case, message
+                    ),
                 )
             answered = True
 
@@ -1212,6 +1297,7 @@ async def _converse_turn(payload: ConverseCaseRequest, request: Request) -> Conv
                     lang=lang,
                     phone=phone,
                     tree_id=chosen.id,
+                    policy_rules=policy_matcher.rules_for_ids(obj.policy_rule_ids, case, message),
                 )
 
         # 3b) No ready card: the router's decision (from step 1) picks the lane.
@@ -1293,6 +1379,7 @@ async def _converse_turn(payload: ConverseCaseRequest, request: Request) -> Conv
             lang=lang,
             phone=phone,
             tree_id=active_tree,
+            policy_rules=policy_matcher.rules_for_ids(obj.policy_rule_ids, case, message),
         )
     if kind == "ask" and isinstance(obj, DiagnosticNode):
         case.pending_node = obj.id
