@@ -75,6 +75,58 @@ _OTHER_ISSUE = (
 )
 
 
+# A standalone informational/pricing question - the sign of a new complete request
+# rather than an answer to a pending "send the error text" style question.
+_QUESTION_MARKERS = (
+    "qancha",
+    "narx",
+    "necha",
+    "qanchaga",
+    "mumkinmi",
+    "qachon",
+    "qanaqa narx",
+    "how much",
+    "price",
+    "cost",
+    "skolko",
+    "stoit",
+    "tsena",
+)
+# Words that mark an actual error/evidence answer, so it is NOT a new request.
+_EVIDENCE_MARKERS = (
+    "xato",
+    "xatolik",
+    "error",
+    "oshibka",
+    "chiqdi",
+    "chiqyapti",
+    "yozilgan",
+    "yozib",
+    "kod",
+    "skrinshot",
+    "screenshot",
+    "sms",
+    "ekranda",
+    "deb chiq",
+    "blok",
+)
+
+
+def is_new_request(message: str) -> bool:
+    """True when a message is a new, self-contained request, not an answer to the
+    pending question - e.g. a standalone pricing question while the bot is waiting
+    for an error text. A short error description or a plain yes/no is not one."""
+    norm = _normalize(message)
+    has_question = ("?" in message) or any(m in norm for m in _QUESTION_MARKERS)
+    has_evidence = any(m in norm for m in _EVIDENCE_MARKERS)
+    if has_evidence:
+        return False
+    if has_question:
+        return True
+    # A long message that introduces a new scenario (and gives no error text) is new.
+    return len(norm.split()) >= 18
+
+
 def conversation_act(message: str) -> str | None:
     """Return the meta-intent of a message (restart/correction/none_of_above/
     other_issue), or None when it is an ordinary problem or answer."""

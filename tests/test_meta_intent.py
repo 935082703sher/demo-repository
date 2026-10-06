@@ -13,7 +13,14 @@ from typing import Any
 from fastapi.testclient import TestClient
 
 from app.main import create_app
-from app.services.meta_intent import conversation_act
+from app.services.meta_intent import conversation_act, is_new_request
+
+_OZON = (
+    "Assalomu alekum Men Rossiyaning ozon marketdan ozim uchun tel buyurtma berdim, u "
+    "uzpost pochta orqali yetib keladi lekin tel global versiyada uzime dan otmagan xolatda "
+    "yetib kelarkan, yetib kelgach ozim uzime dan otkazmoqchiman royxatdan otkazish narxi "
+    "qancha boladi? 2 la sim karta uchun xam, javobini kutaman raxmat"
+)
 
 
 def _post(client: TestClient, message: str, session: str) -> dict[str, Any]:
@@ -74,3 +81,26 @@ def test_restart_resets_and_greets() -> None:
         body = _post(client, "boshidan boshlaylik", "mi-restart")
         assert body["done"] is False
         assert "assalom" in body["reply"].lower() or "muammo" in body["reply"].lower()
+
+
+# --- a new complete request must not be swallowed by a pending question ---
+
+
+def test_is_new_request_vs_evidence_answer() -> None:
+    assert is_new_request(_OZON) is True
+    assert is_new_request("ekranda ro'yxatdan o'tmagan deb chiqdi") is False
+    assert is_new_request("xato kodi 123") is False
+    assert is_new_request("tushunmadim") is False
+
+
+def test_new_request_supersedes_pending_evidence_question() -> None:
+    with TestClient(create_app()) as client:
+        # Reach imei-register, then "outcome:unclear" -> the bot awaits the error text.
+        for m in ["telefonim royxatdan otmayapti", "abroad", "no", "payment", "outcome:unclear"]:
+            _post(client, m, "mi-stale")
+        r = _post(client, _OZON, "mi-stale")
+        low = r["reply"].lower()
+        assert "xato matn" not in low  # it no longer re-asks for the error text
+        assert "qayerdan" not in low  # and never falls into the registration root
+        # the awaited card was superseded and the new request re-planned
+        assert r["status"] != "waiting_for_result"

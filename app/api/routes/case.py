@@ -65,6 +65,7 @@ from app.services.meta_intent import (
     OTHER_ISSUE,
     RESTART,
     conversation_act,
+    is_new_request,
 )
 from app.services.outcome_analyzer import OutcomeAnalysis, OutcomeAnalyzer
 from app.services.pii import redact_likely_pii
@@ -924,9 +925,21 @@ async def _converse_turn(payload: ConverseCaseRequest, request: Request) -> Conv
         _start_fresh_case(case)
         case.original_problem = None  # a genuinely new problem follows
 
-    # 0) A case awaiting a result: this message is the outcome of the offered card,
-    #    not a new problem. Classify it and let the orchestrator decide what's next.
-    if case.status in AWAITING_OUTCOME and case.resolution_card_id:
+    # 0) A case awaiting a result: this message is normally the outcome of the offered
+    #    card. But a pending question must never swallow a new, self-contained request:
+    #    if the message is a new complete question (e.g. a standalone pricing question
+    #    while we await an error text), supersede the awaited card and re-plan from
+    #    scratch instead of treating it as the card's result.
+    if (
+        case.status in AWAITING_OUTCOME
+        and case.resolution_card_id
+        and _result_from_value(payload.message.strip()) is None
+        and not _wants_phone(message)
+        and is_new_request(message)
+    ):
+        _start_fresh_case(case)
+        case.original_problem = None  # the new request becomes the new problem
+    elif case.status in AWAITING_OUTCOME and case.resolution_card_id:
         case.last_customer_reply = message
         card = engine.get_card(case.resolution_card_id)
         forced = _result_from_value(payload.message.strip())
