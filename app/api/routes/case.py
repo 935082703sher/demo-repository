@@ -66,6 +66,7 @@ from app.services.interaction_log import InteractionLog, InteractionRecord
 from app.services.kb_retriever import get_retriever
 from app.services.knowledge_gap import KnowledgeGapStore
 from app.services.language_detect import detect_language
+from app.services.learned_knowledge import LearnedKnowledgeStore
 from app.services.legal_reasoning import LegalReasoningEngine
 from app.services.localizer import Localizer
 from app.services.meta_intent import (
@@ -868,17 +869,25 @@ async def _rag_answer(
     message: str,
     lang: str,
     gaps: KnowledgeGapStore | None = None,
+    learned: LearnedKnowledgeStore | None = None,
 ) -> ConverseCaseResponse:
     """Answer an informational question strictly from approved KB evidence.
 
-    Retrieves the top approved passages and lets the provider answer only from
-    them. It abstains - never invents an answer - when there is no evidence, the
-    top hit is too weak, the provider fails, or the answer cites a source it was
-    not given (grounding check). A KB gap (no/weak evidence or an ungroundable
-    answer) is recorded as an 'unanswered' question AND as a structured knowledge
-    gap (with the retrieval context) so an expert can later supply the missing
-    knowledge. Sources are returned only when it actually answers.
+    Expert-approved LEARNED knowledge is consulted first: if a published article
+    (from the gap->expert->approval workflow) matches, its verified solution answers
+    the question. Otherwise the static KB is retrieved and the provider answers only
+    from it. It abstains - never invents an answer - when there is no evidence, the
+    top hit is too weak, the provider fails, or the answer cites a source it was not
+    given (grounding check). A KB gap (no/weak evidence or an ungroundable answer) is
+    recorded as an 'unanswered' question AND as a structured knowledge gap so an
+    expert can later supply the missing knowledge. Sources are returned only when it
+    actually answers.
     """
+    if learned is not None:
+        hit = await learned.search(message)
+        if hit is not None:
+            source = SourceOut(doc_id=hit.article.article_id, title=hit.article.content.title)
+            return _resp(case, hit.article.content.solution, done=True, sources=[source])
     retriever = get_retriever()
     results = retriever.retrieve(message, _RAG_TOP_K, domain=case.domain)
     docs = [RetrievedDoc(doc_id=r.chunk.doc_id, score=float(r.score)) for r in results]
@@ -1134,6 +1143,9 @@ async def _converse_turn(payload: ConverseCaseRequest, request: Request) -> Conv
     knowledge_gaps = cast(
         "KnowledgeGapStore | None", getattr(request.app.state, "knowledge_gaps", None)
     )
+    learned_knowledge = cast(
+        "LearnedKnowledgeStore | None", getattr(request.app.state, "learned_knowledge", None)
+    )
     orchestrator = cast(ResolutionOrchestrator, request.app.state.resolution_orchestrator)
     outcome_analyzer = cast(OutcomeAnalyzer, request.app.state.outcome_analyzer)
     coverage_eval = cast(TreeCoverageEvaluator, request.app.state.tree_coverage)
@@ -1270,7 +1282,14 @@ async def _converse_turn(payload: ConverseCaseRequest, request: Request) -> Conv
         case.pending_node = None
         original = case.original_problem or message
         reply = await _rag_answer(
-            provider, grounding, interaction_log, case, original, lang, knowledge_gaps
+            provider,
+            grounding,
+            interaction_log,
+            case,
+            original,
+            lang,
+            knowledge_gaps,
+            learned_knowledge,
         )
         if not reply.requires_human:
             await store.save(case)
@@ -1313,6 +1332,22 @@ async def _converse_turn(payload: ConverseCaseRequest, request: Request) -> Conv
 
     # 3) Not an answer to an open question: pick the lane for this message.
     if not answered:
+        # 3-pre) Expert-approved LEARNED knowledge comes first: a published article
+        #    (from the gap -> expert -> approval loop) that STRONGLY matches a fresh
+        #    question answers it before any tree/KB routing - this is how newly taught
+        #    knowledge reaches users. The high score floor means only a clearly-matching
+        #    article pre-empts; a generic problem still goes to its diagnostic tree.
+        if case.active_tree is None and learned_knowledge is not None:
+            hit = await learned_knowledge.search(message)
+            if hit is not None and hit.score >= 3.0:
+                _start_fresh_case(case)
+                case.domain = case.domain or hit.article.content.domain
+                case.status = CaseStatus.RESOLVED
+                await store.save(case)
+                await _audit(audit, case, OUTCOME_ANSWER, ROUTE_RAG, detail="learned_knowledge")
+                src = [SourceOut(doc_id=hit.article.article_id, title=hit.article.content.title)]
+                return _resp(case, hit.article.content.solution, done=True, sources=src)
+
         # 3) Coverage gate (applies to EVERY tree): the decision tree is one evaluated
         #    candidate, not a forced route. A message enters a tree only when a tree
         #    DIRECTLY covers it; a specific sub-issue no tree covers goes to the
@@ -1329,7 +1364,14 @@ async def _converse_turn(payload: ConverseCaseRequest, request: Request) -> Conv
             if policy_reply is not None:
                 return policy_reply
             reply = await _rag_answer(
-                provider, grounding, interaction_log, case, message, lang, knowledge_gaps
+                provider,
+                grounding,
+                interaction_log,
+                case,
+                message,
+                lang,
+                knowledge_gaps,
+                learned_knowledge,
             )
             _start_fresh_case(case)
             if not reply.requires_human:
@@ -1431,7 +1473,14 @@ async def _converse_turn(payload: ConverseCaseRequest, request: Request) -> Conv
                 if policy_reply is not None:
                     return policy_reply
             reply = await _rag_answer(
-                provider, grounding, interaction_log, case, message, lang, knowledge_gaps
+                provider,
+                grounding,
+                interaction_log,
+                case,
+                message,
+                lang,
+                knowledge_gaps,
+                learned_knowledge,
             )
             # A standalone question leaves no residue; a question mid-diagnosis
             # keeps the open case so the next message can still answer it.

@@ -14,11 +14,14 @@ from typing import Annotated, cast
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 from fastapi.responses import FileResponse
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
+from pydantic import BaseModel
 
 from app.core.config import Settings
 from app.domain.knowledge_gap import GapStatus, KnowledgeGap
 from app.services.audit_log import AuditLog
+from app.services.kb_draft import KbDraftComposer
 from app.services.knowledge_gap import KnowledgeGapStore
+from app.services.learned_knowledge import LearnedKnowledgeStore, ValidationError
 
 router = APIRouter(tags=["admin"])
 
@@ -83,3 +86,90 @@ async def admin_knowledge_gaps(
     status = GapStatus(status_filter) if status_filter in valid else None
     gaps: list[KnowledgeGap] = await gaps_store.list(status=status)
     return {"count": len(gaps), "gaps": [g.model_dump() for g in gaps]}
+
+
+class ExpertAnswer(BaseModel):
+    expert: str
+    expert_answer: str
+
+
+class ApproveRequest(BaseModel):
+    expert: str
+    change_reason: str = ""
+
+
+@router.post("/admin/knowledge-gaps/{gap_id}/answer")
+async def admin_answer_gap(
+    gap_id: str, payload: ExpertAnswer, request: Request, _: AdminGuard
+) -> dict[str, object]:
+    """Expert answers a gap; the AI composes a structured draft for the expert to review.
+
+    The draft is a proposal only - it is NOT answerable until approved. Returns the
+    draft so the expert can edit/approve/reject it.
+    """
+    gaps_store = cast(KnowledgeGapStore, request.app.state.knowledge_gaps)
+    composer = cast(KbDraftComposer, request.app.state.kb_draft)
+    learned = cast(LearnedKnowledgeStore, request.app.state.learned_knowledge)
+    gap = await gaps_store.get(gap_id)
+    if gap is None:
+        raise HTTPException(status_code=404, detail="gap_not_found")
+    content = await composer.compose(gap, payload.expert_answer)
+    from app.domain.knowledge_article import KnowledgeDraft
+
+    draft = KnowledgeDraft(
+        draft_id=f"draft-{gap_id}",
+        gap_id=gap_id,
+        content=content,
+        source_expert=payload.expert,
+        expert_answer=payload.expert_answer,
+    )
+    await learned.add_draft(draft)
+    await gaps_store.set_status(gap_id, GapStatus.DRAFT_CREATED)
+    return {"draft": draft.model_dump()}
+
+
+@router.get("/admin/knowledge-drafts")
+async def admin_list_drafts(request: Request, _: AdminGuard) -> dict[str, object]:
+    """Pending KB drafts awaiting expert approval."""
+    learned = cast(LearnedKnowledgeStore, request.app.state.learned_knowledge)
+    drafts = await learned.list_drafts()
+    return {"count": len(drafts), "drafts": [d.model_dump() for d in drafts]}
+
+
+@router.post("/admin/knowledge-drafts/{draft_id}/approve")
+async def admin_approve_draft(
+    draft_id: str, payload: ApproveRequest, request: Request, _: AdminGuard
+) -> dict[str, object]:
+    """Approve a draft: validate, publish a versioned article, refresh the index.
+
+    On success the article becomes answerable and the originating gap is marked
+    published. Validation (required fields, expert present, no duplicate) is enforced
+    here - an AI draft is never published on confidence alone.
+    """
+    learned = cast(LearnedKnowledgeStore, request.app.state.learned_knowledge)
+    gaps_store = cast(KnowledgeGapStore, request.app.state.knowledge_gaps)
+    draft = await learned.get_draft(draft_id)
+    if draft is None:
+        raise HTTPException(status_code=404, detail="draft_not_found")
+    try:
+        article = await learned.approve(
+            draft_id, expert=payload.expert, change_reason=payload.change_reason
+        )
+    except ValidationError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+    if draft.gap_id:
+        await gaps_store.set_status(draft.gap_id, GapStatus.PUBLISHED)
+    return {"article": article.model_dump()}
+
+
+@router.post("/admin/knowledge-drafts/{draft_id}/reject")
+async def admin_reject_draft(draft_id: str, request: Request, _: AdminGuard) -> dict[str, object]:
+    """Reject a draft; the originating gap is marked rejected."""
+    learned = cast(LearnedKnowledgeStore, request.app.state.learned_knowledge)
+    gaps_store = cast(KnowledgeGapStore, request.app.state.knowledge_gaps)
+    draft = await learned.reject(draft_id)
+    if draft is None:
+        raise HTTPException(status_code=404, detail="draft_not_found")
+    if draft.gap_id:
+        await gaps_store.set_status(draft.gap_id, GapStatus.REJECTED)
+    return {"draft": draft.model_dump()}

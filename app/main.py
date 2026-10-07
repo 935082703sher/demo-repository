@@ -63,8 +63,15 @@ from app.services.governed_complaint_orchestrator import GovernedComplaintOrches
 from app.services.grounding import GroundingValidator
 from app.services.guardrails import Guardrails
 from app.services.interaction_log import build_interaction_log
+from app.services.kb_draft import (
+    KbDraftComposer,
+    LLMKbDraft,
+    TemplateKbDraft,
+    build_openai_kb_draft_complete,
+)
 from app.services.knowledge import KnowledgeService
 from app.services.knowledge_gap import InMemoryKnowledgeGapStore
+from app.services.learned_knowledge import InMemoryLearnedKnowledgeStore
 from app.services.legal_reasoning import LegalReasoningEngine
 from app.services.localizer import (
     LLMLocalizer,
@@ -340,6 +347,23 @@ def create_app(
     app.state.grounding = GroundingValidator()
     app.state.interaction_log = build_interaction_log(app_settings.interaction_log_path)
     app.state.knowledge_gaps = InMemoryKnowledgeGapStore()
+    app.state.learned_knowledge = InMemoryLearnedKnowledgeStore()
+    kb_draft: KbDraftComposer = TemplateKbDraft()
+    if (
+        app_settings.llm_provider == "openai"
+        and app_settings.llm_api_key is not None
+        and app_settings.llm_api_key.get_secret_value()
+        and app_settings.llm_model
+    ):
+        kb_draft = LLMKbDraft(
+            build_openai_kb_draft_complete(
+                api_key=app_settings.llm_api_key.get_secret_value(),
+                model=app_settings.llm_model,
+                timeout_seconds=app_settings.llm_timeout_seconds,
+            ),
+            fallback=TemplateKbDraft(),
+        )
+    app.state.kb_draft = kb_draft
     app.state.audit_log = InMemoryAuditLog()
     app.state.usage_limits = usage_limits
     legacy_drafts = ComplaintDraftService(app_settings.privacy_notice_version)
