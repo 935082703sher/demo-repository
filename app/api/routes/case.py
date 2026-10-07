@@ -1375,6 +1375,26 @@ def _computed_fee_evidence(tariffs: TariffConfig) -> Evidence | None:
     )
 
 
+# How much of the customer's open request is kept (already PII-redacted) as context.
+_AI_RAG_REQUEST_CHARS = 300
+# A reply this short that names no service continues the open request.
+_AI_RAG_FOLLOW_UP_WORDS = 6
+
+
+def _is_ai_rag_follow_up(case: CaseState, message: str, turn_domain: str | None) -> bool:
+    """True when the message continues the open request rather than starting one.
+
+    A pending question always takes the next message as its answer unless it names a
+    service; otherwise only a short message that names no service ("online", "endi
+    aytasanmi") continues - a full new sentence is a new request.
+    """
+    if case.current_problem is None or turn_domain is not None:
+        return False
+    if case.last_question:
+        return True
+    return len(message.split()) <= _AI_RAG_FOLLOW_UP_WORDS
+
+
 async def _ai_rag_evidence(
     reasoning_engine: LegalReasoningEngine,
     tariffs: TariffConfig,
@@ -1404,8 +1424,12 @@ async def _ai_rag_evidence(
             _add(sid, f"VMQ-778 {clause.clause}", clause.legal_rule)
 
     retriever = get_retriever()
+    # The domain follows the CURRENT turn (set by the caller), never the first topic of
+    # the session, so an IMEI question after an MNP one retrieves IMEI sources.
+    # Keyed by CHUNK id: one document (an FAQ file, the UZIMEI KB) holds many separate
+    # answers, and keying by document kept only its first hit and dropped the rest.
     for r in _applicable_results(retriever.retrieve(message, _RAG_TOP_K, domain=case.domain)):
-        _add(r.chunk.doc_id, r.chunk.title, r.chunk.text)
+        _add(r.chunk.id or r.chunk.doc_id, r.chunk.title, r.chunk.text)
     try:
         query_vector = await reasoning_engine.embed(message)
         reasoning = reasoning_engine.reason(case, message, query_vector=query_vector)
@@ -1448,8 +1472,19 @@ async def _converse_ai_rag(
         responder = AiRagResponder(None, grounding)
     # Memory: keep extracting and storing facts so the model has the full context and
     # never asks again for something the customer already gave.
-    if case.domain is None:
-        case.domain = detect_domain(message)
+    # Topic per turn: a message that names a service sets the domain for THIS turn (a
+    # switch from MNP to IMEI must not keep retrieving MNP sources). A short reply that
+    # names none ("ha", "online", "endi aytasanmi") continues the open request: it is
+    # read together with that request, both for retrieval and by the model.
+    turn_domain = detect_domain(message)
+    follow_up = _is_ai_rag_follow_up(case, message, turn_domain)
+    if turn_domain is not None and turn_domain != case.domain:
+        case.domain = turn_domain
+        case.last_question = None  # a new topic closes the old open question
+        case.last_answer = None
+    if not follow_up:
+        case.current_problem = message[:_AI_RAG_REQUEST_CHARS]
+    query = f"{case.current_problem} {message}" if follow_up and case.current_problem else message
     try:
         for fact in await extractor.extract(message, case, turn_id=case.turn_count):
             case.upsert(fact)
@@ -1457,8 +1492,11 @@ async def _converse_ai_rag(
         pass
     _refresh_unknowns(case)
 
-    evidence = await _ai_rag_evidence(reasoning_engine, tariffs, case, message)
+    evidence = await _ai_rag_evidence(reasoning_engine, tariffs, case, query)
     result = await responder.respond(case, message, lang, evidence)
+    # Remember the question just asked, so the customer's short answer next turn is
+    # linked to it instead of being read as a new, empty request.
+    case.last_question = result.reply if result.is_question and not result.error else None
     case.status = CaseStatus.DIAGNOSING  # non-terminal: the context carries to next turn
     await store.save(case)
     if result.error:
