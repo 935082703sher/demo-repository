@@ -88,6 +88,22 @@ async def admin_knowledge_gaps(
     return {"count": len(gaps), "gaps": [g.model_dump() for g in gaps]}
 
 
+@router.get("/admin/metrics/trends")
+async def admin_metrics_trends(request: Request, _: AdminGuard) -> dict[str, object]:
+    """Windowed KPI trends (7/30/90 days) plus a daily series, to show whether the
+    assistant is improving over time. Admin Basic-auth protected."""
+    audit = cast(AuditLog, request.app.state.audit_log)
+    trends = await audit.trends()
+    gaps_store = cast(
+        "KnowledgeGapStore | None", getattr(request.app.state, "knowledge_gaps", None)
+    )
+    open_gaps = 0
+    if gaps_store is not None:
+        open_gaps = sum(1 for g in await gaps_store.list() if g.priority_score() > 0)
+    trends["open_knowledge_gaps"] = open_gaps
+    return trends
+
+
 @router.get("/admin/improvement-queue")
 async def admin_improvement_queue(request: Request, _: AdminGuard) -> dict[str, object]:
     """Assistant Improvement Queue: unresolved knowledge-gap clusters ranked by impact.
