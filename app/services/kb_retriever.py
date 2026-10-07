@@ -25,6 +25,8 @@ import json
 import math
 import os
 import re
+import subprocess
+import sys
 from collections import Counter
 from dataclasses import dataclass
 from functools import lru_cache
@@ -456,6 +458,44 @@ def load_corpus(path: Path | None = None) -> list[KBChunk]:
             if stripped:
                 chunks.append(KBChunk.from_row(json.loads(stripped)))
     return chunks
+
+
+_BUILD_SCRIPT = _REPO_ROOT / "kb" / "src" / "build_kb.py"
+_KB_INPUTS = (_REPO_ROOT / "kb" / "src", _REPO_ROOT / "kb" / "data")
+
+
+def _newest_input_mtime() -> float:
+    newest = 0.0
+    for folder in _KB_INPUTS:
+        if folder.is_dir():
+            for item in folder.rglob("*"):
+                if item.is_file() and item.suffix in {".py", ".json", ".jsonl", ".txt"}:
+                    newest = max(newest, item.stat().st_mtime)
+    return newest
+
+
+def ensure_corpus() -> str:
+    """Build the default index when it is missing or older than its KB sources.
+
+    The index is gitignored, so after a fresh clone or a ``git pull`` that changed the
+    KB it is absent or stale - and the assistant then answers procedure questions with
+    "no data". Rebuilding here (a fraction of a second) removes that manual step. An
+    explicit ``KB_CORPUS_PATH`` is never touched. Returns what was done.
+    """
+    if os.environ.get("KB_CORPUS_PATH") or not _BUILD_SCRIPT.exists():
+        return "skipped"
+    target = _DEFAULT_CORPUS
+    if target.exists() and target.stat().st_mtime >= _newest_input_mtime():
+        return "fresh"
+    result = subprocess.run(
+        [sys.executable, str(_BUILD_SCRIPT)],
+        cwd=_REPO_ROOT,
+        capture_output=True,
+        check=False,
+        timeout=120,
+    )
+    get_retriever.cache_clear()
+    return "built" if result.returncode == 0 and target.exists() else "build_failed"
 
 
 @lru_cache(maxsize=1)
