@@ -1,0 +1,550 @@
+Print 100
+Oʻzbekiston Respublikasi Vazirlar Mahkamasining
+qarori
+Oʻzbekiston Respublikasi hududida foydalanilayotgan, sotish yoki shaxsiy foydalanish uchun olib kiriladigan va ishlab chiqariladigan mobil qurilmalarni roʻyxatga olish tartibi toʻgʻrisidagi nizomni tasdiqlash haqida
+Oʻzbekiston Respublikasi Vazirlar Mahkamasining “Oʻzbekiston Respublikasida mobil qurilmalarni hisobga olish tizimini tartibga solish chora-tadbirlari toʻgʻrisida” 2018-yil 22-oktabrdagi 847-son qaroriga muvofiq, shuningdek, Oʻzbekiston Respublikasi hududida foydalanilayotgan, sotish yoki shaxsiy foydalanish uchun olib kiriladigan va ishlab chiqariladigan mobil qurilmalarni roʻyxatga olish tartibi va shartlarini belgilash maqsadida Vazirlar Mahkamasi qaror qiladi:
+1. Oʻzbekiston Respublikasi hududida foydalanilayotgan, sotish yoki shaxsiy foydalanish uchun olib kiriladigan va ishlab chiqariladigan mobil qurilmalarni roʻyxatga olish tartibi toʻgʻrisidagi nizom (keyingi oʻrinlarda Nizom deb ataladi) ilovaga muvofiq tasdiqlansin.
+2. Belgilansinki:
+Oʻzbekiston Respublikasi hududida foydalanilayotgan, sotish yoki shaxsiy foydalanish uchun olib kiriladigan va ishlab chiqariladigan mobil qurilmalar mobil qurilmalarni xalqaro oʻziga xos identifikatsiya kodlari boʻyicha roʻyxatga olish tizimida:
+2019-yil 1-noyabrgacha — ularni avtomatik tarzda mobil aloqa operatorlari tarmoqlariga ulash (aktivlashtirish) orqali bepul asosda;
+2019-yil 1-noyabrdan — Nizomga muvofiq jismoniy shaxslar, import qiluvchilar va ishlab chiqaruvchi korxonalarning mobil qurilmalarni xalqaro oʻziga xos identifikatsiya kodlari boʻyicha roʻyxatga olish tizimiga murojaat qilishi orqali bepul asosda;
+2019-yil 1-dekabrdan — Nizomga muvofiq jismoniy shaxslar, import qiluvchilar va ishlab chiqaruvchi tashkilotlarning mobil qurilmalarni xalqaro oʻziga xos identifikatsiya kodlari boʻyicha roʻyxatga olish tizimiga murojaat qilishi orqali pulli asosda roʻyxatga olinadi.
+3. Oʻzbekiston Respublikasi Axborot texnologiyalari va kommunikatsiyalarini rivojlantirish vazirligi hamda Oʻzbekiston Respublikasi Vazirlar Mahkamasi huzuridagi Davlat personallashtirish markazi jismoniy shaxslar tomonidan shaxsiy foydalanish uchun olib kiriladigan mobil qurilmalarni roʻyxatga olish maqsadida mobil qurilmalarni xalqaro oʻziga xos identifikatsiya kodlari boʻyicha roʻyxatga olish tizimi operatorining Vazirlar Mahkamasi huzuridagi Davlat personallashtirish markazi bilan oʻzaro hamkorligi toʻgʻrisida bitim tuzilishini hamda fuqarolarning Oʻzbekiston Respublikasi Davlat chegarasini kesib oʻtganligi haqidagi maʼlumotlar bilan avtomatik tarzda almashish uchun ularning elektron tizimlariga ulanishini bir oy muddatda taʼminlasin.
+4. Oʻzbekiston Respublikasi Raqamli texnologiyalar vazirligi Oʻzbekiston Milliy teleradiokompaniyasi, Oʻzbekiston Milliy axborot agentligi, Transport vazirligi bilan birgalikda bosma va elektron ommaviy axborot vositalarini jalb qilgan holda, ushbu qarorning maqsad va vazifalarini aholi, turistlar va respublika mehmonlari oʻrtasida keng yoritib borilishini tizimli asosda tashkil qilsin.
+(4-band Oʻzbekiston Respublikasi Vazirlar Mahkamasining 2023-yil 26-oktabrdagi 563-sonli qarori tahririda — Qonunchilik maʼlumotlari milliy bazasi, 27.10.2023-y., 09/23/563/0800-son — 2024-yil 28-yanvardan kuchga kiradi)
+5. Oʻzbekiston Respublikasi Axborot texnologiyalari va kommunikatsiyalarini rivojlantirish vazirligi manfaatdor vazirliklar hamda idoralar bilan birgalikda oʻzlari qabul qilgan normativ-huquqiy hujjatlarni bir oy muddatda ushbu qarorga muvofiqlashtirsin.
+6. Mazkur qarorning bajarilishini nazorat qilish Oʻzbekiston Respublikasi axborot texnologiyalari va kommunikatsiyalarini rivojlantirish vaziri Sh.M. Sadikov zimmasiga va Oʻzbekiston Respublikasi Vazirlar Mahkamasining Telekommunikatsiyalar, IT-texnologiyalar va innovatsion faoliyatni rivojlantirish, axborot xavfsizligini taʼminlash masalalari kotibiyatiga yuklansin.
+Oʻzbekiston Respublikasining Bosh vaziri A. ARIPOV
+Toshkent sh.,
+2019-yil 17-sentabr,
+778-son
+Vazirlar Mahkamasining 2019-yil 17-sentabrdagi 778-son qaroriga
+ILOVA
+Oʻzbekiston Respublikasi hududida foydalanilayotgan, sotish yoki shaxsiy foydalanish uchun olib kiriladigan va ishlab chiqariladigan mobil qurilmalarni roʻyxatga olish tartibi toʻgʻrisida
+NIZOM
+1-bob. Umumiy qoidalar
+1. Ushbu Nizom Oʻzbekiston Respublikasi hududida foydalanilayotgan, sotish yoki shaxsiy foydalanish uchun olib kiriladigan va ishlab chiqariladigan mobil telefonlar hamda mobil aloqa moduliga ega qurilmalarni (keyin oʻrinlarda mobil qurilmalar deb ataladi) roʻyxatga olish tartibini belgilaydi.
+2. Ushbu Nizomda quyidagi asosiy tushunchalardan foydalaniladi:
+GSMA (Global System for Mobile Communication Association) — xalqaro mobil apparat identifikatorini yaratish uchun ishlatiladigan TAC kodini taqsimlash boʻyicha global boshqaruvchi. Uyushma TAC raqamlarining rasmiy intervallarini 3GPP mos keluvchi barcha qurilma ishlab chiqaruvchilariga tarqatadi va ushbu intervallarni va qurilma modeli maʼlumotlarini maʼlumotlar bazasiga yozib oladi. Ushbu maʼlumotlar bazasiga asoslanib qurilmani qidirish va identifikatsiya qilishga vakolatli tashkilotlarga IMEI orqali mobil qurilma ishlab chiqaruvchisi va modelini aniq identifikatsiyalash imkonini beradi;
+IMEI (International Mobile Equipment Identifier) — har bir mobil qurilma uchun oʻziga xos boʻlgan 15 raqamdan iborat xalqaro mobil qurilmalar identifikatori (keyin oʻrinlarda — IMEI kodi). Asosiy identifikator GSMA tomonidan belgilangan maxsus TAC hisoblanadi. GSM/UMTS va boshqa mobil qurilmalarni identifikatsiyalash uchun qoʻllaniladi. Mobil qurilma bir yoki undan ortiq IMEI koddan iborat boʻlishi mumkin;
+(2-bandning ikkinchi va uchinchi xatboshilari Oʻzbekiston Respublikasi Vazirlar Mahkamasining 2020-yil 31-dekabrdagi 828-sonli qarori tahririda — Qonun hujjatlari maʼlumotlari milliy bazasi, 31.12.2020-y., 09/20/828/1692-son)
+MSISDN (Mobile Station Integrated Services Digital Network) — GSM/UMTS standartlarida aloqa uchun xizmatlar integratsiyalashtirilgan raqamli tarmoq mobil abonentining raqami (masalan, +998 XX-XXX-XX-XX);
+SIM-karta — ichiga mikrosxema oʻrnatilgan identifikatsiyalash moduli boʻlib, uning yordamida abonent qurilmasini identifikatsiyalash, mobil aloqa tarmogʻida undan foydalanish, shuningdek, GSM tarmogʻida abonent raqamidan ruxsatsiz foydalanishdan himoya qilish taʼminlanadi;
+SMS (Short Message Service) — mobil qurilma yordamida qisqa matnli xabarlarni qabul qilish va uzatish imkonini beradigan texnologiya;
+USSD (Unstructured Supplementary Service Data) — qisqa xabarlarni uzatish rejimida tarmoq abonenti va servis ilova oʻrtasida interaktiv oʻzaro hamkorlikni tashkil qilish imkonini beradigan GSM tarmoqlaridagi standart servis;
+abonent — mobil aloqa operatori bilan mobil aloqa xizmatlarini koʻrsatish uchun shartnoma tuzgan jismoniy yoki yuridik shaxs;
+import qiluvchi — mobil qurilmalarni Oʻzbekiston Respublikasi hududiga belgilangan tartibda tegishli bojxona rejimiga rasmiylashtirgan holda olib kiradigan jismoniy va yuridik shaxs;
+IMEI-kodlar maʼlumotlar bazasi — tizimda roʻyxatdan oʻtgan va hisobga olingan barcha IMEI kodlari toʻplamidir. IMEI kodlarining maʼlumotlar bazasi oq, qora, kulrang va bogʻlangan-oq roʻyxatlardagi mobil qurilmalar IMEI-kodlaridan iborat;
+(2-bandning toʻqqizinchi va oʻninchi xatboshilari Oʻzbekiston Respublikasi Vazirlar Mahkamasining 2020-yil 31-dekabrdagi 828-sonli qarori tahririda — Qonun hujjatlari maʼlumotlari milliy bazasi, 31.12.2020-y., 09/20/828/1692-son)
+oq roʻyxat — mobil qurilmalar IMEI-kodlarining roʻyxati boʻlib, ular:
+2019-yil 1-noyabrgacha boʻlgan davrda mobil aloqa operatorlarining tarmoqlariga ularni ulash (aktivlashtirish) orqali avtomatik rejimda roʻyxatga olingan;
+ushbu Nizomga muvofiq roʻyxatga olingan boʻladi.
+Oq roʻyxatga kiritilgan mobil qurilmalarga mobil aloqa xizmatlaridan mobil aloqa operatori bilan tuzilgan shartnomaga va amaldagi tarifga koʻra belgilangan tartibda foydalanishga ruxsat beriladi;
+qora roʻyxat — tizimda roʻyxatdan oʻtmagan, klonlangan, IMEI kodi aniqlanmagan, GSMAning qora roʻyxatida boʻlgan mobil qurilmalar IMEI kodlari (roumingdagi mobil qurilmalarni ham oʻz ichiga oladi).
+Qora roʻyxatga kiritilgan mobil qurilma IMEI-kodi mobil aloqa xizmatlaridan foydalanishi cheklanib (bir vaqtning oʻzida bogʻlangan oq roʻyxatda joylashgan mobil qurilmalarning IMEI-kodlari bundan mustasno), abonentga qora roʻyxatga kiritilganligi sababi haqida SMS ogohlantirish yuboriladi.
+Mobil aloqa xizmatlaridan foydalanish cheklovi, mobil qurilma IMEI-kodi orqali qora roʻyxatga olingan holatda barcha telekommunikatsiya xizmatlaridan foydalanish imkoniyati mavjud emasligini anglatadi;
+(2-bandning oʻn beshinchi — oʻn yettinchi xatboshilari Oʻzbekiston Respublikasi Vazirlar Mahkamasining 2020-yil 31-dekabrdagi 828-sonli qarori tahririda — Qonun hujjatlari maʼlumotlari milliy bazasi, 31.12.2020-y., 09/20/828/1692-son)
+kul rang roʻyxat — oq yoki qora roʻyxatlarga kiritilmagan, ammo mobil aloqa operatorining tarmogʻida birinchi tarmoq hodisasi paytidan boshlab 30 kalendar kunidan koʻp boʻlmagan muddatga mobil aloqa xizmatlaridan foydalanish imkoniyatiga ega boʻladigan mobil qurilmalarning IMEI-kodlari roʻyxati (norezidentlarga tegishli mobil qurilmalar IMEI-kodlari ushbu roʻyxatda boʻlishi mumkin boʻlgan muddat bir kalendar yil davomida 60 kalendar kunini tashkil qiladi);
+(2-bandning oʻn sakkizinchi xatboshisi Oʻzbekiston Respublikasi Vazirlar Mahkamasining 2025-yil 6-noyabrdagi 700-sonli qarori tahririda — Qonunchilik maʼlumotlari milliy bazasi, 07.11.2025-y., 09/25/700/1022-son. Kuchga kirish sanasi — 2026-yil 8-fevral)
+bogʻlangan oq roʻyxat — mobil qurilmalar IMEI-kodlarining roʻyxati boʻlib, ular:
+klonlangan yoki aniqlanmagan, ammo 2019-yilning 1-noyabrigacha boʻlgan davrda IMEI-kodni abonentning telefon raqami bilan bogʻlagan holda avtomatik ravishda roʻyxatga olingan boʻladi (IMEI — MSISDN);
+GSMA talablariga javob beradigan, boshqa qurilma bilan birgalikda IMEI-kodlar maʼlumotlar bazasiga kiritilgan IMEI-kodli yangi mobil qurilma hisoblanadi va IMEI-kodning klonlanganligi aniqlanguniga qadar abonent tomonidan Tizim operatori yoki Tizim roʻyxatga oluvchisiga kelib, mobil qurilma hujjatlarini IMEI-kod hamda abonent telefon raqami bilan birgalikda (IMEI — MSISDN) taqdim etiladi.
+Bogʻlangan oq roʻyxatdagi IMEI-kodli mobil qurilmalardan faqat abonentlarning bogʻlangan mobil raqamlari tomonidan foydalaniladi (IMEI — MSISDN);
+mobil qurilma hujjatlari — texnik pasport, kafolat taloni, mobil qurilma qutisi yoki arizada koʻrsatilgan mobil qurilmaning IMEI-kodi roʻyxatga olinadigan mobil qurilma IMEI-kodiga mos kelishini isbotlash uchun asos boʻluvchi boshqa hujjat;
+klonlangan IMEI-kod — GSMA tomonidan belgilangan boshqa mobil qurilma IMEI-kodining belgilari va ramzlarini toʻliq qaytaruvchi mobil qurilmaning IMEI-kodi;
+mobil qurilmalar — mobil aloqa moduliga ega boʻlgan mobil telefonlar, qurilmalar va ularning ehtiyot qismlari (platalar);
+(2-bandning yigirma beshinchi xatboshisi Oʻzbekiston Respublikasi Vazirlar Mahkamasining 2023-yil 26-oktabrdagi 563-sonli qarori tahririda — Qonunchilik maʼlumotlari milliy bazasi, 27.10.2023-y., 09/23/563/0800-son — 2024-yil 28-yanvardan kuchga kiradi)
+aniqlanmagan IMEI-kod — GSMA tomonidan belgilangan talablarga javob bermaydigan mobil qurilmaning IMEI-kodi;
+mobil aloqa operatori — mobil aloqa tarmogʻiga ega boʻlgan, uning qurilishi, ishlashi, rivojlanishini taʼminlovchi va litsenziyaga asosan mobil aloqa xizmatlarini koʻrsatuvchi yuridik shaxs;
+Tizim operatori — mobil qurilmalarning IMEI-kodlarini roʻyxatga oluvchi, Tizimning muntazam ishlashini va takomillashtirilishini taʼminlovchi yuridik shaxs;
+(2-bandning yigirma toʻqqizinchi xatboshisi Oʻzbekiston Respublikasi Vazirlar Mahkamasining 2023-yil 26-oktabrdagi 563-sonli qaroriga asosan 2024-yil 28-yanvardan chiqariladi — Qonunchilik maʼlumotlari milliy bazasi, 27.10.2023-y., 09/23/563/0800-son)
+IMEI-kodlarni tekshirish — aniqlanmagan va klonlangan IMEI-kodlarni, shuningdek, yoʻqotilgan va oʻgʻirlangan mobil qurilmalarni aniqlash uchun mobil qurilmalarning IMEI-kodlarini Tizim bazasi bilan taqqoslash;
+mobil qurilmalarni roʻyxatga olish — mobil qurilmalarning IMEI-kodlarini Tizim operatori IMEI-kodlarining maʼlumotlar bazasiga kiritish;
+Tizim roʻyxatga oluvchisi — mobil qurilmalarning IMEI-kodlarini roʻyxatga olish uchun Tizim operatori bilan shartnoma tuzgan yakka tartibdagi tadbirkor yoki yuridik shaxs;
+fuqaroligi boʻlmagan shaxslar — Oʻzbekiston Respublikasi hududida yashovchi, Oʻzbekiston Respublikasi fuqarosi boʻlmagan va xorijiy davlatning fuqaroligiga tegishli ekanligini isbotlamagan shaxslar;
+chet davlat fuqarosi — Oʻzbekiston Respublikasining fuqaroligiga ega boʻlmagan, boshqa davlat fuqaroligiga va oʻzining boshqa davlat fuqaroligiga mansubligiga doir dalilga ega boʻlgan shaxs;
+(2-bandning oʻttiz uchinchi va oʻttiz toʻrtinchi xatboshilari Oʻzbekiston Respublikasi Vazirlar Mahkamasining 2020-yil 31-dekabrdagi 828-sonli qarori tahririda — Qonun hujjatlari maʼlumotlari milliy bazasi, 31.12.2020-y., 09/20/828/1692-son)
+rouming — bir mobil aloqa operatorining abonenti boshqa mobil aloqa operatorining xizmat koʻrsatish hududida bir davlat doirasida (milliy rouming) yoki boshqa mamlakatda (xalqaro rouming) boʻlganda uning boshqa mobil aloqa operatorining tarmogʻidan foydalanishini taʼminlovchi xizmat;
+mobil qurilmalarni xalqaro oʻziga xos identifikatsiya kodlari boʻyicha roʻyxatga olish tizimi (keyingi oʻrinlarda Tizim deb ataladi) — ushbu Nizomda nazarda tutilgan mobil qurilmalarni texnik identifikatsiyalash parametrlari toʻgʻrisidagi maʼlumotlarni roʻyxatga olish, yigʻish, saqlash va qayta ishlash uchun foydalaniladigan axborot tizimi;
+tarmoq hodisasi — mobil qurilmani mobil aloqa operatorining tarmogʻiga uning abonent SIM-kartasidan foydalanish orqali ulash;
+TAC (Type Allocation Code) — simsiz qurilmalarni oʻziga xos identifikatsiyalash uchun ishlatiladigan IMEI identifikatorining dastlabki sakkiz xonali qismidir. TAC IMEIdan foydalangan holda GSM, UMTS yoki boshqa simsiz qurilmalarni aniq modelini identifikatsiyalaydi;
+yashash guvohnomasi — fuqaroligi boʻlmagan shaxsning yoki chet davlat fuqarosining shaxsini tasdiqlaydigan, Oʻzbekiston Respublikasi hududida doimiy yashashga ruxsat etilganligining tasdigʻi sifatida berilgan hujjat.
+(2-band Oʻzbekiston Respublikasi Vazirlar Mahkamasining 2020-yil 31-dekabrdagi 828-sonli qaroriga asosan xatboshilar bilan toʻldirilgan — Qonun hujjatlari maʼlumotlari milliy bazasi, 31.12.2020-y., 09/20/828/1692-son)
+2-bob. Tizimning vazifasi va imkoniyatlari
+3. Tizim ushbu Nizomning talablariga koʻra mobil qurilmalarni roʻyxatga olish, Oʻzbekiston Respublikasi hududida foydalanilayotgan, sotish yoki shaxsiy foydalanish uchun olib kiriladigan va ishlab chiqariladigan barcha mobil qurilmalarning IMEI-kodlari toʻgʻrisidagi axborotni oʻz ichiga olgan yagona maʼlumotlar bazasini yaratish, shuningdek, mobil qurilmalar IMEI-kodlarining oq, kul rang, qora, bogʻlangan oq roʻyxatlarini shakllantirish va taʼminlash uchun moʻljallangan.
+4. IMEI-kodlarni tekshirish va mobil qurilmalarni roʻyxatga olish bilan bogʻliq barcha jarayonlar Tizim yordamida amalga oshiriladi.
+5. Import qiluvchilar va jismoniy shaxslar Oʻzbekiston Respublikasi hududida qurilmani xarid qilishdan avval IMEI-kodning maqomini tekshirish va aniqlanmagan, klonlangan, yoʻqotilgan va oʻgʻirlangan mobil qurilmalarni aniqlash uchun IMEI-kodlarning maʼlumotlar bazasiga SMS/USSD soʻrov yuborishlari yoki www.uzimei.uz manzil boʻyicha Tizim operatorining saytiga murojaat qilishlari mumkin.
+Tizim operatoridan barcha SMS-xabarlar va abonentlardan mobil qurilmaning IMEI-kodini roʻyxatdan oʻtkazish va tekshirish tartibi bilan bogʻliq SMS/USSD soʻrovlari mobil operatorlar tarmoqlari orqali bepul amalga oshiriladi.
+(5-bandning ikkinchi xatboshisi Oʻzbekiston Respublikasi Vazirlar Mahkamasining 2020-yil 31-dekabrdagi 828-sonli qarori tahririda — Qonun hujjatlari maʼlumotlari milliy bazasi, 31.12.2020-y., 09/20/828/1692-son)
+3-bob. Mobil qurilmalarni roʻyxatga olish tartibi va shartlari
+6. Oʻzbekiston Respublikasi hududiga olib kirilgan, Oʻzbekiston Respublikasi hududida ishlab chiqarilayotgan va foydalanilayotgan mobil qurilmalarni roʻyxatdan oʻtkazish majburiydir. Oʻzbekiston Respublikasi hududida roumingda boʻlib, mahalliy operator tarmogʻida ilgari tarmoq hodisasi qayd etilmagan mobil qurilmalar bundan mustasno.
+(6-band Oʻzbekiston Respublikasi Vazirlar Mahkamasining 2020-yil 31-dekabrdagi 828-sonli qarori tahririda — Qonun hujjatlari maʼlumotlari milliy bazasi, 31.12.2020-y., 09/20/828/1692-son)
+6 1 . Oʻzbekiston Respublikasi hududida mobil qurilmalar chakana savdosi bilan shugʻullanuvchi tadbirkorlik subyektlari mobil qurilmalarni respublika hududiga olib kirish sanasidan qatʼiy nazar, ularni roʻyxatdan oʻtkazish uchun javobgar boʻladilar
+(6 1 -band Oʻzbekiston Respublikasi Vazirlar Mahkamasining 2020-yil 31-dekabrdagi 828-sonli qaroriga asosan kiritilgan — Qonun hujjatlari maʼlumotlari milliy bazasi, 31.12.2020-y., 09/20/828/1692-son)
+7. Klonlangan va aniqlanmagan IMEI-kodli mobil qurilmalar Tizimda roʻyxatga olinmaydi.
+8. Mobil qurilmalarni xalqaro oʻziga xos identifikatsiya kodlari boʻyicha roʻyxatga olish tizimida roʻyxatga olinishi kerak boʻlgan mobil qurilmalar turlarining roʻyxati ushbu Nizomga 1-ilovada beriladi.
+Mobil qurilmalarni roʻyxatga olish ushbu Nizomning 4 va 5-boblarida koʻrsatilgan talablarga muvofiq jismoniy va yuridik shaxslarning Tizim operatori yoki Tizim roʻyxatga oluvchisiga qilgan murojaatlari boʻyicha amalga oshiriladi.
+(8-bandning ikkinchi xatboshisi Oʻzbekiston Respublikasi Vazirlar Mahkamasining 2020-yil 31-dekabrdagi 828-sonli qarori tahririda — Qonun hujjatlari maʼlumotlari milliy bazasi, 31.12.2020-y., 09/20/828/1692-son)
+9. Avval roʻyxatga olingan mobil qurilmalar qayta roʻyxatga olinmaydi.
+10. Davlat tomonidan qoʻriqlanishi kerak boʻlgan shaxslarning xavfsizligi, mamlakatda mudofaa qobiliyati, xavfsizlik va ichki tartibni taʼminlash va favqulodda vaziyatlar holatida ehtiyojlarni taʼminlash uchun Oʻzbekiston Respublikasi hududiga olib kirilgan mobil qurilmalarning IMEI-kodlarini roʻyxatga olish vakolatli organlarning tegishli murojaatlari boʻyicha alohida tartibda amalga oshiriladi.
+10 1 . Xorijiy davlatlarning Oʻzbekiston Respublikasida akkreditatsiyadan oʻtgan diplomatik vakolatxonalari, konsullik muassasalari va ularga tenglashtirilgan tashkilotlar (keyingi oʻrinlarda — diplomatik vakolatxonalar) mobil qurilmalari IMEI-kodlarini roʻyxatdan oʻtkazish uchun Oʻzbekiston Respublikasi Tashqi ishlar vazirligi huzuridagi “Diplomatik servis xizmati” davlat muassasasiga mazkur Nizomning 3a-ilovasiga muvofiq toʻldirilgan arizani ilova qilgan holda murojaat qiladi. Bunda diplomatik vakolatxonalar tomonidan mobil qurilmalar diplomatik pochta orqali olinmagan taqdirda arizaga bojxona yuk deklaratsiyasi (keyingi oʻrinlarda — BYD) yoki bojxona kirim orderi taqdim etiladi.
+(10 1 -bandning birinchi xatboshisi Oʻzbekiston Respublikasi Vazirlar Mahkamasining 2026-yil 23-yanvardagi 26-sonli qarori tahririda — Qonunchilik maʼlumotlari milliy bazasi, 26.01.2026-y., 09/26/26/0076-son)
+Tizim operatori “Diplomatik servis xizmati” davlat muassasasi bergan arizaga muvofiq IMEI-kodlarini roʻyxatdan oʻtkazishni ariza olingan kundan boshlab 3 ish kuni mobaynida toʻlov asosida amalga oshiradi.
+(10 1 -bandning ikkinchi xatboshisi Oʻzbekiston Respublikasi Vazirlar Mahkamasining 2026-yil 23-yanvardagi 26-sonli qarori tahririda — Qonunchilik maʼlumotlari milliy bazasi, 26.01.2026-y., 09/26/26/0076-son)
+10 2 . Sud qaroriga koʻra davlat egaligiga oʻtkazilgan mobil qurilmalar IMEI-kodlarini roʻyxatdan oʻtkazish uchun davlat ijrochisi tomonidan mazkur Nizomning 3b-ilovasiga muvofiq toʻldirilgan anketa va sud qarorining nusxasini tizim operatoriga taqdim etadi.
+Tizim operatori davlat ijrochisi tomonidan taqdim etilgan maʼlumotlar asosida mobil qurilmalar IMEI-kodlarini ariza kelib tushgan kundan boshlab 3 ish kuni mobaynida roʻyxatdan oʻtkazadi.
+Tizim operatori bilan Oʻzbekiston Respublikasi Bosh prokuraturasi huzuridagi Majburiy ijro byurosi oʻrtasida sud qaroriga koʻra davlat egaligiga oʻtkazilgan mobil qurilmalar boʻyicha elektron axborot almashinuvi amalga oshiriladi.
+(10 1 va 10 2 -bandlar Oʻzbekiston Respublikasi Vazirlar Mahkamasining 2020-yil 31-dekabrdagi 828-sonli qaroriga asosan kiritilgan — Qonun hujjatlari maʼlumotlari milliy bazasi, 31.12.2020-y., 09/20/828/1692-son)
+4-bob. Import qiluvchi va ishlab chiqaruvchi tashkilot tomonidan mobil qurilmalarni roʻyxatga olish
+11. Oʻzbekiston Respublikasi hududiga/hududida import qiluvchilar tomonidan olib kiriladigan va ishlab chiqaruvchi tashkilotlar tomonidan ishlab chiqariladigan mobil qurilmalarni roʻyxatga olish ushbu Nizomga 2-ilovadagi sxema boʻyicha amalga oshiriladi.
+Import qiluvchilar tomonidan olib kirilayotgan mobil qurilmalarning Tizimda roʻyxatga olinishi “erkin muomalaga chiqarish” (IM-40) bojxona rejimiga rasmiylashtirilganidan soʻng uch kun muddatda amalga oshiriladi.
+(11-band Oʻzbekiston Respublikasi Vazirlar Mahkamasining 2023-yil 26-oktabrdagi 563-sonli qaroriga asosan xatboshi bilan toʻldirilgan — Qonunchilik maʼlumotlari milliy bazasi, 27.10.2023-y., 09/23/563/0800-son — 2024-yil 28-yanvardan kuchga kiradi)
+12. Eksport qilish uchun ishlab chiqarilgan mobil qurilmalarning IMEI-kodlari roʻyxatga olinmaydi.
+13. Import qiluvchilar va ishlab chiqaruvchi tashkilotlar (keyingi oʻrinlarda ariza beruvchi deb ataladi) mobil qurilmalarni roʻyxatga olishni:
+Tizim operatoriga oʻzi kelib murojaat etish orqali;
+Oʻzbekiston Respublikasi Yagona interaktiv davlat xizmatlari portali (keyingi oʻrinlarda YIDXP deb ataladi) orqali amalga oshirishlari mumkin.
+14. Mobil qurilmalarni roʻyxatga olish uchun ariza beruvchi Oʻzbekiston Respublikasi hududiga/hududida olib kirilgan/ishlab chiqarilgan mobil qurilmalarning tegishli ravishda ariza beruvchining turiga qarab, ushbu Nizomga 3v yoki 3g-ilovalardagi shaklga muvofiq toʻldirilgan anketani taqdim etadi.
+Import qiluvchilar anketada olib kirilgan qurilmalar partiyasi uchun “erkin muomalaga chiqarish” (IM-40) bojxona rejimiga rasmiylashtirilgan BYDning roʻyxatga olingan bojxona posti, sanasi va raqamini koʻrsatadi. Agar import qiluvchi tomonidan anketada koʻrsatilgan axborot BYD yoki bojxona kirim orderida aks ettirilgan axborotga mos kelmasa, qurilmalarning butun tovar partiyasi roʻyxatga olinmaydi.
+Bunda, chetdan keltiriladigan mobil qurilmalarning IMEI-kodlari toʻgʻrisidagi elektron maʼlumot import qiluvchilar tomonidan majburiy tartibda BYDning 31-ustunida koʻrsatilgan boʻlishi lozim.
+Mobil qurilmalar IMEI-kodlarini roʻyxatdan oʻtkazish uchun ishlab chiqaruvchi tashkilotlar qurilma ishlab chiqarish uchun tegishli ruxsatnomalarni, shuningdek, vakolatli organning mahalliy ishlab chiqaruvchisi haqidagi maʼlumotlarni (GSMA assotsiatsiyasining TAC sertifikatlari va boshqa ruxsatnomalar) taqdim etishi kerak.
+Bunda mobil qurilmalarning markasi, modeli, soni toʻgʻrisidagi maʼlumotlar va ular IMEI-kodlarining roʻyxati ariza beruvchilar tomonidan elektron koʻrinishda taqdim etiladi.
+(14-band Oʻzbekiston Respublikasi Vazirlar Mahkamasining 2020-yil 31-dekabrdagi 828-sonli qarori tahririda — Qonun hujjatlari maʼlumotlari milliy bazasi, 31.12.2020-y., 09/20/828/1692-son)
+Import qiluvchilar tomonidan olib kirilgan qurilmalar partiyasi “erkin muomalaga chiqarish” (IM-40) bojxona rejimiga rasmiylashtirilmaguncha, mazkur qurilmalarning IMEI kodlari Tizimda roʻyxatdan oʻtkazilishiga yoʻl qoʻyilmaydi.
+(14-band Oʻzbekiston Respublikasi Vazirlar Mahkamasining 2023-yil 26-oktabrdagi 563-sonli qaroriga asosan xatboshi bilan toʻldirilgan — Qonunchilik maʼlumotlari milliy bazasi, 27.10.2023-y., 09/23/563/0800-son — 2024-yil 28-yanvardan kuchga kiradi)
+Ariza beruvchi va jismoniy shaxslar mazkur bandda keltirilgan roʻyxatga olinmaydigan hamda roʻyxatdan oʻtkazishga yoʻl qoʻyilmaydigan holatlarni va hujjatlardagi maʼlumotlar oʻrtasidagi nomuvofiqliklarni bartaraf etilgandan soʻng oʻn kun muddatda mobil qurilmalarni roʻyxatga olish boʻyicha qayta murojaat qilishlari mumkin.
+(14-band Oʻzbekiston Respublikasi Vazirlar Mahkamasining 2025-yil 6-noyabrdagi 700-sonli qaroriga asosan yettinchi xatboshi bilan toʻldirilgan — Qonunchilik maʼlumotlari milliy bazasi, 07.11.2025-y., 09/25/700/1022-son. Kuchga kirish sanasi — 2026-yil 8-fevral)
+15. Roʻyxatga olish uchun oʻzi kelib murojaat qilish tartibida toʻldirilgan anketa Tizim operatori yoki Tizim roʻyxatga oluvchisining masʼul shaxsi tomonidan qabul qilinadi.
+Masʼul shaxs tomonidan YIDXP orqali elektron shaklda taqdim etilgan mobil qurilmani roʻyxatga olish toʻgʻrisidagi anketa uning olinganligi toʻgʻrisidagi bildirishnoma bilan qabul qilinadi, shuningdek, roʻyxat raqami berilgan holda avtomatik ravishda YIDXPda roʻyxatga olinadi.
+16. Roʻyxatga olish uchun ariza beruvchi tomonidan taqdim etiladigan mobil qurilmalarning soni cheklanmagan.
+17. Ariza beruvchidan ushbu Nizomning 14-bandida nazarda tutilmagan hujjatlar va maʼlumotlarning taqdim etishni talab qilishga yoʻl qoʻyilmaydi.
+18. Mobil qurilmalarni roʻyxatga olish uchun ushbu Nizomning 14-bandida nazarda tutilmagan qoʻshimcha maʼlumotlarni olish zarur boʻlganda, Tizim operatori Oʻzbekiston Respublikasi Vazirlar Mahkamasining “Tadbirkorlik subyektlariga davlat xizmatlari koʻrsatish tartibini yanada takomillashtirish chora-tadbirlari toʻgʻrisida” 2014-yil 31-dekabrdagi 377-son qarori bilan belgilangan tartibda boshqa vakolatli organlardan mustaqil ravishda ularni soʻraydi va oladi.
+Mobil qurilmalarni roʻyxatga olish uchun zarur boʻlgan hujjatlar va axborotga ega boʻlgan davlat organlari tegishli idoralararo soʻrovni olgan paytdan boshlab bir ish kuni ichida bunday hujjatlar va axborotni (arxiv maʼlumotlaridan tashqari) taqdim etishga majbur.
+19. Ishonchli boʻlmagan yoki notoʻgʻri maʼlumotlar berganligi uchun ariza beruvchi qonunchilikka muvofiq javobgar boʻladi.
+(19-band Oʻzbekiston Respublikasi Vazirlar Mahkamasining 2022-yil 4-apreldagi 153-sonli qarori tahririda — Qonunchilik maʼlumotlari milliy bazasi, 05.04.2022-y., 09/22/153/0266-son)
+20. Ariza beruvchining anketasini koʻrib chiqish va mobil qurilmalarning IMEI-kodlarini roʻyxatga olish 3 (uch) ish kuni ichida amalga oshiriladi.
+21. Roʻyxatga olish jarayoni tugaganidan keyin Tizim operatori yoki Tizim roʻyxatga oluvchisi 1 ish kuni ichida belgilangan tartibda ariza beruvchiga toʻlash uchun hisobni taqdim etadi.
+22. Ariza beruvchi tomonidan toʻlov 10 ish kuni ichida amalga oshirilgandan keyin Tizim operatori yoki Tizim roʻyxatga oluvchisi 1 ish kuni ichida barcha IMEI-kodlarni oq roʻyxatga kiritadi va agar mavjud boʻlsa, roʻyxatga olib boʻlmaydigan mobil qurilmalarning IMEI-kodlari roʻyxatini koʻrsatgan holda, ariza beruvchini anketada koʻrsatilgan usul orqali roʻyxatga olish tugaganligi toʻgʻrisida xabardor qiladi.
+(22-band Oʻzbekiston Respublikasi Vazirlar Mahkamasining 2023-yil 26-oktabrdagi 563-sonli qarori tahririda — Qonunchilik maʼlumotlari milliy bazasi, 27.10.2023-y., 09/23/563/0800-son — 2024-yil 28-yanvardan kuchga kiradi)
+5-bob. Jismoniy shaxslar tomonidan mobil qurilmalarni roʻyxatga olish
+23. Abonentlar tomonidan foydalaniladigan va 2019-yilning 1-noyabrigacha tarmoqda aktiv (ulangan) holatda boʻlgan barcha mobil qurilmalar roʻyxatga olinadi va Tizim operatori IMEI-kodlarining maʼlumotlar bazasiga avtomatik ravishda kiritiladi (ular egalarining hech qanday qoʻshimcha arizalari talab etilmaydi).
+Agar mobil qurilmaning bir slotiga tegishli IMEI-kodi 2019-yil 1-noyabrgacha avtomatik roʻyxatdan oʻtgan va bazaga kiritilgan boʻlsa, uning boshqa slotidagi IMEI-kodi qurilma egasi tomonidan quyidagi harakatlar bajarilganidan soʻng Tizim operatori tomonidan 3 ish soati mobaynida bepul ravishda amalga oshiriladi:
+mobil qurilma egasining Tizim operatori yoki Tizim roʻyxatga oluvchisiga shaxsni tasdiqlovchi hujjat bilan shaxsan murojaat qilishi;
+ushbu IMEI kodining ushbu mobil qurilmaga haqiqiy ekanligini tasdiqlash (mobil qurilma klaviaturasida *#06# kodini yozib olingan IMEI kodining ekran tasvirini taqdim etish);
+ushbu Nizomning 5a-ilovasiga muvofiq toʻldirilgan anketani taqdim etishi.
+Agar mobil qurilmaning bir slotiga tegishli IMEI-kodi 2019-yil 1-noyabrdan keyin arizaga asosan roʻyxatga olingan boʻlsa, ushbu qurilmaning boshqa sloti IMEI kodini roʻyxatdan oʻtkazish quyidagi harakatlar amalga oshirilganida 3 soat ish vaqtida toʻlov asosida amalga oshiriladi:
+mobil qurilma egasining Tizim operatori yoki Tizim roʻyxatga oluvchisiga shaxsan murojaat qilgan holda shaxsni tasdiqlovchi hujjatni taqdim qilishi;
+ushbu IMEI kodining ushbu mobil qurilmaga haqiqiy ekanligini tasdiqlash (mobil qurilma klaviaturasida *#06# kodini yozib olingan IMEI kodining ekran tasvirini taqdim etish);
+IMEI-kodini roʻyxatdan oʻtkazish uchun anketa ushbu Nizomning 5a-ilovasiga muvofiq, 2019-yil 1-noyabrdan soʻng roʻyxatdan oʻtkazilgan mobil qurilmalarning markasi, modeli, soni va IMEI-kodlari koʻrsatilgan holda toʻldiriladi.
+(23-band Oʻzbekiston Respublikasi Vazirlar Mahkamasining 2020-yil 31-dekabrdagi 828-sonli qaroriga asosan ikkinchi — toʻqqizinchi xatboshilar bilan toʻldirilgan — Qonun hujjatlari maʼlumotlari milliy bazasi, 31.12.2020-y., 09/20/828/1692-son)
+24. Jismoniy shaxslar tomonidan Tizim operatorining bazasida import qiluvchilar yoki ishlab chiqaruvchi tashkilotlar tomonidan avval roʻyxatga olingan Oʻzbekiston Respublikasi hududida sotib olingan mobil qurilmalarni roʻyxatga olish talab etilmaydi.
+25. Jismoniy shaxs tomonidan Oʻzbekiston Respublikasi hududiga olib kirilgan mobil qurilmalarni roʻyxatga olish ushbu Nizomga 4-ilovadagi sxemaga muvofiq amalga oshiriladi.
+26. Jismoniy shaxslar tomonidan, shu jumladan xalqaro pochta yoki kuryerlik joʻnatmalari orqali olib kirilgan mobil qurilmalar dastlabki muvaffaqiyatli tarmoq hodisasi kunidan boshlab 30 kalendar kuni davomida roʻyxatga olinadi.
+27. Tizim operatori mobil qurilmasi dastlabki muvaffaqiyatli tarmoq hodisasidan oʻtgan abonentni 30 kalendar kuni davomida ushbu mobil qurilmani roʻyxatga olish zarurligi va koʻrsatilgan muddat tugaganidan keyin roʻyxatga olinmaganda, uning mobil aloqa xizmatlaridan foydalanishi cheklanishi toʻgʻrisida xabardor qilish choralarini koʻradi.
+(27-bandning birinchi xatboshisi Oʻzbekiston Respublikasi Vazirlar Mahkamasining 2020-yil 31-dekabrdagi 828-sonli qarori tahririda — Qonun hujjatlari maʼlumotlari milliy bazasi, 31.12.2020-y., 09/20/828/1692-son)
+Xabar dastlabki muvaffaqiyatli tarmoq hodisasi paytida va 30 kun muddat tugashidan besh kun oldin davlat, rus va ingliz tillarida mobil aloqa operatorlari tarmoqlari orqali Tizim operatori tomonidan SMS-xabar joʻnatish orqali beriladi.
+(27-bandning ikkinchi xatboshisi Oʻzbekiston Respublikasi Vazirlar Mahkamasining 2020-yil 31-dekabrdagi 828-sonli qarori tahririda — Qonun hujjatlari maʼlumotlari milliy bazasi, 31.12.2020-y., 09/20/828/1692-son)
+28. Oʻzbekiston Respublikasi fuqarosi tomonidan mobil qurilmalar IMEI-kodlarini roʻyxatga olish:
+Tizim operatori yoki Tizim roʻyxatga oluvchisiga shaxsan kelib murojaat qilish yoʻli bilan, Oʻzbekiston Respublikasi fuqarosi uchun JSHSHIR mavjud shaxsni tasdiqlovchi hujjat va ushbu Nizomning 5b-ilovasiga muvofiq Oʻzbekiston Respublikasiga olib kirilgan mobil qurilmaning IMEI-kodlari, soni, modeli va markasi koʻrsatilgan anketani toʻldirgan holda;
+YIDXP orqali — jismoniy shaxsning elektron raqamli imzosi yoki Mobil-ID tizimi yordamida;
+Tizim operatorining veb-sayti orqali — roʻyxatdan oʻtkazilayotgan mobil qurilmaning IMEI-kodi, JSHSHIR va abonent raqamini kiritish orqali;
+Tizim operatorining veb-sayti va mobil ilovalar orqali — shaxsning biometrik maʼlumotlarini identifikatsiya qilish va mobil qurilma IMEI kodlarini kiritish bilan amalga oshiriladi.
+(28-band Oʻzbekiston Respublikasi Vazirlar Mahkamasining 2023-yil 26-oktabrdagi 563-sonli qarori tahririda — Qonunchilik maʼlumotlari milliy bazasi, 27.10.2023-y., 09/23/563/0800-son — 2024-yil 28-yanvardan kuchga kiradi)
+28 1 . Chet davlat fuqarosi, Oʻzbekiston Respublikasida yashash guvohnomasiga ega chet davlat fuqarosi, Oʻzbekiston Respublikasida yashash guvohnomasiga ega fuqaroligi boʻlmagan shaxs tomonidan mobil qurilmalar IMEI-kodlarini roʻyxatga olish:
+Tizim operatori yoki Tizim roʻyxatga oluvchisiga shaxsan murojaat qilish yoʻli bilan ushbu Nizomning 5b-ilovasiga muvofiq Oʻzbekiston Respublikasiga olib kirilgan mobil qurilmaning IMEI-kodlari, soni, modeli va markasi koʻrsatilgan anketani toʻldirish va quyidagilarni taqdim etgan holda:
+chet davlat fuqarosi uchun Oʻzbekiston Respublikasiga kirib kelishi qayd etilgan shaxsni tasdiqlovchi hujjati;
+Oʻzbekiston Respublikasida yashash guvohnomasiga ega chet davlat fuqarosi uchun Oʻzbekiston Respublikasiga kirib kelishi qayd etilgan shaxsni tasdiqlovchi hujjati hamda yashash uchun guvohnomasi;
+Oʻzbekiston Respublikasida yashash guvohnomasiga ega fuqaroligi boʻlmagan shaxs uchun biometrik harakatlanish hujjatining nusxasi hamda yashash uchun guvohnomasini taqdim qilish orqali;
+YIDXP orqali — jismoniy shaxsning elektron raqamli imzosi yoki Mobil-ID tizimi yordamida;
+(28 1 -bandning oltinchi xatboshisi Oʻzbekiston Respublikasi Vazirlar Mahkamasining 2022-yil 28-sentabrdagi 541-sonli qarori tahririda — Qonunchilik maʼlumotlari milliy bazasi, 29.09.2022-y., 09/22/541/0859-son)
+Tizim operatorining veb sayti orqali — roʻyxatdan oʻtkazilayotgan mobil qurilmaning IMEI-kodi, shaxsiy abonent raqami va quyidagilarni taqdim etgan holda:
+mobil ilovalar orqali — shaxsning biometrik maʼlumotlarini identifikatsiya qilish va mobil qurilma IMEI kodlarini kiritish bilan amalga oshiriladi;
+(28 1 -band Oʻzbekiston Respublikasi Vazirlar Mahkamasining 2023-yil 26-oktabrdagi 563-sonli qaroriga asosan sakkizinchi xatboshi bilan toʻldirilgan — Qonunchilik maʼlumotlari milliy bazasi, 27.10.2023-y., 09/23/563/0800-son — 2024-yil 28-yanvardan kuchga kiradi)
+chet davlat fuqarosi uchun Oʻzbekiston Respublikasiga kirib kelishi qayd etilgan shaxsni tasdiqlovchi hujjat raqami;
+Oʻzbekiston Respublikasida yashash guvohnomasiga ega chet davlat fuqarosi uchun Oʻzbekiston Respublikasiga kirib kelishi qayd etilgan shaxsni tasdiqlovchi hujjatining hamda yashash uchun guvohnomasining raqamlari;
+Oʻzbekiston Respublikasida yashash guvohnomasiga ega fuqaroligi boʻlmagan shaxs uchun yashash uchun guvohnomasining hamda biometrik harakatlanish hujjatining raqamlari hamda JSHSHIR kiritish bilan amalga oshiriladi.
+(28 1 -band Oʻzbekiston Respublikasi Vazirlar Mahkamasining 2020-yil 31-dekabrdagi 828-sonli qaroriga asosan kiritilgan — Qonun hujjatlari maʼlumotlari milliy bazasi, 31.12.2020-y., 09/20/828/1692-son)
+29. Mobil qurilmalarni roʻyxatga olish uchun jismoniy shaxs quyidagilarni taqdim etadi:
+ushbu Nizomga 5-ilovaga muvofiq shakl boʻyicha toʻldirilgan Anketani, shu jumladan Oʻzbekiston Respublikasi hududiga olib kirilgan mobil qurilmalarning markasi, modeli, soni va IMEI-kodlari;
+oʻzi kelib murojaat etganda — Tizim operatori yoki Tizim roʻyxatga oluvchisi uchun JSHSHIR mavjud shaxsni tasdiqlovchi hujjat;
+anketa YIDXP orqali elektron shaklda taqdim etilganda jismoniy shaxsdan fuqarolik pasporti va elektron raqamli imzosi talab etilmaydi;
+Tizim operatorining saytida — abonent roʻyxatdan oʻtkaziladigan mobil qurilmaning IMEI-kodi, ariza beruvchining JSHSHIR va telefon raqamini koʻrsatadi.
+Veb-sayt va mobil ilovalar orqali shaxsning biometrik maʼlumotlarini identifikatsiya qilish va mobil qurilma IMEI-kodlarini kiritish bilan amalga oshiriladi.
+(29-band Oʻzbekiston Respublikasi Vazirlar Mahkamasining 2023-yil 26-oktabrdagi 563-sonli qarori tahririda — Qonunchilik maʼlumotlari milliy bazasi, 27.10.2023-y., 09/23/563/0800-son — 2024-yil 28-yanvardan kuchga kiradi)
+29 1 . Jismoniy shaxslar tomonidan mobil qurilmalarni olib kirishda bojxona toʻlovlari undirilmaydigan cheklangan meʼyorlaridan qatʼi nazar, deklaratsiya toʻldiriladi.
+(29 1 -band Oʻzbekiston Respublikasi Vazirlar 2023-yil 26-oktabrdagi 563-sonli qaroriga asosan kiritilgan — Qonunchilik maʼlumotlari milliy bazasi, 27.10.2023-y., 09/23/563/0800-son — 2024-yil 28-yanvardan kuchga kiradi)
+30. Roʻyxatga olish uchun oʻzi kelib murojaat etish tartibida toʻldirilgan Anketa Tizim operatori yoki Tizim roʻyxatga oluvchisining masʼul shaxsi tomonidan qabul qilinadi.
+Jismoniy shaxs tomonidan elektron shaklda YIDXP orqali taqdim etilgan mobil qurilmani IMEI-kodlari, Anketa uning qabul qilinganligi toʻgʻrisidagi bildirishnoma bilan qabul qilinadi, shuningdek, roʻyxatga olish raqami berilgan holda YIDXPda avtomatik ravishda roʻyxatga olinadi.
+(30-bandning ikkinchi xatboshisi Oʻzbekiston Respublikasi Vazirlar Mahkamasining 2020-yil 31-dekabrdagi 828-sonli qarori tahririda — Qonun hujjatlari maʼlumotlari milliy bazasi, 31.12.2020-y., 09/20/828/1692-son)
+31. Jismoniy shaxslar tomonidan xalqaro pochta yoki kuryerlik joʻnatmalari orqali olib kiritilgan mobil qurilmalar Tizim operatori yoki Tizim roʻyxatga oluvchisiga shaxsan murojaat etish yoʻli bilan, shuningdek, tizim operatorining sayti orqali, mos ravishda pochta identifikatorining shtrix kodi, kalendar shtempeli boʻlgan konvert va joʻnatma oluvchining JSHSHIR mavjud shaxsni tasdiqlovchi hujjatini koʻrsatgan holda amalga oshiriladi.
+(31-band Oʻzbekiston Respublikasi Vazirlar Mahkamasining 2023-yil 26-oktabrdagi 563-sonli qarori tahririda — Qonunchilik maʼlumotlari milliy bazasi, 27.10.2023-y., 09/23/563/0800-son — 2024-yil 28-yanvardan kuchga kiradi)
+31 1 . Jismoniy shaxslarning Oʻzbekiston Respublikasi bojxona chegarasini kesib oʻtganligi toʻgʻrisidagi maʼlumotlar (sana, usul va boshqa) Oʻzbekiston Respublikasi Adliya vazirligi huzuridagi Personallashtirish agentligi bilan elektron axborot almashish orqali murojaat etilgan sana va pasport maʼlumotlarini qayd etilgan holda tekshiriladi.
+(31 1 -bandning birinchi xatboshisi Oʻzbekiston Respublikasi Vazirlar Mahkamasining 2025-yil 1-martdagi 135-sonli qarori tahririda — Qonunchilik maʼlumotlari milliy bazasi, 03.03.2025-y., 09/25/135/0208-son)
+Xalqaro pochta joʻnatmalari maʼlumotlari tekshiruvi “Oʻzbekiston pochtasi” AJ, kuryerlik joʻnatmalari va BKO boʻyicha maʼlumotlari tekshiruvi Oʻzbekiston Respublikasi Davlat bojxona qoʻmitasi bilan elektron axborot almashinuvi orqali amalga oshiriladi.
+Bojxona chegarasidan tovarlarni bojsiz olib kirish normalariga rioya qilinmagan holda olib kirilgan mobil qurilmalar, ular uchun import qiluvchi sifatida bojxona toʻlovlari toʻlangandan soʻng IMEI-kodlari roʻyxatdan oʻtkaziladi.
+Jismoniy shaxslarning Oʻzbekiston Respublikasi bojxona chegarasini oxirgi marta kesib oʻtganligi toʻgʻrisidagi maʼlumotlar (sana, usul va boshqa) hisobga olinadi.
+(31 1 -band Oʻzbekiston Respublikasi Vazirlar Mahkamasining 2020-yil 31-dekabrdagi 828-sonli qaroriga asosan kiritilgan — Qonun hujjatlari maʼlumotlari milliy bazasi, 31.12.2020-y., 09/20/828/1692-son)
+31 2 . Mobil qurilmalar belgilangan meʼyordan ortiq miqdorda olib kirilgan holatlarda yoki ularning bojxona rasmiylashtiruvidan oʻtganligi toʻgʻrisida hujjatlar taqdim etilmagan taqdirda, Tizim tomonidan ushbu mobil qurilmalarning modeliga muvofiq umumiy bojxona toʻlovlari hamda roʻyxatdan oʻtkazish toʻlovlari miqdori shakllantiriladi.
+Bojxona toʻlovlari miqdori Bojxona qoʻmitasi maʼlumotlar bazasi bilan yoʻlga qoʻyilgan elektron axborot almashinuvi orqali belgilanadi.
+Bunda jismoniy shaxs tomonidan toʻlangan bojxona toʻlovlari Davlat budjetiga, mobil qurilmani roʻyxatdan oʻtkazish uchun toʻlovlar Tizim operatorining mahsus hisobvaragʻiga yoʻnaltiriladi.
+(31 2 -band Oʻzbekiston Respublikasi Vazirlar 2023-yil 26-oktabrdagi 563-sonli qaroriga asosan kiritilgan — Qonunchilik maʼlumotlari milliy bazasi, 27.10.2023-y., 09/23/563/0800-son — 2024-yil 28-yanvardan kuchga kiradi)
+32. Jismoniy shaxsdan ushbu Nizomda nazarda tutilmagan hujjatlar va maʼlumotlarning taqdim etishni talab qilishga yoʻl qoʻyilmaydi.
+(32-band Oʻzbekiston Respublikasi Vazirlar Mahkamasining 2020-yil 31-dekabrdagi 828-sonli qarori tahririda — Qonun hujjatlari maʼlumotlari milliy bazasi, 31.12.2020-y., 09/20/828/1692-son)
+33. Mobil qurilmalarni roʻyxatga olish uchun ushbu Nizomda nazarda tutilmagan qoʻshimcha maʼlumotlarni olish zarur boʻlganda, Tizim operatori Oʻzbekiston Respublikasi Vazirlar Mahkamasining “Tadbirkorlik subyektlariga davlat xizmatlari koʻrsatish tartibini yanada takomillashtirish chora-tadbirlari toʻgʻrisida” 2014-yil 31-dekabrdagi 377-son qarori bilan belgilangan tartibda boshqa vakolatli organlardan mustaqil ravishda ularni soʻraydi va oladi.
+(33-bandning birinchi xatboshisi Oʻzbekiston Respublikasi Vazirlar Mahkamasining 2020-yil 31-dekabrdagi 828-sonli qarori tahririda — Qonun hujjatlari maʼlumotlari milliy bazasi, 31.12.2020-y., 09/20/828/1692-son)
+Mobil qurilmalarni roʻyxatga olish uchun zarur boʻlgan hujjatlari va axboroti mavjud boʻlgan davlat organlari tegishli idoralararo soʻrovni olgan paytdan boshlab bir ish kuni ichida bunday hujjatlar va axborotni (arxiv maʼlumotlaridan tashqari) taqdim etishga majbur.
+34. Ishonchli boʻlmagan yoki notoʻgʻri maʼlumotlar taqdim etganligi uchun jismoniy shaxs qonunchilikka muvofiq javobgar boʻladi.
+(34-band Oʻzbekiston Respublikasi Vazirlar Mahkamasining 2022-yil 4-apreldagi 153-sonli qarori tahririda — Qonunchilik maʼlumotlari milliy bazasi, 05.04.2022-y., 09/22/153/0266-son)
+35. Jismoniy shaxsning Anketasini koʻrib chiqish va mobil qurilmalarning IMEI-kodlarini roʻyxatga olish 3 (uch) ish soati ichida amalga oshiriladi.
+36. Roʻyxatga olish tugaganidan keyin Tizim operatori yoki Tizim roʻyxatga oluvchisi 1 ish soati ichida belgilangan tartibda jismoniy shaxsga hisobni taqdim etadi.
+37. Jismoniy shaxs tomonidan toʻlov amalga oshirilgandan keyin Tizim operatori yoki Tizim roʻyxatga oluvchisi 1 ish soati ichida barcha IMEI-kodlarni oq roʻyxatga kiritadi va agar mavjud boʻlsa, roʻyxatga olib boʻlmaydigan mobil qurilmalarning IMEI-kodlari roʻyxatini koʻrsatgan holda, jismoniy shaxsni anketada koʻrsatilgan usul orqali roʻyxatga olish tugaganligi toʻgʻrisida xabardor qiladi.
+38. Roʻyxatga olish toʻgʻrisidagi Anketani koʻrib chiqish davrida, IMEI-kodning birinchi tarmoq hodisasi sodir etilgan vaqtidan keyin 30 kun ichida murojaat qilingan boʻlsa, jismoniy shaxsning mobil qurilmasi aloqa xizmatlarini cheklamasdan, kulrang roʻyxatda turadi.
+(38-band Oʻzbekiston Respublikasi Vazirlar Mahkamasining 2020-yil 31-dekabrdagi 828-sonli qarori tahririda — Qonun hujjatlari maʼlumotlari milliy bazasi, 31.12.2020-y., 09/20/828/1692-son)
+38 1 . Roʻyxatdan oʻtkazish uchun toʻlovlar ariza berilgan kundan boshlab oʻn kalendar kuni ichida amalga oshiriladi.
+Toʻlovlar Oʻzbekiston Respublikasi qonunchiligida taqiqlanmagan usullar, shu jumladan, jismoniy shaxsning telefon raqami hisobidagi mablagʻdan amalga oshirilishi mumkin.
+(38 1 -band Oʻzbekiston Respublikasi Vazirlar 2023-yil 26-oktabrdagi 563-sonli qaroriga asosan kiritilgan — Qonunchilik maʼlumotlari milliy bazasi, 27.10.2023-y., 09/23/563/0800-son — 2024-yil 28-yanvardan kuchga kiradi)
+6-bob. Mobil qurilmalarda klonlangan IMEI-kodlar aniqlanganida tizimning ishlash tartibi
+(6-bobning nomi Oʻzbekiston Respublikasi Vazirlar Mahkamasining 2020-yil 31-dekabrdagi 828-sonli qarori tahririda — Qonun hujjatlari maʼlumotlari milliy bazasi, 31.12.2020-y., 09/20/828/1692-son)
+39. Mobil qurilmalarda klonlangan IMEI-kodlar aniqlangan taqdirda, tizim tomonidan avtomatik tarzda tahlil qilinadi va “qora roʻyxat”ga kiritiladi.
+(39-band Oʻzbekiston Respublikasi Vazirlar Mahkamasining 2020-yil 31-dekabrdagi 828-sonli qarori tahririda — Qonun hujjatlari maʼlumotlari milliy bazasi, 31.12.2020-y., 09/20/828/1692-son)
+(40-band Oʻzbekiston Respublikasi Vazirlar Mahkamasining 2020-yil 31-dekabrdagi 828-sonli qaroriga asosan oʻz kuchini yoʻqotgan — Qonun hujjatlari maʼlumotlari milliy bazasi, 31.12.2020-y., 09/20/828/1692-son)
+(41-band Oʻzbekiston Respublikasi Vazirlar Mahkamasining 2020-yil 31-dekabrdagi 828-sonli qaroriga asosan oʻz kuchini yoʻqotgan — Qonun hujjatlari maʼlumotlari milliy bazasi, 31.12.2020-y., 09/20/828/1692-son)
+7-bob. Mobil qurilmalarning IMEI-kodlarini roʻyxatga olish uchun toʻlov
+42. Tizimda roʻyxatga olinishi kerak boʻlgan mobil qurilmalarning IMEI-kodlarini roʻyxatga olish uchun toʻlov miqdorlari ushbu Nizomga 6-ilovada keltirilgan.
+43. Mobil qurilmalarning IMEI-kodlarini roʻyxatga olish uchun toʻlov Tizim operatorining maxsus hisobvaragʻiga kelib tushadi.
+Kelib tushgan mablagʻlar quyidagilarga yoʻnaltiriladi:
+tizim operatori oʻz faoliyatini yuritish xarajatlari va majburiyatlari uchun;
+Oʻzbekiston Respublikasi Raqamli texnologiyalar vazirligining qaror, buyruq va farmoyishlariga asosan davlat organlarida amalga oshirilayotgan axborot-kommunikatsiya texnologiyalarini joriy etish loyihalarini maqsadli moliyalashtirish uchun (ushbu xarajatlarga Tizim operatorining investitsiya faoliyatidan olingan daromadlari ham jalb qilinishi mumkin);
+Raqamli texnologiyalarni rivojlantirish jamgʻarmasiga — Vazirlar Mahkamasining qarorlariga muvofiq davlat organlarida amalga oshirilayotgan axborot-kommunikatsiya texnologiyalarini joriy etish loyihalarini maqsadli moliyalashtirish uchun;
+respublika telekommunikatsiya infratuzilmasini, shu jumladan, qishloq va chekka aholi punktlari, turistik va rekreatsion hududlarda rivojlantirish loyihalari uchun.
+(43-band Oʻzbekiston Respublikasi Vazirlar Mahkamasining 2023-yil 26-oktabrdagi 563-sonli qarori tahririda — Qonunchilik maʼlumotlari milliy bazasi, 27.10.2023-y., 09/23/563/0800-son — 2024-yil 28-yanvardan kuchga kiradi)
+44. Mobil qurilmada bittadan ortiq IMEI kodi boʻlgan taqdirda, roʻyxatga olish toʻlovi har bir IMEI-kod uchun alohida amalga oshiriladi.
+8-bob. Tizim operatorining huquqlari, majburiyatlari va javobgarligi
+45. Tizim operatori quyidagi huquqlarga ega:
+Tizimga kira olish va undan foydalanish tartibini belgilash;
+axborot almashish uchun belgilangan tartibda Tizimning boshqa axborot tizimlari bilan integratsiyalashuvini amalga oshirish;
+mobil aloqa operatorlaridan zarur texnik axborotni, shu jumladan mobil qurilmaning ishlash maʼlumotlarini, real vaqt rejimida mobil qurilma, shuningdek, tizim ishlashi doirasida belgilangan davriylik bilan amalga oshirilgan tarmoq hodisalari va aktivlik parametrlarini soʻrash;
+mobil aloqa operatorlarining mablagʻlari hisobidan Tizimning ishlashi doirasida zarur ishlarni bajarish boʻyicha mobil aloqa operatorlarining faoliyatini muvofiqlashtirish;
+mobil aloqa operatorlarining tarmoqlaridagi Tizimning ishlashiga taʼsir koʻrsatuvchi kamchiliklarni ularning mablagʻlari hisobidan bartaraf etish boʻyicha mobil aloqa operatorlarining faoliyatini muvofiqlashtirish.
+Tizim operatori qonunchilikka muvofiq boshqa huquqlarga ham ega boʻlishi mumkin.
+(45-bandning yettinchi xatboshisi Oʻzbekiston Respublikasi Vazirlar Mahkamasining 2022-yil 4-apreldagi 153-sonli qarori tahririda — Qonunchilik maʼlumotlari milliy bazasi, 05.04.2022-y., 09/22/153/0266-son)
+Taqdim qilingan maʼlumotlari toʻgʻri kelmagan, uchinchi shaxslarning maʼlumotlari taqdim qilingan hollarda IMEI-kodlarni roʻyxatdan oʻtkazishni rad etish.
+(45-bandning sakkizinchi xatboshisi Oʻzbekiston Respublikasi Vazirlar Mahkamasining 2023-yil 26-oktabrdagi 563-sonli qarori tahririda — Qonunchilik maʼlumotlari milliy bazasi, 27.10.2023-y., 09/23/563/0800-son — 2024-yil 28-yanvardan kuchga kiradi)
+46. Tizim operatori quyidagilarga majbur:
+mobil aloqa operatorlari bilan birgalikda Tizim modullarini ularning axborot tizimlariga integratsiyalashtirish;
+Tizimning uzluksiz ishlashi va axborot xavfsizligini taʼminlash;
+mobil aloqa operatorlarini Tizimning texnik nosozliklari toʻgʻrisida oʻz vaqtida xabardor qilish;
+tizimda roʻyxatga olingan xorijdan olib kelingan mobil qurilmalar toʻgʻrisida Bojxona qoʻmitasiga har oy yakuni boʻyicha axborot taqdim etish;
+(46-band Oʻzbekiston Respublikasi Vazirlar Mahkamasining 2023-yil 26-oktabrdagi 563-sonli qaroriga asosan beshinchi xatboshi bilan toʻldirilgan — Qonunchilik maʼlumotlari milliy bazasi, 27.10.2023-y., 09/23/563/0800-son — 2024-yil 28-yanvardan kuchga kiradi)
+Tizim operatori qonunchilikka muvofiq boshqa majburiyatlarni ham bajarishi mumkin.
+(46-bandning beshinchi xatboshisi Oʻzbekiston Respublikasi Vazirlar Mahkamasining 2022-yil 4-apreldagi 153-sonli qarori tahririda — Qonunchilik maʼlumotlari milliy bazasi, 05.04.2022-y., 09/22/153/0266-son)
+47. Tizim operatori quyidagilarga javobgar boʻladi:
+Tizimning uzluksiz ishlashi va axborot xavfsizligi;
+maxfiy axborotni tarqatmaslik va ularni muhofaza qilish boʻyicha zarur chora-tadbirlarning oʻz vaqtida amalga oshirilishi.
+9-bob. Boshqa idoralar bilan oʻzaro hamkorlik
+48. Tizimning boshqa idoralar va manfaatdor tashkilotlar bilan axborot almashish tartibi va oʻzaro hamkorlik qilish shartlari tashkilotlar hamda Oʻzbekiston Respublikasi Axborot texnologiyalari va kommunikatsiyalarini rivojlantirish vazirligi oʻrtasida tuzilgan oʻzaro hamkorlik boʻyicha alohida shartnomalar/kelishuvlar bilan belgilanadi.
+10-bob. Yakunlovchi qoidalar
+49. Davlatning, huquqni muhofaza qilish organlarining xavfsizligi va mudofaa qobiliyatini taʼminlash hamda oʻta muhim ijtimoiy-siyosiy chora-tadbirlarni oʻtkazishda Tizim operatori huquqni muhofaza qilish organlarining soʻrovi boʻyicha mobil qurilmalar ishini majburiy toʻxtatib turish va qayta tiklashni amalga oshiradi.
+49 1 . Tizim operatori Tizimdan foydalanish yoʻli bilan shartnoma asosida Oʻzbekiston Respublikasi qonunchiligida taqiqlanmagan xizmatlarni taqdim qilish huquqiga ega.
+49 2 . Ushbu Nizomda ariza beruvchiga yoki taqdim etilgan hujjatlar va maʼlumotlarga belgilangan talablarning buzilishi aniqlanganda yoki shunday holatlar toʻgʻrisida shaxslardan kelib tushgan murojaatlarga asosan avval roʻyxatdan oʻtkazilgan IMEI-kodlar sudning tegishli qaroriga asosan Tizim operatori tomonidan bekor qilinadi va amalga oshirilgan xizmatlar uchun qabul qilingan toʻlovlar qaytarilmaydi.
+(49 2 -band Oʻzbekiston Respublikasi Vazirlar Mahkamasining 2025-yil 6-noyabrdagi 700-sonli qarori tahririda — Qonunchilik maʼlumotlari milliy bazasi, 07.11.2025-y., 09/25/700/1022-son. Kuchga kirish sanasi — 2026-yil 8-fevral)
+49 3 . Ariza beruvchi va jismoniy shaxslar mazkur Nizom talablari buzilishi oqibatida tizim operatori, tizim roʻyxatga oluvchisi va boshqa vakolatli davlat organlari mansabdor shaxslarining qabul qilgan qarorlari yoki sodir qilgan harakatlari (harakatsizligi) ustidan qonunchilikda belgilangan tartibda shikoyat qilish huquqiga ega.
+(49 3 -band Oʻzbekiston Respublikasi Vazirlar 2025-yil 6-noyabrdagi 700-sonli qaroriga asosan kiritilgan — Qonunchilik maʼlumotlari milliy bazasi, 07.11.2025-y., 09/25/700/1022-son. Kuchga kirish sanasi — 2026-yil 8-fevral) )
+50. Ushbu Nizomning talablarini buzganlikda aybdor shaxslar qonunchilikda belgilangan tartibda javobgar boʻladi.
+(50-band Oʻzbekiston Respublikasi Vazirlar Mahkamasining 2022-yil 4-apreldagi 153-sonli qarori tahririda — Qonunchilik maʼlumotlari milliy bazasi, 05.04.2022-y., 09/22/153/0266-son)
+Oʻzbekiston Respublikasi hududida foydalanilayotgan, sotish yoki shaxsiy foydalanish uchun olib kiriladigan va ishlab chiqariladigan mobil qurilmalarni roʻyxatga olish tartibi toʻgʻrisidagi nizomga
+1-ILOVA
+Mobil qurilmalarni xalqaro oʻziga xos identifikatsiya kodlari boʻyicha roʻyxatga olish tizimida roʻyxatga olinishi kerak boʻlgan mobil qurilmalar turlari
+ROʻYXATI
+T/r
+GSM assotsiatsiyasi bazasi boʻyicha mobil qurilmalarning nomi
+Roʻyxatga olish jarayoni
+1 .
+SIM-modulli planshetlar ( TABLET )
+Roʻyxatdan oʻtkazish Tizim operatoriga murojaat qilish orqali amalga oshiriladi
+2 .
+SIM-modulli smartfonlar ( SMARTPNO N E )
+3 .
+SIM-modulli mobil/funksional telefonlar (MOBILE PNONE /FEATURE PNONE)
+4 .
+SIM-modulli portativ qurilmalar, shu jumladan CHSHK (choʻntak shaxsiy kompyuteri) (PORTABLE (INCLUDED PDA)
+5 .
+Koʻchma qurilmalar ( NA N DNELD )
+(knopkali telefonlar )
+6 .
+SIM-modulli adapterlar (DO N GLE)
+Roʻyxatdan oʻtkazish birinchi tarmoq hodisasidan soʻng foydalanuvchi ishtirokisiz
+Tizim operatori tomonidan avtomatik ravishda amalga oshiriladi
+7 .
+SIM-modulli WLAN routerlari ( WLAN ROUTER)
+8 .
+IoT qurilmalari ( IoT DEVICE )
+Internet buyumlari qurilmalari, mashinalararo oʻzaro ishlash qurilmalari (SIM-modulli elektr energiyasi hisoblagichlari)
+9 .
+SIM-modulli transport vositalari (VENICLE)
+10 .
+SIM-modulli elektron kitoblar ( E-BOOK )
+11 .
+Aloqa modullari (MODULE)
+GSM/GPRS va GPS moduli boʻlgan qurilmalar, (SIM-modulli GPS-trekerlari va POS-terminallar)
+12 .
+Kompyuterlar ( CO NN ECTED COMPUTER )
+(SIM-modulli noutbuklar)
+13 .
+SIM-modulli modemlar ( MODEM)
+14 .
+SIM-modulli olib yuriladigan qurilmalar ( WEARABLES )
+(soatlar, fitnes-brasletlar)
+Oʻzbekiston Respublikasi hududida foydalanilayotgan, sotish yoki shaxsiy foydalanish uchun olib kiriladigan va ishlab chiqariladigan mobil qurilmalarni roʻyxatga olish tartibi toʻgʻrisidagi nizomga
+2-ILOVA
+Import qiluvchi va ishlab chiqaruvchi tashkilot tomonidan mobil qurilmalarni roʻyxatga olish
+SXEMASI
+Oʻzbekiston Respublikasi hududida foydanilayotgan, sotish yoki shaxsiy foydalanish uchun olib kiriladigan va ishlab chiqariladigan mobil qurilmalarni roʻyxatga olish tartibi toʻgʻrisidagi nizomga
+3a-ILOVA
+(Namuna)
+Tizim
+Operatoriga/Roʻyxatga oluvchisiga
+ANKETA
+(diplomatik korpus, elchixonalar, konsullik idoralari tomonidan mobil qurilmalarni roʻyxatga olish uchun)
+Oʻzbekiston Respublikasi hududiga diplomatik pochta orqali olib kirilgan ______ dona mobil qurilmalarning IMEI-kodlarini roʻyxatga olishingizni soʻrayman:
+T/r
+Mobil qurilmani ishlab chiqaruvchi
+Mobil qurilma modeli
+1-IMEI
+IMEI №
+1.
+2.
+3.
+...
+Xabar berish usuli:
++998 _______________________ nomeriga SMS yuborish;
+___________________@___________________ elektron pochta manziliga xabar yuborish;
+Ariza beruvchining rekvizitlari
+Tashkilot nomi:__________________________
+Manzil: _______________________________
+Pochta indeksi: __________________________
+Tashkilot STIR:_________________________
+h/r: ____________________________________
+Bank: __________________________________
+MFO: _________________________________
+IFUT: ________________________________
+QQS:___________________________________
+Telefon:_______________________________
+Masʼul shaxsning F.I.O.__________________
+______________________________________
+____________ 20 ____ y. “____” __________
+(imzo)
+(toʻldirilgan sana)
+(MOʻ)
+(3a-ilova Oʻzbekiston Respublikasi Vazirlar Mahkamasining 2020-yil 31-dekabrdagi 828-sonli qarori tahririda — Qonun hujjatlari maʼlumotlari milliy bazasi, 31.12.2020-y., 09/20/828/1692-son)
+Oʻzbekiston Respublikasi hududida foydanilayotgan, sotish yoki shaxsiy foydalanish uchun olib kiriladigan va ishlab chiqariladigan mobil qurilmalarni roʻyxatga olish tartibi toʻgʻrisidagi nizomga
+3b-ILOVA
+(Namuna)
+Tizim
+Operatoriga/Roʻyxatga oluvchisiga
+ANKETA
+(Sud qarori asosida davlat egaligiga mobil qurilmalarni roʻyxatga olish uchun)
+Oʻzbekiston Respublikasi hududida sotish uchun moʻljallangan ___________ dona mobil qurilmalarning IMEI-kodlarini 20 _____ y. “_____” ___________ ___________-son Sud qaroriga asosan roʻyxatga olishingizni soʻrayman:
+T/r
+Mobil qurilmani ishlab chiqaruvchi
+Mobil qurilma modeli
+1-IMEI
+IMEI №
+1.
+2.
+3.
+...
+Xabar berish usuli:
++998 _______________________ nomeriga SMS yuborish;
+___________________@___________________ elektron pochta manziliga xabar yuborish;
+Ariza beruvchining rekvizitlari
+Tashkilot nomi:__________________________
+Manzil: _______________________________
+Pochta indeksi: __________________________
+Tashkilot STIR:_________________________
+h/r: ____________________________________
+Bank: __________________________________
+MFO: _________________________________
+IFUT: ________________________________
+QQS:___________________________________
+Telefon:_______________________________
+Masʼul shaxsning F.I.O.__________________
+______________________________________
+____________ 20 ____ y. “____” __________
+(imzo)
+(toʻldirilgan sana)
+(MOʻ)
+(3b-ilova Oʻzbekiston Respublikasi Vazirlar Mahkamasining 2020-yil 31-dekabrdagi 828-sonli qarori tahririda — Qonun hujjatlari maʼlumotlari milliy bazasi, 31.12.2020-y., 09/20/828/1692-son)
+Oʻzbekiston Respublikasi hududida foydanilayotgan, sotish yoki shaxsiy foydalanish uchun olib kiriladigan va ishlab chiqariladigan mobil qurilmalarni roʻyxatga olish tartibi toʻgʻrisidagi nizomga
+3v-ILOVA
+(Namuna)
+Tizim
+Operatoriga/Roʻyxatga oluvchisiga
+ANKETA
+(ishlab chiqaruvchi tashkilot tomonidan Oʻzbekiston Respublikasi hududida sotishga moʻljallangan mobil qurilmalarni roʻyxatga olish uchun)
+Oʻzbekiston Respublikasi hududida ishlab chiqarilgan ___________________________ dona mobil qurilmalar uchun IMEI-kodlarini roʻyxatga olishingizni soʻrayman:
+T/r
+Mobil qurilmani ishlab chiqaruvchi
+Mobil qurilma modeli
+1-IMEI
+IMEI №
+1.
+2.
+3.
+...
+Xabar berish usuli:
++998 _______________________ nomeriga SMS yuborish;
+___________________@___________________ elektron pochta manziliga xabar yuborish;
+Ariza beruvchining rekvizitlari
+Tashkilot nomi:__________________________
+Manzil: _______________________________
+Pochta indeksi: __________________________
+Tashkilot STIR:_________________________
+h/r: ____________________________________
+Bank: __________________________________
+MFO: _________________________________
+IFUT: ________________________________
+QQS:___________________________________
+Telefon:_______________________________
+Masʼul shaxsning F.I.O.__________________
+______________________________________
+____________ 20 ____ y. “____” __________
+(imzo)
+(toʻldirilgan sana)
+(MOʻ)
+(3v-ilova Oʻzbekiston Respublikasi Vazirlar Mahkamasining 2020-yil 31-dekabrdagi 828-sonli qaroriga asosan kiritilgan — Qonun hujjatlari maʼlumotlari milliy bazasi, 31.12.2020-y., 09/20/828/1692-son)
+Oʻzbekiston Respublikasi hududida foydanilayotgan, sotish yoki shaxsiy foydalanish uchun olib kiriladigan va ishlab chiqariladigan mobil qurilmalarni roʻyxatga olish tartibi toʻgʻrisidagi nizomga
+3g-ILOVA
+(Namuna)
+Tizim
+Operatoriga/Roʻyxatga oluvchisiga
+ANKETA
+(import qiluvchilar tomonidan Oʻzbekiston Respublikasi hududiga olib kirilgan mobil qurilmalarni roʻyxatga olish uchun)
+Oʻzbekiston Respublikasi hududiga “______/__ __ 20__/________” — son (bojxona posti/sana/raqam) BYDga muvofiq olib kirilgan __________________ birlikdagi mobil qurilmalar uchun IMEI-kodlarini roʻyxatga olishingizni soʻrayman:
+T/r
+Mobil qurilmani ishlab chiqaruvchi
+Mobil qurilma modeli
+1-IMEI
+IMEI №
+1.
+2.
+3.
+...
+Xabar berish usuli:
++998 _______________________ nomeriga SMS yuborish;
+___________________@___________________ elektron pochta manziliga xabar yuborish;
+Ariza beruvchining rekvizitlari
+Tashkilot nomi:__________________________
+Manzil: _______________________________
+Pochta indeksi: __________________________
+Tashkilot STIR:_________________________
+h/r: ____________________________________
+Bank: __________________________________
+MFO: _________________________________
+IFUT: ________________________________
+QQS:___________________________________
+Telefon:_______________________________
+Masʼul shaxsning F.I.O.__________________
+______________________________________
+____________ 20 ____ y. “____” __________
+(imzo)
+(toʻldirilgan sana)
+(MOʻ)
+(3g-ilova Oʻzbekiston Respublikasi Vazirlar Mahkamasining 2020-yil 31-dekabrdagi 828-sonli qaroriga asosan kiritilgan — Qonun hujjatlari maʼlumotlari milliy bazasi, 31.12.2020-y., 09/20/828/1692-son)
+Oʻzbekiston Respublikasi hududida foydalanilayotgan, sotish yoki shaxsiy foydalanish uchun olib kiriladigan va ishlab chiqariladigan mobil qurilmalarni roʻyxatga olish tartibi toʻgʻrisidagi nizomga
+4-ILOVA
+Oʻzbekiston Respublikasi hududiga jismoniy shaxslar tomonidan olib kirilgan mobil qurilmalarni roʻyxatga olish
+SXEMASI
+(4-ilova Oʻzbekiston Respublikasi Vazirlar Mahkamasining 2020-yil 31-dekabrdagi 828-sonli qarori tahririda— Qonun hujjatlari maʼlumotlari milliy bazasi, 31.12.2020-y., 09/20/828/1692-son)
+Oʻzbekiston Respublikasi hududida foydanilayotgan, sotish yoki shaxsiy foydalanish uchun olib kiriladigan va ishlab chiqariladigan mobil qurilmalarni roʻyxatga olish tartibi toʻgʻrisidagi nizomga
+5-ILOVA
+(Namuna)
+Tizim
+Operatoriga/Roʻyxatga oluvchisiga
+ANKETA
+(Oʻzbekiston Respublikasi hududida 2019-yil 1-noyabrga qadar/buyon birinchi IMEI-kodlari roʻyxatga olingan mobil qurilmalarning qoʻshimcha IMEI-kodlarini roʻyxatga olish uchun)
+Oʻzbekiston Respublikasida shaxsiy foydalanish uchun mobil qurilmalarning qoʻshimcha IMEI-kodlarini roʻyxatdan oʻtkazishingizni soʻrayman.
+T/r
+Mobil qurilmani ishlab chiqaruvchi
+Mobil qurilma modeli
+1-IMEI
+IMEI №
+1.
+2.
+3.
+...
+Xabar berish usuli:
++998 _______________________ nomeriga SMS yuborish;
+___________________@___________________ elektron pochta manziliga xabar yuborish;
+Ariza beruvchining rekvizitlari
+__________________________________
+(jismoniy shaxsning F.I.O.)
+Pasport seriyasi _____ №_________________
+______________________________________
+Kim tomonidan va qachon berilgan ______________________________________ ______________________________________
+__________ 20____ y. “_____” ____________
+(imzo)
+(toʻldirilgan sana)
+(5-ilova Oʻzbekiston Respublikasi Vazirlar Mahkamasining 2020-yil 31-dekabrdagi 828-sonli qarori tahririda — Qonun hujjatlari maʼlumotlari milliy bazasi, 31.12.2020-y., 09/20/828/1692-son)
+Oʻzbekiston Respublikasi hududida foydanilayotgan, sotish yoki shaxsiy foydalanish uchun olib kiriladigan va ishlab chiqariladigan mobil qurilmalarni roʻyxatga olish tartibi toʻgʻrisidagi nizomga
+5a-ILOVA
+(Namuna)
+Tizim
+Operatoriga/Roʻyxatga oluvchisiga
+ANKETA
+(jismoniy shaxslar tomonidan Oʻzbekiston Respublikasi hududiga olib kirilgan mobil qurilmalarni roʻyxatga olish uchun)
+Shaxsiy foydalanish uchun Oʻzbekiston Respublikasiga olib kirilgan mobil qurilmalarning IMEI-kodlarini roʻyxatdan oʻtkazishingizni soʻrayman:
+T/r
+Mobil qurilmani ishlab chiqaruvchi
+Mobil qurilma modeli
+1-IMEI
+IMEI №
+1.
+2.
+3.
+...
+Xabar berish usuli:
++998 _______________________ nomeriga SMS yuborish;
+___________________@___________________ elektron pochta manziliga xabar yuborish;
+Ariza beruvchining rekvizitlari
+__________________________________
+(jismoniy shaxsning F.I.O.)
+Pasport seriyasi _____ №_________________
+______________________________________
+Kim tomonidan va qachon berilgan ______________________________________ ______________________________________
+__________ 20____ y. “_____” ____________
+(imzo)
+(toʻldirilgan sana)
+(5a-ilova Oʻzbekiston Respublikasi Vazirlar Mahkamasining 2020-yil 31-dekabrdagi 828-sonli qaroriga asosan kiritilgan — Qonun hujjatlari maʼlumotlari milliy bazasi, 31.12.2020-y., 09/20/828/1692-son)
+Oʻzbekiston Respublikasi hududida foydanilayotgan, sotish yoki shaxsiy foydalanish uchun olib kiriladigan va ishlab chiqariladigan mobil qurilmalarni roʻyxatga olish tartibi toʻgʻrisidagi nizomga
+6-ILOVA
+Mobil qurilmalarning IMEI-kodlarini roʻyxatga olish uchun toʻlov
+MIQDORLARI
+T/r
+Ariza beruvchi
+Mobil qurilmaning bitta IMEI-kodini roʻyxatga olish uchun toʻlov miqdori
+Izoh
+1.
+Import qiluvchi
+BHM * ning 20%
+2.
+Ishlab chiqaruvchi **
+BHMning 10%
+3.
+Jismoniy shaxs
+BHMning 20%
+Dastlabki tarmoq hodisasi paytidan boshlab 30 kalendar kuni mobaynida roʻyxatga olish sharti bilan
+BHMning 25%
+Dastlabki tarmoq hodisasi paytidan boshlab 30 kalendar kuni oʻtgandan keyin roʻyxatga olinganda
+4.
+Rouming xizmatidan foydalanayotgan abonent mobil qurilmasidan foydalanish
+Bepul
+Ushbu Nizomning 6-bandida koʻrsatilgan shartlar bajarilganda
+5.
+Diplomatik korpus, elchixona, konsullik idorasi
+BHMning 20%
+6.
+Sud qarori asosida Oʻzbekiston Respublikasi hududida sotishni amalga oshiruvchi tashkilot
+* BHM — bazaviy hisoblash miqdori.
+** Oʻzbekiston Respublikasida mobil qurilmalarni ishlab chiqarish bilan shugʻullanuvchi subyekt.
+(6-ilova Oʻzbekiston Respublikasi Vazirlar Mahkamasining 2020-yil 31-dekabrdagi 828-sonli qarori tahririda — Qonun hujjatlari maʼlumotlari milliy bazasi, 31.12.2020-y., 09/20/828/1692-son)
+(Qonun hujjatlari maʼlumotlari milliy bazasi, 18.09.2019-y., 09/19/778/3462-son; 31.12.2020-y., 09/20/828/1692-son; Qonunchilik maʼlumotlari milliy bazasi, 05.04.2022-y., 09/22/153/0266-son, 29.09.2022-y., 09/22/541/0859-son; 27.10.2023-y., 09/23/563/0800-son; 03.03.2025-y., 09/25/135/0208-son; 07.11.2025-y., 09/25/700/1022-son; 26.01.2026-y., 09/26/26/0076-son)
