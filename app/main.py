@@ -29,6 +29,7 @@ from app.repositories.usage_repository import (
     RateLimitRepository,
     UsageRepository,
 )
+from app.services.ai_rag import AiRagResponder, build_openai_ai_rag_complete
 from app.services.approved_links import stage3b_link_registry
 from app.services.assistant import AssistantService
 from app.services.audit_log import InMemoryAuditLog, PostgresAuditLog
@@ -345,6 +346,25 @@ def create_app(
         )
     app.state.outcome_analyzer = outcome_analyzer
     app.state.grounding = GroundingValidator()
+    # AI + RAG only mode: the responder is always wired so the mode fails openly. A real
+    # model is attached only for OpenAI; otherwise complete=None and every AI+RAG turn
+    # reports an open technical error instead of a hidden canned or mock answer.
+    ai_rag_complete = None
+    if (
+        app_settings.llm_provider == "openai"
+        and app_settings.llm_api_key is not None
+        and app_settings.llm_api_key.get_secret_value()
+        and app_settings.llm_model
+    ):
+        ai_rag_complete = build_openai_ai_rag_complete(
+            api_key=app_settings.llm_api_key.get_secret_value(),
+            model=app_settings.llm_model,
+            timeout_seconds=app_settings.llm_timeout_seconds,
+            max_output_tokens=app_settings.llm_max_output_tokens,
+        )
+    app.state.ai_rag = AiRagResponder(
+        ai_rag_complete, app.state.grounding, model_name=app_settings.llm_model
+    )
     app.state.interaction_log = build_interaction_log(app_settings.interaction_log_path)
     # Share the embedding function (when OpenAI is configured) so gaps group and
     # learned articles are matched semantically; both fall back to lexical otherwise.

@@ -8,6 +8,7 @@ Yakuniy bilim bazasini yig'adi:
 """
 import hashlib
 import json
+import re
 import sys
 from collections import Counter
 from pathlib import Path
@@ -296,6 +297,9 @@ def build_rows():
     # Curated qoidalar (yuqorida) tez-tez so'raladigan savollar uchun qoladi; to'liq
     # korpus noodatiy va chuqur savollarga javob beradi.
     rows.extend(vmq778_full_rows())
+    # (main'dagi "vmq778_full_source.txt" asosidagi yirik-chunkli qatlam shu
+    # tuzilgan korpus bilan almashtirildi: aynan o'sha matn band raqamlari va
+    # amaldagi/tarixiy ajratish bilan indekslanadi; txt fayl o'qish uchun qoladi.)
 
     # --- 2-qatlam (davomi): 3275-son Qoidalarning MNP korpusi ----------------
     # FAQ va toza KB maqolalari qisqa javob uchun qoladi; bu korpus chuqur va

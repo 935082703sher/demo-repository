@@ -11,7 +11,7 @@ from __future__ import annotations
 
 from collections import Counter
 from dataclasses import dataclass, field
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from typing import Any, Protocol, runtime_checkable
 
 # Terminal and intermediate outcomes of one assistant turn.
@@ -60,6 +60,61 @@ class AuditLog(Protocol):
     async def record(self, event: AuditEvent) -> None: ...
 
     async def metrics(self) -> dict[str, object]: ...
+
+    async def trends(self) -> dict[str, object]: ...
+
+
+def _window_kpis(outcomes: Counter[str]) -> dict[str, object]:
+    """The headline KPIs for one time window (reuses compute_metrics)."""
+    m = compute_metrics(outcomes, Counter())
+    return {
+        "total_events": m["total_events"],
+        "terminal_events": m["terminal_events"],
+        "self_service_resolution_rate": m["self_service_resolution_rate"],
+        "ai_resolution_rate": m["ai_resolution_rate"],
+        "call_1170_rate": m["call_1170_rate"],
+        "handoff_rate": m["handoff_rate"],
+    }
+
+
+def compute_trends(
+    events: list[tuple[datetime, str]],
+    *,
+    now: datetime | None = None,
+    windows: tuple[int, ...] = (7, 30, 90),
+    bucket_days: int = 14,
+) -> dict[str, object]:
+    """Windowed KPIs plus a per-day series, to show whether quality is improving.
+
+    ``events`` is (timestamp, outcome) pairs. For each window (last N days) the
+    headline rates are computed; the daily series gives resolution and 1170 rates per
+    day over the last ``bucket_days`` so a trend is visible. Empty windows yield null
+    rates rather than fabricated numbers.
+    """
+    now = now or datetime.now(UTC)
+    windows_out: dict[str, object] = {}
+    for w in windows:
+        cutoff = now - timedelta(days=w)
+        oc: Counter[str] = Counter(o for ts, o in events if ts >= cutoff)
+        windows_out[f"{w}d"] = _window_kpis(oc)
+
+    daily: list[dict[str, object]] = []
+    for offset in range(bucket_days - 1, -1, -1):
+        day_start = (now - timedelta(days=offset)).replace(
+            hour=0, minute=0, second=0, microsecond=0
+        )
+        day_end = day_start + timedelta(days=1)
+        oc = Counter(o for ts, o in events if day_start <= ts < day_end)
+        kpis = _window_kpis(oc)
+        daily.append(
+            {
+                "date": day_start.date().isoformat(),
+                "total_events": kpis["total_events"],
+                "self_service_resolution_rate": kpis["self_service_resolution_rate"],
+                "call_1170_rate": kpis["call_1170_rate"],
+            }
+        )
+    return {"generated_at": now.isoformat(), "windows": windows_out, "daily": daily}
 
 
 def _rate(numerator: int, denominator: int) -> float | None:
@@ -129,9 +184,16 @@ class InMemoryAuditLog:
         self._failure_cards: Counter[str] = Counter()
         self._styles: Counter[str] = Counter()
         self._call_reasons: Counter[str] = Counter()
+        # (timestamp, outcome) pairs for time-windowed trends; bounded so memory is
+        # stable on long dev runs (the Postgres backend trends over the full table).
+        self._events: list[tuple[datetime, str]] = []
+        self._max_events = 50_000
         self._count = 0
 
     async def record(self, event: AuditEvent) -> None:
+        self._events.append((event.created_at, event.outcome))
+        if len(self._events) > self._max_events:
+            del self._events[: len(self._events) - self._max_events]
         self._outcomes[event.outcome] += 1
         if event.category:
             self._categories[event.category] += 1
@@ -154,6 +216,9 @@ class InMemoryAuditLog:
             styles=self._styles,
             call_1170_reasons=self._call_reasons,
         )
+
+    async def trends(self) -> dict[str, object]:
+        return compute_trends(self._events)
 
 
 _CREATE_TABLE_SQL = """
@@ -267,6 +332,15 @@ class PostgresAuditLog:
             styles=styles,
             call_1170_reasons=reasons,
         )
+
+    async def trends(self) -> dict[str, object]:
+        async with self._pool.acquire() as connection:
+            rows = await connection.fetch(
+                "SELECT created_at, outcome FROM audit_events "
+                "WHERE created_at >= now() - interval '90 days'"
+            )
+        events = [(row["created_at"], row["outcome"]) for row in rows]
+        return compute_trends(events)
 
     async def close(self) -> None:
         await self._pool.close()

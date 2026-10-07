@@ -61,6 +61,10 @@
   </header>
 
   <div class="cards" id="cards"></div>
+  <section><h2>Trend — assistant yaxshilanyaptimi? (7 / 30 / 90 kun)</h2>
+    <div class="cards" id="trendCards"></div>
+    <div id="trendDaily" class="empty">Yuklanmoqda…</div>
+  </section>
   <section><h2>Natijalar (outcomes)</h2><div id="outcomes" class="empty">Yuklanmoqda…</div></section>
   <section><h2>Yo'nalishlar (router)</h2><div id="routes" class="empty">Yuklanmoqda…</div></section>
   <section><h2>Kategoriyalar</h2><div id="categories" class="empty">Yuklanmoqda…</div></section>
@@ -104,6 +108,7 @@
       bars($("outcomes"), m.outcomes, OUTCOME_LABELS);
       bars($("routes"), m.routes, ROUTE_LABELS);
       bars($("categories"), m.categories, { imei: "IMEI", mnp: "MNP" });
+      await loadTrends();
       $("foot").textContent = "Yangilandi: " + new Date().toLocaleString();
     } catch (e) {
       $("err").hidden = false;
@@ -113,6 +118,31 @@
 
   function card(label, value, cls) {
     return `<div class="card"><div class="label">${label}</div><div class="value ${cls}">${value}</div></div>`;
+  }
+
+  async function loadTrends() {
+    const res = await fetch("/admin/metrics/trends", { headers: { "Accept": "application/json" } });
+    if (!res.ok) throw new Error("trends HTTP " + res.status);
+    const t = await res.json();
+    const w = t.windows || {};
+    $("trendCards").innerHTML = ["7d", "30d", "90d"].map((k) => {
+      const win = w[k] || {};
+      const r = win.self_service_resolution_rate;
+      return card(k + " — hal qilish", pct(r), r != null && r >= 0.5 ? "good" : (r != null ? "warn" : "")) +
+             card(k + " — 1170", pct(win.call_1170_rate), "");
+    }).join("");
+    const daily = t.daily || [];
+    const hasData = daily.some((d) => d.total_events > 0);
+    if (!hasData) { $("trendDaily").className = "empty"; $("trendDaily").textContent = "Hali yetarli ma'lumot yo'q"; return; }
+    $("trendDaily").className = "";
+    $("trendDaily").innerHTML = daily.map((d) => {
+      const r = d.self_service_resolution_rate;
+      const wd = r == null ? 0 : Math.round(r * 100);
+      const label = d.date.slice(5) + ` (${d.total_events})`;
+      return `<div class="row"><div class="name">${label}</div>` +
+             `<div class="track"><div class="fill" style="width:${wd}%"></div></div>` +
+             `<div class="n">${pct(r)}</div></div>`;
+    }).join("");
   }
 
   $("refresh").onclick = load;

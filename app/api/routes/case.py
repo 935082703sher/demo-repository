@@ -28,8 +28,10 @@ from app.domain.knowledge_gap import RetrievedDoc
 from app.domain.legal_clauses import Clause
 from app.domain.policy import PolicyRule
 from app.domain.schemas import LLMRequest
+from app.domain.tariffs import TariffConfig
 from app.providers.base import LLMProvider
 from app.providers.errors import ProviderError
+from app.services.ai_rag import AiRagResponder, Evidence
 from app.services.audit_log import (
     OUTCOME_ANSWER,
     OUTCOME_CALL_1170,
@@ -49,7 +51,7 @@ from app.services.audit_log import (
     AuditEvent,
     AuditLog,
 )
-from app.services.card_answer import CardAnswerComposer
+from app.services.card_answer import CardAnswerComposer, is_fact_preserving
 from app.services.card_explainer import CardExplainer
 from app.services.case_store import CaseStore
 from app.services.diagnostic_engine import DiagnosticEngine
@@ -104,6 +106,7 @@ from app.services.resolution_orchestrator import (
     OrchestratorDecision,
     ResolutionOrchestrator,
 )
+from app.services.response_quality import CAPABILITY_CLAIM, check_reply
 from app.services.router import Route
 from app.services.status_capability import (
     SEED_ENTRY_BY_KIND,
@@ -246,6 +249,11 @@ _RAG_TOP_K = 5
 # assistant abstains instead of answering from irrelevant evidence. Calibrated on
 # the corpus - on-topic queries score well above it, off-topic ones well below.
 _RAG_MIN_SCORE = 4.0
+# §22 RAG applicability: a retrieved passage much weaker than the best hit is almost
+# always a different topic riding along on one shared word (a receipt question pulling
+# in a registration-fee article). Retrieved does not mean applicable, so only the best
+# hit and passages within this fraction of its score drive the grounded answer.
+_RAG_APPLICABILITY_RATIO = 0.5
 # The grounded-answer request carries the base enum; the exact script/language is
 # steered by a short hint prepended to the question (see _rag_answer).
 _LANG_ENUM = {
@@ -395,6 +403,8 @@ def _start_fresh_case(case: CaseState) -> None:
     case.awaiting_menu = False
     case.current_intent = None
     case.current_problem = None
+    case.conversation_summary = None
+    case.last_answer = None
     # original_problem is intentionally NOT cleared here: the RAG lane resets the
     # diagnostic slate between turns, but a menu shown next must still re-examine the
     # original problem. It is cleared only when a genuinely new problem begins.
@@ -736,6 +746,19 @@ def _has_strong_evidence(results: list[Any], min_score: float) -> bool:
     return bool(results) and results[0].score >= min_score
 
 
+def _applicable_results(results: list[Any]) -> list[Any]:
+    """Keep only passages applicable to the query (spec §22).
+
+    Results arrive sorted by score. The best hit is always kept; a passage scoring
+    far below it is treated as a different topic that merely shares a word, and is
+    dropped so an irrelevant article never drives the grounded answer.
+    """
+    if not results:
+        return results
+    floor = results[0].score * _RAG_APPLICABILITY_RATIO
+    return [r for r in results if r.score >= floor]
+
+
 async def _log_unanswered(log: InteractionLog | None, case: CaseState, message: str) -> None:
     """Record a question the knowledge base could not answer, for the review list."""
     if log is None:
@@ -932,6 +955,9 @@ async def _rag_answer(
             gaps, case, message, "no_evidence" if not results else "weak_evidence", docs
         )
         return _resp(case, fallback, done=True, requires_human=True)
+    # §22: a retrieved article is not necessarily applicable; keep only passages close
+    # to the best hit so an off-topic one does not steer the answer.
+    results = _applicable_results(results)
     source_ids = [r.chunk.doc_id for r in results]
     llm_request = LLMRequest(
         language=_LANG_ENUM.get(lang, Language.UZ),
@@ -1082,6 +1108,73 @@ def _apply_style_cue(case: CaseState, message: str, lang: str) -> None:
             case.explanation.needs_examples = True
 
 
+# Styles that signal "I didn't understand" rather than a genuinely new request, so a
+# follow-up carrying one restates the previous answer instead of starting over.
+_REEXPLAIN_STYLES = {
+    ExplanationStyle.SIMPLE,
+    ExplanationStyle.STEP_BY_STEP,
+    ExplanationStyle.EXAMPLE,
+}
+_REEXPLAIN_INSTRUCTION = {
+    ExplanationStyle.SIMPLE: "Restate the answer below in simpler, shorter words, same "
+    "meaning and the same facts. Do not add anything new.",
+    ExplanationStyle.STEP_BY_STEP: "Restate the answer below as a short, numbered "
+    "step-by-step, same facts. Do not add anything new.",
+    ExplanationStyle.EXAMPLE: "Restate the answer below with one short, concrete example, "
+    "same facts. Do not add anything new.",
+}
+
+
+# Every re-explanation lead-in, so a re-explained reply is recognised and never stored
+# as the canonical answer (which would stack lead-ins on the next "I didn't understand").
+_REEXPLAIN_LEADIN_PREFIXES = frozenset(
+    reexplain_leadin(style, lang)
+    for lang in ("uz", "uz_cyrl", "ru", "en", "kaa")
+    for style in _REEXPLAIN_STYLES
+)
+
+
+def _is_reexplain_reply(reply: str) -> bool:
+    """True when a reply is itself a re-explanation (so it is not stored as canonical)."""
+    stripped = reply.lstrip()
+    return any(stripped.startswith(prefix) for prefix in _REEXPLAIN_LEADIN_PREFIXES)
+
+
+async def _reexplain_last_answer(
+    provider: LLMProvider, case: CaseState, lang: str
+) -> str:
+    """Restate the last one-shot answer more simply (spec: never repeat the same text).
+
+    The previous answer is the only source, so no new fact can be introduced; the LLM
+    rephrase is accepted only when it preserves the numbers and claims no live lookup,
+    otherwise a fresh lead-in plus the original answer is returned. Each repeat escalates
+    the style (simpler -> step-by-step -> example) so the wording keeps changing.
+    """
+    case.explanation.confusion_count += 1
+    style = style_for_confusion(case.explanation.confusion_count)
+    case.explanation.style = style
+    leadin = reexplain_leadin(style, lang)
+    original = case.last_answer or ""
+    body = original
+    instruction = _REEXPLAIN_INSTRUCTION.get(style, _REEXPLAIN_INSTRUCTION[ExplanationStyle.SIMPLE])
+    try:
+        result = await provider.generate(
+            LLMRequest(
+                language=_LANG_ENUM.get(lang, Language.UZ),
+                question=_ANSWER_LANG_HINT.get(lang, "") + instruction,
+                category=Category.OTHER,
+                source_ids=["prior_answer"],
+                passages=[original],
+            )
+        )
+        text = result.text.strip()
+        if text and is_fact_preserving(original, text) and not claims_live_check(text):
+            body = text
+    except ProviderError:
+        pass
+    return f"{leadin}\n\n{body}"
+
+
 def _attach_legal_basis(
     resp: ConverseCaseResponse, rules: list[PolicyRule], lang: str
 ) -> ConverseCaseResponse:
@@ -1217,6 +1310,150 @@ async def _intent_answer(
     return _resp(case, reply, done=True)
 
 
+# Payment-topic cues (any language), used only to decide whether to attach the fee
+# legal basis - a general money detector, never tied to a specific test question.
+_PAYMENT_TERMS = (
+    "tolov", "tolash", "tolay", "toladi", "tolagan", "tarif", "narx", "pul", "bhm",
+    " som", "soum", "oplat", "plat", "cena", "stoim", "skolko stoit",
+    "pay", "price", "cost", " fee", "how much",
+)
+# The clauses that establish the registration fee: the obligation (6) and the amounts
+# (42 points to Annex 6; 6-ilova is the amounts table). Retrieval ranks these unreliably
+# for some phrasings ("is there a legal basis for the amount?"), so for a payment topic
+# they are attached deterministically - the law's own fee basis, not a canned answer.
+_FEE_CLAUSE_LABELS = ("6", "42", "6-ilova")
+_FEE_FORMULAS = ("physical_person_within_30_days", "physical_person_after_30_days")
+
+
+def _is_payment_topic(message: str, evidence: list[Evidence]) -> bool:
+    """True when the turn is about the registration fee (message or retrieved material)."""
+    hay = message.lower().replace("'", "").replace("ʻ", "").replace("`", "")
+    if any(term in hay for term in _PAYMENT_TERMS):
+        return True
+    joined = " ".join(f"{e.title} {e.text}".lower() for e in evidence)
+    return "to'lov" in joined or "tarif" in joined or "turadi" in joined
+
+
+def _computed_fee_evidence(tariffs: TariffConfig) -> Evidence | None:
+    """An authoritative fee item: the amounts (BHM x percent) tied to their law clauses.
+
+    Built from the versioned tariff source, so the model can ground the exact sum to the
+    law instead of saying no clause confirms it. None when the fee cannot be priced.
+    """
+    today = date.today()
+    within = tariffs.resolve(_FEE_FORMULAS[0], today)
+    after = tariffs.resolve(_FEE_FORMULAS[1], today)
+    if within is None or after is None:
+        return None
+    text = (
+        f"Ro'yxatdan o'tkazish to'lovi (jismoniy shaxs, har IMEI uchun alohida): dastlabki "
+        f"tarmoq hodisasidan 30 kalendar kun ichida BHM ({within.bhm} {within.currency}) ning "
+        f"{within.percent}% = {within.amount} {within.currency}; 30 kundan keyin {after.percent}% "
+        f"= {after.amount} {after.currency}. Huquqiy asos: VMQ-778 6-band (to'lov majburiyati) "
+        f"hamda 42-band va 6-ilova (miqdorlar jadvali)."
+    )
+    return Evidence(
+        source_id="VMQ-778 6-ilova (hisoblangan tarif)",
+        title="Ro'yxatdan o'tkazish to'lovi (hisoblangan)",
+        text=text,
+    )
+
+
+async def _ai_rag_evidence(
+    reasoning_engine: LegalReasoningEngine,
+    tariffs: TariffConfig,
+    case: CaseState,
+    message: str,
+) -> list[Evidence]:
+    """Gather the RAG evidence for a turn: approved KB passages and VMQ-778 clauses.
+
+    The approved FAQ/card text and the law clauses are offered only as SOURCES the model
+    reasons over - never as a ready answer. Passages far weaker than the best hit are
+    dropped (§22) so an off-topic article does not ride along. For a payment question the
+    fee clauses and the computed tariff are attached deterministically, so the legal basis
+    of the amount is always present regardless of how retrieval ranked it.
+    """
+    evidence: list[Evidence] = []
+    seen: set[str] = set()
+
+    def _add(source_id: str, title: str, text: str) -> None:
+        if source_id and source_id not in seen:
+            seen.add(source_id)
+            evidence.append(Evidence(source_id=source_id, title=title, text=text))
+
+    def _add_clause(label: str) -> None:
+        clause = reasoning_engine.clause(label)
+        if clause is not None:
+            sid = clause.rule_id or f"VMQ-778:{clause.clause}"
+            _add(sid, f"VMQ-778 {clause.clause}", clause.legal_rule)
+
+    retriever = get_retriever()
+    for r in _applicable_results(retriever.retrieve(message, _RAG_TOP_K, domain=case.domain)):
+        _add(r.chunk.doc_id, r.chunk.title, r.chunk.text)
+    try:
+        query_vector = await reasoning_engine.embed(message)
+        reasoning = reasoning_engine.reason(case, message, query_vector=query_vector)
+        for label in reasoning.legal_basis[:6]:
+            _add_clause(label)
+    except Exception:  # pragma: no cover - retrieval of clauses must never break a turn
+        pass
+    # Fee questions: attach the fee legal basis and the computed amounts deterministically.
+    if _is_payment_topic(message, evidence):
+        for label in _FEE_CLAUSE_LABELS:
+            _add_clause(label)
+        fee = _computed_fee_evidence(tariffs)
+        if fee is not None:
+            _add(fee.source_id, fee.title, fee.text)
+    return evidence
+
+
+async def _converse_ai_rag(
+    request: Request,
+    case: CaseState,
+    message: str,
+    lang: str,
+    store: CaseStore,
+    audit: AuditLog,
+) -> ConverseCaseResponse:
+    """One turn in AI+RAG-only mode: understand -> retrieve -> apply -> natural reply.
+
+    No tree, menu, intent/keyword canned reply, verbatim FAQ/card text, or auto-1170.
+    Facts are still extracted and kept (memory, so nothing is re-asked), the reply is
+    grounded (cited sources and numbers must come from the evidence) and capability-
+    honest, and a model failure is surfaced openly instead of a hidden canned fallback.
+    The case is kept non-terminal so the conversation context carries across turns.
+    """
+    responder = cast("AiRagResponder | None", getattr(request.app.state, "ai_rag", None))
+    reasoning_engine = cast(LegalReasoningEngine, request.app.state.legal_reasoning)
+    tariffs = cast(TariffConfig, request.app.state.tariffs)
+    extractor = cast(FactExtractor, request.app.state.fact_extractor)
+    grounding = cast(GroundingValidator, request.app.state.grounding)
+    if responder is None:
+        responder = AiRagResponder(None, grounding)
+    # Memory: keep extracting and storing facts so the model has the full context and
+    # never asks again for something the customer already gave.
+    if case.domain is None:
+        case.domain = detect_domain(message)
+    try:
+        for fact in await extractor.extract(message, case, turn_id=case.turn_count):
+            case.upsert(fact)
+    except ProviderError:
+        pass
+    _refresh_unknowns(case)
+
+    evidence = await _ai_rag_evidence(reasoning_engine, tariffs, case, message)
+    result = await responder.respond(case, message, lang, evidence)
+    case.status = CaseStatus.DIAGNOSING  # non-terminal: the context carries to next turn
+    await store.save(case)
+    if result.error:
+        await _audit(audit, case, OUTCOME_HANDOFF, ROUTE_RAG, detail="ai_rag_model_error")
+        return _resp(case, result.reply, requires_human=True)
+    sources = [SourceOut(doc_id=doc_id, title=title) for doc_id, title in result.sources]
+    outcome = OUTCOME_QUESTION if result.is_question else OUTCOME_ANSWER
+    await _audit(audit, case, outcome, ROUTE_RAG, detail="ai_rag")
+    return _resp(case, result.reply, done=not result.is_question, sources=sources)
+
+
 async def _converse_turn(payload: ConverseCaseRequest, request: Request) -> ConverseCaseResponse:
     """One conversation turn: greet, route, extract facts, ask only what's missing."""
     store = cast(CaseStore, request.app.state.case_store)
@@ -1267,6 +1504,39 @@ async def _converse_turn(payload: ConverseCaseRequest, request: Request) -> Conv
     # now; a menu shown this turn sets it again before returning.
     was_awaiting_menu = case.awaiting_menu
     case.awaiting_menu = False
+
+    # AI + RAG only mode (configuration switch): take every hardcoded conversation path
+    # out of the flow and let the model reason over retrieved evidence in context. The
+    # technical controls above (PII redaction, language detection) and below (grounding,
+    # capability honesty, fact memory) stay on. Off by default; flip AI_RAG_ONLY to
+    # restore the full hybrid flow.
+    if bool(getattr(request.app.state.settings, "ai_rag_only", False)):
+        return await _converse_ai_rag(request, case, message, lang, store, audit)
+
+    # Re-explanation: after a one-shot answer, a bare "I didn't understand" must get a
+    # simpler restatement of that same answer - never a reset to a generic menu. Only
+    # when the previous turn closed with a substantive answer, the message is purely a
+    # confusion signal, and it is not a new self-contained request.
+    if (
+        case.last_answer
+        and case.active_tree is None
+        and case.resolution_card_id is None
+        and not was_awaiting_menu
+        and case.status not in AWAITING_OUTCOME
+        and detect_style(message) in _REEXPLAIN_STYLES
+        and not is_new_request(message)
+    ):
+        reexplained = await _reexplain_last_answer(provider, case, lang)
+        await store.save(case)
+        await _audit(
+            audit,
+            case,
+            OUTCOME_ANSWER,
+            ROUTE_CASE,
+            style=case.explanation.style.value,
+            detail="reexplain_one_shot",
+        )
+        return _resp(case, reexplained, done=True)
 
     # A previously closed case starts fresh so old facts don't auto-complete a new one.
     if case.status in (CaseStatus.RESOLVED, CaseStatus.HANDOFF, CaseStatus.CALL_1170_RECOMMENDED):
@@ -1712,8 +1982,12 @@ async def _converse_turn(payload: ConverseCaseRequest, request: Request) -> Conv
         # Never ask the same question twice in a row: the previous turn asked it and
         # this message did not answer it, so the customer is talking about something
         # else. Leave the tree and answer the message itself (the KB, else 1170)
-        # rather than repeating the question. A request to rephrase is not this case.
-        if case.last_question == obj.id and detect_style(message) is None:
+        # rather than repeating the question. Only a genuine rephrase request
+        # ("I didn't understand") keeps the tree; an emotional or format cue
+        # ("I'm worried", "briefly") does not mean the question was answered, and a
+        # new self-contained request never does.
+        reroute = is_new_request(message) or detect_style(message) not in _REEXPLAIN_STYLES
+        if case.last_question == obj.id and reroute:
             case.active_tree = None
             case.pending_node = None
             case.last_question = None
@@ -1800,12 +2074,84 @@ async def _log_interaction(
     )
 
 
+# §24 conversation summary: only short, categorical fact values are inlined; anything
+# longer is reduced to its name, so the stored digest never carries free-form PII.
+_SAFE_FACT_VALUE = re.compile(r"^[\w./-]{1,24}$")
+
+
+def _safe_fact_tokens(case: CaseState) -> list[str]:
+    """Known facts as "name=value" for short categorical values, else just the name."""
+    tokens: list[str] = []
+    for name, value in case.known_facts().items():
+        tokens.append(f"{name}={value}" if _SAFE_FACT_VALUE.match(value or "") else name)
+    return tokens
+
+
+def _build_conversation_summary(case: CaseState) -> str:
+    """A short, PII-safe digest of the case state after a turn (spec §24)."""
+    parts: list[str] = []
+    goal = case.current_intent or case.user_goal
+    if goal:
+        parts.append(f"goal={goal}")
+    if case.domain:
+        parts.append(f"domain={case.domain}")
+    parts.append(f"status={case.status.value}")
+    tokens = _safe_fact_tokens(case)
+    if tokens:
+        parts.append("facts=" + ",".join(tokens))
+    if case.last_question:
+        parts.append(f"open_q={case.last_question}")
+    return "; ".join(parts)
+
+
+async def _finalize_turn(
+    request: Request, payload: ConverseCaseRequest, response: ConverseCaseResponse
+) -> ConverseCaseResponse:
+    """Run the §26 quality gate and refresh the §24 summary after a turn.
+
+    The gate is a last-resort safety net: if a composed reply slipped through claiming
+    a live-system lookup the assistant cannot make, it is replaced with an honest
+    abstention instead of being shown. The conversation digest is then rebuilt from the
+    post-turn state so the stored case stays legible without keeping the raw messages.
+    """
+    store = cast(CaseStore, request.app.state.case_store)
+    case = await store.get(payload.session_id)
+    if case is None:
+        return response
+    issues = check_reply(
+        response.reply,
+        option_values=[o.value for o in response.options],
+        done=response.done,
+        current_intent=case.current_intent,
+    )
+    if CAPABILITY_CLAIM in issues and not response.requires_human:
+        lang = detect_language(redact_likely_pii(payload.message), default=payload.language)
+        fallback = _NO_EVIDENCE_REPLY.get(lang, _NO_EVIDENCE_REPLY["uz"])
+        response = response.model_copy(
+            update={"reply": fallback, "requires_human": True, "done": True}
+        )
+    # Remember a substantive one-shot answer so a follow-up "I didn't understand" can
+    # restate it. A re-explanation is not stored as canonical (it would stack lead-ins),
+    # and an abstention / menu / open question is not a settled answer to restate.
+    if (
+        response.done
+        and not response.requires_human
+        and not response.options
+        and not _is_reexplain_reply(response.reply)
+    ):
+        case.last_answer = response.reply
+    case.conversation_summary = _build_conversation_summary(case)
+    await store.save(case)
+    return response
+
+
 @router.post("/converse", response_model=ConverseCaseResponse)
 async def assistant_converse(
     payload: ConverseCaseRequest, request: Request
 ) -> ConverseCaseResponse:
-    """One conversation turn, then capture it to the interaction log."""
+    """One conversation turn, the quality gate, then capture it to the interaction log."""
     response = await _converse_turn(payload, request)
+    response = await _finalize_turn(request, payload, response)
     await _log_interaction(request, payload, response)
     return response
 
