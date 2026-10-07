@@ -24,6 +24,7 @@ from typing import Any, Protocol
 from app.domain.tariffs import ResolvedPayment
 from app.services.assistant_voice import ASSISTANT_VOICE
 from app.services.policy_matcher import PolicyMatch
+from app.services.status_capability import claims_live_check
 
 # A clause citation in the answer: "6-band", "6-1 band", "10-modda", "6-ilova", etc.
 _CLAUSE_CITATION = re.compile(r"\b(\d+(?:-\d+)?)\s*-?\s*(?:band|modda|ilova|bandi|moddasi)", re.I)
@@ -275,8 +276,8 @@ class LLMPolicyAnswer:
             text = str(json.loads(raw).get("answer", "")).strip()
         except Exception:  # pragma: no cover - network/parse failure -> concise fallback
             return fallback
-        if not text:
-            return fallback
+        if not text or claims_live_check(text):
+            return fallback  # empty, or claims a live lookup it cannot make
         if not is_legally_grounded(text, match.clauses()):
             return fallback  # invented a clause -> concise grounded fallback
         # The customer's own figures (a price they paid, a date) are not invented

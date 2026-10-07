@@ -211,6 +211,38 @@ def build():
             ))
             n_cards += 1
 
+    # --- 3-qatlam (davomi): toza bilim bazasi v1.0 maqolalari (authority 3) ---
+    # Faqat retrieval_policy.index_statuses dagi (published_candidate) maqolalar
+    # indekslanadi; amaldagi holati tekshirilishi kerak bo'lgan (tarif, muddat,
+    # limit), ekspert kutayotgan va tarixiy maqolalar javob manbai bo'lmaydi.
+    clean_kb_path = ROOT.parent / "app" / "data" / "knowledge_base.v1_0.json"
+    n_clean = 0
+    if clean_kb_path.exists():
+        clean_kb = json.loads(clean_kb_path.read_text(encoding="utf-8"))
+        allowed = set(clean_kb["retrieval_policy"]["index_statuses"])
+        for art in clean_kb["articles"]:
+            if art["status"] not in allowed or not art.get("answer"):
+                continue
+            steps = art.get("resolution_steps") or []
+            parts = [art["title"], art["answer"]]
+            if steps:
+                parts.append("Qadamlar: " + " ".join(f"{i}) {s}" for i, s in enumerate(steps, 1)))
+            rows.append(base(
+                id=rid("kbv1", art["id"]),
+                doc_id=art["id"],
+                source_type="bilim_maqola",
+                source_title=f"Toza bilim bazasi v{clean_kb['kb_version']}",
+                title=art["title"],
+                authority=3,
+                domain=art["domain"],
+                case_type="boshqa",
+                outcome=None,
+                text="\n".join(parts),
+                legal_refs=[],
+                tags=[],
+            ))
+            n_clean += 1
+
     # --- 4-qatlam: amaliyot (javob xatlari, authority 4) ---------------------
     letters_path = OUT / "letters.jsonl"
     n_letters = 0

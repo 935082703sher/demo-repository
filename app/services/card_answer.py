@@ -25,6 +25,7 @@ from typing import Any, Protocol
 from app.domain.case_state import CaseState
 from app.domain.diagnostics import ResolutionCard
 from app.services.assistant_voice import ASSISTANT_VOICE
+from app.services.status_capability import claims_live_check
 
 # A run of digits, optionally grouped by spaces/non-breaking spaces/commas, e.g.
 # "82 400", "103 000", "1 170". Periods are left out: they end sentences and number
@@ -128,7 +129,7 @@ class LLMCardAnswer:
             text = str(json.loads(raw).get("answer", "")).strip()
         except Exception:  # pragma: no cover - network/parse failure -> approved text
             return body
-        if not text or not is_fact_preserving(body, text):
+        if not text or not is_fact_preserving(body, text) or claims_live_check(text):
             return body
         return text
 

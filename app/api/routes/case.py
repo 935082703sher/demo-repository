@@ -90,6 +90,13 @@ from app.services.resolution_orchestrator import (
     ResolutionOrchestrator,
 )
 from app.services.router import Route
+from app.services.status_capability import (
+    SEED_ENTRY_BY_KIND,
+    claims_live_check,
+    detect_status_request,
+    reported_status_reply,
+    status_request_reply,
+)
 from app.services.tree_coverage import TreeCoverageEvaluator
 from app.services.turn_analysis import TurnAnalyzer
 
@@ -916,6 +923,9 @@ async def _rag_answer(
         await _log_unanswered(log, case, message)
         await _record_gap(gaps, case, message, "ungroundable", docs)
         return _resp(case, fallback, done=True, requires_human=True)
+    # Capability rule: an answer must never claim a live-system lookup it cannot make.
+    if claims_live_check(result.text):
+        return _resp(case, fallback, done=True, requires_human=True)
     sources = [SourceOut(doc_id=r.chunk.doc_id, title=r.chunk.title) for r in results]
     return _resp(case, result.text, done=True, sources=sources)
 
@@ -1301,6 +1311,47 @@ async def _converse_turn(payload: ConverseCaseRequest, request: Request) -> Conv
         await _audit(audit, case, OUTCOME_CALL_1170, ROUTE_CASE, detail="menu_rejected_no_coverage")
         text = _MENU_REJECTED_1170.get(lang, _MENU_REJECTED_1170["uz"]).format(phone=phone)
         return _resp(case, text, done=True, requires_human=True, call_1170=True, phone=phone)
+
+    # 1-status) Live-system status (knowledge base capability rule). The assistant has
+    #   no UZIMEI/MNP/customs/operator integration, so it never FINDS a status: an
+    #   official status code the customer pasted is explained from its seed entry,
+    #   and a request to look one up is answered honestly ("I can't check this
+    #   directly") with what to send next - never a dead end and never a pretend
+    #   lookup (it names the official way to check instead). Both run before a
+    #   pending tree question can mistake them for answers, and leave the case open
+    #   so the customer's next message continues it.
+    reported = reported_status_reply(message, lang)
+    if reported is not None:
+        # KB rule 5: the status the customer reported is a first-class fact; it is
+        # never replaced by one the assistant guessed.
+        case.upsert(
+            Fact(
+                name="user_reported_status",
+                value=reported.code,
+                status=FactStatus.EXPLICIT,
+                turn_id=case.turn_count,
+            )
+        )
+        await store.save(case)
+        await _audit(
+            audit,
+            case,
+            OUTCOME_ANSWER,
+            ROUTE_CASE,
+            detail=f"reported_status:{reported.code}:{reported.seed_entry_id}",
+        )
+        return _resp(case, reported.reply)
+    status_kind = detect_status_request(message)
+    if status_kind is not None:
+        await store.save(case)
+        await _audit(
+            audit,
+            case,
+            OUTCOME_CLARIFY,
+            ROUTE_CASE,
+            detail=f"status_lookup_unsupported:{status_kind}:{SEED_ENTRY_BY_KIND[status_kind]}",
+        )
+        return _resp(case, status_request_reply(status_kind, lang))
 
     # 2) If a question is open and this message answers it, take that answer.
     answered = False
