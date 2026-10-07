@@ -24,6 +24,7 @@ def _post(client: TestClient, message: str, session: str, lang: str = "uz") -> d
         ).json()
     )
 
+
 # --- §26 response-quality gate -------------------------------------------------------
 
 

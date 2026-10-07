@@ -1140,9 +1140,7 @@ def _is_reexplain_reply(reply: str) -> bool:
     return any(stripped.startswith(prefix) for prefix in _REEXPLAIN_LEADIN_PREFIXES)
 
 
-async def _reexplain_last_answer(
-    provider: LLMProvider, case: CaseState, lang: str
-) -> str:
+async def _reexplain_last_answer(provider: LLMProvider, case: CaseState, lang: str) -> str:
     """Restate the last one-shot answer more simply (spec: never repeat the same text).
 
     The previous answer is the only source, so no new fact can be introduced; the LLM
@@ -1313,9 +1311,27 @@ async def _intent_answer(
 # Payment-topic cues (any language), used only to decide whether to attach the fee
 # legal basis - a general money detector, never tied to a specific test question.
 _PAYMENT_TERMS = (
-    "tolov", "tolash", "tolay", "toladi", "tolagan", "tarif", "narx", "pul", "bhm",
-    " som", "soum", "oplat", "plat", "cena", "stoim", "skolko stoit",
-    "pay", "price", "cost", " fee", "how much",
+    "tolov",
+    "tolash",
+    "tolay",
+    "toladi",
+    "tolagan",
+    "tarif",
+    "narx",
+    "pul",
+    "bhm",
+    " som",
+    "soum",
+    "oplat",
+    "plat",
+    "cena",
+    "stoim",
+    "skolko stoit",
+    "pay",
+    "price",
+    "cost",
+    " fee",
+    "how much",
 )
 # The clauses that establish the registration fee: the obligation (6) and the amounts
 # (42 points to Annex 6; 6-ilova is the amounts table). Retrieval ranks these unreliably
