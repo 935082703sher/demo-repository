@@ -43,6 +43,25 @@ def test_similar_questions_group_and_count() -> None:
     assert len(gaps[0].example_questions) == 2
 
 
+def test_semantic_grouping_merges_lexically_different_questions() -> None:
+    # A stub embedder: internet-connectivity phrasings share a vector direction,
+    # the MNP question points elsewhere - no shared tokens needed.
+    async def embed(text: str) -> list[float]:
+        t = text.lower()
+        if "mnp" in t or "ariza" in t:
+            return [0.0, 1.0]
+        return [1.0, 0.0]  # any connectivity phrasing
+
+    store = InMemoryKnowledgeGapStore(embed)
+    _record(store, "Internet ishlamayapti")
+    _record(store, "4G yo'q")  # no shared token with the first, but same meaning
+    _record(store, "MNP arizam qabul qilinmadi")
+    gaps = asyncio.run(store.list())
+    assert len(gaps) == 2  # the two connectivity questions merged; MNP is separate
+    connectivity = max(gaps, key=lambda g: g.frequency)
+    assert connectivity.frequency == 2
+
+
 def test_status_filter_and_transition() -> None:
     store = InMemoryKnowledgeGapStore()
     gap = _record(store, "norezident uchun maxsus tartif bormi")

@@ -1338,8 +1338,8 @@ async def _converse_turn(payload: ConverseCaseRequest, request: Request) -> Conv
         #    knowledge reaches users. The high score floor means only a clearly-matching
         #    article pre-empts; a generic problem still goes to its diagnostic tree.
         if case.active_tree is None and learned_knowledge is not None:
-            hit = await learned_knowledge.search(message)
-            if hit is not None and hit.score >= 3.0:
+            hit = await learned_knowledge.strong_match(message)
+            if hit is not None:
                 _start_fresh_case(case)
                 case.domain = case.domain or hit.article.content.domain
                 case.status = CaseStatus.RESOLVED

@@ -140,6 +140,33 @@ def test_expert_learning_loop_end_to_end() -> None:
     assert any(g.status.value == "published" for g in published)
 
 
+def test_improvement_queue_ranks_by_impact() -> None:
+    app = _app()
+    store = app.state.knowledge_gaps
+    # A high-impact cluster (3 users, no KB) and a low-impact one (1 user).
+    for cid in ("a", "b", "c"):
+        asyncio.run(
+            store.record(
+                question="Mobil internet umuman ishlamayapti",
+                domain="imei",
+                intent=None,
+                reason="no_evidence",
+                case_id=cid,
+            )
+        )
+    asyncio.run(
+        store.record(
+            question="Boshqa kamdan-kam savol", domain="mnp", intent=None, reason="weak_evidence"
+        )
+    )
+    with TestClient(app) as client:
+        q = client.get("/admin/improvement-queue", auth=_ADMIN).json()
+    assert q["count"] == 2
+    assert q["items"][0]["affected_users"] == 3  # highest impact first
+    assert q["items"][0]["priority_score"] >= q["items"][1]["priority_score"]
+    assert "foydalanuvchi" in q["items"][0]["summary"]
+
+
 def test_reject_draft_marks_gap_rejected() -> None:
     app = _app()
     gap = asyncio.run(

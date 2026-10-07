@@ -346,8 +346,10 @@ def create_app(
     app.state.outcome_analyzer = outcome_analyzer
     app.state.grounding = GroundingValidator()
     app.state.interaction_log = build_interaction_log(app_settings.interaction_log_path)
-    app.state.knowledge_gaps = InMemoryKnowledgeGapStore()
-    app.state.learned_knowledge = InMemoryLearnedKnowledgeStore()
+    # Share the embedding function (when OpenAI is configured) so gaps group and
+    # learned articles are matched semantically; both fall back to lexical otherwise.
+    app.state.knowledge_gaps = InMemoryKnowledgeGapStore(embed_query)
+    app.state.learned_knowledge = InMemoryLearnedKnowledgeStore(embed_query)
     kb_draft: KbDraftComposer = TemplateKbDraft()
     if (
         app_settings.llm_provider == "openai"

@@ -579,5 +579,6 @@ def test_feature_disabled_keeps_legacy_and_enabled_adds_no_openapi_paths() -> No
     assert disabled.openapi() == enabled.openapi()
     # 5 legacy + 10 /assistant (incl. /understand, /converse, /converse/stream,
     # /feedback, /case/{session_id}) + 2 diagnostics + admin: metrics, knowledge-gaps,
-    # gap answer, list drafts, approve draft, reject draft (expert learning console).
-    assert len(enabled.openapi()["paths"]) == 23
+    # improvement-queue, gap answer, list drafts, approve draft, reject draft
+    # (expert learning console).
+    assert len(enabled.openapi()["paths"]) == 24

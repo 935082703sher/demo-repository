@@ -16,6 +16,8 @@ from __future__ import annotations
 from typing import Protocol, runtime_checkable
 
 from app.domain.knowledge_gap import GapStatus, KnowledgeGap, RetrievedDoc
+from app.services.embeddings import EmbedText
+from app.services.embeddings import cosine as _cosine
 from app.services.fact_extraction import _normalize
 
 
@@ -95,8 +97,11 @@ class NullKnowledgeGapStore:
 class InMemoryKnowledgeGapStore:
     """In-memory gap store with normalised-question grouping (dev/tests)."""
 
-    def __init__(self) -> None:
+    def __init__(self, embed: EmbedText | None = None, *, semantic_floor: float = 0.55) -> None:
         self._gaps: dict[str, KnowledgeGap] = {}
+        self._embeddings: dict[str, list[float]] = {}  # gap_id -> question embedding
+        self._embed = embed
+        self._floor = semantic_floor
         self._seq = 0
 
     async def record(
@@ -113,7 +118,10 @@ class InMemoryKnowledgeGapStore:
         case_id: str | None = None,
     ) -> KnowledgeGap:
         normalized = _normalize(question)
-        existing = self._find_similar(normalized)
+        # Semantic grouping when embeddings are configured (so "4G yo'q" and "internet
+        # ishlamayapti" can share a cluster); lexical token overlap is the fallback.
+        vector = await self._embed(question) if self._embed is not None else None
+        existing = self._find_similar(normalized, vector)
         if existing is not None:
             existing.frequency += 1
             if question not in existing.example_questions:
@@ -141,9 +149,21 @@ class InMemoryKnowledgeGapStore:
             case_ids=[case_id] if case_id else [],
         )
         self._gaps[gap.gap_id] = gap
+        if vector is not None:
+            self._embeddings[gap.gap_id] = vector
         return gap
 
-    def _find_similar(self, normalized: str) -> KnowledgeGap | None:
+    def _find_similar(self, normalized: str, vector: list[float] | None) -> KnowledgeGap | None:
+        # Prefer semantic similarity (cosine over question embeddings) when available;
+        # otherwise fall back to lexical token overlap.
+        if vector is not None and self._embeddings:
+            best_id, best_sim = None, 0.0
+            for gap_id, vec in self._embeddings.items():
+                sim = _cosine(vector, vec)
+                if sim > best_sim:
+                    best_id, best_sim = gap_id, sim
+            if best_id is not None and best_sim >= self._floor:
+                return self._gaps[best_id]
         for gap in self._gaps.values():
             if _similar(gap.normalized_question, normalized):
                 return gap

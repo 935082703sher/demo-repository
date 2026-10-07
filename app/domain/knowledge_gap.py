@@ -72,3 +72,13 @@ class KnowledgeGap(BaseModel):
 
     def touch(self) -> None:
         self.updated_at = datetime.now(UTC).isoformat()
+
+    def priority_score(self) -> int:
+        """Impact ranking for the improvement queue: more affected users and no KB
+        coverage score higher; an already-published topic drops to the bottom."""
+        if self.status in (GapStatus.PUBLISHED, GapStatus.REJECTED):
+            return 0
+        affected = max(self.frequency, len(self.case_ids))
+        no_coverage = 3 if self.reason_for_failure in {"no_evidence", "no_coverage"} else 1
+        unresolved = 2 if self.status in (GapStatus.NEW, GapStatus.GROUPED) else 1
+        return affected * 2 + no_coverage + unresolved

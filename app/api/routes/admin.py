@@ -88,6 +88,45 @@ async def admin_knowledge_gaps(
     return {"count": len(gaps), "gaps": [g.model_dump() for g in gaps]}
 
 
+@router.get("/admin/improvement-queue")
+async def admin_improvement_queue(request: Request, _: AdminGuard) -> dict[str, object]:
+    """Assistant Improvement Queue: unresolved knowledge-gap clusters ranked by impact.
+
+    Each item is a cluster (semantically grouped) with how many users it affects, why
+    the assistant failed, and a one-line summary - so an expert can pick the
+    highest-impact missing knowledge to teach first via the answer endpoint.
+    """
+    gaps_store = cast(
+        "KnowledgeGapStore | None", getattr(request.app.state, "knowledge_gaps", None)
+    )
+    if gaps_store is None:
+        return {"count": 0, "items": []}
+    gaps = await gaps_store.list()
+    ranked = sorted(
+        (g for g in gaps if g.priority_score() > 0),
+        key=lambda g: g.priority_score(),
+        reverse=True,
+    )
+    items = [
+        {
+            "gap_id": g.gap_id,
+            "priority_score": g.priority_score(),
+            "affected_users": max(g.frequency, len(g.case_ids)),
+            "domain": g.domain,
+            "status": g.status.value,
+            "reason": g.reason_for_failure,
+            "summary": (
+                f"{max(g.frequency, len(g.case_ids))} ta foydalanuvchi shunga o'xshash "
+                f"savol berdi; ishonchli KB maqolasi yo'q ({g.reason_for_failure}). "
+                f"Namuna: {g.question[:120]}"
+            ),
+            "example_questions": g.example_questions[:5],
+        }
+        for g in ranked
+    ]
+    return {"count": len(items), "items": items}
+
+
 class ExpertAnswer(BaseModel):
     expert: str
     expert_answer: str

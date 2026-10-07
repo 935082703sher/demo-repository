@@ -13,7 +13,7 @@ so the assistant never answers from a thin learned match.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Protocol, runtime_checkable
+from typing import ClassVar, Protocol, runtime_checkable
 
 from app.domain.knowledge_article import (
     DraftStatus,
@@ -21,6 +21,8 @@ from app.domain.knowledge_article import (
     KnowledgeContent,
     KnowledgeDraft,
 )
+from app.services.embeddings import EmbedText
+from app.services.embeddings import cosine as _cosine
 from app.services.fact_extraction import _normalize
 
 
@@ -51,18 +53,26 @@ class LearnedKnowledgeStore(Protocol):
     async def reject(self, draft_id: str) -> KnowledgeDraft | None: ...
     async def list_articles(self) -> list[KnowledgeArticle]: ...
     async def search(self, query: str) -> ArticleHit | None: ...
+    async def strong_match(self, query: str) -> ArticleHit | None: ...
     async def rollback(self, article_id: str, version: int) -> KnowledgeArticle | None: ...
 
 
 class InMemoryLearnedKnowledgeStore:
     """In-memory drafts + versioned articles with a lexical search index (dev/tests)."""
 
-    def __init__(self, *, score_floor: float = 1.5) -> None:
+    def __init__(self, embed: EmbedText | None = None) -> None:
         self._drafts: dict[str, KnowledgeDraft] = {}
         self._versions: dict[str, list[KnowledgeArticle]] = {}
         self._current: dict[str, KnowledgeArticle] = {}  # article_id -> current version
-        self._floor = score_floor
+        self._vectors: dict[str, list[float]] = {}  # article_id -> content embedding
+        self._embed = embed
         self._seq = 0
+
+    # Match floors differ by mode: a semantic cosine lives in [0,1], a lexical token
+    # score is an integer count. "normal" is enough to answer from a learned article;
+    # "strong" is required to pre-empt a diagnostic tree with one.
+    _NORMAL: ClassVar[dict[str, float]] = {"semantic": 0.45, "lexical": 1.5}
+    _STRONG: ClassVar[dict[str, float]] = {"semantic": 0.60, "lexical": 3.0}
 
     async def add_draft(self, draft: KnowledgeDraft) -> KnowledgeDraft:
         self._drafts[draft.draft_id] = draft
@@ -104,6 +114,8 @@ class InMemoryLearnedKnowledgeStore:
         )
         self._versions[article_id] = [article]
         self._current[article_id] = article  # index refresh is immediate (in-memory)
+        if self._embed is not None:
+            self._vectors[article_id] = await self._embed(article.content.searchable_text())
         draft.status = DraftStatus.APPROVED
         return article
 
@@ -116,23 +128,57 @@ class InMemoryLearnedKnowledgeStore:
     async def list_articles(self) -> list[KnowledgeArticle]:
         return list(self._current.values())
 
-    async def search(self, query: str) -> ArticleHit | None:
+    async def _best(self, query: str) -> tuple[ArticleHit, str] | None:
+        """The best current article for the query, with the scoring mode used.
+
+        Semantic (cosine over content embeddings) when embeddings are configured, else
+        lexical token overlap with a multi-word keyword bonus. Returns the hit and the
+        mode so the caller applies the right floor.
+        """
+        if not self._current:
+            return None
+        if self._embed is not None and self._vectors:
+            qv = await self._embed(query)
+            best: ArticleHit | None = None
+            for article in self._current.values():
+                vec = self._vectors.get(article.article_id)
+                if not vec:
+                    continue
+                sim = _cosine(qv, vec)
+                if best is None or sim > best.score:
+                    best = ArticleHit(article=article, score=sim)
+            return (best, "semantic") if best is not None else None
         q = _tokens(query)
         if not q:
             return None
-        best: ArticleHit | None = None
+        norm_q = _normalize(query)
+        best = None
         for article in self._current.values():
             terms = _tokens(article.content.searchable_text())
             score = float(len(q & terms))
-            # a matched multi-word keyword/synonym counts for more
-            norm_q = _normalize(query)
             for kw in article.content.keywords + article.content.synonyms:
                 nk = _normalize(kw)
                 if " " in nk and nk in norm_q:
                     score += 2.0
-            if score >= self._floor and (best is None or score > best.score):
+            if best is None or score > best.score:
                 best = ArticleHit(article=article, score=score)
-        return best
+        return (best, "lexical") if best is not None else None
+
+    async def search(self, query: str) -> ArticleHit | None:
+        """Best article at the normal floor - enough to answer from learned knowledge."""
+        found = await self._best(query)
+        if found is None:
+            return None
+        hit, mode = found
+        return hit if hit.score >= self._NORMAL[mode] else None
+
+    async def strong_match(self, query: str) -> ArticleHit | None:
+        """Best article at the strong floor - enough to pre-empt a diagnostic tree."""
+        found = await self._best(query)
+        if found is None:
+            return None
+        hit, mode = found
+        return hit if hit.score >= self._STRONG[mode] else None
 
     async def rollback(self, article_id: str, version: int) -> KnowledgeArticle | None:
         for article in self._versions.get(article_id, []):
