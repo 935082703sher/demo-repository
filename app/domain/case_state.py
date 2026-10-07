@@ -148,6 +148,12 @@ class CaseState(BaseModel):
     # and whether the previous turn offered a topic menu awaiting a selection.
     original_problem: str | None = None
     awaiting_menu: bool = False
+    # Intent control: the goal the customer's CURRENT request states (never carried
+    # over from an earlier message) and the problem it names. With facts, unknowns,
+    # attempts, last_question / last_customer_reply and problem_summary this is the
+    # whole conversation state.
+    current_intent: str | None = None
+    current_problem: str | None = None
 
     def known_facts(self) -> dict[str, str]:
         """Return name -> value for facts that carry a real (non-unknown) value."""
