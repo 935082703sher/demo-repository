@@ -70,6 +70,7 @@ from app.services.kb_draft import (
     TemplateKbDraft,
     build_openai_kb_draft_complete,
 )
+from app.services.kb_retriever import corpus_path, get_retriever
 from app.services.knowledge import KnowledgeService
 from app.services.knowledge_gap import InMemoryKnowledgeGapStore
 from app.services.learned_knowledge import InMemoryLearnedKnowledgeStore
@@ -129,6 +130,17 @@ def create_app(
     @asynccontextmanager
     async def lifespan(application: FastAPI) -> AsyncIterator[None]:
         logger.info("event=service_start environment=%s", app_settings.environment)
+        # The KB index (kb/out/kb.jsonl) is built, not committed. Without it every
+        # answer is limited to the legal clauses and reads as "no data", so say so
+        # loudly at startup instead of failing silently turn by turn.
+        kb_chunks = get_retriever().size
+        if kb_chunks == 0:
+            logger.warning(
+                "event=kb_index_missing path=%s hint=run 'python kb/src/build_kb.py' then restart",
+                corpus_path(),
+            )
+        else:
+            logger.info("event=kb_index_loaded chunks=%d", kb_chunks)
         postgres_audit: PostgresAuditLog | None = None
         postgres_cases: PostgresCaseStore | None = None
         if app_settings.database_url:
