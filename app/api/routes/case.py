@@ -1808,8 +1808,12 @@ async def _converse_turn(payload: ConverseCaseRequest, request: Request) -> Conv
         # Never ask the same question twice in a row: the previous turn asked it and
         # this message did not answer it, so the customer is talking about something
         # else. Leave the tree and answer the message itself (the KB, else 1170)
-        # rather than repeating the question. A request to rephrase is not this case.
-        if case.last_question == obj.id and detect_style(message) is None:
+        # rather than repeating the question. Only a genuine rephrase request
+        # ("I didn't understand") keeps the tree; an emotional or format cue
+        # ("I'm worried", "briefly") does not mean the question was answered, and a
+        # new self-contained request never does.
+        reroute = is_new_request(message) or detect_style(message) not in _REEXPLAIN_STYLES
+        if case.last_question == obj.id and reroute:
             case.active_tree = None
             case.pending_node = None
             case.last_question = None
