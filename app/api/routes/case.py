@@ -62,6 +62,17 @@ from app.services.fact_extraction import (
     strong_domain,
 )
 from app.services.grounding import GroundingValidator
+from app.services.intent_control import (
+    FEE_ORIGIN_QUESTION,
+    PAYMENT_RECEIPT,
+    REGISTRATION_FEE,
+    detect_intent,
+    fee_followup_reply,
+    fee_reply,
+    mentions_amount,
+    receipt_reply,
+    transaction_facts,
+)
 from app.services.interaction_log import InteractionLog, InteractionRecord
 from app.services.kb_retriever import get_retriever
 from app.services.knowledge_gap import KnowledgeGapStore
@@ -210,6 +221,10 @@ _DOMAIN_INTRO = {
         "mnp": "MNP бўйича айнан қандай ёрдам керак?",
     },
     "ru": {"imei": "Что именно нужно по IMEI?", "mnp": "Что именно нужно по MNP?"},
+    "en": {
+        "imei": "What exactly do you need help with on IMEI?",
+        "mnp": "What exactly do you need help with on MNP?",
+    },
     "kaa": {
         "imei": "IMEI boyınsha tap qanday járdem kerek?",
         "mnp": "MNP boyınsha tap qanday járdem kerek?",
@@ -374,6 +389,8 @@ def _start_fresh_case(case: CaseState) -> None:
     case.last_customer_reply = None
     case.call_1170_reason = None
     case.awaiting_menu = False
+    case.current_intent = None
+    case.current_problem = None
     # original_problem is intentionally NOT cleared here: the RAG lane resets the
     # diagnostic slate between turns, but a menu shown next must still re-examine the
     # original problem. It is cleared only when a genuinely new problem begins.
@@ -1137,6 +1154,49 @@ async def _finalize_card(
     return _attach_legal_basis(_resp(case, card_text, done=True, card_id=card.id), rules, lang)
 
 
+async def _intent_answer(
+    case: CaseState, message: str, lang: str, gaps: KnowledgeGapStore | None
+) -> ConverseCaseResponse | None:
+    """Answer the customer's current explicit goal, or None to route normally.
+
+    The goal is the one THIS conversation step is about (``case.current_intent``,
+    set from the current message). A receipt request is answered at once - the
+    capability limit, then what the customer can do - and, because the knowledge
+    base has no receipt-retrieval procedure, recorded as a knowledge gap instead of
+    inventing one. A fee complaint asks one question only when where the phone came
+    from is still unknown; that question is never asked twice.
+    """
+    known = case.known_facts()
+    if case.current_intent == PAYMENT_RECEIPT:
+        case.user_goal = PAYMENT_RECEIPT
+        case.last_question = None
+        await _record_gap(gaps, case, message, "no_coverage")
+        case.status = CaseStatus.RESOLVED
+        succeeded = known.get("registration_status") == "success"
+        return _resp(case, receipt_reply(lang, registration_succeeded=succeeded), done=True)
+    if case.current_intent != REGISTRATION_FEE:
+        return None
+    origin = known.get("device_origin")
+    if case.last_question == FEE_ORIGIN_QUESTION:
+        # This message should answer the one question asked. If it did not (or it is
+        # a new problem), the fee flow ends here - the question is never repeated.
+        case.last_question = None
+        if origin is None or is_new_request(message):
+            case.current_intent = None
+            return None
+        case.status = CaseStatus.RESOLVED
+        return _resp(case, fee_followup_reply(lang, origin), done=True)
+    if detect_intent(message) != REGISTRATION_FEE:
+        case.current_intent = None  # an earlier turn's goal is never carried over
+        return None
+    reply = fee_reply(lang, amount_quoted=mentions_amount(message), device_origin=origin)
+    if origin is None:
+        case.last_question = FEE_ORIGIN_QUESTION
+        return _resp(case, reply)  # one question, free-text answer, no menu
+    case.status = CaseStatus.RESOLVED
+    return _resp(case, reply, done=True)
+
+
 async def _converse_turn(payload: ConverseCaseRequest, request: Request) -> ConverseCaseResponse:
     """One conversation turn: greet, route, extract facts, ask only what's missing."""
     store = cast(CaseStore, request.app.state.case_store)
@@ -1192,6 +1252,20 @@ async def _converse_turn(payload: ConverseCaseRequest, request: Request) -> Conv
     if case.status in (CaseStatus.RESOLVED, CaseStatus.HANDOFF, CaseStatus.CALL_1170_RECOMMENDED):
         _start_fresh_case(case)
         case.original_problem = None  # a genuinely new problem follows
+
+    # 0-intent) What is the customer's goal NOW? An explicit request in this message
+    #   outranks everything from earlier turns: when it names a different goal than
+    #   the one being worked on (a fee complaint becomes "I paid, I need the receipt"),
+    #   the old diagnostic flow, open question, menu or awaited result is dropped so
+    #   it is never continued against the new request.
+    intent = detect_intent(message)
+    if intent is not None and intent != case.current_intent:
+        if case.active_tree or case.pending_node or case.resolution_card_id or was_awaiting_menu:
+            _start_fresh_case(case)
+            case.original_problem = None
+            was_awaiting_menu = False
+        case.current_intent = intent
+        case.current_problem = message
 
     # 0) A case awaiting a result: this message is normally the outcome of the offered
     #    card. But a pending question must never swallow a new, self-contained request:
@@ -1252,6 +1326,10 @@ async def _converse_turn(payload: ConverseCaseRequest, request: Request) -> Conv
     #    new story is never ignored.
     analysis = await analyzer.analyze(message, case, turn_id=case.turn_count)
     for fact in analysis.facts:
+        case.upsert(fact)
+    # A completed step the customer reports (registration succeeded, payment made,
+    # receipt missing) is a fact to respect - it is never diagnosed as a failure.
+    for fact in transaction_facts(message, turn_id=case.turn_count):
         case.upsert(fact)
     if case.domain is None:
         # The analyzer's domain understands typos/dialect; keyword detection is the net.
@@ -1352,6 +1430,20 @@ async def _converse_turn(payload: ConverseCaseRequest, request: Request) -> Conv
             detail=f"status_lookup_unsupported:{status_kind}:{SEED_ENTRY_BY_KIND[status_kind]}",
         )
         return _resp(case, status_request_reply(status_kind, lang))
+
+    # 1-intent) Answer the customer's explicit goal directly - no decision tree, no
+    #   menu, and no question unless its answer changes the next step.
+    intent_reply = await _intent_answer(case, message, lang, knowledge_gaps)
+    if intent_reply is not None:
+        await store.save(case)
+        await _audit(
+            audit,
+            case,
+            OUTCOME_ANSWER if intent_reply.done else OUTCOME_QUESTION,
+            ROUTE_CASE,
+            detail=f"intent:{case.current_intent}",
+        )
+        return intent_reply
 
     # 2) If a question is open and this message answers it, take that answer.
     answered = False
@@ -1597,6 +1689,35 @@ async def _converse_turn(payload: ConverseCaseRequest, request: Request) -> Conv
             policy_rules=policy_matcher.rules_for_ids(obj.policy_rule_ids, case, message),
         )
     if kind == "ask" and isinstance(obj, DiagnosticNode):
+        # Never ask the same question twice in a row: the previous turn asked it and
+        # this message did not answer it, so the customer is talking about something
+        # else. Leave the tree and answer the message itself (the KB, else 1170)
+        # rather than repeating the question. A request to rephrase is not this case.
+        if case.last_question == obj.id and detect_style(message) is None:
+            case.active_tree = None
+            case.pending_node = None
+            case.last_question = None
+            reply = await _rag_answer(
+                provider,
+                grounding,
+                interaction_log,
+                case,
+                message,
+                lang,
+                knowledge_gaps,
+                learned_knowledge,
+            )
+            if not reply.requires_human:
+                await store.save(case)
+                await _audit(audit, case, OUTCOME_ANSWER, ROUTE_RAG, detail="repeat_question_guard")
+                return reply
+            case.status = CaseStatus.CALL_1170_RECOMMENDED
+            case.call_1170_reason = "question_not_answered"
+            await store.save(case)
+            await _audit(audit, case, OUTCOME_CALL_1170, ROUTE_CASE, detail="repeat_question_guard")
+            text = _UNSUPPORTED_1170.get(lang, _UNSUPPORTED_1170["uz"]).format(phone=phone)
+            return _resp(case, text, done=True, requires_human=True, call_1170=True, phone=phone)
+        case.last_question = obj.id
         case.pending_node = obj.id
         case.status = CaseStatus.DIAGNOSING
         await store.save(case)

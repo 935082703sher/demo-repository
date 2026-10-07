@@ -27,6 +27,7 @@ from app.services.status_capability import (
     LOCATION,
     MNP_STATUS,
     MY_DEVICES,
+    PAYMENT,
     SEED_ENTRY_BY_KIND,
     claims_live_check,
     detect_status_request,
@@ -35,7 +36,7 @@ from app.services.status_capability import (
 )
 
 _LANGS = ("uz", "uz_cyrl", "ru", "en", "kaa")
-_KINDS = (IMEI_STATUS, BLACKLIST, MNP_STATUS, MY_DEVICES, CUSTOMS, APPLICATION, LOCATION)
+_KINDS = (IMEI_STATUS, BLACKLIST, MNP_STATUS, MY_DEVICES, CUSTOMS, APPLICATION, LOCATION, PAYMENT)
 
 
 # --- the knowledge base ---------------------------------------------------------
@@ -123,6 +124,8 @@ def test_every_rule_points_at_a_real_article() -> None:
         ("Arizam qayergacha yetdi?", APPLICATION),
         ("Telefon qayerdaligini tekshirib bering.", LOCATION),
         ("IMEI orqali topib bera olasizmi?", LOCATION),
+        ("To'lovim o'tdimi, tekshirib bering", PAYMENT),
+        ("Did my payment go through?", PAYMENT),
     ],
 )
 def test_detects_live_status_requests(message: str, kind: str) -> None:
@@ -186,6 +189,7 @@ def test_cloned_reply_raises_the_iot_exception_and_does_not_loop_registration() 
         "Я проверил ваш IMEI.",
         "I checked your IMEI and it is registered.",
         "Let me check the system for you.",
+        "To'lovingiz tizimda mavjud.",
     ],
 )
 def test_claims_live_check_catches_pretend_lookups(text: str) -> None:
