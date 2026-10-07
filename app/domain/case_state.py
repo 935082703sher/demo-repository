@@ -154,6 +154,10 @@ class CaseState(BaseModel):
     # whole conversation state.
     current_intent: str | None = None
     current_problem: str | None = None
+    # A short, PII-safe digest of the case so far (goal, domain, status, known fact
+    # names, the open question), refreshed each turn. It makes the conversation state
+    # legible without replaying the raw messages, which are never stored.
+    conversation_summary: str | None = None
 
     def known_facts(self) -> dict[str, str]:
         """Return name -> value for facts that carry a real (non-unknown) value."""

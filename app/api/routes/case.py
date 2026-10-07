@@ -100,6 +100,7 @@ from app.services.resolution_orchestrator import (
     OrchestratorDecision,
     ResolutionOrchestrator,
 )
+from app.services.response_quality import CAPABILITY_CLAIM, check_reply
 from app.services.router import Route
 from app.services.status_capability import (
     SEED_ENTRY_BY_KIND,
@@ -242,6 +243,11 @@ _RAG_TOP_K = 5
 # assistant abstains instead of answering from irrelevant evidence. Calibrated on
 # the corpus - on-topic queries score well above it, off-topic ones well below.
 _RAG_MIN_SCORE = 4.0
+# §22 RAG applicability: a retrieved passage much weaker than the best hit is almost
+# always a different topic riding along on one shared word (a receipt question pulling
+# in a registration-fee article). Retrieved does not mean applicable, so only the best
+# hit and passages within this fraction of its score drive the grounded answer.
+_RAG_APPLICABILITY_RATIO = 0.5
 # The grounded-answer request carries the base enum; the exact script/language is
 # steered by a short hint prepended to the question (see _rag_answer).
 _LANG_ENUM = {
@@ -391,6 +397,7 @@ def _start_fresh_case(case: CaseState) -> None:
     case.awaiting_menu = False
     case.current_intent = None
     case.current_problem = None
+    case.conversation_summary = None
     # original_problem is intentionally NOT cleared here: the RAG lane resets the
     # diagnostic slate between turns, but a menu shown next must still re-examine the
     # original problem. It is cleared only when a genuinely new problem begins.
@@ -732,6 +739,19 @@ def _has_strong_evidence(results: list[Any], min_score: float) -> bool:
     return bool(results) and results[0].score >= min_score
 
 
+def _applicable_results(results: list[Any]) -> list[Any]:
+    """Keep only passages applicable to the query (spec §22).
+
+    Results arrive sorted by score. The best hit is always kept; a passage scoring
+    far below it is treated as a different topic that merely shares a word, and is
+    dropped so an irrelevant article never drives the grounded answer.
+    """
+    if not results:
+        return results
+    floor = results[0].score * _RAG_APPLICABILITY_RATIO
+    return [r for r in results if r.score >= floor]
+
+
 async def _log_unanswered(log: InteractionLog | None, case: CaseState, message: str) -> None:
     """Record a question the knowledge base could not answer, for the review list."""
     if log is None:
@@ -923,6 +943,9 @@ async def _rag_answer(
             gaps, case, message, "no_evidence" if not results else "weak_evidence", docs
         )
         return _resp(case, fallback, done=True, requires_human=True)
+    # §22: a retrieved article is not necessarily applicable; keep only passages close
+    # to the best hit so an off-topic one does not steer the answer.
+    results = _applicable_results(results)
     source_ids = [r.chunk.doc_id for r in results]
     llm_request = LLMRequest(
         language=_LANG_ENUM.get(lang, Language.UZ),
@@ -1780,12 +1803,74 @@ async def _log_interaction(
     )
 
 
+# §24 conversation summary: only short, categorical fact values are inlined; anything
+# longer is reduced to its name, so the stored digest never carries free-form PII.
+_SAFE_FACT_VALUE = re.compile(r"^[\w./-]{1,24}$")
+
+
+def _safe_fact_tokens(case: CaseState) -> list[str]:
+    """Known facts as "name=value" for short categorical values, else just the name."""
+    tokens: list[str] = []
+    for name, value in case.known_facts().items():
+        tokens.append(f"{name}={value}" if _SAFE_FACT_VALUE.match(value or "") else name)
+    return tokens
+
+
+def _build_conversation_summary(case: CaseState) -> str:
+    """A short, PII-safe digest of the case state after a turn (spec §24)."""
+    parts: list[str] = []
+    goal = case.current_intent or case.user_goal
+    if goal:
+        parts.append(f"goal={goal}")
+    if case.domain:
+        parts.append(f"domain={case.domain}")
+    parts.append(f"status={case.status.value}")
+    tokens = _safe_fact_tokens(case)
+    if tokens:
+        parts.append("facts=" + ",".join(tokens))
+    if case.last_question:
+        parts.append(f"open_q={case.last_question}")
+    return "; ".join(parts)
+
+
+async def _finalize_turn(
+    request: Request, payload: ConverseCaseRequest, response: ConverseCaseResponse
+) -> ConverseCaseResponse:
+    """Run the §26 quality gate and refresh the §24 summary after a turn.
+
+    The gate is a last-resort safety net: if a composed reply slipped through claiming
+    a live-system lookup the assistant cannot make, it is replaced with an honest
+    abstention instead of being shown. The conversation digest is then rebuilt from the
+    post-turn state so the stored case stays legible without keeping the raw messages.
+    """
+    store = cast(CaseStore, request.app.state.case_store)
+    case = await store.get(payload.session_id)
+    if case is None:
+        return response
+    issues = check_reply(
+        response.reply,
+        option_values=[o.value for o in response.options],
+        done=response.done,
+        current_intent=case.current_intent,
+    )
+    if CAPABILITY_CLAIM in issues and not response.requires_human:
+        lang = detect_language(redact_likely_pii(payload.message), default=payload.language)
+        fallback = _NO_EVIDENCE_REPLY.get(lang, _NO_EVIDENCE_REPLY["uz"])
+        response = response.model_copy(
+            update={"reply": fallback, "requires_human": True, "done": True}
+        )
+    case.conversation_summary = _build_conversation_summary(case)
+    await store.save(case)
+    return response
+
+
 @router.post("/converse", response_model=ConverseCaseResponse)
 async def assistant_converse(
     payload: ConverseCaseRequest, request: Request
 ) -> ConverseCaseResponse:
-    """One conversation turn, then capture it to the interaction log."""
+    """One conversation turn, the quality gate, then capture it to the interaction log."""
     response = await _converse_turn(payload, request)
+    response = await _finalize_turn(request, payload, response)
     await _log_interaction(request, payload, response)
     return response
 
