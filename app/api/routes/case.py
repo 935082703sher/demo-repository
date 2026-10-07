@@ -1312,15 +1312,26 @@ async def _converse_turn(payload: ConverseCaseRequest, request: Request) -> Conv
         text = _MENU_REJECTED_1170.get(lang, _MENU_REJECTED_1170["uz"]).format(phone=phone)
         return _resp(case, text, done=True, requires_human=True, call_1170=True, phone=phone)
 
-    # 1-status) Live-system status (knowledge seed capability rule). The assistant has
+    # 1-status) Live-system status (knowledge base capability rule). The assistant has
     #   no UZIMEI/MNP/customs/operator integration, so it never FINDS a status: an
     #   official status code the customer pasted is explained from its seed entry,
     #   and a request to look one up is answered honestly ("I can't check this
     #   directly") with what to send next - never a dead end and never a pretend
-    #   lookup. Both run before a pending tree question can mistake them for answers,
-    #   and leave the case open so the customer's next message continues it.
+    #   lookup (it names the official way to check instead). Both run before a
+    #   pending tree question can mistake them for answers, and leave the case open
+    #   so the customer's next message continues it.
     reported = reported_status_reply(message, lang)
     if reported is not None:
+        # KB rule 5: the status the customer reported is a first-class fact; it is
+        # never replaced by one the assistant guessed.
+        case.upsert(
+            Fact(
+                name="user_reported_status",
+                value=reported.code,
+                status=FactStatus.EXPLICIT,
+                turn_id=case.turn_count,
+            )
+        )
         await store.save(case)
         await _audit(
             audit,

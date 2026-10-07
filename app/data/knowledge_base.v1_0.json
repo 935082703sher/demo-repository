@@ -1,0 +1,1657 @@
+{
+  "kb_version": "1.0",
+  "title": "UZIMEI & MNP AI Assistant - Full Clean Knowledge Base",
+  "language": "uz",
+  "statuses": {
+    "published_candidate": "Manba aniq va AI javobida ishlatish mumkin.",
+    "needs_current_verification": "Tarif, muddat, davlat tartibi yoki boshqa vaqtga bog'liq ma'lumot. Production'ga kiritishdan oldin amaldagi holat tekshiriladi.",
+    "needs_expert_input": "Muammo mavjud, lekin manba barcha amaliy detallarni bermagan.",
+    "historical": "Eski transition-period qoidasi. Oddiy current user savollarida ishlatilmaydi."
+  },
+  "capability_rule": {
+    "summary": "Real tizim integratsiyasi yo'q: assistant IMEI holati, foydalanuvchi nomidagi qurilmalar, MNP statusi, bojxona bazasi, telefon joylashuvi, IMEI ishlayotgan raqam va blacklist statusini mustaqil tekshira olmaydi. U statusni topmaydi - foydalanuvchi yuborgan statusni tahlil qiladi.",
+    "can_find_status": false,
+    "can_explain_status": true,
+    "can_analyse_problem": true,
+    "can_recommend_next_step": true,
+    "can_route_to_operator": true,
+    "official_check_methods": {
+      "imei_status": [
+        "UZIMEI sayti",
+        "1170 qisqa raqamiga SMS",
+        "*1170# USSD"
+      ],
+      "mnp_status": [
+        "Ko'chirish yakunlanganda yangi operator yuboradigan SMS"
+      ]
+    },
+    "forbidden_claims": [
+      "Tekshirib ko'raman.",
+      "Tizimdan qarayman.",
+      "Tekshirdim, IMEI registered.",
+      "Sizning status hozir...",
+      "MNP jarayonini tizimdan tekshirdim."
+    ]
+  },
+  "conversation_rules": [
+    {
+      "id": "RULE-1",
+      "title": "Statusni uydirma",
+      "rule": "Real statusni tekshirgandek javob bermaslik; rasmiy tekshirish usulini aytib, natijani so'rash."
+    },
+    {
+      "id": "RULE-2",
+      "title": "User aytgan simptomni qayta gapirma",
+      "rule": "Foydalanuvchi aytganini takrorlamasdan, keyingi eng kerakli savolni berish."
+    },
+    {
+      "id": "RULE-3",
+      "title": "Taxminni faktga aylantirma",
+      "rule": "Dalilsiz xulosa (masalan, boj limiti) chiqarmaslik; avval rad sababi va olib kirish yo'lini so'rash."
+    },
+    {
+      "id": "RULE-4",
+      "title": "Bittadan eng foydali savol",
+      "rule": "Daraxtdagi barcha savollarni ketma-ket bermaslik; eng ko'p ma'lumot beradigan bitta savol."
+    },
+    {
+      "id": "RULE-5",
+      "title": "User yuborgan status birinchi darajali fakt",
+      "rule": "Foydalanuvchi yuborgan status/xatolik user_reported_status sifatida saqlanadi va AI taxmini bilan almashtirilmaydi."
+    }
+  ],
+  "retrieval_policy": {
+    "index_statuses": [
+      "published_candidate"
+    ],
+    "exclude_from_index": [
+      "needs_current_verification",
+      "needs_expert_input",
+      "historical"
+    ],
+    "flow": [
+      "intent_detection",
+      "fact_extraction",
+      "realtime_status_required?",
+      "semantic_kb_search",
+      "filter: published, current, applicable, sufficient facts",
+      "answer_or_one_clarifying_question",
+      "verify_user_outcome",
+      "resolved? close : next hypothesis / operator"
+    ],
+    "principle": {
+      "realtime_status_check": "faqat integration mavjud bo'lsa",
+      "status_interpretation": "ha",
+      "knowledge_based_guidance": "ha",
+      "current_policy": "faqat verified bo'lsa",
+      "hypothesis": "mumkin, lekin hypothesis sifatida",
+      "unverified_claim": "yo'q",
+      "operator_routing": "kerak bo'lsa"
+    }
+  },
+  "time_sensitive_topics": [
+    "IMEI tariflari",
+    "BHM foizlari",
+    "30/60 kun",
+    "import limitlari",
+    "bojxona qoidalari",
+    "operatorlar ro'yxati",
+    "CDMA availability",
+    "registratsiya kanallari",
+    "MNP minimal waiting period",
+    "MNP narxi"
+  ],
+  "excluded_data": [
+    "F.I.Sh.",
+    "telefon raqami",
+    "manzil",
+    "pasport seriya/raqami",
+    "JSHSHIRning real qiymati",
+    "IMEI'ning real customer qiymatlari",
+    "murojaat raqamlari",
+    "ijrochi xodimlar",
+    "\"e'tirozingiz yo'q\" boilerplate",
+    "\"sudga murojaat qilishingiz mumkin\" boilerplate",
+    "imzo",
+    "tashkilot ichki routing ma'lumotlari",
+    "muammo va yechimi noma'lum \"ijobiy hal qilindi\" xatlar"
+  ],
+  "source_conflicts": [
+    {
+      "topic": "IoT",
+      "removed_rule": "IoT = registration_not_required",
+      "replacement": "device_category -> TAC check -> applicable registration mode",
+      "reason": "FAQ ayrim IoT, modem, tracker, wearable va SIM-modulli qurilmalarni avtomatik ro'yxatdan o'tkazish tartibini ko'rsatadi.",
+      "see": "KB-IMEI-TAC-001"
+    }
+  ],
+  "superseded_v0_1": {
+    "KB-IMEI-003": "KB-IMEI-TAC-001",
+    "KB-MNP-001": "KB-MNP-008",
+    "KB-LOST-001": "KB-IMEI-LOST-001",
+    "KB-IMPORT-001": "KB-IMEI-POST-001",
+    "KB-PURCHASE-001": "KB-IMEI-PURCHASE-001",
+    "REVIEW-001": "KB-IMEI-TARIFF-001",
+    "REVIEW-002": "KB-IMEI-CUSTOMS-001"
+  },
+  "articles": [
+    {
+      "id": "KB-IMEI-BASIC-001",
+      "title": "IMEI kodini qanday bilish mumkin?",
+      "domain": "imei",
+      "topic": "IMEI_BASIC",
+      "intent": [
+        "find_imei",
+        "imei_number",
+        "where_is_imei"
+      ],
+      "status": "published_candidate",
+      "risk_level": "normal",
+      "requires_realtime_status": false,
+      "requires_identity": false,
+      "requires_current_policy_check": false,
+      "user_examples": [
+        "IMEI'ni qayerdan topsam bo'ladi?",
+        "Telefon IMEI kodi qanaqa chiqadi?",
+        "IMEI'ni qanday bilaman?"
+      ],
+      "answer": "Mobil qurilmada *#06# kombinatsiyasini terish orqali IMEI kod/kodlarni ko'rish mumkin. IMEI qurilma qutisida, kafolat kartasida va ayrim qurilmalarda batareya ostida ham bo'ladi. IMEI'ni ommaviy chat, guruh yoki boshqa ochiq joyga yubormang.",
+      "symptoms": [],
+      "facts": [],
+      "resolution_steps": [
+        "*#06# ni tering",
+        "Ekranda chiqqan IMEI kod(lar)ni yozib oling"
+      ],
+      "diagnostic_questions": [],
+      "assistant_must_not": [],
+      "status_codes": [],
+      "source_type": "official_faq",
+      "version": 1
+    },
+    {
+      "id": "KB-IMEI-REG-001",
+      "title": "Rezident shaxs IMEI'ni qanday ro'yxatdan o'tkazadi?",
+      "domain": "imei",
+      "topic": "RESIDENT_REGISTRATION",
+      "intent": [
+        "resident_registration",
+        "how_to_register_imei"
+      ],
+      "status": "needs_current_verification",
+      "risk_level": "normal",
+      "requires_realtime_status": false,
+      "requires_identity": false,
+      "requires_current_policy_check": true,
+      "user_examples": [
+        "IMEI'ni qayerdan registratsiya qilaman?"
+      ],
+      "answer": "Mobil qurilma olib kirilganda deklaratsiya to'ldiriladi. Registratsiya UZIMEI sayti, my.gov.uz, UZIMEI tizim operatori yoki ayrim mobil aloqa operatorlari orqali amalga oshirilishi mumkin. IMEI SIM-karta almashtirilishidan qat'i nazar bir marta ro'yxatdan o'tkaziladi.",
+      "symptoms": [],
+      "facts": [],
+      "resolution_steps": [],
+      "diagnostic_questions": [
+        "Qurilma O'zbekistonga qanday olib kirilgan?"
+      ],
+      "assistant_must_not": [],
+      "status_codes": [],
+      "source_type": "official_faq",
+      "version": 1,
+      "note": "Pochta/kurer orqali kelgan bo'lsa KB-IMEI-POST-001 ga o'tiladi."
+    },
+    {
+      "id": "KB-IMEI-REG-002",
+      "title": "Norezident IMEI ro'yxatdan o'tkazishi",
+      "domain": "imei",
+      "topic": "NON_RESIDENT",
+      "intent": [
+        "nonresident_registration",
+        "foreigner_imei_registration"
+      ],
+      "status": "needs_current_verification",
+      "risk_level": "normal",
+      "requires_realtime_status": false,
+      "requires_identity": false,
+      "requires_current_policy_check": true,
+      "user_examples": [],
+      "answer": "Norezidentlar uchun import deklaratsiyasi, mahalliy SIM'ni norezident maqomida rasmiylashtirish hamda UZIMEI va tegishli ro'yxatga olish kanallari ko'rsatilgan. Chet el SIM-kartasidan roaming rejimida foydalanishda IMEI registratsiyasi uchun to'lov olinmaydi.",
+      "symptoms": [],
+      "facts": [],
+      "resolution_steps": [],
+      "diagnostic_questions": [],
+      "assistant_must_not": [],
+      "status_codes": [],
+      "source_type": "official_faq",
+      "version": 1
+    },
+    {
+      "id": "KB-IMEI-STATUS-001",
+      "title": "IMEI holatini qanday tekshirish mumkin?",
+      "domain": "imei",
+      "topic": "IMEI_STATUS",
+      "intent": [
+        "imei_status",
+        "check_imei",
+        "registered_or_not"
+      ],
+      "status": "published_candidate",
+      "risk_level": "normal",
+      "requires_realtime_status": false,
+      "requires_identity": false,
+      "requires_current_policy_check": false,
+      "user_examples": [],
+      "answer": "IMEI holatini foydalanuvchining o'zi UZIMEI saytida, 1170 qisqa raqamiga SMS yuborib yoki *1170# USSD orqali tekshiradi. Assistant real UZIMEI bazasidagi statusni ko'ra olmaydi; natijani yuborsangiz, tushuntirib beradi.",
+      "symptoms": [],
+      "facts": [],
+      "resolution_steps": [
+        "UZIMEI saytida, 1170 ga SMS yoki *1170# orqali tekshiring",
+        "Chiqqan status yoki xabarni yuboring"
+      ],
+      "diagnostic_questions": [],
+      "assistant_must_not": [
+        "\"Men tekshirib beraman\" deyish",
+        "statusni o'zi tekshirganini aytish"
+      ],
+      "status_codes": [],
+      "source_type": "official_faq",
+      "version": 1
+    },
+    {
+      "id": "KB-IMEI-PURCHASE-001",
+      "title": "O'zbekistonda sotib olingan telefon ro'yxatdan o'tmagan",
+      "domain": "imei",
+      "topic": "LOCAL_PURCHASE",
+      "intent": [
+        "local_purchase",
+        "shop_phone_unregistered",
+        "seller_responsibility",
+        "retail_phone_unregistered"
+      ],
+      "status": "needs_current_verification",
+      "risk_level": "normal",
+      "requires_realtime_status": false,
+      "requires_identity": false,
+      "requires_current_policy_check": true,
+      "user_examples": [
+        "Do'kondan oldim, registratsiya qilinmagan"
+      ],
+      "answer": "Sotish uchun olib kirilgan mobil qurilmalar yuridik shaxs/import qiluvchi tomonidan ro'yxatdan o'tkazilishi kerak. Xaridor telefonni sotib olishdan oldin IMEI holatini tekshirishi tavsiya etiladi. Xarid hujjatini (chek/shartnoma) saqlang.",
+      "symptoms": [],
+      "facts": [],
+      "resolution_steps": [],
+      "diagnostic_questions": [
+        "Telefonni qayerdan sotib oldingiz va chek/shartnoma bormi?",
+        "Tizimda qanday xabar chiqmoqda?"
+      ],
+      "assistant_must_not": [
+        "foydalanuvchini avtomatik ayblash",
+        "statusni o'zi tekshirganini aytish"
+      ],
+      "status_codes": [],
+      "source_type": "official_faq",
+      "version": 1,
+      "carried_from": "KB-PURCHASE-001"
+    },
+    {
+      "id": "KB-IMEI-DEADLINE-001",
+      "title": "IMEI registratsiya muddati",
+      "domain": "imei",
+      "topic": "REGISTRATION_DEADLINE",
+      "intent": [
+        "registration_deadline"
+      ],
+      "status": "needs_current_verification",
+      "risk_level": "normal",
+      "requires_realtime_status": false,
+      "requires_identity": false,
+      "requires_current_policy_check": true,
+      "user_examples": [],
+      "answer": "Manbada: rezident uchun 30 kalendar kun, norezident uchun 60 kalendar kun. Mahalliy SIM ulanganidan keyin 30 kun ichida ro'yxatdan o'tkazilmasa, GSM xizmatidan foydalanish cheklanishi aytilgan.",
+      "symptoms": [],
+      "facts": [],
+      "resolution_steps": [],
+      "diagnostic_questions": [],
+      "assistant_must_not": [],
+      "status_codes": [],
+      "source_type": "official_faq",
+      "version": 1,
+      "policy": {
+        "policy_type": "time_sensitive",
+        "effective_from": null,
+        "effective_to": null,
+        "requires_current_verification": true,
+        "expert_reviewed": false
+      }
+    },
+    {
+      "id": "KB-IMEI-MULTI-001",
+      "title": "Telefonda ikki yoki undan ortiq IMEI nima uchun bo'ladi?",
+      "domain": "imei",
+      "topic": "MULTIPLE_IMEI",
+      "intent": [
+        "dual_imei",
+        "two_imeis",
+        "multiple_imei"
+      ],
+      "status": "published_candidate",
+      "risk_level": "normal",
+      "requires_realtime_status": false,
+      "requires_identity": false,
+      "requires_current_policy_check": false,
+      "user_examples": [],
+      "answer": "Ikki yoki undan ortiq IMEI qurilmada ikki yoki undan ortiq SIM imkoniyati borligini anglatishi mumkin. Ikki IMEI bo'lishining o'zi muammo emas.",
+      "symptoms": [],
+      "facts": [],
+      "resolution_steps": [],
+      "diagnostic_questions": [],
+      "assistant_must_not": [],
+      "status_codes": [],
+      "source_type": "official_faq",
+      "version": 1
+    },
+    {
+      "id": "KB-IMEI-PAYMENT-001",
+      "title": "IMEI to'lovini qanday qilish mumkin?",
+      "domain": "imei",
+      "topic": "PAYMENT",
+      "intent": [
+        "imei_payment"
+      ],
+      "status": "needs_current_verification",
+      "risk_level": "normal",
+      "requires_realtime_status": false,
+      "requires_identity": false,
+      "requires_current_policy_check": true,
+      "user_examples": [],
+      "answer": "Manbada Payme, Click, Upay, tegishli Telegram bot va banklar orqali to'lash mumkinligi ko'rsatilgan.",
+      "symptoms": [],
+      "facts": [],
+      "resolution_steps": [],
+      "diagnostic_questions": [],
+      "assistant_must_not": [],
+      "status_codes": [],
+      "source_type": "official_faq",
+      "version": 1,
+      "policy": {
+        "policy_type": "time_sensitive",
+        "effective_from": null,
+        "effective_to": null,
+        "requires_current_verification": true,
+        "expert_reviewed": false
+      }
+    },
+    {
+      "id": "KB-IMEI-UNBLOCK-001",
+      "title": "IMEI'ni blokdan chiqarish (ro'yxatdan o'tmaganlik sababli blok)",
+      "domain": "imei",
+      "topic": "UNBLOCK",
+      "intent": [
+        "imei_unblock"
+      ],
+      "status": "needs_current_verification",
+      "risk_level": "normal",
+      "requires_realtime_status": false,
+      "requires_identity": false,
+      "requires_current_policy_check": true,
+      "user_examples": [],
+      "answer": "Ro'yxatdan o'tmaganlik sababli blokda: IMEI UZIMEI'da ro'yxatdan o'tkaziladi, keyin qurilma o'chirib-yoqiladi.",
+      "symptoms": [],
+      "facts": [],
+      "resolution_steps": [
+        "IMEI'ni UZIMEI'da ro'yxatdan o'tkazing",
+        "Qurilmani o'chirib-yoqing"
+      ],
+      "diagnostic_questions": [],
+      "assistant_must_not": [
+        "lost/stolen blacklist, klonlangan IMEI, huquqni muhofaza qiluvchi organ bloki yoki boshqa xavfsizlik statuslariga avtomatik qo'llash"
+      ],
+      "status_codes": [],
+      "source_type": "official_faq",
+      "version": 1
+    },
+    {
+      "id": "HIST-IMEI-001",
+      "title": "IMEI'ni abonent raqamiga bog'lash (2019 o'tish davri)",
+      "domain": "imei",
+      "topic": "HISTORICAL_NUMBER_BINDING",
+      "intent": [
+        "imei_bound_to_number"
+      ],
+      "status": "historical",
+      "risk_level": "normal",
+      "requires_realtime_status": false,
+      "requires_identity": false,
+      "requires_current_policy_check": false,
+      "user_examples": [
+        "Eski telefonim faqat eski raqam bilan ishlaydi"
+      ],
+      "answer": "2019-yildagi avtomatik ro'yxatdan o'tish davrida ayrim aniqlanmagan/klonlangan IMEI'lar telefon raqamlariga bog'langan.",
+      "symptoms": [],
+      "facts": [],
+      "resolution_steps": [],
+      "diagnostic_questions": [],
+      "assistant_must_not": [],
+      "status_codes": [],
+      "source_type": "official_faq",
+      "version": 1,
+      "note": "Oddiy yangi murojaatlarda ishlatilmaydi; faqat aynan shu tarixiy holat bilan kelganda nomzod."
+    },
+    {
+      "id": "KB-IMEI-LOST-001",
+      "title": "Telefon yo'qolgan yoki o'g'irlangan",
+      "domain": "imei",
+      "topic": "LOST_STOLEN",
+      "intent": [
+        "lost_phone",
+        "stolen_phone",
+        "find_phone_by_imei"
+      ],
+      "status": "published_candidate",
+      "risk_level": "normal",
+      "requires_realtime_status": false,
+      "requires_identity": false,
+      "requires_current_policy_check": false,
+      "user_examples": [
+        "Telefonim yo'qoldi.",
+        "IMEI orqali topib bera olasizmi?",
+        "Telefon qayerdaligini tekshirib bering."
+      ],
+      "answer": "Assistant IMEI orqali qurilmaning joylashuvini tekshira olmaydi. Yo'qolgan yoki o'g'irlangan telefon bo'yicha ichki ishlar organlariga (IIB) ariza bilan murojaat qilinadi. Arizada ishlab chiqaruvchi, model va IMEI kod/kodlar ko'rsatiladi.",
+      "symptoms": [],
+      "facts": [],
+      "resolution_steps": [
+        "IIBga ariza bilan murojaat qiling",
+        "Ishlab chiqaruvchi, model va IMEI'larni tayyorlang"
+      ],
+      "diagnostic_questions": [],
+      "assistant_must_not": [
+        "\"topib beraman\" deyish",
+        "joriy abonent ma'lumotlarini berish",
+        "joylashuvni topishni va'da qilish"
+      ],
+      "status_codes": [],
+      "source_type": "official_faq",
+      "version": 1,
+      "carried_from": "KB-LOST-001"
+    },
+    {
+      "id": "KB-IMEI-CUSTOMS-001",
+      "title": "Bojsiz normadan ortiq qurilma olib kirilgan",
+      "domain": "imei",
+      "topic": "CUSTOMS_LIMIT",
+      "intent": [
+        "customs_limit",
+        "over_duty_free_norm"
+      ],
+      "status": "needs_current_verification",
+      "risk_level": "normal",
+      "requires_realtime_status": false,
+      "requires_identity": false,
+      "requires_current_policy_check": true,
+      "user_examples": [],
+      "answer": "Manbada me'yordan ortiq qurilma olib kirilganda IMEI registratsiyasi bojxona kirim orderi asosida amalga oshirilishi, quruqlik/temir yo'l/daryo punktlari bo'yicha \"yarim yilda bitta\" qoida keltirilgan. Bu qoida amaldagi deb hisoblanmaydi.",
+      "symptoms": [],
+      "facts": [],
+      "resolution_steps": [],
+      "diagnostic_questions": [
+        "Telefonlarni qaysi yo'l bilan olib kirgansiz?",
+        "Nechta qurilma olib kirilgan?",
+        "Deklaratsiya yoki bojxona hujjati bormi?"
+      ],
+      "assistant_must_not": [
+        "\"Siz yarim yillik limitdan oshgansiz\" deb dalilsiz xulosa chiqarish"
+      ],
+      "status_codes": [],
+      "source_type": "official_faq",
+      "version": 1,
+      "carried_from": "REVIEW-002",
+      "policy": {
+        "policy_type": "time_sensitive",
+        "effective_from": null,
+        "effective_to": null,
+        "requires_current_verification": true,
+        "expert_reviewed": false
+      }
+    },
+    {
+      "id": "KB-ID-001",
+      "title": "JSHSHIR nima?",
+      "domain": "imei",
+      "topic": "JSHSHIR",
+      "intent": [
+        "what_is_jshshir"
+      ],
+      "status": "published_candidate",
+      "risk_level": "high",
+      "requires_realtime_status": false,
+      "requires_identity": false,
+      "requires_current_policy_check": false,
+      "user_examples": [],
+      "answer": "JSHSHIR - jismoniy shaxsning shaxsiy identifikatsiya raqami. U 14 ta raqamdan iborat va pasportda ko'rsatiladi.",
+      "symptoms": [],
+      "facts": [],
+      "resolution_steps": [],
+      "diagnostic_questions": [],
+      "assistant_must_not": [
+        "foydalanuvchidan to'liq JSHSHIR'ni oddiy chatda keraksiz so'rash"
+      ],
+      "status_codes": [],
+      "source_type": "official_faq",
+      "version": 1
+    },
+    {
+      "id": "KB-IMEI-TAC-001",
+      "title": "TAC qurilma turiga mos kelmaydi",
+      "domain": "imei",
+      "topic": "TAC_GSMA",
+      "intent": [
+        "tac_mismatch",
+        "gsma_device_type_mismatch",
+        "iot_device_imei",
+        "device_classification"
+      ],
+      "status": "published_candidate",
+      "risk_level": "normal",
+      "requires_realtime_status": false,
+      "requires_identity": false,
+      "requires_current_policy_check": false,
+      "user_examples": [],
+      "answer": "TAC - IMEI'ning birinchi 8 raqami. Ayrim qurilmalar foydalanuvchi ishtirokisiz avtomatik ro'yxatdan o'tkaziladi: dongle, WLAN router, IoT, M2M, SIM-modulli transport vositasi, e-book, GSM/GPRS/GPS modullar, GPS tracker, POS terminal, connected computer, modem, wearable. Agar TAC GSMA bazasida qurilma turiga mos kelmasa, IMEI/TAC ma'lumotini tuzatish uchun ishlab chiqaruvchiga murojaat qilinadi.",
+      "symptoms": [],
+      "facts": [],
+      "resolution_steps": [],
+      "diagnostic_questions": [
+        "Qurilma modeli va turi nima?",
+        "Tizimda qanday xabar chiqyapti?"
+      ],
+      "assistant_must_not": [
+        "IoT qurilmaga registratsiya umuman talab qilinmaydi deb universal qoida aytish",
+        "har qanday IMEI'li qurilmani avtomatik telefon deb qabul qilish"
+      ],
+      "status_codes": [],
+      "source_type": "official_faq",
+      "version": 1,
+      "note": "device_category -> TAC check -> applicable registration mode",
+      "carried_from": "KB-IMEI-003 (o'rniga)"
+    },
+    {
+      "id": "KB-IMEI-OWNER-001",
+      "title": "IMEI'ni kim ro'yxatdan o'tkazishi kerak?",
+      "domain": "imei",
+      "topic": "WHO_REGISTERS",
+      "intent": [
+        "who_registers"
+      ],
+      "status": "needs_current_verification",
+      "risk_level": "normal",
+      "requires_realtime_status": false,
+      "requires_identity": false,
+      "requires_current_policy_check": true,
+      "user_examples": [],
+      "answer": "Sotish uchun olib kirilgan qurilmani import qiluvchi; shaxsiy foydalanish uchun olib kirilganini olib kirgan shaxs; pochta/kurer importida qabul qiluvchi/import jarayoni asosida ro'yxatdan o'tkaziladi. Registratsiyada ishlatiladigan mahalliy abonent raqami arizachining nomida bo'lishi kerak.",
+      "symptoms": [],
+      "facts": [],
+      "resolution_steps": [],
+      "diagnostic_questions": [],
+      "assistant_must_not": [],
+      "status_codes": [],
+      "source_type": "official_faq",
+      "version": 1
+    },
+    {
+      "id": "KB-IMEI-STATELESS-001",
+      "title": "Fuqaroligi bo'lmagan shaxs IMEI registratsiyasi",
+      "domain": "imei",
+      "topic": "STATELESS_PERSON",
+      "intent": [
+        "stateless_registration"
+      ],
+      "status": "needs_current_verification",
+      "risk_level": "normal",
+      "requires_realtime_status": false,
+      "requires_identity": false,
+      "requires_current_policy_check": true,
+      "user_examples": [],
+      "answer": "Manbada biometrik harakatlanish hujjati orqali ro'yxatdan o'tkazish imkoniyati ko'rsatilgan.",
+      "symptoms": [],
+      "facts": [],
+      "resolution_steps": [],
+      "diagnostic_questions": [],
+      "assistant_must_not": [],
+      "status_codes": [],
+      "source_type": "official_faq",
+      "version": 1
+    },
+    {
+      "id": "KB-IMEI-POST-001",
+      "title": "Pochta/kurer orqali kelgan telefon",
+      "domain": "imei",
+      "topic": "POSTAL_COURIER",
+      "intent": [
+        "postal_import_registration",
+        "online_store_phone_registration"
+      ],
+      "status": "needs_current_verification",
+      "risk_level": "normal",
+      "requires_realtime_status": false,
+      "requires_identity": false,
+      "requires_current_policy_check": true,
+      "user_examples": [
+        "Alibaba'dan telefon oldim, IMEI o'tmayapti.",
+        "Telefon pochta orqali keldi."
+      ],
+      "answer": "Manbada talab qilinadigan dalillar: pochta identifikatori shtrix kodi va kalendar shtempelli konvert.",
+      "symptoms": [],
+      "facts": [],
+      "resolution_steps": [],
+      "diagnostic_questions": [
+        "Telefon O'zbekistonga xalqaro pochta orqali keldimi yoki kurer orqali?",
+        "Jo'natma identifikatori va import hujjatlari sizda bormi?"
+      ],
+      "assistant_must_not": [
+        "bojxona bazasini tekshirayotgandek ko'rsatish",
+        "darrov boj limiti haqida taxmin qilish"
+      ],
+      "status_codes": [],
+      "source_type": "official_faq",
+      "version": 1,
+      "carried_from": "KB-IMPORT-001"
+    },
+    {
+      "id": "KB-IMEI-CHANNEL-001",
+      "title": "IMEI registratsiya kanallari",
+      "domain": "imei",
+      "topic": "REGISTRATION_CHANNELS",
+      "intent": [
+        "registration_channels"
+      ],
+      "status": "needs_current_verification",
+      "risk_level": "normal",
+      "requires_realtime_status": false,
+      "requires_identity": false,
+      "requires_current_policy_check": true,
+      "user_examples": [],
+      "answer": "Manbada: uzimei.uz, my.gov.uz mobil ilovasi, Birda mobil ilovasi va Tizim operatori.",
+      "symptoms": [],
+      "facts": [],
+      "resolution_steps": [],
+      "diagnostic_questions": [],
+      "assistant_must_not": [],
+      "status_codes": [],
+      "source_type": "official_faq",
+      "version": 1,
+      "policy": {
+        "policy_type": "time_sensitive",
+        "effective_from": null,
+        "effective_to": null,
+        "requires_current_verification": true,
+        "expert_reviewed": false
+      }
+    },
+    {
+      "id": "KB-IMEI-IMPORTER-001",
+      "title": "Qurilmani olib kirgan shaxs registratsiya qiladi",
+      "domain": "imei",
+      "topic": "IMPORTER_RESPONSIBILITY",
+      "intent": [
+        "importer_responsibility"
+      ],
+      "status": "needs_current_verification",
+      "risk_level": "normal",
+      "requires_realtime_status": false,
+      "requires_identity": false,
+      "requires_current_policy_check": true,
+      "user_examples": [],
+      "answer": "Qurilmani O'zbekistonga olib kirgan shaxs IMEI registratsiyasini amalga oshiradi.",
+      "symptoms": [],
+      "facts": [],
+      "resolution_steps": [],
+      "diagnostic_questions": [],
+      "assistant_must_not": [],
+      "status_codes": [],
+      "source_type": "official_faq",
+      "version": 1
+    },
+    {
+      "id": "KB-IMEI-TARIFF-001",
+      "title": "IMEI registratsiya tariflari",
+      "domain": "imei",
+      "topic": "IMEI_TARIFF",
+      "intent": [
+        "imei_tariff",
+        "imei_price"
+      ],
+      "status": "needs_current_verification",
+      "risk_level": "normal",
+      "requires_realtime_status": false,
+      "requires_identity": false,
+      "requires_current_policy_check": true,
+      "user_examples": [],
+      "answer": "2025-yil 1-avgustdan amal qilgan manbada: rezident/norezident 30 kun ichida BHM 20%, 30 kundan keyin BHM 25%; import qiluvchilar BHM 20%; mahalliy ishlab chiqaruvchilar BHM 10%; norezident + xorijiy SIM + roaming 0 so'm.",
+      "symptoms": [],
+      "facts": [],
+      "resolution_steps": [],
+      "diagnostic_questions": [],
+      "assistant_must_not": [
+        "eskirgan tarifni joriy tarif sifatida avtomatik berish"
+      ],
+      "status_codes": [],
+      "source_type": "official_faq",
+      "version": 1,
+      "carried_from": "REVIEW-001",
+      "policy": {
+        "policy_type": "time_sensitive",
+        "effective_from": "2025-08-01",
+        "effective_to": null,
+        "requires_current_verification": true,
+        "expert_reviewed": false
+      }
+    },
+    {
+      "id": "KB-IMEI-001",
+      "title": "IMEI GSMA talablariga mos kelmaydi",
+      "domain": "imei",
+      "topic": "IMEI_REGISTRATION",
+      "intent": [
+        "imei_registration_failed",
+        "invalid_imei",
+        "imei_not_accepted"
+      ],
+      "status": "published_candidate",
+      "risk_level": "normal",
+      "requires_realtime_status": false,
+      "requires_identity": false,
+      "requires_current_policy_check": false,
+      "user_examples": [
+        "IMEI xato deyapti.",
+        "Nega IMEI qabul qilinmayapti?"
+      ],
+      "answer": "GSMA talablariga javob bermaydigan IMEI'ni texnik jihatdan odatiy tartibda ro'yxatdan o'tkazish imkoniyati mavjud emas.",
+      "symptoms": [],
+      "facts": [],
+      "resolution_steps": [],
+      "diagnostic_questions": [
+        "UZIMEI tizimida aynan qanday xabar yoki status chiqyapti?"
+      ],
+      "assistant_must_not": [
+        "tasodifiy APN/SIM troubleshooting boshlash",
+        "\"yana registratsiya qilib ko'ring\" deb aylantirish",
+        "statusni ko'rmasdan GSMA muammosi deb taxmin qilish",
+        "statusni o'zi tekshirganini aytish"
+      ],
+      "status_codes": [
+        "GSMA_INVALID"
+      ],
+      "source_type": "seed_v0_1",
+      "version": 1,
+      "note": "E'tiroz bo'lsa operator/mutaxassisga yo'naltiriladi.",
+      "carried_from": "KB-IMEI-001"
+    },
+    {
+      "id": "KB-IMEI-002",
+      "title": "Klonlangan yoki aniqlanmagan IMEI",
+      "domain": "imei",
+      "topic": "IMEI_REGISTRATION",
+      "intent": [
+        "cloned_imei",
+        "blacklisted_imei",
+        "imei_registration_failed"
+      ],
+      "status": "published_candidate",
+      "risk_level": "normal",
+      "requires_realtime_status": false,
+      "requires_identity": false,
+      "requires_current_policy_check": false,
+      "user_examples": [
+        "IMEI klonlangan deyapti.",
+        "Klon IMEI nima degani?"
+      ],
+      "answer": "Rasmiy tizim IMEI'ni klonlangan, aniqlanmagan yoki blacklist statusida ko'rsatishi mumkin. Oddiy registratsiyani qayta-qayta takrorlash yordam bermaydi; qurilma turini aniqlash kerak (KB-IMEI-TAC-001).",
+      "symptoms": [],
+      "facts": [],
+      "resolution_steps": [],
+      "diagnostic_questions": [],
+      "assistant_must_not": [
+        "statusni o'zi tekshirganini aytish"
+      ],
+      "status_codes": [
+        "CLONED",
+        "UNKNOWN",
+        "BLACKLISTED"
+      ],
+      "source_type": "seed_v0_1",
+      "version": 1,
+      "carried_from": "KB-IMEI-002"
+    },
+    {
+      "id": "KB-IMPORT-002",
+      "title": "Kurer orqali olib kirilgan telefon",
+      "domain": "imei",
+      "topic": "IMPORTED_DEVICES",
+      "intent": [
+        "courier_import_registration"
+      ],
+      "status": "needs_current_verification",
+      "risk_level": "normal",
+      "requires_realtime_status": false,
+      "requires_identity": false,
+      "requires_current_policy_check": true,
+      "user_examples": [],
+      "answer": "",
+      "symptoms": [],
+      "facts": [],
+      "resolution_steps": [],
+      "diagnostic_questions": [
+        "Kurer kompaniyasi va tracking identifikatori bormi?",
+        "Registratsiyada qanday xabar chiqyapti?"
+      ],
+      "assistant_must_not": [
+        "bojxona yoki kurer bazasiga kirayotgandek ko'rsatish"
+      ],
+      "status_codes": [],
+      "source_type": "seed_v0_1",
+      "version": 1,
+      "carried_from": "KB-IMPORT-002"
+    },
+    {
+      "id": "KB-IMPORT-003",
+      "title": "Chet eldan shaxsan olib kirilgan telefon",
+      "domain": "imei",
+      "topic": "IMPORTED_DEVICES",
+      "intent": [
+        "personal_import_registration",
+        "customs_declaration",
+        "brought_phone_from_abroad"
+      ],
+      "status": "needs_current_verification",
+      "risk_level": "normal",
+      "requires_realtime_status": false,
+      "requires_identity": false,
+      "requires_current_policy_check": true,
+      "user_examples": [
+        "Aeroportdan 2 ta telefon bilan keldim.",
+        "Bitta telefon o'tdi, ikkinchisi o'tmayapti."
+      ],
+      "answer": "",
+      "symptoms": [],
+      "facts": [],
+      "resolution_steps": [],
+      "diagnostic_questions": [
+        "Ikkinchi IMEI uchun aynan qanday xabar yoki rad sababi chiqyapti?"
+      ],
+      "assistant_must_not": [
+        "birinchi taxmin sifatida \"Bojsiz me'yordan oshdingizmi?\" deb so'rash",
+        "foydalanuvchi aytgan simptomni qayta gapirish"
+      ],
+      "status_codes": [],
+      "source_type": "seed_v0_1",
+      "version": 1,
+      "carried_from": "KB-IMPORT-003"
+    },
+    {
+      "id": "KB-IDENTITY-001",
+      "title": "Mening nomimga qaysi qurilmalar ro'yxatdan o'tgan?",
+      "domain": "imei",
+      "topic": "OWNERSHIP_AND_IDENTITY",
+      "intent": [
+        "my_registered_devices",
+        "registered_imei_lookup"
+      ],
+      "status": "published_candidate",
+      "risk_level": "high",
+      "requires_realtime_status": true,
+      "requires_identity": true,
+      "requires_current_policy_check": false,
+      "user_examples": [],
+      "answer": "Assistant foydalanuvchi nomiga ro'yxatdan o'tgan qurilmalarni ko'ra olmaydi; buni tegishli rasmiy xizmat orqali tekshirish kerak. Notanish qurilma chiqsa, natijani yuboring.",
+      "symptoms": [],
+      "facts": [],
+      "resolution_steps": [],
+      "diagnostic_questions": [],
+      "assistant_must_not": [
+        "boshqa shaxsga tegishli qurilma/IMEI ma'lumotini taxmin qilib berish"
+      ],
+      "status_codes": [],
+      "source_type": "seed_v0_1",
+      "version": 1,
+      "carried_from": "KB-IDENTITY-001"
+    },
+    {
+      "id": "KB-IDENTITY-002",
+      "title": "Mening nomimga begona IMEI ro'yxatdan o'tgan",
+      "domain": "imei",
+      "topic": "OWNERSHIP_AND_IDENTITY",
+      "intent": [
+        "unknown_device_registered",
+        "unauthorized_imei_registration"
+      ],
+      "status": "published_candidate",
+      "risk_level": "normal",
+      "requires_realtime_status": false,
+      "requires_identity": false,
+      "requires_current_policy_check": false,
+      "user_examples": [
+        "Bu IMEI'ni men ro'yxatdan o'tkazmaganman."
+      ],
+      "answer": "Foydalanuvchi o'zi ro'yxatdan o'tkazmagan IMEI rasmiy xizmatda aniqlansa, Tizim ro'yxatga oluvchisiga murojaat qilish orqali uni o'chirish masalasi ko'rib chiqiladi.",
+      "symptoms": [],
+      "facts": [],
+      "resolution_steps": [],
+      "diagnostic_questions": [],
+      "assistant_must_not": [],
+      "status_codes": [],
+      "source_type": "seed_v0_1",
+      "version": 1,
+      "carried_from": "KB-IDENTITY-002"
+    },
+    {
+      "id": "KB-IDENTITY-003",
+      "title": "Pasport yoki shaxsiy ma'lumotlardan ruxsatsiz foydalanilgan",
+      "domain": "imei",
+      "topic": "OWNERSHIP_AND_IDENTITY",
+      "intent": [
+        "identity_misuse",
+        "passport_data_misuse",
+        "fraud_suspected"
+      ],
+      "status": "published_candidate",
+      "risk_level": "high",
+      "requires_realtime_status": false,
+      "requires_identity": false,
+      "requires_current_policy_check": false,
+      "user_examples": [],
+      "answer": "Shaxsiy ma'lumotlardan ruxsatsiz foydalanish ehtimoli bo'lsa, tegishli rasmiy organ/protseduraga yo'naltiriladi.",
+      "symptoms": [],
+      "facts": [],
+      "resolution_steps": [],
+      "diagnostic_questions": [],
+      "assistant_must_not": [
+        "shaxsiy ma'lumotlarni ortiqcha so'rash"
+      ],
+      "status_codes": [],
+      "source_type": "seed_v0_1",
+      "version": 1,
+      "carried_from": "KB-IDENTITY-003"
+    },
+    {
+      "id": "KB-LOST-002",
+      "title": "Telefon topilgan, lekin blacklistda qolgan",
+      "domain": "imei",
+      "topic": "LOST_STOLEN",
+      "intent": [
+        "found_phone_blacklisted",
+        "remove_lost_device_blacklist"
+      ],
+      "status": "published_candidate",
+      "risk_level": "normal",
+      "requires_realtime_status": true,
+      "requires_identity": false,
+      "requires_current_policy_check": false,
+      "user_examples": [],
+      "answer": "Rasmiy tekshiruvda qurilma hali qora ro'yxatda ko'rinsa, yo'qolgan qurilma bo'yicha avvalgi rasmiy jarayon bilan bog'liq tashkilotga murojaat qilish kerak.",
+      "symptoms": [],
+      "facts": [],
+      "resolution_steps": [],
+      "diagnostic_questions": [],
+      "assistant_must_not": [
+        "statusni o'zi tekshirganini aytish"
+      ],
+      "status_codes": [],
+      "source_type": "seed_v0_1",
+      "version": 1,
+      "carried_from": "KB-LOST-002"
+    },
+    {
+      "id": "KB-LOST-003",
+      "title": "IMEI foydalanish tarixi maxfiy ma'lumot",
+      "domain": "imei",
+      "topic": "LOST_STOLEN",
+      "intent": [
+        "imei_usage_history",
+        "phone_number_history",
+        "track_imei_activity"
+      ],
+      "status": "published_candidate",
+      "risk_level": "high",
+      "requires_realtime_status": false,
+      "requires_identity": false,
+      "requires_current_policy_check": false,
+      "user_examples": [],
+      "answer": "",
+      "symptoms": [],
+      "facts": [],
+      "resolution_steps": [],
+      "diagnostic_questions": [],
+      "assistant_must_not": [
+        "IMEI qaysi raqamda ishlayotganini tekshirish",
+        "foydalanish tarixini berish",
+        "joylashuv berish",
+        "boshqa abonent ma'lumotlarini oshkor qilish"
+      ],
+      "status_codes": [],
+      "source_type": "seed_v0_1",
+      "version": 1,
+      "carried_from": "KB-LOST-003"
+    },
+    {
+      "id": "KB-PURCHASE-002",
+      "title": "Boshqa shaxsdan sotib olingan (second-hand) telefon",
+      "domain": "imei",
+      "topic": "DEVICE_PURCHASE",
+      "intent": [
+        "second_hand_phone",
+        "used_phone_imei_problem"
+      ],
+      "status": "needs_expert_input",
+      "risk_level": "normal",
+      "requires_realtime_status": false,
+      "requires_identity": false,
+      "requires_current_policy_check": false,
+      "user_examples": [],
+      "answer": "",
+      "symptoms": [],
+      "facts": [],
+      "resolution_steps": [],
+      "diagnostic_questions": [
+        "Registratsiyada qanday xabar chiqyapti?",
+        "Telefon qayerdan olingan, qanday hujjatlar bor?"
+      ],
+      "assistant_must_not": [
+        "statusni o'zi tekshirganini aytish"
+      ],
+      "status_codes": [],
+      "source_type": "seed_v0_1",
+      "version": 1,
+      "carried_from": "KB-PURCHASE-002"
+    },
+    {
+      "id": "KB-ESIM-001",
+      "title": "Ikkinchi IMEI / eSIM slot ro'yxatdan o'tmayapti",
+      "domain": "imei",
+      "topic": "ESIM_DUAL_IMEI",
+      "intent": [
+        "second_imei",
+        "esim_imei",
+        "dual_sim_registration"
+      ],
+      "status": "needs_expert_input",
+      "risk_level": "normal",
+      "requires_realtime_status": false,
+      "requires_identity": false,
+      "requires_current_policy_check": false,
+      "user_examples": [],
+      "answer": "",
+      "symptoms": [],
+      "facts": [],
+      "resolution_steps": [],
+      "diagnostic_questions": [
+        "Qaysi IMEI ro'yxatdan o'tmayapti va aynan qanday xabar chiqyapti?",
+        "Bu eSIM IMEI'mi yoki ikkinchi fizik SIM slotmi?"
+      ],
+      "assistant_must_not": [
+        "\"Boj limitidan oshdingizmi?\" kabi tayyor taxmin bilan boshlash"
+      ],
+      "status_codes": [],
+      "source_type": "seed_v0_1",
+      "version": 1,
+      "carried_from": "KB-ESIM-001"
+    },
+    {
+      "id": "KB-MNP-001",
+      "title": "MNP nima?",
+      "domain": "mnp",
+      "topic": "MNP_BASIC",
+      "intent": [
+        "what_is_mnp",
+        "number_portability"
+      ],
+      "status": "published_candidate",
+      "risk_level": "normal",
+      "requires_realtime_status": false,
+      "requires_identity": false,
+      "requires_current_policy_check": false,
+      "user_examples": [],
+      "answer": "MNP telefon raqamini saqlagan holda mobil operatorni o'zgartirish imkonini beradi: raqam o'sha qoladi, operator o'zgaradi.",
+      "symptoms": [],
+      "facts": [],
+      "resolution_steps": [],
+      "diagnostic_questions": [],
+      "assistant_must_not": [],
+      "status_codes": [],
+      "source_type": "official_faq",
+      "version": 1
+    },
+    {
+      "id": "KB-MNP-002",
+      "title": "Qaysi operatorlarda MNP mavjud?",
+      "domain": "mnp",
+      "topic": "MNP_OPERATORS",
+      "intent": [
+        "mnp_operators"
+      ],
+      "status": "needs_current_verification",
+      "risk_level": "normal",
+      "requires_realtime_status": false,
+      "requires_identity": false,
+      "requires_current_policy_check": true,
+      "user_examples": [],
+      "answer": "Manbada GSM operatorlari: Beeline, Mobi.uz, Ucell, UZTELECOM, Humans. Ro'yxat vaqt bilan o'zgarishi mumkin.",
+      "symptoms": [],
+      "facts": [],
+      "resolution_steps": [],
+      "diagnostic_questions": [],
+      "assistant_must_not": [],
+      "status_codes": [],
+      "source_type": "official_faq",
+      "version": 1,
+      "policy": {
+        "policy_type": "time_sensitive",
+        "effective_from": null,
+        "effective_to": null,
+        "requires_current_verification": true,
+        "expert_reviewed": false
+      }
+    },
+    {
+      "id": "KB-MNP-003",
+      "title": "Operator o'zgarsa raqam o'zgaradimi?",
+      "domain": "mnp",
+      "topic": "NUMBER_FORMAT",
+      "intent": [
+        "number_kept"
+      ],
+      "status": "published_candidate",
+      "risk_level": "normal",
+      "requires_realtime_status": false,
+      "requires_identity": false,
+      "requires_current_policy_check": false,
+      "user_examples": [],
+      "answer": "Yo'q, telefon raqamingiz saqlanadi - uning shakli o'zgarmaydi. Faqat xizmat ko'rsatuvchi operator o'zgaradi.",
+      "symptoms": [],
+      "facts": [],
+      "resolution_steps": [],
+      "diagnostic_questions": [],
+      "assistant_must_not": [],
+      "status_codes": [],
+      "source_type": "official_faq",
+      "version": 1
+    },
+    {
+      "id": "KB-MNP-004",
+      "title": "CDMA raqamini ko'chirish",
+      "domain": "mnp",
+      "topic": "CDMA",
+      "intent": [
+        "cdma_porting"
+      ],
+      "status": "needs_current_verification",
+      "risk_level": "normal",
+      "requires_realtime_status": false,
+      "requires_identity": false,
+      "requires_current_policy_check": true,
+      "user_examples": [],
+      "answer": "Manbada CDMA raqamlarini ko'chirishning texnik imkoniyati mavjud emasligi ko'rsatilgan.",
+      "symptoms": [],
+      "facts": [],
+      "resolution_steps": [],
+      "diagnostic_questions": [],
+      "assistant_must_not": [],
+      "status_codes": [],
+      "source_type": "official_faq",
+      "version": 1,
+      "policy": {
+        "policy_type": "time_sensitive",
+        "effective_from": null,
+        "effective_to": null,
+        "requires_current_verification": true,
+        "expert_reviewed": false
+      }
+    },
+    {
+      "id": "KB-MNP-005",
+      "title": "Eski operatorga qaytish",
+      "domain": "mnp",
+      "topic": "REPORTING_BACK",
+      "intent": [
+        "port_back"
+      ],
+      "status": "needs_current_verification",
+      "risk_level": "normal",
+      "requires_realtime_status": false,
+      "requires_identity": false,
+      "requires_current_policy_check": true,
+      "user_examples": [],
+      "answer": "Manbaga ko'ra navbatdagi porting oldingi ko'chirishdan kamida 30 kun o'tgach amalga oshiriladi.",
+      "symptoms": [],
+      "facts": [],
+      "resolution_steps": [],
+      "diagnostic_questions": [],
+      "assistant_must_not": [],
+      "status_codes": [],
+      "source_type": "official_faq",
+      "version": 1,
+      "policy": {
+        "policy_type": "time_sensitive",
+        "effective_from": null,
+        "effective_to": null,
+        "requires_current_verification": true,
+        "expert_reviewed": false
+      }
+    },
+    {
+      "id": "KB-MNP-006",
+      "title": "Balans boshqa operatorga ko'chadimi?",
+      "domain": "mnp",
+      "topic": "MNP_BALANCE",
+      "intent": [
+        "mnp_balance"
+      ],
+      "status": "published_candidate",
+      "risk_level": "normal",
+      "requires_realtime_status": false,
+      "requires_identity": false,
+      "requires_current_policy_check": false,
+      "user_examples": [],
+      "answer": "Oldingi operator hisobidagi pul yangi operatorga avtomatik ko'chmaydi. Pulni qaytarish uchun oldingi operatorga murojaat qilinadi.",
+      "symptoms": [],
+      "facts": [],
+      "resolution_steps": [
+        "Qoldiq pulni qaytarish uchun oldingi operatorga murojaat qiling"
+      ],
+      "diagnostic_questions": [],
+      "assistant_must_not": [],
+      "status_codes": [],
+      "source_type": "official_faq",
+      "version": 1
+    },
+    {
+      "id": "KB-MNP-007",
+      "title": "Raqam ko'chirishga nima xalaqit beradi?",
+      "domain": "mnp",
+      "topic": "MNP_ELIGIBILITY",
+      "intent": [
+        "mnp_eligibility",
+        "mnp_rejected"
+      ],
+      "status": "published_candidate",
+      "risk_level": "normal",
+      "requires_realtime_status": false,
+      "requires_identity": false,
+      "requires_current_policy_check": false,
+      "user_examples": [],
+      "answer": "Cheklovlar: shaxsiy ma'lumotlar mos emas; eski qarzdorlik bor; oldingi operator bilan bajarilmagan majburiyat bor; oxirgi portingdan 30 kun o'tmagan.",
+      "symptoms": [],
+      "facts": [],
+      "resolution_steps": [],
+      "diagnostic_questions": [],
+      "assistant_must_not": [],
+      "status_codes": [],
+      "source_type": "official_faq",
+      "version": 1
+    },
+    {
+      "id": "KB-MNP-008",
+      "title": "Raqam ko'chirilganini qanday bilish mumkin?",
+      "domain": "mnp",
+      "topic": "MNP_STATUS",
+      "intent": [
+        "mnp_status",
+        "operator_changed"
+      ],
+      "status": "published_candidate",
+      "risk_level": "normal",
+      "requires_realtime_status": false,
+      "requires_identity": false,
+      "requires_current_policy_check": false,
+      "user_examples": [
+        "Raqamim boshqa operatorga o'tdimi?",
+        "MNP statusini tekshirib bering."
+      ],
+      "answer": "Ko'chirish muvaffaqiyatli yakunlanganda yangi operator SMS orqali xabar beradi. Assistant MNP tizimidagi real statusni tekshira olmaydi; SMS yoki rad sababini yuborsangiz, keyingi qadamni aytadi.",
+      "symptoms": [],
+      "facts": [],
+      "resolution_steps": [],
+      "diagnostic_questions": [],
+      "assistant_must_not": [
+        "statusni o'zi tekshirganini aytish"
+      ],
+      "status_codes": [],
+      "source_type": "official_faq",
+      "version": 1,
+      "carried_from": "KB-MNP-001 (v0.1)"
+    },
+    {
+      "id": "KB-MNP-009",
+      "title": "MNP uchun qanday hujjat kerak?",
+      "domain": "mnp",
+      "topic": "MNP_DOCUMENTS",
+      "intent": [
+        "mnp_documents"
+      ],
+      "status": "needs_current_verification",
+      "risk_level": "normal",
+      "requires_realtime_status": false,
+      "requires_identity": false,
+      "requires_current_policy_check": true,
+      "user_examples": [],
+      "answer": "Jismoniy shaxs: raqamni rasmiylashtirishda ishlatilgan shaxsni tasdiqlovchi hujjat. Yuridik shaxs: STIR.",
+      "symptoms": [],
+      "facts": [],
+      "resolution_steps": [],
+      "diagnostic_questions": [],
+      "assistant_must_not": [],
+      "status_codes": [],
+      "source_type": "official_faq",
+      "version": 1
+    },
+    {
+      "id": "KB-MNP-010",
+      "title": "Arizada shaxsiy ma'lumotlar mos emas",
+      "domain": "mnp",
+      "topic": "MNP_REJECTION",
+      "intent": [
+        "mnp_rejected",
+        "mnp_data_mismatch"
+      ],
+      "status": "published_candidate",
+      "risk_level": "normal",
+      "requires_realtime_status": false,
+      "requires_identity": false,
+      "requires_current_policy_check": false,
+      "user_examples": [],
+      "answer": "Ariza ma'lumotlari oldingi operatordagi ma'lumotga mos kelmasa, ma'lumotni oldingi operatorda to'g'rilab, arizani qayta topshirish kerak.",
+      "symptoms": [
+        "Telefon raqami, F.I.Sh. yoki pasport ma'lumotlari oldingi operator ma'lumotiga mos emas"
+      ],
+      "facts": [],
+      "resolution_steps": [
+        "Oldingi operatorga murojaat qiling",
+        "Ma'lumotni to'g'rilang",
+        "MNP arizasini qayta topshiring"
+      ],
+      "diagnostic_questions": [],
+      "assistant_must_not": [],
+      "status_codes": [],
+      "source_type": "official_faq",
+      "version": 1
+    },
+    {
+      "id": "KB-MNP-011",
+      "title": "Oldingi operator oldida qarzdorlik sabab MNP rad etilgan",
+      "domain": "mnp",
+      "topic": "MNP_REJECTION",
+      "intent": [
+        "mnp_rejected",
+        "mnp_debt"
+      ],
+      "status": "published_candidate",
+      "risk_level": "normal",
+      "requires_realtime_status": false,
+      "requires_identity": false,
+      "requires_current_policy_check": false,
+      "user_examples": [],
+      "answer": "Oldingi operator oldidagi qarzdorlik so'ndirilgach, MNP arizasi qayta topshiriladi.",
+      "symptoms": [
+        "MNP ariza rad etildi",
+        "qarzdorlik bor"
+      ],
+      "facts": [],
+      "resolution_steps": [
+        "Oldingi operator oldidagi qarzdorlikni so'ndiring",
+        "MNP arizasini qayta topshiring"
+      ],
+      "diagnostic_questions": [],
+      "assistant_must_not": [
+        "qarzdorlikni o'zi tekshirganini aytish"
+      ],
+      "status_codes": [],
+      "source_type": "official_faq",
+      "version": 1
+    },
+    {
+      "id": "KB-MNP-012",
+      "title": "Oxirgi ko'chirishdan 30 kun o'tmagan",
+      "domain": "mnp",
+      "topic": "MNP_REJECTION",
+      "intent": [
+        "mnp_rejected",
+        "mnp_too_soon"
+      ],
+      "status": "needs_current_verification",
+      "risk_level": "normal",
+      "requires_realtime_status": false,
+      "requires_identity": false,
+      "requires_current_policy_check": true,
+      "user_examples": [],
+      "answer": "Belgilangan muddat tugagach arizani qayta topshirish kerak.",
+      "symptoms": [],
+      "facts": [],
+      "resolution_steps": [],
+      "diagnostic_questions": [],
+      "assistant_must_not": [],
+      "status_codes": [],
+      "source_type": "official_faq",
+      "version": 1,
+      "policy": {
+        "policy_type": "time_sensitive",
+        "effective_from": null,
+        "effective_to": null,
+        "requires_current_verification": true,
+        "expert_reviewed": false
+      }
+    },
+    {
+      "id": "KB-MNP-013",
+      "title": "Raqam eski operator tomonidan bloklangan",
+      "domain": "mnp",
+      "topic": "MNP_REJECTION",
+      "intent": [
+        "mnp_rejected",
+        "number_blocked"
+      ],
+      "status": "published_candidate",
+      "risk_level": "normal",
+      "requires_realtime_status": false,
+      "requires_identity": false,
+      "requires_current_policy_check": false,
+      "user_examples": [],
+      "answer": "Raqam oldingi operator tomonidan bloklangan bo'lsa (SIM yo'qolgan, sud qarori yoki to'lov qilinmagan), avval blokdan chiqarish kerak.",
+      "symptoms": [
+        "SIM yo'qolgan",
+        "sud qarori",
+        "xizmat uchun haq to'lanmagan"
+      ],
+      "facts": [],
+      "resolution_steps": [
+        "Oldingi operatorga murojaat qiling",
+        "Raqamni blokdan chiqaring",
+        "MNP arizasini qayta topshiring"
+      ],
+      "diagnostic_questions": [],
+      "assistant_must_not": [],
+      "status_codes": [],
+      "source_type": "official_faq",
+      "version": 1
+    },
+    {
+      "id": "KB-MNP-014",
+      "title": "Boshqa odam nomidagi raqamni ko'chirish",
+      "domain": "mnp",
+      "topic": "MNP_OWNERSHIP",
+      "intent": [
+        "port_someone_elses_number"
+      ],
+      "status": "published_candidate",
+      "risk_level": "normal",
+      "requires_realtime_status": false,
+      "requires_identity": false,
+      "requires_current_policy_check": false,
+      "user_examples": [],
+      "answer": "MNP arizasini faqat raqam egasi yoki ishonchnoma asosidagi vakil berishi mumkin.",
+      "symptoms": [],
+      "facts": [],
+      "resolution_steps": [],
+      "diagnostic_questions": [],
+      "assistant_must_not": [],
+      "status_codes": [],
+      "source_type": "official_faq",
+      "version": 1
+    },
+    {
+      "id": "KB-MNP-015",
+      "title": "Raqamni boshqa shaxs nomiga o'tkazish",
+      "domain": "mnp",
+      "topic": "NUMBER_OWNERSHIP_TRANSFER",
+      "intent": [
+        "number_ownership_transfer"
+      ],
+      "status": "needs_current_verification",
+      "risk_level": "normal",
+      "requires_realtime_status": false,
+      "requires_identity": false,
+      "requires_current_policy_check": true,
+      "user_examples": [],
+      "answer": "Ikkala abonent operator ofisiga tegishli hujjatlar bilan keladi; kelish imkoni bo'lmasa ishonchnoma ishlatilishi mumkin.",
+      "symptoms": [],
+      "facts": [],
+      "resolution_steps": [],
+      "diagnostic_questions": [],
+      "assistant_must_not": [],
+      "status_codes": [],
+      "source_type": "official_faq",
+      "version": 1
+    },
+    {
+      "id": "KB-MNP-016",
+      "title": "MNP'dan keyin eski qarzdorlik sabab xizmat bloklangan",
+      "domain": "mnp",
+      "topic": "POST_MNP_DEBT",
+      "intent": [
+        "post_mnp_debt_block"
+      ],
+      "status": "published_candidate",
+      "risk_level": "normal",
+      "requires_realtime_status": false,
+      "requires_identity": false,
+      "requires_current_policy_check": false,
+      "user_examples": [],
+      "answer": "Ko'chirishdan keyin oldingi operatorda (masalan, roaming) qarzdorlik aniqlansa, oldingi operatorga murojaat qilib qarzni so'ndirish va xizmatni blokdan chiqarish kerak.",
+      "symptoms": [],
+      "facts": [],
+      "resolution_steps": [
+        "Oldingi operatorga murojaat qiling",
+        "Qarzdorlikni so'ndiring",
+        "Xizmatni blokdan chiqaring"
+      ],
+      "diagnostic_questions": [],
+      "assistant_must_not": [],
+      "status_codes": [],
+      "source_type": "official_faq",
+      "version": 1
+    },
+    {
+      "id": "KB-MNP-017",
+      "title": "MNP arizasini qayerda topshirish mumkin?",
+      "domain": "mnp",
+      "topic": "MNP_APPLICATION",
+      "intent": [
+        "mnp_where_to_apply"
+      ],
+      "status": "published_candidate",
+      "risk_level": "normal",
+      "requires_realtime_status": false,
+      "requires_identity": false,
+      "requires_current_policy_check": false,
+      "user_examples": [],
+      "answer": "MNP arizasi mobil aloqa operatorlarining ofislarida, o'tmoqchi bo'lgan yangi operatorga topshiriladi.",
+      "symptoms": [],
+      "facts": [],
+      "resolution_steps": [],
+      "diagnostic_questions": [],
+      "assistant_must_not": [],
+      "status_codes": [],
+      "source_type": "official_faq",
+      "version": 1
+    },
+    {
+      "id": "KB-MNP-018",
+      "title": "MNP xizmati narxi",
+      "domain": "mnp",
+      "topic": "MNP_PRICE",
+      "intent": [
+        "mnp_price"
+      ],
+      "status": "needs_current_verification",
+      "risk_level": "normal",
+      "requires_realtime_status": false,
+      "requires_identity": false,
+      "requires_current_policy_check": true,
+      "user_examples": [],
+      "answer": "Bu bir martalik to'lov bo'lib, yangi operatorga to'lanadi; miqdorni operatorning o'zi belgilaydi.",
+      "symptoms": [],
+      "facts": [],
+      "resolution_steps": [],
+      "diagnostic_questions": [],
+      "assistant_must_not": [
+        "joriy narxni taxmin qilish"
+      ],
+      "status_codes": [],
+      "source_type": "official_faq",
+      "version": 1,
+      "policy": {
+        "policy_type": "time_sensitive",
+        "effective_from": null,
+        "effective_to": null,
+        "requires_current_verification": true,
+        "expert_reviewed": false
+      }
+    },
+    {
+      "id": "KB-MNP-019",
+      "title": "MNP paytida yangi SIM beriladi",
+      "domain": "mnp",
+      "topic": "NEW_SIM",
+      "intent": [
+        "mnp_new_sim"
+      ],
+      "status": "published_candidate",
+      "risk_level": "normal",
+      "requires_realtime_status": false,
+      "requires_identity": false,
+      "requires_current_policy_check": false,
+      "user_examples": [],
+      "answer": "Yangi operator arizani qabul qiladi, shartnoma tuzadi va tanlangan tarifga ulangan yangi SIM-karta beradi.",
+      "symptoms": [],
+      "facts": [],
+      "resolution_steps": [],
+      "diagnostic_questions": [],
+      "assistant_must_not": [],
+      "status_codes": [],
+      "source_type": "official_faq",
+      "version": 1
+    },
+    {
+      "id": "KB-MNP-020",
+      "title": "MNP yakunlanganligi haqida SMS",
+      "domain": "mnp",
+      "topic": "MNP_SUCCESS_SMS",
+      "intent": [
+        "mnp_success_sms"
+      ],
+      "status": "published_candidate",
+      "risk_level": "normal",
+      "requires_realtime_status": false,
+      "requires_identity": false,
+      "requires_current_policy_check": false,
+      "user_examples": [],
+      "answer": "Yangi operator ko'chirish muvaffaqiyatli yakunlanganligi haqida SMS yuboradi.",
+      "symptoms": [],
+      "facts": [],
+      "resolution_steps": [],
+      "diagnostic_questions": [],
+      "assistant_must_not": [],
+      "status_codes": [],
+      "source_type": "official_faq",
+      "version": 1
+    }
+  ]
+}

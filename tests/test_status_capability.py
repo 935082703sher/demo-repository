@@ -1,4 +1,4 @@
-"""Knowledge seed v0.1 and its capability rule: never pretend to check a live system.
+"""Knowledge base v1.0 and its capability rule: never pretend to check a live system.
 
 The assistant has no UZIMEI/MNP/customs/operator integration. A request to look up a
 status gets an honest "I can't check this directly" plus a way forward; a status code
@@ -38,39 +38,68 @@ _LANGS = ("uz", "uz_cyrl", "ru", "en", "kaa")
 _KINDS = (IMEI_STATUS, BLACKLIST, MNP_STATUS, MY_DEVICES, CUSTOMS, APPLICATION, LOCATION)
 
 
-# --- the seed ------------------------------------------------------------------
+# --- the knowledge base ---------------------------------------------------------
 
 
-def test_seed_loads_with_valid_unique_entries() -> None:
-    seed = load_seed()
-    ids = [e.id for e in seed.entries]
+def test_knowledge_base_loads_with_valid_unique_articles() -> None:
+    kb = load_seed()
+    ids = [a.id for a in kb.articles]
+    assert kb.kb_version == "1.0"
     assert len(ids) == len(set(ids))
-    assert set(seed.statuses) == set(SeedStatus)
-    assert seed.capability_rule.can_find_status is False
-    assert seed.capability_rule.can_explain_status is True
+    assert set(kb.statuses) == set(SeedStatus)
+    assert kb.capability_rule.can_find_status is False
+    assert kb.capability_rule.can_explain_status is True
+    assert "*1170# USSD" in kb.capability_rule.official_check_methods["imei_status"]
 
 
-def test_only_published_candidates_are_stated_as_fact() -> None:
-    seed = load_seed()
-    for entry in seed.entries:
-        assert entry.stated_as_fact == (
-            entry.status is SeedStatus.PUBLISHED_CANDIDATE and not entry.review_only
-        )
-    review = seed.get("REVIEW-001")
-    assert review is not None and not review.stated_as_fact  # tariffs need verification
-    esim = seed.get("KB-ESIM-001")
-    assert esim is not None and esim.status is SeedStatus.NEEDS_EXPERT_INPUT
+def test_only_published_current_articles_are_stated_as_fact() -> None:
+    kb = load_seed()
+    for article in kb.articles:
+        if article.stated_as_fact:
+            assert article.status is SeedStatus.PUBLISHED_CANDIDATE
+    tariff = kb.get("KB-IMEI-TARIFF-001")
+    assert tariff is not None and not tariff.stated_as_fact
+    assert tariff.policy is not None
+    assert tariff.policy.effective_from == "2025-08-01"
+    assert tariff.policy.requires_current_verification is True
+    hist = kb.get("HIST-IMEI-001")
+    assert hist is not None and hist.status is SeedStatus.HISTORICAL
 
 
-def test_every_rule_points_at_a_real_seed_entry() -> None:
-    seed = load_seed()
-    for entry_id in SEED_ENTRY_BY_KIND.values():
-        assert seed.get(entry_id) is not None
+def test_time_sensitive_articles_are_never_published_as_current() -> None:
+    for article in load_seed().articles:
+        if article.policy is not None:
+            assert article.policy.requires_current_verification is True
+            assert article.status is not SeedStatus.PUBLISHED_CANDIDATE
+
+
+def test_retrieval_index_takes_only_published_candidates() -> None:
+    kb = load_seed()
+    indexed = {a.id for a in kb.indexable()}
+    assert "KB-MNP-006" in indexed and "KB-IMEI-BASIC-001" in indexed
+    for article_id in ("KB-IMEI-TARIFF-001", "HIST-IMEI-001", "KB-ESIM-001", "KB-MNP-018"):
+        assert article_id not in indexed
+
+
+def test_iot_never_means_registration_not_required() -> None:
+    kb = load_seed()
+    conflict = kb.source_conflicts[0]
+    assert conflict.removed_rule == "IoT = registration_not_required"
+    assert kb.superseded_v0_1["KB-IMEI-003"] == "KB-IMEI-TAC-001"
+    assert kb.get("KB-IMEI-003") is None  # the simplified v0.1 IoT rule is gone
+    tac = kb.get("KB-IMEI-TAC-001")
+    assert tac is not None and "avtomatik" in tac.answer
+
+
+def test_every_rule_points_at_a_real_article() -> None:
+    kb = load_seed()
+    for article_id in SEED_ENTRY_BY_KIND.values():
+        assert kb.get(article_id) is not None
     for code in ("GSMA_INVALID", "CLONED", "UNKNOWN", "BLACKLISTED"):
         reported = reported_status_reply(code, "uz")
-        assert reported is not None
-        assert seed.by_status_code(code) is not None
-        assert reported.seed_entry_id == seed.by_status_code(code).id  # type: ignore[union-attr]
+        owner = kb.by_status_code(code)
+        assert reported is not None and owner is not None
+        assert reported.seed_entry_id == owner.id
 
 
 # --- detecting a lookup request ---------------------------------------------------
@@ -200,8 +229,10 @@ def _post(client: TestClient, message: str, session: str, lang: str = "uz") -> d
 def test_converse_answers_a_lookup_request_honestly_and_keeps_helping() -> None:
     with TestClient(create_app()) as client:
         body = _post(client, "IMEI ro‘yxatdan o‘tganmi? Tekshirib bering", "st-1")
-    assert "tekshirish imkoniyatim yo'q" in body["reply"]
-    assert "yuborsangiz" in body["reply"]  # asks for what the customer sees
+    assert "tekshira olmayman" in body["reply"]
+    # names the official ways to check, then asks for what the customer sees
+    assert "UZIMEI" in body["reply"] and "1170" in body["reply"] and "*1170#" in body["reply"]
+    assert "yuborsangiz" in body["reply"]
     assert body["done"] is False  # never a dead end
     assert body["requires_human"] is False
     assert not claims_live_check(body["reply"])
@@ -211,13 +242,18 @@ def test_converse_mnp_lookup_in_russian() -> None:
     with TestClient(create_app()) as client:
         body = _post(client, "Проверьте, мой номер перешел к другому оператору?", "st-2", "ru")
     assert "не могу" in body["reply"]
+    assert "SMS" in body["reply"]  # the new operator confirms a completed port by SMS
 
 
 def test_converse_explains_a_reported_status_code() -> None:
     with TestClient(create_app()) as client:
         body = _post(client, "UZIMEI'da GSMA_INVALID deb chiqyapti", "st-3")
+        store = client.app.state.case_store  # type: ignore[attr-defined]
+        case = client.portal.call(store.get, "st-3")  # type: ignore[union-attr]
     assert body["reply"].startswith("GSMA_INVALID")
     assert "qayta-qayta" in body["reply"]
+    # KB rule 5: the reported status is kept as a first-class fact
+    assert case.facts["user_reported_status"].value == "GSMA_INVALID"
 
 
 def test_lookup_request_mid_tree_keeps_the_open_question() -> None:
@@ -230,5 +266,5 @@ def test_lookup_request_mid_tree_keeps_the_open_question() -> None:
         assert tree is not None and node is not None
         second = _post(client, "IMEI statusini tekshirib bering", "st-4")
         after = client.portal.call(store.get, "st-4")  # type: ignore[union-attr]
-    assert "tekshirish imkoniyatim yo'q" in second["reply"]
+    assert "tekshira olmayman" in second["reply"]
     assert (after.active_tree, after.pending_node) == (tree, node)

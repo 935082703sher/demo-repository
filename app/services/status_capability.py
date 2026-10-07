@@ -1,4 +1,4 @@
-"""Honest handling of live-status requests, per the knowledge seed's capability rule.
+"""Honest handling of live-status requests, per the knowledge base's capability rule.
 
 The assistant has no integration with UZIMEI, MNP, customs, operators or any other
 external system, so it can never FIND a status. It can EXPLAIN a status the customer
@@ -11,9 +11,10 @@ Three deterministic pieces enforce that:
   phone by IMEI") - but not a how-to question ("qanday tekshiraman?"), which the
   knowledge base answers;
 - :func:`status_request_reply` says plainly that it cannot check, then keeps helping:
-  what to send, where to look, what happens next - it never ends the conversation;
+  the official way to check (UZIMEI site, SMS to 1170 or *1170# for an IMEI; the new
+  operator's SMS for MNP), what to send back, what happens next - never a dead end;
 - :func:`reported_status_reply` explains an official status code the customer pasted
-  (GSMA_INVALID, CLONED, UNKNOWN, BLACKLISTED) from the seed entry that owns it;
+  (GSMA_INVALID, CLONED, UNKNOWN, BLACKLISTED) from the knowledge-base article that owns it;
 - :func:`claims_live_check` rejects model-written text that claims a lookup it could
   not have made ("tekshirdim", "tizimdan qaradim", "I checked..."), so a composed
   answer falls back to its approved text instead.
@@ -37,15 +38,15 @@ CUSTOMS = "customs"
 APPLICATION = "application"
 LOCATION = "location"
 
-# The seed entry that governs each kind of lookup request.
+# The knowledge-base article that governs each kind of lookup request.
 SEED_ENTRY_BY_KIND = {
-    IMEI_STATUS: "KB-IMEI-002",
+    IMEI_STATUS: "KB-IMEI-STATUS-001",
     BLACKLIST: "KB-LOST-002",
-    MNP_STATUS: "KB-MNP-001",
+    MNP_STATUS: "KB-MNP-008",
     MY_DEVICES: "KB-IDENTITY-001",
     CUSTOMS: "KB-IMPORT-002",
     APPLICATION: "KB-IMEI-001",
-    LOCATION: "KB-LOST-001",
+    LOCATION: "KB-IMEI-LOST-001",
 }
 
 # A request for the assistant itself to look something up.
@@ -227,19 +228,24 @@ _CANNOT_CHECK = {
 
 _REPLIES: dict[str, dict[str, str]] = {
     IMEI_STATUS: {
-        "uz": "IMEI holatini tizimdan bevosita tekshirish imkoniyatim yo'q. Agar UZIMEI'da "
-        "sizga chiqayotgan status yoki xatolik xabarini yuborsangiz, nimani anglatishini va "
-        "keyin nima qilish kerakligini tushuntirib beraman.",
-        "uz_cyrl": "IMEI ҳолатини тизимдан бевосита текшириш имкониятим йўқ. Агар UZIMEI'да "
-        "сизга чиқаётган статус ёки хатолик хабарини юборсангиз, нимани англатишини ва "
-        "кейин нима қилиш кераклигини тушунтириб бераман.",
-        "ru": "Я не могу напрямую проверить статус IMEI в системе. Пришлите статус или текст "
-        "ошибки, который вы видите в UZIMEI, — объясню, что он означает и что делать дальше.",
-        "en": "I can't check an IMEI's status directly in the system. Send me the status or "
-        "error message you see in UZIMEI and I'll explain what it means and what to do next.",
-        "kaa": "IMEI jaǵdayın sistemadan tikkeley tekserip bere almayman. UZIMEI'de sizge "
-        "shıǵıp atırǵan status yamasa qátelik xabarın jiberseńiz, neni ańlatatuǵının hám "
-        "keyin ne qılıw kerekligin túsindirip beremen.",
+        "uz": "IMEI holatini men tizimdan bevosita tekshira olmayman. Uni UZIMEI sayti, 1170 "
+        "raqamiga SMS yoki *1170# orqali tekshirishingiz mumkin. Sizga chiqqan status yoki "
+        "xabarni yuborsangiz, nimani anglatishini va keyin nima qilish kerakligini "
+        "tushuntirib beraman.",
+        "uz_cyrl": "IMEI ҳолатини мен тизимдан бевосита текшира олмайман. Уни UZIMEI сайти, 1170 "
+        "рақамига SMS ёки *1170# орқали текширишингиз мумкин. Сизга чиққан статус ёки "
+        "хабарни юборсангиз, нимани англатишини ва кейин нима қилиш кераклигини "
+        "тушунтириб бераман.",
+        "ru": "Я не могу напрямую проверить статус IMEI в системе. Проверить его можно на сайте "
+        "UZIMEI, отправив SMS на номер 1170 или через *1170#. Пришлите статус или сообщение, "
+        "которое вы получили, — объясню, что оно значит и что делать дальше.",
+        "en": "I can't check an IMEI's status directly in the system. You can check it on the "
+        "UZIMEI website, by SMS to 1170, or via *1170#. Send me the status or message you get "
+        "and I'll explain what it means and what to do next.",
+        "kaa": "IMEI jaǵdayın men sistemadan tikkeley tekserip bere almayman. Onı UZIMEI saytı, "
+        "1170 nomerine SMS yamasa *1170# arqalı tekseriwińiz múmkin. Sizge shıqqan status "
+        "yamasa xabardı jiberseńiz, neni ańlatatuǵının hám keyin ne qılıw kerekligin "
+        "túsindirip beremen.",
     },
     BLACKLIST: {
         "uz": "Qora ro'yxat (blacklist) holatini men tizimdan bevosita tekshira olmayman. "
@@ -267,23 +273,21 @@ _REPLIES: dict[str, dict[str, str]] = {
         "múráját etiw kerek.",
     },
     MNP_STATUS: {
-        "uz": "Mobil raqamni ko'chirish holatini men tizimdan bevosita tekshira olmayman. "
-        "Agar operator yoki rasmiy xizmatda sizga ko'rinayotgan status yoki xabarni "
-        "yuborsangiz, nimani anglatishini tushuntirib beraman. MNP qanday ishlashi haqida "
-        "ham so'rashingiz mumkin.",
-        "uz_cyrl": "Мобил рақамни кўчириш ҳолатини мен тизимдан бевосита текшира олмайман. "
-        "Агар оператор ёки расмий хизматда сизга кўринаётган статус ёки хабарни "
-        "юборсангиз, нимани англатишини тушунтириб бераман. MNP қандай ишлаши ҳақида "
-        "ҳам сўрашингиз мумкин.",
-        "ru": "Я не могу напрямую проверить статус переноса номера. Пришлите статус или "
-        "сообщение, которое вы видите у оператора или в официальном сервисе, — объясню, что "
-        "оно значит. Можете также спросить, как работает MNP.",
-        "en": "I can't check a number-porting status directly in the system. Send me the "
-        "status or message your operator or the official service shows and I'll explain "
-        "what it means. You can also ask me how MNP works.",
-        "kaa": "Mobil nomerdi kóshiriw jaǵdayın men sistemadan tikkeley tekserip bere "
-        "almayman. Operator yamasa rásmiy xızmette sizge kórinip atırǵan status yamasa "
-        "xabardı jiberseńiz, neni ańlatatuǵının túsindirip beremen.",
+        "uz": "MNP tizimidagi real statusni bevosita tekshira olmayman. Raqam muvaffaqiyatli "
+        "ko'chirilganda yangi operator SMS orqali xabar beradi. Agar sizga SMS yoki rad sababi "
+        "kelgan bo'lsa, shu xabarni yuboring — keyingi qadamni aytaman.",
+        "uz_cyrl": "MNP тизимидаги реал статусни бевосита текшира олмайман. Рақам муваффақиятли "
+        "кўчирилганда янги оператор SMS орқали хабар беради. Агар сизга SMS ёки рад сабаби "
+        "келган бўлса, шу хабарни юборинг — кейинги қадамни айтаман.",
+        "ru": "Я не могу напрямую проверить статус переноса номера в системе MNP. Когда перенос "
+        "успешно завершён, новый оператор сообщает об этом по SMS. Если вам пришло SMS или "
+        "причина отказа, пришлите это сообщение — подскажу следующий шаг.",
+        "en": "I can't check the real porting status in the MNP system. When the number has "
+        "been ported successfully, the new operator lets you know by SMS. If you received an "
+        "SMS or a rejection reason, send it to me and I'll tell you the next step.",
+        "kaa": "MNP sistemasındaǵı real statustı tikkeley tekserip bere almayman. Nomer tabıslı "
+        "kóshirilgende jańa operator SMS arqalı xabar beredi. Eger sizge SMS yamasa biykar "
+        "etiw sebebi kelgen bolsa, sol xabardı jiberiń — keyingi qádemdi aytaman.",
     },
     MY_DEVICES: {
         "uz": "Men sizning nomingizga ro'yxatdan o'tgan qurilmalarni tizimdan bevosita ko'ra "
@@ -336,21 +340,25 @@ _REPLIES: dict[str, dict[str, str]] = {
         "jiberseńiz, neni ańlatatuǵının hám keyingi qádemdi túsindirip beremen.",
     },
     LOCATION: {
-        "uz": "Men IMEI orqali telefonning joylashuvini yoki hozir qaysi raqamda "
-        "ishlayotganini tekshira olmayman. Yo'qolgan yoki o'g'irlangan qurilma bo'yicha "
-        "huquqni muhofaza qiluvchi organlarga tegishli hujjatlar bilan murojaat qilish kerak.",
-        "uz_cyrl": "Мен IMEI орқали телефоннинг жойлашувини ёки ҳозир қайси рақамда "
-        "ишлаётганини текшира олмайман. Йўқолган ёки ўғирланган қурилма бўйича ҳуқуқни "
-        "муҳофаза қилувчи органларга тегишли ҳужжатлар билан мурожаат қилиш керак.",
-        "ru": "Я не могу определить по IMEI, где находится телефон или с каким номером он "
-        "сейчас работает. По утерянному или украденному устройству нужно обратиться в "
-        "правоохранительные органы с соответствующими документами.",
-        "en": "I can't use an IMEI to find a phone's location or which number it is "
-        "currently used with. For a lost or stolen device, contact law enforcement with the "
-        "relevant documents.",
-        "kaa": "Men IMEI arqalı telefonnıń jaylasqan ornın yamasa házir qaysı nomerde "
-        "islep atırǵanın tekserip bere almayman. Joǵalǵan yamasa urlanǵan qurılma boyınsha "
-        "huqıq qorǵaw organlarına tiyisli hújjetler menen múráját etiw kerek.",
+        "uz": "Men IMEI orqali qurilmaning joylashuvini yoki hozir qaysi raqamda ishlayotganini "
+        "tekshira olmayman. Yo'qolgan yoki o'g'irlangan telefon bo'yicha IIBga (ichki ishlar "
+        "organlariga) ariza bilan murojaat qilish kerak. Arizada ko'rsatish uchun qurilmaning "
+        "ishlab chiqaruvchisi, modeli va IMEI'larini tayyorlab qo'ying.",
+        "uz_cyrl": "Мен IMEI орқали қурилманинг жойлашувини ёки ҳозир қайси рақамда "
+        "ишлаётганини текшира олмайман. Йўқолган ёки ўғирланган телефон бўйича ИИБга (ички "
+        "ишлар органларига) ариза билан мурожаат қилиш керак. Аризада кўрсатиш учун "
+        "қурилманинг ишлаб чиқарувчиси, модели ва IMEI'ларини тайёрлаб қўйинг.",
+        "ru": "Я не могу определить по IMEI, где находится устройство или с каким номером оно "
+        "сейчас работает. По утерянному или украденному телефону нужно подать заявление в "
+        "органы внутренних дел. Подготовьте для заявления производителя, модель и IMEI "
+        "устройства.",
+        "en": "I can't use an IMEI to find a device's location or which number it is currently "
+        "used with. For a lost or stolen phone, file a report with the internal affairs "
+        "bodies (police). Have the device's manufacturer, model and IMEI(s) ready for it.",
+        "kaa": "Men IMEI arqalı qurılmanıń jaylasqan ornın yamasa házir qaysı nomerde islep "
+        "atırǵanın tekserip bere almayman. Joǵalǵan yamasa urlanǵan telefon boyınsha ishki "
+        "isler organlarına arza menen múráját etiw kerek. Arza ushın qurılmanıń islep "
+        "shıǵarıwshısın, modelin hám IMEI'lerin tayarlap qoyıń.",
     },
 }
 
