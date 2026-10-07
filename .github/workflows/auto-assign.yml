@@ -11,9 +11,20 @@ jobs:
       issues: write
       pull-requests: write
     steps:
-    - name: 'Auto-assign issue'
-      uses: pozil/auto-assign-issue@v1
+    # pozil/auto-assign-issue only understands issue events and crashed on PRs
+    # ("Couldn't find issue info in current context"), so assign via the API for both.
+    - name: 'Auto-assign issue or pull request'
+      uses: actions/github-script@v7
       with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          assignees: 935082703sher
-          numOfAssignee: 1
+        script: |
+          const number = context.payload.issue?.number ?? context.payload.pull_request?.number;
+          if (!number) {
+            core.info('No issue or pull request in this event; nothing to assign.');
+            return;
+          }
+          await github.rest.issues.addAssignees({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number: number,
+            assignees: ['935082703sher'],
+          });
