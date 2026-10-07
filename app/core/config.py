@@ -91,6 +91,20 @@ class Settings(BaseSettings):
         pattern=r"^(mock|openai|ollama)$",
         validation_alias=AliasChoices("LLM_PROVIDER", "RTMC_LLM_PROVIDER"),
     )
+    # AI + RAG only mode: a configuration switch (off by default) that takes every
+    # hardcoded conversation path out of the active flow - decision trees and their
+    # pending-node state, intent/keyword-bound canned replies, direct FAQ/resolution-card
+    # text, forced menus and buttons, and the auto-1170 fallback - and routes every turn
+    # through understand -> retrieve -> apply evidence -> natural answer (or one necessary
+    # question). The technical controls stay on (PII redaction, source grounding, tariff
+    # facts, duplicate prevention, legal limits), the approved FAQ/card/clause text remains
+    # a RAG SOURCE but is never emitted as the final answer, and a model failure is
+    # surfaced openly instead of silently falling back to canned text. Flip it back off to
+    # restore the full hybrid flow; no code is removed.
+    ai_rag_only: bool = Field(
+        default=False,
+        validation_alias=AliasChoices("AI_RAG_ONLY", "RTMC_AI_RAG_ONLY"),
+    )
     llm_model: str = Field(
         default="",
         validation_alias=AliasChoices("LLM_MODEL", "RTMC_LLM_MODEL"),

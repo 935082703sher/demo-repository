@@ -30,6 +30,7 @@ from app.domain.policy import PolicyRule
 from app.domain.schemas import LLMRequest
 from app.providers.base import LLMProvider
 from app.providers.errors import ProviderError
+from app.services.ai_rag import AiRagResponder, Evidence
 from app.services.audit_log import (
     OUTCOME_ANSWER,
     OUTCOME_CALL_1170,
@@ -1288,6 +1289,92 @@ async def _intent_answer(
     return _resp(case, reply, done=True)
 
 
+async def _ai_rag_evidence(
+    reasoning_engine: LegalReasoningEngine, case: CaseState, message: str
+) -> list[Evidence]:
+    """Gather the RAG evidence for a turn: approved KB passages and VMQ-778 clauses.
+
+    The approved FAQ/card text and the law clauses are offered only as SOURCES the model
+    reasons over - never as a ready answer. Passages far weaker than the best hit are
+    dropped (§22) so an off-topic article does not ride along.
+    """
+    evidence: list[Evidence] = []
+    seen: set[str] = set()
+    retriever = get_retriever()
+    for r in _applicable_results(retriever.retrieve(message, _RAG_TOP_K, domain=case.domain)):
+        if r.chunk.doc_id in seen:
+            continue
+        seen.add(r.chunk.doc_id)
+        evidence.append(Evidence(source_id=r.chunk.doc_id, title=r.chunk.title, text=r.chunk.text))
+    try:
+        query_vector = await reasoning_engine.embed(message)
+        reasoning = reasoning_engine.reason(case, message, query_vector=query_vector)
+        for label in reasoning.legal_basis[:4]:
+            clause = reasoning_engine.clause(label)
+            if clause is None:
+                continue
+            source_id = clause.rule_id or f"VMQ-778:{clause.clause}"
+            if source_id in seen:
+                continue
+            seen.add(source_id)
+            evidence.append(
+                Evidence(
+                    source_id=source_id,
+                    title=f"VMQ-778 {clause.clause}",
+                    text=clause.legal_rule,
+                )
+            )
+    except Exception:  # pragma: no cover - retrieval of clauses must never break a turn
+        pass
+    return evidence
+
+
+async def _converse_ai_rag(
+    request: Request,
+    case: CaseState,
+    message: str,
+    lang: str,
+    store: CaseStore,
+    audit: AuditLog,
+) -> ConverseCaseResponse:
+    """One turn in AI+RAG-only mode: understand -> retrieve -> apply -> natural reply.
+
+    No tree, menu, intent/keyword canned reply, verbatim FAQ/card text, or auto-1170.
+    Facts are still extracted and kept (memory, so nothing is re-asked), the reply is
+    grounded (cited sources and numbers must come from the evidence) and capability-
+    honest, and a model failure is surfaced openly instead of a hidden canned fallback.
+    The case is kept non-terminal so the conversation context carries across turns.
+    """
+    responder = cast("AiRagResponder | None", getattr(request.app.state, "ai_rag", None))
+    reasoning_engine = cast(LegalReasoningEngine, request.app.state.legal_reasoning)
+    extractor = cast(FactExtractor, request.app.state.fact_extractor)
+    grounding = cast(GroundingValidator, request.app.state.grounding)
+    if responder is None:
+        responder = AiRagResponder(None, grounding)
+    # Memory: keep extracting and storing facts so the model has the full context and
+    # never asks again for something the customer already gave.
+    if case.domain is None:
+        case.domain = detect_domain(message)
+    try:
+        for fact in await extractor.extract(message, case, turn_id=case.turn_count):
+            case.upsert(fact)
+    except ProviderError:
+        pass
+    _refresh_unknowns(case)
+
+    evidence = await _ai_rag_evidence(reasoning_engine, case, message)
+    result = await responder.respond(case, message, lang, evidence)
+    case.status = CaseStatus.DIAGNOSING  # non-terminal: the context carries to next turn
+    await store.save(case)
+    if result.error:
+        await _audit(audit, case, OUTCOME_HANDOFF, ROUTE_RAG, detail="ai_rag_model_error")
+        return _resp(case, result.reply, requires_human=True)
+    sources = [SourceOut(doc_id=doc_id, title=title) for doc_id, title in result.sources]
+    outcome = OUTCOME_QUESTION if result.is_question else OUTCOME_ANSWER
+    await _audit(audit, case, outcome, ROUTE_RAG, detail="ai_rag")
+    return _resp(case, result.reply, done=not result.is_question, sources=sources)
+
+
 async def _converse_turn(payload: ConverseCaseRequest, request: Request) -> ConverseCaseResponse:
     """One conversation turn: greet, route, extract facts, ask only what's missing."""
     store = cast(CaseStore, request.app.state.case_store)
@@ -1338,6 +1425,14 @@ async def _converse_turn(payload: ConverseCaseRequest, request: Request) -> Conv
     # now; a menu shown this turn sets it again before returning.
     was_awaiting_menu = case.awaiting_menu
     case.awaiting_menu = False
+
+    # AI + RAG only mode (configuration switch): take every hardcoded conversation path
+    # out of the flow and let the model reason over retrieved evidence in context. The
+    # technical controls above (PII redaction, language detection) and below (grounding,
+    # capability honesty, fact memory) stay on. Off by default; flip AI_RAG_ONLY to
+    # restore the full hybrid flow.
+    if bool(getattr(request.app.state.settings, "ai_rag_only", False)):
+        return await _converse_ai_rag(request, case, message, lang, store, audit)
 
     # Re-explanation: after a one-shot answer, a bare "I didn't understand" must get a
     # simpler restatement of that same answer - never a reset to a generic menu. Only
