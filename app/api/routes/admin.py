@@ -16,7 +16,9 @@ from fastapi.responses import FileResponse
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 
 from app.core.config import Settings
+from app.domain.knowledge_gap import GapStatus, KnowledgeGap
 from app.services.audit_log import AuditLog
+from app.services.knowledge_gap import KnowledgeGapStore
 
 router = APIRouter(tags=["admin"])
 
@@ -59,3 +61,25 @@ async def admin_metrics(request: Request, _: AdminGuard) -> dict[str, object]:
     """Return the pilot KPIs for the dashboard (Basic-auth protected)."""
     audit = cast(AuditLog, request.app.state.audit_log)
     return await audit.metrics()
+
+
+@router.get("/admin/knowledge-gaps")
+async def admin_knowledge_gaps(
+    request: Request, _: AdminGuard, status_filter: str | None = None
+) -> dict[str, object]:
+    """The expert console: distinct missing-knowledge topics, most frequent first.
+
+    Each item is a grouped gap (the normalised question, how often it was hit, the
+    example phrasings, what was searched and why it failed) so an expert can supply
+    the missing knowledge once for all the users who asked a variation of it. Admin
+    Basic-auth protected; stored questions are already PII-redacted.
+    """
+    gaps_store = cast(
+        "KnowledgeGapStore | None", getattr(request.app.state, "knowledge_gaps", None)
+    )
+    if gaps_store is None:
+        return {"count": 0, "gaps": []}
+    valid = {s.value for s in GapStatus}
+    status = GapStatus(status_filter) if status_filter in valid else None
+    gaps: list[KnowledgeGap] = await gaps_store.list(status=status)
+    return {"count": len(gaps), "gaps": [g.model_dump() for g in gaps]}

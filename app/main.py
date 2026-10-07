@@ -64,6 +64,7 @@ from app.services.grounding import GroundingValidator
 from app.services.guardrails import Guardrails
 from app.services.interaction_log import build_interaction_log
 from app.services.knowledge import KnowledgeService
+from app.services.knowledge_gap import InMemoryKnowledgeGapStore
 from app.services.legal_reasoning import LegalReasoningEngine
 from app.services.localizer import (
     LLMLocalizer,
@@ -338,6 +339,7 @@ def create_app(
     app.state.outcome_analyzer = outcome_analyzer
     app.state.grounding = GroundingValidator()
     app.state.interaction_log = build_interaction_log(app_settings.interaction_log_path)
+    app.state.knowledge_gaps = InMemoryKnowledgeGapStore()
     app.state.audit_log = InMemoryAuditLog()
     app.state.usage_limits = usage_limits
     legacy_drafts = ComplaintDraftService(app_settings.privacy_notice_version)
