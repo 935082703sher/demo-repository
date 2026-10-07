@@ -249,6 +249,11 @@ _RAG_TOP_K = 5
 # assistant abstains instead of answering from irrelevant evidence. Calibrated on
 # the corpus - on-topic queries score well above it, off-topic ones well below.
 _RAG_MIN_SCORE = 4.0
+# AI+RAG reads more of the base than the single-answer hybrid lane: the whole KB (no
+# domain filter) and more passages, so nothing that exists is hidden from the model by a
+# domain guess or an over-tight trim. The model reads them and cites what fits; grounding
+# keeps it safe.
+_AI_RAG_TOP_K = 10
 # §22 RAG applicability: a retrieved passage much weaker than the best hit is almost
 # always a different topic riding along on one shared word (a receipt question pulling
 # in a registration-fee article). Retrieved does not mean applicable, so only the best
@@ -1424,16 +1429,18 @@ async def _ai_rag_evidence(
             _add(sid, f"VMQ-778 {clause.clause}", clause.legal_rule)
 
     retriever = get_retriever()
-    # The domain follows the CURRENT turn (set by the caller), never the first topic of
-    # the session, so an IMEI question after an MNP one retrieves IMEI sources.
-    # Keyed by CHUNK id: one document (an FAQ file, the UZIMEI KB) holds many separate
-    # answers, and keying by document kept only its first hit and dropped the rest.
-    for r in _applicable_results(retriever.retrieve(message, _RAG_TOP_K, domain=case.domain)):
+    # Full KB reachability: search the WHOLE base (no domain filter) and keep the top
+    # matches as they rank - no relevance trim. A cross-domain question (e.g. MNP porting
+    # time while the turn's domain is IMEI) is no longer hidden by a domain guess, and
+    # nothing that exists in the base is withheld from the model; it reads the passages
+    # and cites what fits, and grounding keeps the answer safe. Keyed by CHUNK id so each
+    # separate answer in a multi-answer document (an FAQ file, the UZIMEI KB) is kept.
+    for r in retriever.retrieve(message, _AI_RAG_TOP_K, domain=None):
         _add(r.chunk.id or r.chunk.doc_id, r.chunk.title, r.chunk.text)
     try:
         query_vector = await reasoning_engine.embed(message)
         reasoning = reasoning_engine.reason(case, message, query_vector=query_vector)
-        for label in reasoning.legal_basis[:6]:
+        for label in reasoning.legal_basis[:8]:
             _add_clause(label)
     except Exception:  # pragma: no cover - retrieval of clauses must never break a turn
         pass
