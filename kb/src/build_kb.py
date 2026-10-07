@@ -116,6 +116,62 @@ def build():
             tags=r.get("tags", []),
         ))
 
+    # --- 2-qatlam (to'liq): VMQ 778-son konsolidatsiyalangan matni -----------
+    # Bu qatlam FAQ yoki qo'lda tanlangan qisqa qoidalarga sig'magan savollar uchun
+    # qarorning barcha boblari, bandlari, ilovalari, anketalari va to'lov jadvalini
+    # qidiriladigan qiladi. O'zgartirish/tahrir tarixi alohida source_type bilan
+    # belgilanadi, shunda current normativ matn javobda ustun turadi.
+    vmq778_full_path = ROOT / "data" / "vmq778_full_source.txt"
+    n_vmq778_full = 0
+    if vmq778_full_path.exists():
+        raw_lines = [x.strip() for x in vmq778_full_path.read_text(encoding="utf-8").splitlines() if x.strip()]
+        section = "VMQ 778-son — umumiy"
+        current_buf = []
+        hist_buf = []
+
+        def flush_vmq(buf, kind, sec):
+            nonlocal n_vmq778_full
+            if not buf:
+                return
+            joined = " ".join(buf).strip()
+            buf.clear()
+            for j, part in enumerate(split_long(joined)):
+                rows.append(base(
+                    id=rid("reg778full", f"{kind}:{sec}:{n_vmq778_full}:{j}"),
+                    doc_id="VMQ 778-son-full",
+                    source_type="nizom_toliq" if kind == "current" else "nizom_tarixiy_izoh",
+                    source_title="VMQ 778-son, 17.09.2019 — konsolidatsiyalangan to'liq matn",
+                    title=sec,
+                    authority=2 if kind == "current" else 5,
+                    domain="imei",
+                    case_type="boshqa",
+                    outcome=None,
+                    text=part,
+                    legal_refs=["VMQ 778-son"],
+                    tags=["vmq778", "to'liq matn", kind],
+                ))
+                n_vmq778_full += 1
+
+        heading_re = re.compile(r"^(?:\d+-bob\.|\d+[a-z]?[- ]ILOVA|\d+[a-z]?\.?-ILOVA|NIZOM$|Mobil qurilmalarning IMEI-kodlarini ro'yxatga olish uchun to'lov)", re.I)
+        hist_re = re.compile(r"^\(.*(?:qarori|tahririda|kuchga kirish|asosan kiritilgan|chiqariladi).*[\)]$", re.I)
+
+        for line in raw_lines:
+            if heading_re.search(line):
+                flush_vmq(current_buf, "current", section)
+                flush_vmq(hist_buf, "historical_note", section)
+                section = line[:300]
+                continue
+            if hist_re.search(line):
+                flush_vmq(current_buf, "current", section)
+                hist_buf.append(line)
+                flush_vmq(hist_buf, "historical_note", section)
+                continue
+            current_buf.append(line)
+            if sum(len(x) for x in current_buf) >= 2600:
+                flush_vmq(current_buf, "current", section)
+        flush_vmq(current_buf, "current", section)
+        flush_vmq(hist_buf, "historical_note", section)
+
     # --- 3-qatlam: FAQ (authority 3) -----------------------------------------
     qa_rows = []
     for f in FAQ:
