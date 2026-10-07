@@ -68,6 +68,14 @@ TESTS = [
     ("Сколько стоит регистрация IMEI?", ["82 400"]),
     ("Перенос номера к другому оператору", ["MNP", "ko‘chir"]),
     ("Срок рассмотрения обращения", ["15 kun", "bir oy"]),
+    # VMQ 778-son to'liq korpusi (amaldagi bandlar)
+    ("Klonlangan IMEI registratsiya qilinadimi?", ["Tizimda roʻyxatga olinmaydi"]),
+    ("Har bir IMEI uchun alohida to'lov qilinadimi?", ["har bir IMEI-kod uchun alohida"]),
+    ("BYD ma'lumoti arizaga mos kelmasa nima bo'ladi?", ["butun tovar partiyasi"]),
+    ("Ro'yxatdan o'tgan IMEI bekor qilinishi mumkinmi?", ["toʻlovlar qaytarilmaydi"]),
+    ("IoT qurilmalar qanday registratsiya qilinadi?", ["IoT qurilmalari"]),
+    ("Who is responsible for registering a phone sold in Uzbekistan?", ["chakana savdosi"]),
+    ("Что такое серый список IMEI?", ["kul rang roʻyxat"]),
 ]
 
 

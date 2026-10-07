@@ -1,4 +1,4 @@
-"""BM25 knowledge-base retriever over the four-layer RTMC corpus.
+"""BM25 knowledge-base retriever over the layered RTMC corpus.
 
 Reads the built corpus (``kb/out/kb.jsonl`` by default; gitignored, sensitive
 provenance) and serves lexical retrieval with authority-layer metadata plus a
@@ -8,6 +8,15 @@ be tested independently of whichever model is plugged in later.
 
 When the corpus file is absent the retriever loads empty and reports an
 ``unavailable`` mode instead of failing, so the application still starts.
+
+Ranking is not the lexical score alone. Each hit is weighted by its authority layer
+(law > regulation > FAQ / approved KB > resolution cards > practice letters >
+amendment history) and by its temporal status: the current consolidated text always
+outranks historical material. A historical transition rule or an amendment note
+("... qarori tahririda", "2019-yil 1-noyabrgacha") is pushed far down for ordinary
+questions, and surfaces only when the question itself is about history ("bu band
+qachon o'zgargan?", "700-son qaror bilan nima yangilangan?"), so an old revision is
+never served as today's rule.
 """
 
 from __future__ import annotations
@@ -38,6 +47,108 @@ _REPO_ROOT = Path(__file__).resolve().parents[2]
 _DEFAULT_CORPUS = _REPO_ROOT / "kb" / "out" / "kb.jsonl"
 _TOKEN = re.compile(r"[a-z0-9]{3,}")
 
+# Authority layer weight (1 = law ... 5 = amendment history). Mild, so relevance still
+# decides between layers of similar authority.
+_AUTHORITY_WEIGHT = {1: 1.10, 2: 1.05, 3: 1.0, 4: 0.85, 5: 0.5}
+# Temporal weight for an ordinary question vs. a question about history.
+_TEMPORAL_WEIGHT = {"current": 1.0, "historical": 0.3, "historical_note": 0.25}
+_TEMPORAL_WEIGHT_HISTORY = {"current": 1.0, "historical": 1.1, "historical_note": 1.6}
+# A question about how/when the rules changed (normalised Latin form). A decree number
+# other than 778 itself ("700-son qaror") also marks a history question.
+_HISTORY_MARKERS = (
+    "qachon ozgar",
+    "ozgargan",
+    "ozgartir",
+    "ozgarish",
+    "yangilangan",
+    "tahrir",
+    "kuchga kir",
+    "kuchini yoqot",
+    "chiqarilgan",
+    "eski qoida",
+    "tarixi",
+    "izmen",
+    "redakts",
+    "utratil",
+    "amend",
+    "history",
+    "changed",
+)
+# Question and filler words carry no topic. They are dropped from the QUERY (never
+# from documents), so "bugungi ob-havo qanday" cannot reach the evidence floor on
+# "qanday" alone - a larger corpus would otherwise inflate such words' weight.
+_QUERY_STOPWORDS = frozenset(
+    {
+        # uz
+        "qanday",
+        "qancha",
+        "qachon",
+        "qayerda",
+        "qayerdan",
+        "qaerda",
+        "qaerdan",
+        "nima",
+        "nimaga",
+        "nimani",
+        "nega",
+        "kerak",
+        "kerakmi",
+        "mumkin",
+        "mumkinmi",
+        "bormi",
+        "uchun",
+        "bilan",
+        "yoki",
+        "lekin",
+        "agar",
+        "menga",
+        "mening",
+        "men",
+        "sizga",
+        "iltimos",
+        "salom",
+        "rahmat",
+        "ham",
+        # ru (normalised Latin)
+        "chto",
+        "kak",
+        "kogda",
+        "gde",
+        "eto",
+        "dlya",
+        "ili",
+        "mne",
+        "moy",
+        "moya",
+        "menya",
+        "pozhaluysta",
+        "takoe",
+        "kakoy",
+        "kakaya",
+        "kakie",
+        # en
+        "what",
+        "how",
+        "when",
+        "where",
+        "the",
+        "and",
+        "for",
+        "can",
+        "does",
+        "with",
+        "this",
+        "that",
+        "are",
+        "you",
+        "please",
+        "will",
+        "there",
+        "about",
+    }
+)
+_DECREE_NUMBER = re.compile(r"\b(?!778\b)\d{2,3}\s*-?\s*son")
+
 MODE_HYBRID_UNAVAILABLE = "bm25_only"
 MODE_EMPTY = "unavailable"
 
@@ -48,7 +159,13 @@ _SYSTEM_PROMPT_HEADER = (
     "nizom (authority=2), FAQ (authority=3). Javob xatlari (authority=4) faqat "
     "uslub va kazus namunasi — ulardan aniq raqam yoki normani olmang. Kontekstda "
     "javob bo'lmasa, hech narsa o'ylab topmang va operatorga yo'naltiring. Har bir "
-    "fakt uchun manba doc_id sini keltiring. Foydalanuvchi tilida javob bering."
+    "fakt uchun manba doc_id sini keltiring. Foydalanuvchi tilida javob bering. "
+    "temporal_status=historical yoki historical_note bo'lgan manba — eski tahrir yoki "
+    "tahrirlar tarixi: uni hozirgi amaldagi qoida sifatida bermang, faqat tarix haqidagi "
+    "savolga javob bering. Normativ matnni katta paragraf qilib ko'chirmang: avval "
+    "savolga tabiiy, qisqa javob bering, keyin kerak bo'lsa normativ asosni (masalan, "
+    "VMQ 778-son Nizomining 6¹-bandi) va keyingi qadamni ayting. Foydalanuvchining real "
+    "holatini (IMEI statusi, to'lov) tizimdan tekshirgandek gapirmang."
 )
 
 
@@ -72,8 +189,31 @@ def default_top_k() -> int:
         return 8
 
 
+# "14-band", "6¹-band", "3a-ilova", "32-modda": a clause reference becomes one token
+# ("band14"), so a question naming a clause finds it - the bare number alone is too
+# short to be indexed.
+_CLAUSE_REF = re.compile(r"(\d+[a-z]?)\s*-\s*(band|bob|ilova|modda)")
+# Russian / English clause references: "пункт 49²", "clause 14" -> "band492", "band14".
+_CLAUSE_REF_PREFIX = re.compile(r"\b(?:punkt|clause|paragraph)\s*(\d+[a-z]?)")
+
+
 def _tokenize(text: str) -> list[str]:
-    return _TOKEN.findall(_normalize(text))
+    norm = _CLAUSE_REF.sub(r"\2\1", _normalize(text))
+    return _TOKEN.findall(_CLAUSE_REF_PREFIX.sub(r"band\1", norm))
+
+
+def is_history_query(query: str) -> bool:
+    """True when the question asks how or when the rules changed, not what they are now."""
+    norm = _normalize(query)
+    return any(marker in norm for marker in _HISTORY_MARKERS) or bool(_DECREE_NUMBER.search(norm))
+
+
+def rank_weight(chunk: KBChunk, *, history: bool) -> float:
+    """Authority x temporal weight applied on top of the lexical score."""
+    temporal = (_TEMPORAL_WEIGHT_HISTORY if history else _TEMPORAL_WEIGHT).get(
+        chunk.temporal_status, 1.0
+    )
+    return _AUTHORITY_WEIGHT.get(chunk.authority, 0.85) * temporal
 
 
 @dataclass(frozen=True)
@@ -93,6 +233,7 @@ class KBChunk:
     legal_refs: tuple[str, ...]
     tags: tuple[str, ...]
     lang: str
+    temporal_status: str = "current"
 
     @classmethod
     def from_row(cls, row: dict[str, Any]) -> KBChunk:
@@ -110,6 +251,7 @@ class KBChunk:
             legal_refs=tuple(str(x) for x in (row.get("legal_refs") or [])),
             tags=tuple(str(x) for x in (row.get("tags") or [])),
             lang=str(row.get("lang", "uz_latn")),
+            temporal_status=str(row.get("temporal_status") or "current"),
         )
 
     def index_text(self) -> str:
@@ -181,11 +323,24 @@ class KBRetriever:
         domain: str | None = None,
         case_type: str | None = None,
     ) -> list[RetrievedChunk]:
-        """Return the top scoring chunks, optionally filtered by taxonomy axes."""
+        """Return the top chunks by weighted score, optionally filtered by taxonomy axes.
+
+        The lexical score is multiplied by the chunk's authority and temporal weight,
+        so the current normative text outranks historical notes and practice letters
+        unless the question is explicitly about history.
+        """
         if not self._chunks or not query.strip():
             return []
         limit = top_k or default_top_k()
-        scores = self._bm25.scores(_tokenize(query))
+        history = is_history_query(query)
+        terms = [t for t in _tokenize(query) if t not in _QUERY_STOPWORDS]
+        if not terms:
+            return []
+        raw = self._bm25.scores(terms)
+        scores = [
+            score * rank_weight(chunk, history=history) if score > 0 else 0.0
+            for score, chunk in zip(raw, self._chunks, strict=True)
+        ]
         order = sorted(range(len(scores)), key=lambda i: -scores[i])
         results: list[RetrievedChunk] = []
         for i in order:
@@ -232,7 +387,7 @@ def build_system_prompt(query: str, results: list[RetrievedChunk]) -> str:
         return f"{_SYSTEM_PROMPT_HEADER}\n\nKONTEKST: [bo'sh]\n\nSAVOL: {query}"
     blocks = [
         f"[{r.chunk.doc_id} | authority={r.chunk.authority} | "
-        f"{r.chunk.source_type}/{r.chunk.domain}]\n{r.chunk.text}"
+        f"{r.chunk.source_type}/{r.chunk.domain} | {r.chunk.temporal_status}]\n{r.chunk.text}"
         for r in results
     ]
     context = "\n\n".join(blocks)

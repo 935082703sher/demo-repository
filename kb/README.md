@@ -23,6 +23,45 @@ qatlamlarga bo'linadi va retrieval'da yuqori qatlam ustunlik qiladi:
 foydalanadi, faktni esa 1–3-qatlamdan oladi. Prompt'da shu aniq yozilishi kerak,
 aks holda model eski tariflarni yoki bekor qilingan normani takrorlaydi.
 
+### VMQ 778-son — to'liq normativ korpus
+
+VMQ 778-son (17.09.2019) qarori va Nizomining **to'liq konsolidatsiyalangan matni**
+(2026-yil 8-fevralgacha bo'lgan barcha tahrirlar bilan) alohida qatlam sifatida
+indekslanadi. Ikki qatlam birga ishlaydi:
+
+| Qatlam | Manba | Nima uchun |
+|---|---|---|
+| Curated VMQ 778 | `src/vmq778_data.py` (10 ta qisqa qoida) | Tez-tez so'raladigan asosiy savollar |
+| To'liq VMQ 778 | `data/vmq778_full.json` ← `src/ingest_vmq778.py` ← `sources/vmq778_17.09.2019.doc` | Noodatiy va chuqur savollar: har bir bob, band (6¹, 10², 49³…), 2-banddagi har bir ta'rif, barcha ilovalar (qurilma turlari, sxemalar, anketalar, tarif jadvali) |
+
+Amaldagi matn va tarix ajratilgan (`temporal_status`):
+
+* `current` — amaldagi normativ matn (`source_type=nizom_toliq`, `authority=2`);
+* `historical` — 2019-yilgi o'tish davri qoidalari va bajarilgan bir martalik
+  topshiriqlar (qarorning 2, 3, 5-bandlari; curated "joriy etish sanalari");
+* `historical_note` — lex.uz tahrir izohlari ("... qarori tahririda",
+  "... kiritilgan", "o'z kuchini yo'qotgan"), band bo'yicha guruhlangan
+  (`source_type=nizom_tarixiy_izoh`, `authority=5`).
+
+Retriever (`app/services/kb_retriever.py`) BM25 ballini authority va temporal
+og'irligiga ko'paytiradi: oddiy savolda amaldagi band doim ustun, tarix past
+o'rinda; "qachon o'zgargan?", "700-son qaror bilan nima yangilangan?" kabi tarixiy
+savolda esa tahrir izohlari oldinga chiqadi. "14-band", "пункт 49²", "clause 14"
+kabi havolalar bitta token bo'lib indekslanadi. Teglar (`src/vmq778_tags.py`)
+real foydalanuvchi iboralari va RU/EN sinonimlarini qo'shadi.
+
+Manba hujjat yangilansa (yangi tahrir):
+
+```bash
+python src/ingest_vmq778.py sources/vmq778_17.09.2019.doc   # data/vmq778_full.json
+python src/build_kb.py                                       # out/kb.jsonl + stats
+python src/eval_retrieval.py
+```
+
+Ma'lum cheklovlar: 2- va 4-ilova sxemalari manbada rasm (matn yo'q) — faqat
+nomi va ularga havola qilgan band (11, 25) indekslanadi; 6-ilova tarif jadvalining
+6-qatorida (sud qarori asosida sotuvchi tashkilot) manbaning o'zida miqdor yo'q.
+
 ---
 
 ## 2. Quvur (pipeline)

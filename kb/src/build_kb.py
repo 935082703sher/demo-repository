@@ -25,6 +25,9 @@ OUT = ROOT / "out"
 # Chunk hajmi: embedding modeli (bge-m3 / multilingual-e5) uchun optimal
 MAX_CHARS = 1200
 OVERLAP = 150
+# VMQ 778 to'liq korpusida band xatboshilari shu hajmgacha bitta chunkga yig'iladi
+VMQ_PART_CHARS = 900
+VMQ778_FULL = ROOT / "data" / "vmq778_full.json"
 
 
 def rid(prefix, text):
@@ -60,7 +63,98 @@ def base(**kw):
     return kw
 
 
-def build():
+def _group_paragraphs(paras, limit=VMQ_PART_CHARS):
+    """Band xatboshilarini mazmunini buzmasdan ~limit hajmli qismlarga yig'adi."""
+    parts, cur = [], []
+    for p in paras:
+        if cur and len("\n".join(cur)) + len(p) + 1 > limit:
+            parts.append("\n".join(cur))
+            cur = []
+        cur.append(p)
+    if cur:
+        parts.append("\n".join(cur))
+    out = []
+    for part in parts:  # bitta xatboshining o'zi juda uzun bo'lsa — jumla chegarasida
+        out.extend(split_long(part, max_chars=MAX_CHARS))
+    return out
+
+
+def vmq778_full_rows(path=VMQ778_FULL):
+    """VMQ 778-son to'liq korpusi: amaldagi matn (authority 2) + tahrir tarixi (authority 5).
+
+    Amaldagi konsolidatsiyalangan matn — faol huquqiy bilim (temporal_status=current);
+    2019-yilgi o'tish davri qoidalari — historical; lex.uz tahrir izohlari —
+    historical_note. Retriever historical qatlamni faqat tarixiy savollarda
+    oldinga chiqaradi, aks holda amaldagi band ustun turadi.
+    """
+    if not path.exists():
+        return []
+    data = json.loads(path.read_text(encoding="utf-8"))
+    rows = []
+    for u in data["units"]:
+        parts = _group_paragraphs(u["paragraphs"])
+        if u["temporal_status"] == "historical":
+            # the model sees only the passage, so the passage itself says it is history
+            marker = f"[Tarixiy qoida — amaldagi tartib emas: {u['historical_reason']}]\n"
+            parts = [marker + p for p in parts]
+        for i, text in enumerate(parts):
+            title = u["title"] + (f" — {i + 1}/{len(parts)}-qism" if len(parts) > 1 else "")
+            row = base(
+                id=rid("vmq778full", f"{u['key']}#{i}"),
+                doc_id=f"kb-vmq778:{u['key']}",
+                source_type="nizom_toliq",
+                source_title=data["document"],
+                title=title,
+                authority=2,
+                domain="imei",
+                case_type=u["case_type"],
+                outcome=None,
+                text=text,
+                legal_refs=[f"VMQ 778-son, {u['clause_display']}"
+                            + ("" if "ilova" in u["clause_display"] else "-band")],
+                tags=u["tags"],
+                valid_from=u["valid_from"],
+                temporal_status=u["temporal_status"],
+                lang="uz_latn",
+            )
+            row["amended_by"] = u["amended_by"]
+            row["clause"] = u["clause_display"]
+            if u.get("historical_reason"):
+                row["historical_reason"] = u["historical_reason"]
+            if u.get("tariff"):
+                row["tariff"] = u["tariff"]
+            if len(parts) > 1:
+                row["part"] = f"{i + 1}/{len(parts)}"
+            rows.append(row)
+    for h in data["historical_notes"]:
+        head, *lines = h["text"].split("\n")
+        parts = _group_paragraphs(lines)
+        for i, body in enumerate(parts):
+            rows.append(base(
+                id=rid("vmq778note", f"{h['key']}#{i}"),
+                doc_id=f"kb-vmq778:{h['key']}",
+                source_type="nizom_tarixiy_izoh",
+                source_title=data["document"] + " — tahrirlar tarixi",
+                title=h["title"] + (f" — {i + 1}/{len(parts)}-qism" if len(parts) > 1 else ""),
+                authority=5,
+                domain="imei",
+                case_type="boshqa",
+                outcome=None,
+                text=head + "\n" + body,
+                legal_refs=h["decrees"],
+                tags=h["tags"],
+                valid_from=max(h["dates"]) if h["dates"] else None,
+                temporal_status="historical_note",
+                lang="uz_latn",
+            ))
+    return rows
+
+
+def build_rows():
+    """Barcha qatlamlar bo'yicha chunklar (faylga yozmasdan; testlar ham shundan foydalanadi).
+
+    Qaytaradi: (rows, qa_rows, n_letters).
+    """
     rows = []
 
     # --- 1-qatlam: qonun (authority 1) ---------------------------------------
@@ -114,7 +208,13 @@ def build():
             text=r["text"],
             legal_refs=["VMQ 778-son"],
             tags=r.get("tags", []),
+            temporal_status=r.get("temporal_status", "current"),
         ))
+
+    # --- 2-qatlam (davomi): VMQ 778-son TO'LIQ korpusi (amaldagi + tarixiy) ---
+    # Curated qoidalar (yuqorida) tez-tez so'raladigan savollar uchun qoladi; to'liq
+    # korpus noodatiy va chuqur savollarga javob beradi.
+    rows.extend(vmq778_full_rows())
 
     # --- 3-qatlam: FAQ (authority 3) -----------------------------------------
     qa_rows = []
@@ -265,6 +365,16 @@ def build():
                     rr["part"] = f"{k+1}/{len(parts)}"
                 rows.append(rr)
 
+    ids = [r["id"] for r in rows]
+    dupes = {i for i in ids if ids.count(i) > 1}
+    if dupes:
+        raise ValueError(f"takrorlangan chunk id: {sorted(dupes)[:5]}")
+    return rows, qa_rows, n_letters
+
+
+def build():
+    rows, qa_rows, n_letters = build_rows()
+
     # --- yozish ---------------------------------------------------------------
     OUT.mkdir(exist_ok=True)
     with (OUT / "kb.jsonl").open("w", encoding="utf-8") as f:
@@ -284,6 +394,14 @@ def build():
         "domain": dict(Counter(r["domain"] for r in rows)),
         "case_type": dict(Counter(r["case_type"] for r in rows)),
         "lang": dict(Counter(r["lang"] for r in rows)),
+        "temporal_status": dict(Counter(r.get("temporal_status", "current") for r in rows)),
+        "vmq778_full_chunks": sum(1 for r in rows if r["source_type"] == "nizom_toliq"),
+        "vmq778_current_chunks": sum(1 for r in rows if r["source_type"] == "nizom_toliq"
+                                     and r.get("temporal_status") == "current"),
+        "vmq778_historical_chunks": sum(1 for r in rows if r["source_type"] == "nizom_toliq"
+                                        and r.get("temporal_status") == "historical"),
+        "vmq778_historical_notes": sum(1 for r in rows
+                                       if r["source_type"] == "nizom_tarixiy_izoh"),
         "qa_juftlik": len(qa_rows),
         "javob_xatlari": n_letters,
         "mazmunli_xatlar": sum(1 for r in rows if r.get("has_substance")),
@@ -300,10 +418,11 @@ def build():
           f"Jami chunk: **{len(rows)}** · Q&A: **{len(qa_rows)}** · "
           f"Javob xatlari: **{n_letters}** · PII leak: **{len(leaks)}**\n"]
     for lvl, name in [(1, "1. Qonun (ЎРҚ-445)"), (2, "2. Normativ hujjatlar"),
-                      (3, "3. FAQ"), (4, "4. Amaliyot — javob xatlari (namuna)")]:
+                      (3, "3. FAQ"), (4, "4. Amaliyot — javob xatlari (namuna)"),
+                      (5, "5. Tahrirlar tarixi (amaldagi qoida emas)")]:
         md.append(f"\n## {name}\n")
         sel = [r for r in rows if r["authority"] == lvl]
-        for r in sel[:60 if lvl < 4 else 5]:
+        for r in sel[:200 if lvl < 4 else 5]:
             md.append(f"### {r.get('title') or r['doc_id']}\n")
             md.append(r["text"][:1500] + ("…\n" if len(r["text"]) > 1500 else "\n"))
         if lvl == 4 and len(sel) > 5:
