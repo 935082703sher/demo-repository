@@ -52,6 +52,9 @@ class BM25:
 
 TESTS = [
     ("IMEI kodni qanday bilsam bo'ladi?", ["*#06#"]),
+    ("Imeini online royxatdan otkazishga yordam kerak", ["onlayn ro‘yxatdan"]),
+    ("Birda orqali ro'yxatdan o'tkazsa bo'ladimi", ["Birda"]),
+    ("ariza raqami bo'yicha qanday to'layman", ["ariza raqami"]),
     ("IMEI ro'yxatdan o'tkazish necha kun?", ["30 kalendar", "60 kalendar"]),
     ("IMEI ro'yxatga olish narxi qancha?", ["82 400", "103 000"]),
     ("Telefonim bloklandi nima qilay?", ["blokdan", "ro‘yxatdan o‘tkaz"]),

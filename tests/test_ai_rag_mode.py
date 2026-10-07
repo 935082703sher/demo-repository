@@ -108,3 +108,67 @@ def test_mode_on_with_no_model_fails_openly_and_shows_no_menu() -> None:
     assert "Texnik xatolik" in body["reply"]
     assert body["requires_human"] is True
     assert body["options"] == []  # no menu / buttons in this mode
+
+
+def _recording_app(replies: list[dict[str, Any]]) -> tuple[Any, list[dict[str, Any]]]:
+    """An AI+RAG app whose model returns ``replies`` in turn and records each prompt."""
+    app = create_app(settings=Settings(ai_rag_only=True))
+    prompts: list[dict[str, Any]] = []
+
+    async def complete(prompt: str) -> str:
+        prompts.append(json.loads(prompt))
+        return json.dumps(replies[min(len(prompts), len(replies)) - 1])
+
+    app.state.ai_rag = AiRagResponder(complete, GroundingValidator(), model_name="test-model")
+    return app, prompts
+
+
+def test_topic_switch_from_mnp_to_imei_retrieves_imei_sources() -> None:
+    # Regression: the domain was fixed by the session's first topic, so an IMEI question
+    # after an MNP one was answered from MNP sources ("raqamni ko'chirish...").
+    answer = {"type": "answer", "reply": "Tushunarli.", "used_sources": []}
+    app, prompts = _recording_app([answer])
+    with TestClient(app) as client:
+        for text in ("MNP nima", "Imei kodni royxatdan otkazmoqchiman tartibi qanday"):
+            client.post("/assistant/converse", json={"message": text, "session_id": "sw"})
+    second = prompts[1]
+    assert second["open_request"].startswith("Imei kodni")
+    assert not any(e["id"].startswith("kb-mnp3275:") for e in second["evidence"])
+
+
+def test_short_answer_to_a_pending_question_keeps_the_open_request() -> None:
+    # Regression: after "Siz O'zbekiston fuqarosimisiz?" the reply "ha" lost the request
+    # and got a bare "Xo'p, tushunarli."; the model must see both the question it asked
+    # and the request it belongs to, and retrieval must search for that request.
+    question = {"type": "question", "reply": "Siz O'zbekiston fuqarosimisiz?", "used_sources": []}
+    answer = {"type": "answer", "reply": "Tushunarli.", "used_sources": []}
+    app, prompts = _recording_app([question, answer, answer])
+    with TestClient(app) as client:
+        for text in ("Imei kodni royxatdan otkazmoqchiman tartibi qanday", "ha", "online"):
+            client.post("/assistant/converse", json={"message": text, "session_id": "pq"})
+    after_yes, after_online = prompts[1], prompts[2]
+    assert after_yes["pending_question"] == "Siz O'zbekiston fuqarosimisiz?"
+    assert after_yes["open_request"].startswith("Imei kodni")
+    assert after_online["pending_question"] is None  # answered, no longer pending
+    assert after_online["open_request"].startswith("Imei kodni")
+    assert after_online["evidence"]  # "online" alone retrieves via the open request
+
+
+def test_evidence_keeps_every_relevant_answer_of_one_document() -> None:
+    # Regression: evidence was de-duplicated by DOCUMENT id, so of five FAQ answers in
+    # one file only the first reached the model and the procedure itself was dropped.
+    import pytest
+
+    from app.api.routes.case import _ai_rag_evidence
+    from app.domain.case_state import CaseState
+    from app.services.kb_retriever import get_retriever
+
+    query = "Imei kodni royxatdan otkazmoqchiman tartibi qanday"
+    hits = get_retriever().retrieve(query, 5, domain="imei")
+    if len({h.chunk.doc_id for h in hits}) == len(hits):
+        pytest.skip("needs the built KB index (kb/out), where one document has many hits")
+    app = create_app(settings=Settings())
+    case = CaseState(case_id="c", session_id="s", domain="imei")
+    ev = asyncio.run(_ai_rag_evidence(app.state.legal_reasoning, app.state.tariffs, case, query))
+    kb_ids = [e.source_id for e in ev if not e.source_id.startswith("vmq778_clause")]
+    assert len(kb_ids) >= 3

@@ -16,7 +16,7 @@ qatlamlarga bo'linadi va retrieval'da yuqori qatlam ustunlik qiladi:
 |---|---|---|---|
 | **1** | Qonun — ЎРҚ-445 (muddatlar, javob talablari, anonim murojaat, maxfiylik) | Yagona haqiqiy huquqiy asos | 11 chunk |
 | **2** | Normativ hujjatlar — VMQ 778, 463, 828; DBQ 526; PQ 3512; 1-sonli Nizom | Soha qoidalari | 6 chunk |
-| **3** | FAQ (IMEI + MNP) — tasdiqlangan savol-javob | Foydalanuvchi savollariga to'g'ridan-to'g'ri javob | 32 Q&A |
+| **3** | FAQ (IMEI + MNP) — tasdiqlangan savol-javob; uzimei.uz sayti xizmatlari (`uzimei_site_data.py`: onlayn ro‘yxat, Birda/MyGov, ariza raqami bo‘yicha to‘lov, holat tekshirish) | Foydalanuvchi savollariga to‘g‘ridan-to‘g‘ri javob | 32 + 4 Q&A |
 | **4** | Amaliyot — anonimlashtirilgan javob xatlari | Uslub, tipik kazuslar, qaysi normaga havola qilinadi | 178 xat → 282 chunk |
 
 **Muhim qoida:** asistent 4-qatlamdan faqat *uslub va kazus namunasi* sifatida

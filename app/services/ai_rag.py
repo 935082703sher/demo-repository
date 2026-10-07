@@ -83,6 +83,12 @@ _INSTRUCTIONS = (
     "Handle a new topic, a correction, or an 'I didn't understand' naturally from the "
     "context: for 'I didn't understand', restate your previous answer (given as "
     "last_answer) in simpler words - do not repeat it verbatim and do not start over. "
+    "open_request is the customer's request still being handled. If pending_question is "
+    "set, you asked it last turn and customer_message is the answer to it: combine that "
+    "answer with open_request and now actually answer open_request - never reply with a "
+    "bare acknowledgement. A short message such as 'online', 'yes' or 'tell me now' "
+    "continues open_request. If customer_message clearly starts a different topic, "
+    "answer only the new topic and ignore last_answer. "
     "Write in the requested language as a natural, concise human reply - never a form with "
     "headings, never a menu or buttons. "
     "If one specific missing fact would change the answer, ask EXACTLY ONE short clarifying "
@@ -196,6 +202,8 @@ class AiRagResponder:
                 "conversation_summary": case.conversation_summary,
                 "known_facts": case.known_facts(),
                 "last_answer": case.last_answer,
+                "open_request": case.current_problem,
+                "pending_question": case.last_question,
                 "customer_message": message,
                 "evidence": [
                     {"id": e.source_id, "title": e.title, "text": e.text} for e in evidence

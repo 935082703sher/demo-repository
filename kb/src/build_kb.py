@@ -18,6 +18,7 @@ from faq_data import FAQ                     # noqa: E402
 from legal_data import LAW, REGULATIONS      # noqa: E402
 from mask import find_leaks                  # noqa: E402
 from normalize import detect_lang, normalize  # noqa: E402
+from uzimei_site_data import SITE, SITE_SOURCE  # noqa: E402
 from vmq778_data import VMQ778               # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -307,14 +308,18 @@ def build_rows():
     rows.extend(mnp3275_rows())
 
     # --- 3-qatlam: FAQ (authority 3) -----------------------------------------
+    # uzimei.uz sayti (bosh sahifa xizmatlari, Birda/MyGov/operatorlar) ham shu
+    # qatlamda: alohida doc_id va manba nomi bilan.
     qa_rows = []
-    for f in FAQ:
+    faq_sources = [(f, "faq-mnp-imei", "MNP va IMEI FAQ (O‘zTTBRM)") for f in FAQ]
+    faq_sources += [(f, "uzimei-sayt", SITE_SOURCE) for f in SITE]
+    for f, doc_id, source_title in faq_sources:
         text = f"Savol: {f['q']}\nJavob: {f['a']}"
         row = base(
             id=rid("faq", f["q"]),
-            doc_id="faq-mnp-imei",
+            doc_id=doc_id,
             source_type="faq",
-            source_title="MNP va IMEI FAQ (O‘zTTBRM)",
+            source_title=source_title,
             title=f["q"],
             authority=3,
             domain=f["domain"],
@@ -329,7 +334,7 @@ def build_rows():
         qa_rows.append({
             "id": row["id"], "domain": f["domain"], "case_type": f["case"],
             "question": f["q"], "alt_questions": f["alt"], "answer": f["a"],
-            "refs": f["refs"], "source": "MNP va IMEI FAQ (O‘zTTBRM)",
+            "refs": f["refs"], "source": source_title,
         })
 
     # --- 2-qatlam (davomi): UZIMEI mijozlar bilim bazasi (uzimei.uz) ----------
