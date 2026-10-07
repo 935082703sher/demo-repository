@@ -59,6 +59,8 @@ def normalize(text: str) -> str:
     t = unicodedata.normalize("NFKD", t)
     t = "".join(c for c in t if not unicodedata.combining(c))
     t = re.sub(r"\s+", " ", t).strip().lower()
+    # Mijozlar inglizcha "online" deb yozadi, rasmiy matnda "onlayn": bir xil so'z.
+    t = re.sub(r"\bonline\b", "onlayn", t)
     return t
 
 

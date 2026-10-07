@@ -26,6 +26,12 @@ RUN addgroup --system app && adduser --system --ingroup app app
 COPY --from=builder /install /usr/local
 COPY --chown=app:app pyproject.toml README.md ./
 COPY --chown=app:app app ./app
+# Knowledge base: sources plus the built retrieval index (kb/out is gitignored, so it
+# is built here; without it every procedure question is answered with "no data").
+COPY --chown=app:app kb/__init__.py ./kb/__init__.py
+COPY --chown=app:app kb/src ./kb/src
+COPY --chown=app:app kb/data ./kb/data
+RUN python kb/src/build_kb.py > /dev/null && chown -R app:app kb
 
 USER app
 EXPOSE 8000

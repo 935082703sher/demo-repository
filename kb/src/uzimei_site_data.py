@@ -5,8 +5,9 @@ Manba: uzimei.uz bosh sahifasi ("IMEI-kodini ro'yxatdan o'tkazish holatini
 tekshirish", "Ariza raqami bo'yicha ro'yxatdan o'tkazish uchun onlayn to'lov",
 "Rezident va norezidentlar uchun IMEI-kodlarini onlayn ro'yxatdan o'tkazish",
 "Ro'yxatdan o'tish usullari": Birda / MyGov / Operatorlar, "Ro'yxatdan o'tkazish
-nuqtalari") va sayt FAQ matni, 07.10.2026 holatiga. Faqat saytdagi matn
-qayta yozilgan — yangi fakt, muddat yoki summa qo'shilmagan.
+nuqtalari") va sayt FAQ matni, 07.10.2026 holatiga. Onlayn ro'yxat qadamlari
+UZIMEI bilim bazasining D03 bo'limidan (uzimei.uz, 25.09.2026 tekshirilgan) olingan.
+Faqat saytdagi matn qayta yozilgan — yangi fakt, muddat yoki summa qo'shilmagan.
 
 Mavjud FAQ (faq_data.py) bu savollarning ko'pini qamraydi; bu yozuvlar mijozlar
 ko'p ishlatadigan "online/onlayn", "Birda", "MyGov", "ariza raqami" so'zlari bilan
@@ -23,18 +24,23 @@ SITE = [
         "internet orqali IMEI ro'yxatdan o'tkazish", "uydan turib ro'yxatdan o'tkazish",
         "uzimei.uz saytida ro'yxatdan o'tkazish", "IMEI онлайн рўйхатдан ўтказиш",
         "зарегистрировать IMEI онлайн", "register IMEI online"],
-   a="Ha, onlayn ro‘yxatdan o‘tkazish mumkin: 1) Tizim operatorining www.uzimei.uz "
-     "saytida — bosh sahifadagi «O‘zbekiston Respublikasi rezident va norezidentlari "
-     "uchun mobil qurilmaning IMEI-kodlarini onlayn ro‘yxatdan o‘tkazish» bo‘limida "
-     "IMEI-kodni kiritib, «Tekshirish» tugmasi orqali; 2) YIDXPning www.my.gov.uz "
-     "portali yoki MyGov mobil ilovasida (jismoniy shaxslar uchun); 3) Birda mobil "
-     "ilovasida (rezident va norezident jismoniy shaxslar uchun). IMEI-kodni bilish "
-     "uchun telefon klaviaturasida *#06# kombinatsiyasini tering. Xalqaro pochta yoki "
-     "kuryerlik jo‘natmasi orqali kelgan qurilma ham tizim operatorining sayti orqali "
-     "ro‘yxatdan o‘tkazilishi mumkin (pochta identifikatorining shtrix kodi, kalendar "
-     "shtempeli bo‘lgan konvert va jo‘natma oluvchining pasporti bilan). Ro‘yxatga "
-     "olishda foydalanilgan abonent raqami mahalliy mobil operatorda arizachining "
-     "nomiga rasmiylashtirilgan bo‘lishi kerak.",
+   a="Ha, onlayn ro‘yxatdan o‘tkazish mumkin — www.uzimei.uz saytida, YIDXPning "
+     "www.my.gov.uz portali yoki MyGov mobil ilovasida (jismoniy shaxslar uchun) va Birda "
+     "mobil ilovasida (rezident va norezident jismoniy shaxslar uchun). uzimei.uz saytida "
+     "tartib: 1) telefon klaviaturasida *#06# terib IMEI-kodni bilib oling (bir nechta "
+     "bo‘lsa, har biri alohida); 2) bosh sahifada «O‘zbekiston Respublikasi rezident va "
+     "norezidentlari uchun mobil qurilmaning IMEI-kodlarini onlayn ro‘yxatdan o‘tkazish» "
+     "blokini toping; 3) undagi «IMEI-kodni kiriting» maydoniga kodni o‘zingiz kiriting va "
+     "«Tekshirish»ni bosing; 4) shaxsni tasdiqlash, telefon raqami, SMS, biometrik tekshiruv "
+     "yoki to‘lov so‘ralsa, jarayonni saytda o‘zingiz davom ettiring — keyingi ekran IMEI "
+     "holatiga bog‘liq; 5) ariza ochilishi ro‘yxat yakunlanganini anglatmaydi: yakuniy "
+     "holatni bosh sahifadagi «IMEI-kodini ro‘yxatdan o‘tkazish holatini tekshirish» bloki "
+     "orqali tekshiring. Ro‘yxatga olishda foydalanilgan abonent raqami mahalliy mobil "
+     "operatorda arizachining nomiga rasmiylashtirilgan bo‘lishi kerak. O‘zbekistondagi "
+     "do‘kondan olingan telefon bo‘lsa, avval sotuvchiga murojaat qiling. Xalqaro pochta yoki "
+     "kuryerlik jo‘natmasi orqali kelgan qurilma ham sayt orqali ro‘yxatdan o‘tkazilishi "
+     "mumkin (pochta identifikatorining shtrix kodi, kalendar shtempeli bo‘lgan konvert va "
+     "jo‘natma oluvchining pasporti bilan).",
    refs=["VMQ 778-son"]),
 
  dict(domain="imei", case="royxatdan_otkazish",

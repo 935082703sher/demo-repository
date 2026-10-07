@@ -6,4 +6,5 @@
 __pycache__
 *.pyc
 tests
-tmp
+tmpkb/out
+kb/sources

@@ -70,7 +70,7 @@ from app.services.kb_draft import (
     TemplateKbDraft,
     build_openai_kb_draft_complete,
 )
-from app.services.kb_retriever import corpus_path, get_retriever
+from app.services.kb_retriever import corpus_path, ensure_corpus, get_retriever
 from app.services.knowledge import KnowledgeService
 from app.services.knowledge_gap import InMemoryKnowledgeGapStore
 from app.services.learned_knowledge import InMemoryLearnedKnowledgeStore
@@ -133,6 +133,9 @@ def create_app(
         # The KB index (kb/out/kb.jsonl) is built, not committed. Without it every
         # answer is limited to the legal clauses and reads as "no data", so say so
         # loudly at startup instead of failing silently turn by turn.
+        kb_build = ensure_corpus()
+        if kb_build in {"built", "build_failed"}:
+            logger.info("event=kb_index_%s", kb_build)
         kb_chunks = get_retriever().size
         if kb_chunks == 0:
             logger.warning(
