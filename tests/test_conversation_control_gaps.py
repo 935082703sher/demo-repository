@@ -1,13 +1,28 @@
-"""Spec gaps closed on top of intent control: §22 RAG applicability, §24 summary, §26 gate."""
+"""Spec gaps closed on top of intent control: §22 RAG applicability, §24 summary, §26 gate,
+and re-explanation of a one-shot answer on "I didn't understand"."""
 
 from __future__ import annotations
 
+from typing import Any
+
+from fastapi.testclient import TestClient
+
 from app.domain.case_state import CaseState, CaseStatus, Fact, FactStatus
+from app.main import create_app
 from app.services.response_quality import (
     CAPABILITY_CLAIM,
     UNNECESSARY_MENU,
     check_reply,
 )
+
+
+def _post(client: TestClient, message: str, session: str, lang: str = "uz") -> dict[str, Any]:
+    return dict(
+        client.post(
+            "/assistant/converse",
+            json={"message": message, "session_id": session, "language": lang},
+        ).json()
+    )
 
 # --- §26 response-quality gate -------------------------------------------------------
 
@@ -113,3 +128,23 @@ def test_applicability_never_drops_the_only_hit() -> None:
 
     assert len(_applicable_results([_Hit(4.2)])) == 1
     assert _applicable_results([]) == []
+
+
+# --- re-explanation after a one-shot answer ------------------------------------------
+
+_RECEIPT_UZ = "To'lov qildim, registratsiya muvaffaqiyatli bo'ldi. Endi elektron chek kerak."
+
+
+def test_confusion_after_a_one_shot_answer_reexplains_instead_of_a_menu() -> None:
+    with TestClient(create_app()) as client:
+        first = _post(client, _RECEIPT_UZ, "re-1")
+        second = _post(client, "tushunmadim", "re-1")
+        third = _post(client, "tushunmadim", "re-1")
+    # the one-shot answer closed the case
+    assert first["done"] is True and first["options"] == []
+    # "tushunmadim" is re-explained, NOT reset to the topic menu
+    assert second["options"] == []
+    assert second["reply"].startswith("Boshqacha, oddiyroq aytaman:")  # SIMPLE lead-in
+    assert "Muammoingizni aniqlashtiraylik" not in second["reply"]  # not the menu intro
+    # a second "tushunmadim" escalates the style (simpler -> step by step)
+    assert third["reply"].startswith("Keling, bitta-bitta qadam bilan")

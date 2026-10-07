@@ -158,6 +158,10 @@ class CaseState(BaseModel):
     # names, the open question), refreshed each turn. It makes the conversation state
     # legible without replaying the raw messages, which are never stored.
     conversation_summary: str | None = None
+    # The last substantive one-shot answer given (our own composed, grounded text, not
+    # a customer message), kept so that a follow-up "I don't understand" can be
+    # restated more simply instead of resetting the conversation to a menu.
+    last_answer: str | None = None
 
     def known_facts(self) -> dict[str, str]:
         """Return name -> value for facts that carry a real (non-unknown) value."""

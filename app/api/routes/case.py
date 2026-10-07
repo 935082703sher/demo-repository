@@ -49,7 +49,7 @@ from app.services.audit_log import (
     AuditEvent,
     AuditLog,
 )
-from app.services.card_answer import CardAnswerComposer
+from app.services.card_answer import CardAnswerComposer, is_fact_preserving
 from app.services.card_explainer import CardExplainer
 from app.services.case_store import CaseStore
 from app.services.diagnostic_engine import DiagnosticEngine
@@ -398,6 +398,7 @@ def _start_fresh_case(case: CaseState) -> None:
     case.current_intent = None
     case.current_problem = None
     case.conversation_summary = None
+    case.last_answer = None
     # original_problem is intentionally NOT cleared here: the RAG lane resets the
     # diagnostic slate between turns, but a menu shown next must still re-examine the
     # original problem. It is cleared only when a genuinely new problem begins.
@@ -1096,6 +1097,73 @@ def _apply_style_cue(case: CaseState, message: str, lang: str) -> None:
             case.explanation.needs_examples = True
 
 
+# Styles that signal "I didn't understand" rather than a genuinely new request, so a
+# follow-up carrying one restates the previous answer instead of starting over.
+_REEXPLAIN_STYLES = {
+    ExplanationStyle.SIMPLE,
+    ExplanationStyle.STEP_BY_STEP,
+    ExplanationStyle.EXAMPLE,
+}
+_REEXPLAIN_INSTRUCTION = {
+    ExplanationStyle.SIMPLE: "Restate the answer below in simpler, shorter words, same "
+    "meaning and the same facts. Do not add anything new.",
+    ExplanationStyle.STEP_BY_STEP: "Restate the answer below as a short, numbered "
+    "step-by-step, same facts. Do not add anything new.",
+    ExplanationStyle.EXAMPLE: "Restate the answer below with one short, concrete example, "
+    "same facts. Do not add anything new.",
+}
+
+
+# Every re-explanation lead-in, so a re-explained reply is recognised and never stored
+# as the canonical answer (which would stack lead-ins on the next "I didn't understand").
+_REEXPLAIN_LEADIN_PREFIXES = frozenset(
+    reexplain_leadin(style, lang)
+    for lang in ("uz", "uz_cyrl", "ru", "en", "kaa")
+    for style in _REEXPLAIN_STYLES
+)
+
+
+def _is_reexplain_reply(reply: str) -> bool:
+    """True when a reply is itself a re-explanation (so it is not stored as canonical)."""
+    stripped = reply.lstrip()
+    return any(stripped.startswith(prefix) for prefix in _REEXPLAIN_LEADIN_PREFIXES)
+
+
+async def _reexplain_last_answer(
+    provider: LLMProvider, case: CaseState, lang: str
+) -> str:
+    """Restate the last one-shot answer more simply (spec: never repeat the same text).
+
+    The previous answer is the only source, so no new fact can be introduced; the LLM
+    rephrase is accepted only when it preserves the numbers and claims no live lookup,
+    otherwise a fresh lead-in plus the original answer is returned. Each repeat escalates
+    the style (simpler -> step-by-step -> example) so the wording keeps changing.
+    """
+    case.explanation.confusion_count += 1
+    style = style_for_confusion(case.explanation.confusion_count)
+    case.explanation.style = style
+    leadin = reexplain_leadin(style, lang)
+    original = case.last_answer or ""
+    body = original
+    instruction = _REEXPLAIN_INSTRUCTION.get(style, _REEXPLAIN_INSTRUCTION[ExplanationStyle.SIMPLE])
+    try:
+        result = await provider.generate(
+            LLMRequest(
+                language=_LANG_ENUM.get(lang, Language.UZ),
+                question=_ANSWER_LANG_HINT.get(lang, "") + instruction,
+                category=Category.OTHER,
+                source_ids=["prior_answer"],
+                passages=[original],
+            )
+        )
+        text = result.text.strip()
+        if text and is_fact_preserving(original, text) and not claims_live_check(text):
+            body = text
+    except ProviderError:
+        pass
+    return f"{leadin}\n\n{body}"
+
+
 def _attach_legal_basis(
     resp: ConverseCaseResponse, rules: list[PolicyRule], lang: str
 ) -> ConverseCaseResponse:
@@ -1270,6 +1338,31 @@ async def _converse_turn(payload: ConverseCaseRequest, request: Request) -> Conv
     # now; a menu shown this turn sets it again before returning.
     was_awaiting_menu = case.awaiting_menu
     case.awaiting_menu = False
+
+    # Re-explanation: after a one-shot answer, a bare "I didn't understand" must get a
+    # simpler restatement of that same answer - never a reset to a generic menu. Only
+    # when the previous turn closed with a substantive answer, the message is purely a
+    # confusion signal, and it is not a new self-contained request.
+    if (
+        case.last_answer
+        and case.active_tree is None
+        and case.resolution_card_id is None
+        and not was_awaiting_menu
+        and case.status not in AWAITING_OUTCOME
+        and detect_style(message) in _REEXPLAIN_STYLES
+        and not is_new_request(message)
+    ):
+        reexplained = await _reexplain_last_answer(provider, case, lang)
+        await store.save(case)
+        await _audit(
+            audit,
+            case,
+            OUTCOME_ANSWER,
+            ROUTE_CASE,
+            style=case.explanation.style.value,
+            detail="reexplain_one_shot",
+        )
+        return _resp(case, reexplained, done=True)
 
     # A previously closed case starts fresh so old facts don't auto-complete a new one.
     if case.status in (CaseStatus.RESOLVED, CaseStatus.HANDOFF, CaseStatus.CALL_1170_RECOMMENDED):
@@ -1859,6 +1952,16 @@ async def _finalize_turn(
         response = response.model_copy(
             update={"reply": fallback, "requires_human": True, "done": True}
         )
+    # Remember a substantive one-shot answer so a follow-up "I didn't understand" can
+    # restate it. A re-explanation is not stored as canonical (it would stack lead-ins),
+    # and an abstention / menu / open question is not a settled answer to restate.
+    if (
+        response.done
+        and not response.requires_human
+        and not response.options
+        and not _is_reexplain_reply(response.reply)
+    ):
+        case.last_answer = response.reply
     case.conversation_summary = _build_conversation_summary(case)
     await store.save(case)
     return response
