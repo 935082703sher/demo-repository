@@ -202,6 +202,33 @@ def _tokenize(text: str) -> list[str]:
     return _TOKEN.findall(_CLAUSE_REF_PREFIX.sub(r"band\1", norm))
 
 
+# "X nima?" / "что такое X" / "what is X": a definition question. Definitions (legal
+# "Asosiy tushuncha" units, "... nima?" articles) get a moderate boost for it, since a
+# one-word topic otherwise ranks by document length alone.
+_DEFINITION_QUERY = re.compile(r"(\bnima\s*$)|(^\s*chto takoe\b)|(^\s*what (is|are)\b)")
+_DEFINITION_BOOST = 1.5
+
+
+def is_definition_query(query: str) -> bool:
+    norm = " ".join(re.sub(r"[^\w]+", " ", _normalize(query)).split())
+    return bool(_DEFINITION_QUERY.search(norm))
+
+
+def _is_definition(chunk: KBChunk) -> bool:
+    title = _normalize(chunk.title)
+    return "asosiy tushuncha" in title or title.rstrip(" ?").endswith("nima")
+
+
+# Token-set overlap above which two chunks are treated as the same rule.
+_DUPLICATE_JACCARD = 0.8
+
+
+def _jaccard(a: frozenset[str], b: frozenset[str]) -> float:
+    if not a or not b:
+        return 0.0
+    return len(a & b) / len(a | b)
+
+
 def is_history_query(query: str) -> bool:
     """True when the question asks how or when the rules changed, not what they are now."""
     norm = _normalize(query)
@@ -305,7 +332,9 @@ class KBRetriever:
 
     def __init__(self, chunks: list[KBChunk]) -> None:
         self._chunks = chunks
-        self._bm25 = _BM25([_tokenize(chunk.index_text()) for chunk in chunks])
+        docs = [_tokenize(chunk.index_text()) for chunk in chunks]
+        self._bm25 = _BM25(docs)
+        self._token_sets = [frozenset(d) for d in docs]
 
     @property
     def size(self) -> int:
@@ -333,16 +362,22 @@ class KBRetriever:
             return []
         limit = top_k or default_top_k()
         history = is_history_query(query)
+        definition = is_definition_query(query)
         terms = [t for t in _tokenize(query) if t not in _QUERY_STOPWORDS]
         if not terms:
             return []
         raw = self._bm25.scores(terms)
         scores = [
-            score * rank_weight(chunk, history=history) if score > 0 else 0.0
+            score
+            * rank_weight(chunk, history=history)
+            * (_DEFINITION_BOOST if definition and _is_definition(chunk) else 1.0)
+            if score > 0
+            else 0.0
             for score, chunk in zip(raw, self._chunks, strict=True)
         ]
         order = sorted(range(len(scores)), key=lambda i: -scores[i])
         results: list[RetrievedChunk] = []
+        kept: list[frozenset[str]] = []
         for i in order:
             if scores[i] <= 0:
                 break
@@ -351,6 +386,12 @@ class KBRetriever:
                 continue
             if case_type and chunk.case_type != case_type:
                 continue
+            # The same rule often exists in several layers (FAQ, curated, full legal
+            # text). Keep only the strongest-ranked copy so near-duplicates do not crowd
+            # out other evidence; ranking already put the higher-authority copy first.
+            if any(_jaccard(self._token_sets[i], other) >= _DUPLICATE_JACCARD for other in kept):
+                continue
+            kept.append(self._token_sets[i])
             results.append(RetrievedChunk(chunk=chunk, score=round(scores[i], 4)))
             if len(results) >= limit:
                 break

@@ -28,6 +28,7 @@ OVERLAP = 150
 # VMQ 778 to'liq korpusida band xatboshilari shu hajmgacha bitta chunkga yig'iladi
 VMQ_PART_CHARS = 900
 VMQ778_FULL = ROOT / "data" / "vmq778_full.json"
+MNP3275_FULL = ROOT / "data" / "mnp_3275_full.json"
 
 
 def rid(prefix, text):
@@ -150,6 +151,86 @@ def vmq778_full_rows(path=VMQ778_FULL):
     return rows
 
 
+def mnp3275_rows(path=MNP3275_FULL):
+    """3275-son Qoidalarning MNP korpusi (domain=mnp).
+
+    * amaldagi normativ bandlar — source_type=mnp_nizom_current, authority 2;
+      har chunk avval oddiy tildagi izoh, keyin bandning o'zgarmagan matni;
+    * rad etish sabablari bo'yicha qo'llanma (belgi / sabab / yechim / normativ
+      asos) — source_type=mnp_rejection_guide, authority 3;
+    * tahrir izohlari — source_type=mnp_nizom_historical_note, authority 5.
+    """
+    if not path.exists():
+        return []
+    data = json.loads(path.read_text(encoding="utf-8"))
+    title = data["document"]
+    rows = []
+    for u in data["units"]:
+        parts = _group_paragraphs(u["paragraphs"])
+        for i, text in enumerate(parts):
+            body = (u["plain"] + "\nNormativ matn: " + text) if u["plain"] else text
+            row = base(
+                id=rid("mnp3275", f"{u['key']}#{i}"),
+                doc_id=f"kb-mnp3275:{u['key']}",
+                source_type="mnp_nizom_current",
+                source_title=title,
+                title=u["title"] + (f" — {i + 1}/{len(parts)}-qism" if len(parts) > 1 else ""),
+                authority=2,
+                domain="mnp",
+                case_type=u["case_type"],
+                outcome=None,
+                text=body,
+                legal_refs=u["legal_refs"],
+                tags=u["tags"],
+                valid_from=u["valid_from"],
+                temporal_status="current",
+                lang="uz_latn",
+            )
+            row["requires_realtime_status"] = False
+            row["amended_by"] = u["amended_by"]
+            if u["excerpt"]:
+                row["excerpt"] = True
+            rows.append(row)
+    for r in data["rejection_reasons"]:
+        steps = " ".join(f"{i}) {s}" for i, s in enumerate(r["resolution"], 1))
+        rows.append(base(
+            id=rid("mnp3275rad", r["id"]),
+            doc_id=f"kb-mnp3275:rad:{r['id']}",
+            source_type="mnp_rejection_guide",
+            source_title=title + " — rad etish sabablari",
+            title=r["title"],
+            authority=3,
+            domain="mnp",
+            case_type=r["case_type"],
+            outcome=None,
+            text=(f"{r['title']}.\nBelgisi: {r['symptom']}\nSababi: {r['cause']}\n"
+                  f"Nima qilish kerak: {steps}\nNormativ asos: {', '.join(r['legal_refs'])}."),
+            legal_refs=r["legal_refs"],
+            tags=r["tags"],
+            temporal_status="current",
+            lang="uz_latn",
+        ))
+    for h in data["historical_notes"]:
+        rows.append(base(
+            id=rid("mnp3275note", h["key"]),
+            doc_id=f"kb-mnp3275:{h['key']}",
+            source_type="mnp_nizom_historical_note",
+            source_title=title + " — tahrirlar tarixi",
+            title=h["title"],
+            authority=5,
+            domain="mnp",
+            case_type="mnp_tartib",
+            outcome=None,
+            text=h["text"],
+            legal_refs=h["decrees"],
+            tags=h["tags"],
+            valid_from=max(h["dates"]) if h["dates"] else None,
+            temporal_status="historical_note",
+            lang="uz_latn",
+        ))
+    return rows
+
+
 def build_rows():
     """Barcha qatlamlar bo'yicha chunklar (faylga yozmasdan; testlar ham shundan foydalanadi).
 
@@ -215,6 +296,11 @@ def build_rows():
     # Curated qoidalar (yuqorida) tez-tez so'raladigan savollar uchun qoladi; to'liq
     # korpus noodatiy va chuqur savollarga javob beradi.
     rows.extend(vmq778_full_rows())
+
+    # --- 2-qatlam (davomi): 3275-son Qoidalarning MNP korpusi ----------------
+    # FAQ va toza KB maqolalari qisqa javob uchun qoladi; bu korpus chuqur va
+    # noodatiy MNP savollariga normativ band raqami bilan javob beradi.
+    rows.extend(mnp3275_rows())
 
     # --- 3-qatlam: FAQ (authority 3) -----------------------------------------
     qa_rows = []
@@ -402,6 +488,14 @@ def build():
                                         and r.get("temporal_status") == "historical"),
         "vmq778_historical_notes": sum(1 for r in rows
                                        if r["source_type"] == "nizom_tarixiy_izoh"),
+        "mnp_3275_current_chunks": sum(1 for r in rows
+                                       if r["source_type"] == "mnp_nizom_current"),
+        "mnp_3275_rejection_guides": sum(1 for r in rows
+                                         if r["source_type"] == "mnp_rejection_guide"),
+        "mnp_3275_historical_notes": sum(1 for r in rows
+                                         if r["source_type"] == "mnp_nizom_historical_note"),
+        "mnp_faq": sum(1 for r in rows if r["source_type"] == "faq" and r["domain"] == "mnp"),
+        "mnp_case_types": sorted({r["case_type"] for r in rows if r["domain"] == "mnp"}),
         "qa_juftlik": len(qa_rows),
         "javob_xatlari": n_letters,
         "mazmunli_xatlar": sum(1 for r in rows if r.get("has_substance")),

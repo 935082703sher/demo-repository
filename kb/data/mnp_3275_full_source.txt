@@ -1,0 +1,417 @@
+Telekommunikatsiya xizmatlarini koʻrsatish qoidalari (3275-son, 30.06.2020)
+Manba: lex.uz eksporti: kb/sources/3275_30.06.2020.doc
+Kuchga kirgan: 2020-09-30; konsolidatsiya: 2021-07-28
+
+## 3275-son Qoidalar, 3-band. Asosiy tushuncha: abonent
+abonent — telekommunikatsiyalar operatori yoki provayderi bilan tuzilgan shartnomaga asosan telekommunikatsiyalar xizmatlaridan bevosita foydalanuvchi jismoniy yoki yuridik shaxs;
+
+## 3275-son Qoidalar, 3-band. Asosiy tushuncha: abonent raqami
+abonent raqami — telekommunikatsiya xizmatlari koʻrsatilishi uchun shartnomaning amal qilish davrida abonentga operator (provayder) tomonidan ajratiladigan raqam;
+
+## 3275-son Qoidalar, 3-band. Asosiy tushuncha: MNP — abonent raqamining koʻchib oʻtishi (raqamni boshqa operatorga koʻchirish)
+abonent raqamining koʻchib oʻtishi — mobil aloqa xizmatlarini koʻrsatish shartnomasi asosida donor tomonidan abonentga ajratilgan abonent raqamini boshqa mobil aloqa operatori (retsipiyent) bilan yangi shartnoma tuzishda saqlash va undan foydalanish uchun amalga oshiriladigan tashkiliy-texnik tadbirlar majmui;
+
+## 3275-son Qoidalar, 3-band. Asosiy tushuncha: Birlamchi operator
+birlamchi operator — birlamchi ravishda raqamlash resursi ajratilgan, bu resursdan abonentga abonent raqami birinchi marta koʻchirilgan mobil aloqa operatori yoki provayder;
+
+## 3275-son Qoidalar, 3-band. Asosiy tushuncha: Oʻzbekiston Respublikasida jismoniy shaxsning shaxsiy identifikatsiya raqami (bundan buyon matnda JSHSHIR deb yuritiladi)
+Oʻzbekiston Respublikasida jismoniy shaxsning shaxsiy identifikatsiya raqami (bundan buyon matnda JSHSHIR deb yuritiladi) — JSHSHIRni aniqlash tartibiga muvofiq jismoniy shaxsning pasporti boʻyicha aniqlash mumkin boʻlgan va 14 raqamdan iborat shaxsiy identifikatsiya raqami;
+
+## 3275-son Qoidalar, 3-band. Asosiy tushuncha: Koʻchib oʻtgan raqamlar markazlashtirilgan bazasi (KRMB)
+koʻchib oʻtgan raqamlar markazlashtirilgan bazasi — mobil aloqa tarmoqlarida koʻchib oʻtgan abonent raqamlari maʼlumotlar bazasini boshqarish uchun apparat-dasturiy komplek;
+
+## 3275-son Qoidalar, 3-band. Asosiy tushuncha: KRMB — koʻchirilgan raqamlar markazlashtirilgan bazasi
+koʻchirilgan raqamlar markazlashtirilgan bazasi (bundan buyon matnda KRMB deb yuritiladi) — mobil aloqa tarmoqlarida koʻchirilgan abonent raqamlari toʻgʻrisidagi axborotni, shu jumladan, ushbu nizomda belgilanadigan maʼlumotlarni oʻz ichiga olgan maʼlumotlar bazasini boshqaruvchi apparat-dasturiy kompleks;
+
+## 3275-son Qoidalar, 3-band. Asosiy tushuncha: KRMB operatori
+KRMB operatori — KRMB shakllantirilishi, ishlashi, texnik kuzatilishi va rivojlanishini taʼminlaydigan, uning resurslaridan foydalanishni taqdim etadigan tashkilot;
+
+## 3275-son Qoidalar, 3-band. Asosiy tushuncha: Koʻchirilgan raqamlarning lokal bazasi
+koʻchirilgan raqamlarning lokal bazasi — chaqiruv yoki boshqa xabarlarni koʻchirilgan raqamga toʻgʻri marshrutlash uchun mobil aloqa operatori tomonidan undan real vaqtda foydalaniladigan, bu operatorda boʻlgan koʻchirilgan raqamlar markazlashtirilgan bazasining nusxasi;
+
+## 3275-son Qoidalar, 3-band. Asosiy tushuncha: Lokal bazani KRMB bilan sinxronlash
+koʻchirilgan raqamlarning lokal bazasini KRMB bilan sinxronlash — muayyan davriylik bilan amalga oshiriladigan, koʻchirilgan raqamlar markazlashtirilgan bazasidagi axborotning koʻchirilgan raqamlar lokal bazasiga nusxasini koʻchirish jarayoni;
+
+## 3275-son Qoidalar, 3-band. Asosiy tushuncha: qisqa matnli xabar (SMS) (bundan buyon matnda SMS deb yuritiladi)
+qisqa matnli xabar (SMS) (bundan buyon matnda SMS deb yuritiladi) — qiska xabarlar markazi orqali mobil aloqa abonentlariga qiska matnli xabarlarni uzatish va qabul qilish uchun moʻljallangan xizmat;
+
+## 3275-son Qoidalar, 3-band. Asosiy tushuncha: Marshrut raqami (routing number, RN)
+marshrut raqami (routing number, RN) — mobil telekommunikatsiya tarmogʻining koʻchirilgan abonent raqamiga chaqiruvlarni amalga oshirish uchun telekommunikatsiya tarmoqlarida foydalaniladigan manzilli axborot;
+
+## 3275-son Qoidalar, 3-band. Asosiy tushuncha: mahalliy operator
+mahalliy operator — Oʻzbekiston Respublikasi hududida jismoniy va yuridik shaxslarga mobil aloqa xizmatlarini koʻrsatuvchi aloqa operatori (provayderi);
+
+## 3275-son Qoidalar, 3-band. Asosiy tushuncha: Donor — siz ketayotgan eski operator (operator-donor)
+operator (provayder)-donor (bundan buyon matnda donor deb yuritiladi) — telekommunikatsiyalar tarmogʻidan abonent raqami koʻchiriladigan mobil aloqa operatori (provayderi);
+
+## 3275-son Qoidalar, 3-band. Asosiy tushuncha: Retsipiyent — siz oʻtayotgan yangi operator (operator-retsipiyent)
+operator (provayder)-retsipiyent (bundan buyon matnda retsipiyent deb yuritiladi) — telekommunikatsiyalar tarmogʻiga abonent raqami koʻchiriladigan mobil aloqa operatori (provayderi);
+
+## 3275-son Qoidalar, 3-band. Asosiy tushuncha: rouming
+rouming — bitta mobil aloqa operatori abonentining bitta davlat doirasida (milliy rouming) yoki boshqa mamlakatda (xalqaro rouming) boʻlgan boshqa mobil aloqa operatorining xizmat koʻrsatish zonasida boʻlganda boshqa mobil aloqa operatorining tarmogʻidan foydalana olishini taʼminlovchi xizmat;
+
+## 3275-son Qoidalar, 3-band. Asosiy tushuncha: Xato koʻchirish
+xato koʻchirish — abonent talabnomasisiz mobil aloqa operatorlari (provayderlari) tomonidan abonent raqamining koʻchirilishi (“inson omili” keltirib chiqargan xato sababli, yaʼni texnik tizimlar bilan oʻzaro ishlaganda xodimlarning notoʻgʻri xatti-harakatlari sababli abonentning talabnomasida koʻrsatilgan raqamdan boshqa raqamning koʻchirilishi);
+
+## 3275-son Qoidalar, 3-band. Asosiy tushuncha: All Call Query (barcha chaqiruvlar uchun soʻrov)
+barcha chaqiruvlar uchun soʻrov (All Call Query) (bundan buyon matnda All Call Query deb yuritiladi) — mobil telekommunikatsiya tarmogʻining koʻchirilgan abonent raqamlariga trafikni oʻtkazish uchun chaqiruvlarni toʻgʻridan-toʻgʻri marshrutlash metodi, bunda chaqiruv tashabbuskorining tarmogʻi koʻchirilgan raqam toʻgʻrisida axborot olish va chaqiruvni belgilangan joyiga keyinchalik marshrutlash uchun koʻchirilgan raqamlarning operatsion maʼlumotlar bazasiga soʻrovni amalga oshiradi;
+
+## 3275-son Qoidalar, 3-band. Asosiy tushuncha: eSIM
+eSIM — abonent qurilmasining virtual identifikatsiya moduli, uning yordamida abonent qurilmasini identifikatsiya qilish, uning mobil aloqa tarmogʻidan foydalana olishi, shuningdek, abonent raqamidan ruxsatsiz foydalanishdan himoya qilish taʼminlanadi;
+
+## 3275-son Qoidalar, 3-band. Asosiy tushuncha: MSISDN (Mobile Station Integrated Services Digital Network)
+MSISDN (Mobile Station Integrated Services Digital Network) — GSM/UMTS standartlarida aloqa uchun xizmatlari integratsiyalashgan raqamli tarmoq mobil abonentining raqami (masalan: +998 XX-XXX-XX-XX);
+
+## 3275-son Qoidalar, 3-band. Asosiy tushuncha: Onward Routing (progressiv marshrutlash)
+progressiv marshrutlash (Onward Routing) (bundan buyon matnda Onward Routing deb yuritiladi) — mobil telekommunikatsiyalar tarmogʻining koʻchirilgan abonent raqamlariga trafikni oʻtkazish uchun chaqiruvlarni toʻgʻridan-toʻgʻri boʻlmagan marshrutlash metodi, bunda chaqiruv tashabbuskorining tarmogʻi donor tarmogʻiga soʻrovni amalga oshiradi, donor esa, oʻz navbatida, koʻchirilgan raqam toʻgʻrisida axborot olish va chaqiruvni belgilangan joyiga keyinchalik marshrutlash uchun koʻchirilgan raqamlarning operatsion maʼlumotlar bazasiga soʻrovni amalga oshiradi;
+
+## 3275-son Qoidalar, 3-band. Asosiy tushuncha: SIM/RUIM-karta (bundan buyon matnda SIM karta deb yuritiladi)
+SIM/RUIM-karta (bundan buyon matnda SIM karta deb yuritiladi) — ichiga mikrosxema oʻrnatilgan, olinuvchi identifikatsiya moduli, uning yordamida abonent qurilmasini identifikatsiya qilish, uning mobil aloqa tarmogʻidan foydalana olishi, shuningdek, abonent raqamidan ruxsatsiz foydalanishdan himoya qilish taʼminlanadi;
+
+## 3275-son Qoidalar, 167-band. MNP xizmatini kim koʻrsatadi
+167. Abonent uchun abonent raqamini koʻchirish xizmati mobil aloqa operatorlari (provayderlari) tomonidan taqdim etiladi.
+
+## 3275-son Qoidalar, 168-band. MNP chastotasi: 30 kalendar kunda koʻpi bilan bir marta
+168. Abonent raqamini koʻchirish abonentga 30 kalendar kun mobaynida koʻpi bilan bir marta taqdim etiladi.
+
+## 3275-son Qoidalar, 169-band. Qaysi raqamlar koʻchiriladi; raqam terish formati oʻzgarmaydi
+169. Koʻchiriladigan raqamlar sifatida faqat mobil aloqa operatorlari (provayderlari) uchun ajratilgan raqamlar qoʻllanilishi mumkin.
+Raqamni koʻchirish oqibatida raqamni terish formatining oʻzgartirilishiga yoʻl qoʻyilmaydi.
+
+## 3275-son Qoidalar, 170-band. MNP xizmati raqamlarini mobil tarmoqqa va aksincha koʻchirish taqiqlanadi
+170. Abonent raqamlarini koʻchirish xizmatini taqdim etish uchun foydalaniladigan raqamlarning mobil aloqa tarmoqlariga va aksincha koʻchirilishi taqiqlanadi.
+
+## 3275-son Qoidalar, 171-band. KRMB operatorining vazifasi: axborotni avtomatlashtirish va muvofiqlashtirish
+171. KRMB operatori abonent raqami koʻchirilishini taʼminlash uchun mobil aloqa operatorlari (provayderlari) tomonidan taqdim etiladigan axborotni yigʻish, uni qayta ishlash, saqlash va uzatish jarayonlarini avtomatlashtiradi va muvofiqlashtiradi.
+
+## 3275-son Qoidalar, 172-band. Barcha MNP axborot almashinuvi KRMB operatori orqali
+172. Abonent raqamlarini koʻchirish, koʻchirilgan abonent raqamlari toʻgʻrisidagi maʼlumotlarni oʻzgartirish, abonent raqamini koʻchirish xizmatini toʻxtatib turish va koʻchirilgan abonent raqamini birlamchi operatorga qaytarish jarayoniga tegishli axborot bilan almashish KRMB operatori orqali amalga oshiriladi.
+
+## 3275-son Qoidalar, 173-band. KRMB shaxsga doir maʼlumotlar qonuniga rioya qilgan holda yuritiladi
+173. KRMBni shakllantirish, yuritish, ishlashi va texnik kuzatuvi, shu jumladan, undagi axborot va maʼlumotlarni yigʻish, saqlash, qayta ishlash, uzatish, shuningdek, KRMBdan foydalana olish imkoniyatini taqdim etish Oʻzbekiston Respublikasining “Shaxsga doir maʼlumotlar toʻgʻrisida”gi Qonuni talablariga rioya qilgan holda KRMB operatori tomonidan taʼminlanadi.
+
+## 3275-son Qoidalar, 174-band. Operatorlar KRMBga maʼlumot taqdim etadi
+174. Mobil aloqa tarmoqlarining abonent raqamlari toʻgʻrisidagi axborot va abonent raqamini koʻchirish jarayonini amalga oshirish uchun zarur boʻlgan boshqa maʼlumotlar mobil aloqa operatorlari (provayderlari) tomonidan Oʻzbekiston Respublikasining “Shaxsga doir maʼlumotlar toʻgʻrisida”gi Qonuni talablariga rioya qilgan holda KRMB operatoriga taqdim etiladi.
+
+## 3275-son Qoidalar, 175-band. Operatorlarning KRMBdan foydalanishi shartnoma asosida
+175. Mobil aloqa tarmoqlari operatorlarining (provayderlarining) KRMBdan foydalanishi KRMB operatori va mobil aloqa tarmoqlari operatorlari (provayderlari) oʻrtasida tuzilgan shartnomaga muvofiq amalga oshiriladi.
+
+## 3275-son Qoidalar, 176-band. KRMBda qanday axborot saqlanadi
+176. KRMBda quyidagi axborotlar saqlanadi va (yoki) qayta ishlanadi:
+mobil aloqa xizmatlarini koʻrsatish toʻgʻrisida boshqa mobil aloqa operatorlari (provayderlari) bilan yangi shartnomalarni tuzishda abonentlarda saqlanadigan koʻchirilgan abonent raqamlari toʻgʻrisida;
+abonent raqamini koʻchirish sanasi va vaqti toʻgʻrisida;
+raqamlash resursining mobil aloqa operatoriga (provayderiga) tegishliligini koʻrsatib, belgilangan tartibda mobil aloqa operatorlariga (provayderlariga) ajratilgan raqamlash toʻgʻrisida.
+
+## 3275-son Qoidalar, 177-band. KRMB operatorining texnik tadbirlari
+177. KRMB ishlashini va texnik kuzatuvini taʼminlash maqsadida KRMB operatori quyidagi tadbirlarni amalga oshiradi:
+a) KRMB kechayu kunduz ishlashini taʼminlash;
+b) mobil aloqa operatorlaridan (provayderlaridan) kelib tushadigan axborotni yigʻish, saqlash va qayta ishlash;
+v) KRMBdagi axborot muhofazasini taʼminlash;
+g) abonent raqamini koʻchirish va toʻgʻri marshrutlashni amalga oshirish uchun zarur boʻlgan, KRMBda mavjud boʻlgan axborotdan aloqa operatorlarining foydalana olish imkoniyatlarini taqdim etish.
+
+## 3275-son Qoidalar, 178-band. KRMBdagi axborotni muhofaza qilish
+178. KRMBdagi axborotni muhofaza qilish, shuningdek, undan foydalana olish qonunchilik hujjatlarida belgilangan talablarga rioya qilgan holda taʼminlanadi.
+
+## 3275-son Qoidalar, 179-band. Talabnoma topshirish usullari (ofis, veb-sayt, mobil ilova)
+179. Mobil aloqa tarmoqlarida abonent raqamini koʻchirish uchun talabnoma (bundan buyon matnda talabnoma deb yuritiladi) abonentdan quyidagi tartibda qabul qilinadi:
+a) abonent retsipiyentning ofisida mijozlarga xizmat koʻrsatish punktida shaxsini tasdiqlovchi hujjatini taqdim etgan holda;
+b) abonent shaxsini tasdiqlovchi hujjatdagi maʼlumotlari kiritgan holda retsipiyentning rasmiy veb-saytida elektron koʻrinishda;
+v) abonent shaxsini tasdiqlovchi hujjatdagi maʼlumotlarni mobil ilova orqali elektron koʻrinishda.
+
+## 3275-son Qoidalar, 179-band. Shaxsiy maʼlumotlar oʻzgargan boʻlsa — avval donor shartnomasini yangilash
+179-band (davomi): Donor bilan mobil aloqa xizmatlarini koʻrsatish toʻgʻrisidagi shartnoma tuzilgan paytdan boshlab abonentda uning shaxsiy maʼlumotlarida oʻzgarishlar (familiyasi oʻzgarganda, pasporti almashganda va h.k.) yuz bergan holda, talabnomani berishdan oldin donor bilan tuzilgan shartnomaga tegishli oʻzgartirishlar kiritilishi kerak.
+
+## 3275-son Qoidalar, 180-band. MNP muddati: talabnomadan keyin 8 ish soatidan koʻp emas
+180. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish abonentdan olingan talabnoma asosida 8 ish soatidan koʻp boʻlmagan vaqt davomida mobil aloqa operatori (provayderi) tomonidan taʼminlanadi.
+
+## 3275-son Qoidalar, 181-band. Retsipiyent vazifalari: talabnoma, yangi shartnoma, vaqtinchalik raqamli SIM
+181. Retsipiyent:
+abonentdan talabnoma qabul qiladi;
+talabnoma toʻgʻri toʻldirilganligini tekshiradi, uni roʻyxatga oladi va KRMBga soʻrov yuboradi yoki KRMB tomonidan talabnomani mobil ilova orqali olinganligini tasdiqlaydi;
+abonent bilan yangi shartnoma tuzadi va retsipiyentga biriktirilgan hamda abonent tomonidan talabnomada koʻrsatilgan tarif rejasiga ulangan raqamlash diapazonidagi vaqtincha raqamli yangi SIM kartani beradi.
+Elektron roʻyxatdan oʻtgandan keyin abonent SIM-kartani olish va shartnomani imzolash uchun operator (provayder) ofisiga kelishi kerakligi toʻgʻrisida xabardor qilinadi. Agar retsipiyent abonentga eSIM qoʻllab-quvvatlash bilan qurilmalar uchun xizmatlarni taqdim etsa, operator (provayder) shartnomani masofadan tuzish imkoniyati bilan aktiv eSIMga raqam koʻchirilishini taklif qilishi mumkin.
+
+## 3275-son Qoidalar, 182-band. Vaqtinchalik SIM: koʻchirish tugaguncha va rad etilganda
+182. Shartnoma tuzish paytida vaqtincha raqamli SIM-karta aktivlashtiriladi va abonent haqiqiy koʻchirilguncha retsipiyentning aloqa xizmatlaridan foydalanishi mumkin.
+Abonent raqamini koʻchirish rad etilganda abonent unga berilgan SIM-karta orqali retsipiyentning aloqa xizmatlaridan foydalanishni davom ettirishi mumkin. Bunda aynan shu retsipiyentga abonent raqamini koʻchirish uchun talabnoma takroran berilganda aloqa xizmatlarini koʻrsatish toʻgʻrisida yangi shartnomani tuzish talab etilmaydi.
+
+## 3275-son Qoidalar, 183-band. Retsipiyentning KRMBga soʻrovi tarkibi (jismoniy va yuridik shaxs)
+183. Retsipiyentdan abonent raqamini koʻchirish toʻgʻrisida KRMBga berilgan soʻrovda quyidagi maʼlumotlar boʻladi:
+a) jismoniy shaxslar uchun:
+abonentning pasport maʼlumotlari (pasport turi, seriyasi va raqami, JSHSHIR, pasport berilgan sana va kim tomonidan berilganligi);
+abonent raqami;
+b) yuridik shaxslar uchun:
+tashkilotning STIR;
+abonent raqami yoki abonent raqamlarining roʻyxati;
+abonent raqamlarini toʻliq yoki qisman koʻchirishni tanlash toʻgʻrisidagi koʻrsatma.
+
+## 3275-son Qoidalar, 183-band. Toʻliq koʻchirish: bir nechta raqam — bittasi rad etilsa hammasi rad
+183-band (davomi): Bunda, abonent raqamining toʻliq koʻchirilishini tanlash abonent tomonidan abonent raqamlari roʻyxatida aks ettirilgan barcha abonent raqamlari koʻchirilishini koʻzda tutadi. Agar abonent raqamlaridan bittasini boʻlsa ham koʻchirish rad etilgan boʻlsa, u holda soʻrov roʻyxatda aks ettirilgan barcha abonent raqamlari boʻyicha toʻliq rad etilgan hisoblanadi.
+
+## 3275-son Qoidalar, 183-band. Qisman koʻchirish: tasdiqlangan raqamlar koʻchiriladi
+183-band (davomi): Abonent raqami qisman koʻchirilishini tanlash koʻchirish uchun donor tomonidan tasdiqlangan abonent raqamlarining roʻyxatida abonent tomonidan aks ettirilgan abonent raqamlarining faqat qismi koʻchirilishini koʻzda tutadi. Bunda bir yoki bir nechta abonent raqamlari boʻyicha koʻchirishni rad etish roʻyxatdagi donor tasdiqlagan abonent raqamlarini koʻchirish uchun rad javobi hisoblanmaydi.
+
+## 3275-son Qoidalar, 184-band. KRMB tekshiruvi va rad etish: talabnoma, 30 kun, aktiv talabnoma
+184. KRMB operatori retsipiyentdan abonent raqamini koʻchirish soʻrovini olganda quyidagi shartlarga rioya qilinganligini tekshiradi:
+KRMBda retsipiyent tomonidan mobil aloqa tarmoqlarida abonent raqamini koʻchirish uchun soʻrovning toʻgʻri toʻldirilganligini. Bunda toʻgʻri toʻldirilganligi soʻrovning talabnomaga muvofiq toʻgʻri va aniq toʻldirilganligi bilan aniqlanadi. Ushbu shart bajarilmaganda KRMB operatori retsipiyentni xabardor qilgan holda talabnomani rad etadi. Retsipiyent kamchiliklarni bartaraf etadi va KRMB operatoriga yangi soʻrovni yuboradi;
+abonent raqamini koʻchirish imkoniyatini tasdiqlash — oxirgi koʻchirilgan paytdan boshlab kamida 30 kalendar kuni oʻtganligi, bundan xato koʻchirilgan holatlar mustasno;
+abonent raqamini koʻchirish uchun aktiv talabnomalar yoʻqligi.
+Ushbu bandning uchinchi va toʻrtinchi xatboshilaridagi shartlar bajarilmagan holda KRMB operatori retsipiyentga abonent raqamini koʻchirish rad etilganligi toʻgʻrisida xabar qiladi, bu haqda retsipiyent vaqtincha raqamli SIM kartaga SMS xabarni yuborish orqali, rad etish sababini koʻrsatgan holda abonentni xabardor qiladi.
+
+## 3275-son Qoidalar, 185-band. KRMB soʻrovni donorga yuboradi
+185. Retsipiyentdan abonent raqamini koʻchirish toʻgʻrisidagi soʻrov qabul qilinganda KRMB operatori donorga abonent raqamini koʻchirish toʻgʻrisidagi soʻrovni yuborib, retsipiyentga keyin koʻrib chiqish uchun talabnoma qabul qilinganligi toʻgʻrisida xabar qiladi.
+
+## 3275-son Qoidalar, 186-band. Donor tekshiruvi va rad etish: shaxsiy maʼlumot, qarz, majburiyat
+186. Donor KRMB operatoridan abonent raqamini koʻchirish soʻrovini olganda quyidagi shartlarga rioya qilinganligini tekshiradi:
+abonent shaxsiy maʼlumotlarining ishonchliligini. Bunda ishonchlilik KRMBdan soʻrovda kelib tushgan shaxsiy maʼlumotlarning donor va abonent oʻrtasidagi mobil aloqa xizmatlarini koʻrsatish toʻgʻrisidagi shartnomada koʻrsatilgan maʼlumotlar bilan mosligi bilan aniqlanadi;
+donor bilan tuzilgan aloqa xizmatlarini koʻrsatish toʻgʻrisidagi shartnoma boʻyicha donor tomonidan tekshirish paytida abonent qarzlarining yoʻqligi, rouming xizmatlaridan tashqari;
+abonentda donor oldidagi shartnoma boʻyicha majburiyatlarining yoʻqligi.
+Bunda mazkur bandda koʻrsatilgan shartlardan bittasi boʻlsa ham bajarilmasa, donor KRMB operatoriga abonent raqamini koʻchirishni rad etish toʻgʻrisidagi asoslangan bildirishnoma yuboradi, bu haqda KRMB operatori retsipiyentga xabar qiladi, retsipiyent esa, oʻz navbatida, vaqtincha raqamli SIM kartaga SMS-xabarni yuborib, rad etish sababini koʻrsatgan holda abonentni abonent raqamini koʻchirish rad etilganligi toʻgʻrisida xabardor qiladi.
+
+## 3275-son Qoidalar, 187-band. Donor talabnomani 3 ish soatida koʻrib chiqadi
+187. Donor tomonidan talabnomani koʻrib chiqish muddati KRMB operatoridan soʻrovni olgan paytdan boshlab hisoblanadi va 3 ish soatidan koʻp boʻlmagan vaqtni tashkil qiladi. Bunda koʻrib chiqish ajratilgan muddatdan oshib ketganda KRMB avtomatik ravishda retsipiyent va donorga abonent raqami koʻchirilishi mumkinligi toʻgʻrisida xabar qiladi, KRMB talabnomani oʻz vaqtida tasdiqlamagan donor tomonidan buzilishga yoʻl qoʻyilganligini qayd qiladi.
+
+## 3275-son Qoidalar, 188-band. Donor tasdigʻi — eski shartnomani bekor qilish asosi
+188. Donor tomonidan KRMB operatoriga abonent raqamini koʻchirish mumkinligini tasdiqlash mobil aloqa xizmatlarini koʻrsatish toʻgʻrisidagi shartnomani bekor qilish uchun asos boʻlib hisoblanadi.
+
+## 3275-son Qoidalar, 189-band. Texnik koʻchirish boshlanishi haqida SMS
+189. Donordan abonent raqamini koʻchirish imkoniyati toʻgʻrisida bildirishnomani olgandan keyin KRMB operatori retsipiyent va donorga abonent raqamini texnik koʻchirish boshlanishi toʻgʻrisida xabar qiladi, retsipiyent esa, oʻz navbatida, bu haqda vaqtincha raqamli SIM kartaga SMS-xabarni yuborib abonentni xabardor qiladi.
+
+## 3275-son Qoidalar, 190-band. Texnik koʻchirish: retsipiyent va donor harakatlari
+190. KRMB operatoridan abonent raqamini texnik koʻchirishni boshlash toʻgʻrisidagi xabarni olgandan keyin:
+retsipiyent abonent raqamini oʻz maʼlumotlar bazasiga kiritish, shu jumladan, billing tizimlari va abonentlarni identifikatsiyalash maʼlumotlar bazasiga kiritish zarur xatti-harakatlarni bajaradi, shuningdek, SIM-kartadagi vaqtincha raqamni talabnomada abonent tomonidan koʻchiriladigan sifatida koʻrsatilgan raqamga almashtiradi va KRMB operatoriga abonent raqamini oʻz tarmogʻida roʻyxatga olish ishlari tugallanganligi toʻgʻrisida xabar qiladi;
+donor abonent raqamini oʻz billing tizimidan chiqarish boʻyicha kerakli ishlarni bajaradi va abonent deaktivatsiya qilinganligi toʻgʻrisida KRMB operatoriga xabar qiladi.
+
+## 3275-son Qoidalar, 191-band. KRMB koʻchirishni qayd etadi va marshrutlashni oʻzgartirishni soʻraydi
+191. KRMB operatori donordan raqam deaktivatsiya qilinganligi toʻgʻrisida va retsipiyentdan abonent raqami roʻyxatga olinganligi toʻgʻrisidagi xabarlarni olgandan keyin abonent raqami koʻchirilganligi toʻgʻrisidagi maʼlumotlarni KRMBga kiritadi hamda barcha telekommunikatsiya operatorlarini (provayderlarini) koʻchirilgan abonent raqami boʻyicha marshrutlashni oʻzgartirish zarurligi toʻgʻrisida xabardor qiladi.
+Ajratilgan muddatdan oshib ketgan holda KRMB marshrutlash oʻzgarganligini oʻz vaqtida tasdiqlamagan operator (provayder) tomonidan buzilishga yoʻl qoʻyilganligini qayd qiladi. Buzilish toʻgʻrisidagi bunday axborot keyinchalik nazorat qiluvchi vakolatli organni xabardor qilish uchun KRMB bazasida roʻyxatga olinadi.
+
+## 3275-son Qoidalar, 192-band. Operatorlar marshrutlashni oʻzgartiradi
+192. Telekommunikatsiya operatorlari (provayderlari) KRMBdan operatoridan xabarni olgandan keyin koʻchirilgan abonent raqami boʻyicha marshrutlashga oʻzgartirishlar kiritadilar va oʻz tarmoqlarida ishlar tugatilganligi toʻgʻrisida KRMB operatoriga tasdiq yuboradilar.
+
+## 3275-son Qoidalar, 193-band. Koʻchirish muvaffaqiyatli tugaganligi haqida KRMB xabari
+193. KRMB operatori koʻchirilgan abonent raqami boʻyicha marshrutlash oʻzgarganligi toʻgʻrisida telekommunikatsiya operatorlaridan (provayderlaridan) tasdiqni olganlaridan keyin yoki bu operatsiya uchun ajratilgan muddat oshib ketgan holda barcha telekommunikatsiya operatorlariga (provayderlariga) abonent raqamini koʻchirish muvaffaqiyatli tugallanganligi toʻgʻrisida xabar yuboradi. Ajratilgan muddat oshib ketgan holda KRMB marshrutlash oʻzgarganligini oʻz vaqtida tasdiqlamagan operator (provayder) tomonidan buzilishga yoʻl qoʻyilganligini qayd qiladi. Buzilish toʻgʻrisidagi bunday axborot keyinchalik nazorat qiluvchi vakolatli organni xabardor qilish uchun KRMB bazasida roʻyxatga olinadi.
+
+## 3275-son Qoidalar, 194-band. MNP muvaffaqiyatli tugaganini qanday bilaman: SMS xabar
+194. Retsipiyent KRMB operatoridan abonent raqamini koʻchirish muvaffaqiyatli tugallanganligi toʻgʻrisidagi xabarni olgandan keyin bu haqda koʻchirilgan raqamli SIM kartaga SMS-xabarni yuborish orqali abonentni xabardor qiladi.
+
+## 3275-son Qoidalar, 195-band. MNPdan voz kechish (arizani bekor qilish) mumkin — donor tasdiqlaguncha
+195. Donor tomonidan abonent raqamining koʻchirilishi toʻgʻrisida soʻrov tasdiqlanguncha abonent abonent raqamini koʻchirish xizmatlarini rad etishi mumkin.
+
+## 3275-son Qoidalar, 196-band. Avval koʻchirilgan raqamni yana koʻchirish (takroriy porting)
+196. Avval bir operatordan (provayderdan) boshqa operatorga (provayderga) koʻchirilgan abonent raqamini koʻchirish jarayoni abonentning talabnomasi boʻyicha 183 — 195-bandlarda koʻrsatilgan ketma-ketlikda bajariladi.
+
+## 3275-son Qoidalar, 197-band. KRMB orqali barcha harakatlar sinxron tasdiqlanadi
+197. KRMB operatori orqali abonent raqamini koʻchirish protseduralari bilan bogʻliq barcha xatti-harakatlar soʻrov olinganligini majburiy sinxron tasdiqlagan holda bajariladi.
+
+## 3275-son Qoidalar, 198-band. Marshrutlash texnologiyalari: All Call Query va Onward Routing
+198. Aloqa tarmoqlarida koʻchirilgan abonent raqamlari uchun ulanishlarning marshrutlanishini taʼminlash uchun quyidagi texnologiyalar qoʻllaniladi:
+a) mobil aloqa tarmoqlaridan chaqiruvni boshlab berishda koʻchirilgan raqamlarning lokal bazasidan foydalangan holda “All Call Query”;
+b) qayd qilingan aloqa tarmoqlaridan chaqiruvni boshlab berishda “All Call Query” yoki “Onward Routing”.
+
+## 3275-son Qoidalar, 199-band. Operatorning MNP boʻyicha majburiyatlari
+199. Operator (provayder) quyidagilarni taʼminlaydi:
+koʻchirilgan abonent raqamlariga oʻz tarmogʻidan ulanishlarni toʻgʻri marshrutlashni taʼminlash uchun zarur boʻlgan koʻchirilgan raqamlarning lokal bazasini shakllantirish, uning ishlashi va texnik kuzatish;
+KRMB operatoriga talabnomada abonent tomonidan koʻrsatilgan abonent raqamlari toʻgʻrisidagi maʼlumotlarni taqdim etish;
+koʻchirilgan abonent raqamlarini oʻzining raqamlash resursiga kiritish va mazkur Qoidalarida belgilangan tartibda tuzilgan shartnomaning amal qilish muddatida mobil aloqa xizmatlarini koʻrsatish;
+donor tomonidan boshqa operatorning tarmogʻiga koʻchirilishi kerak boʻlgan raqamning berilishi;
+abonent raqamini koʻchirish va koʻchirilgan abonent raqami boʻyicha oʻz tarmoqlarida xizmatlarni lozim darajada koʻrsatish uchun oʻz tarmoqlarini texnik jihatdan tayyorlash;
+foydalanilayotgan texnologiya, taqdim etilayotgan mobil aloqa xizmatining turi, abonent tomonidan aloqa xizmatlariga haq toʻlash usulidan qatʼi nazar mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish;
+aholiga mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish shartlari toʻgʻrisidagi axborotni taqdim etish;
+belgilangan muddatlarda retsipiyent va abonent oʻrtasida shartnoma bekor qilinganda koʻchirilgan abonent raqamini donorga qaytarish.
+
+## 3275-son Qoidalar, 200-band. KRMB operatorining majburiyatlari
+200. KRMB operatori quyidagilarni taʼminlaydi:
+KRMBni shakllantirish va texnik kuzatish hamda operatorlar (provayderlar) tomonidan abonent raqamlarini koʻchirish uchun uning resurslaridan foydalana olish imkonini yaratish;
+abonent raqamlarini koʻchirish jarayonida yuzaga keladigan masalalar boʻyicha operatorlar (provayderlar) oʻrtasida oʻzaro ishlashni tashkil etish;
+KRMBning koʻchirilgan abonent raqamlari toʻgʻrisidagi axborotni aktuallashtirish (maʼlumotlarni sinxronlash) uchun KRMBga ulangan operatorlarning (provayderlarning) koʻchirilgan raqamlarning lokal bazasi bilan oʻzaro ishlashi;
+koʻchirilgan abonent raqamlari toʻgʻrisidagi axborotni KRMBga kiritish (abonent raqamlarini koʻchirish jarayonida axborotni yangilash);
+koʻchirilgan abonent raqamlari toʻgʻrisidagi maʼlumotlardan ruxsatsiz foydalana olishdan himoyalash;
+operatorlarni (provayderlarni) koʻchirilgan abonent raqamiga xizmat koʻrsatuvchi mobil aloqa operatorining (provayderining) almashganligi toʻgʻrisida xabardor qilish.
+
+## 3275-son Qoidalar, 201-band. Donor va retsipiyent faqat KRMB orqali oʻzaro ishlaydi
+201. Abonent raqamlarini koʻchirish jarayonida yuzaga keladigan retsipiyent va donorning oʻzaro ishlashlari faqat KRMB operatori orqali amalga oshiriladi.
+
+## 3275-son Qoidalar, 202-band. KRMBda jarayon avtomatlashtirilgan
+202. KRMBda abonent raqamlarini koʻchirish jarayoni, shu jumladan, axborot almashish avtomatlashtirilgan rejimda amalga oshiriladi.
+
+## 3275-son Qoidalar, 203-band. MNP xarajatlari operatorlar hisobidan
+203. Mobil aloqa operatorlari (provayderlari) oʻz tarmoqlarida, abonent raqamining koʻchirilishini taʼminlash boʻyicha barcha xarajatlarini, shu jumladan, KRMBga ulanish va abonentlarga koʻchirish jarayonlarida koʻzda tutilgan SMSlarni joʻnatish uchun aloqa kanallarini ijaraga olish xarajatlarini oʻz hisoblaridan amalga oshiradilar.
+
+## 3275-son Qoidalar, 204-band. MNP narxini retsipiyent belgilaydi
+204. Mobil aloqa operatorlari (provayderlari) tomonidan abonent raqamlaridan, shu jumladan, koʻchirilgan abonent raqamlaridan foydalanganlik uchun toʻlov abonentga mobil aloqa xizmatlarini koʻrsatuvchi operator (provayder) tomonidan amalga oshiriladi.
+Abonent raqamini koʻchirish xizmati uchun abonent tomonidan toʻlanadigan haq miqdori retsipiyent tomonidan mustaqil ravishda belgilanadi.
+
+## 3275-son Qoidalar, 205-band. MNP toʻlovi bir martalik, retsipiyentga toʻlanadi
+205. Abonent tomonidan abonent raqamini koʻchirish xizmati uchun toʻlanadigan haq bir martalik hisoblanadi va mobil aloqa xizmatlarini koʻrsatish toʻgʻrisidagi shartnomani tuzishda retsipiyentga toʻlanadi.
+
+## 3275-son Qoidalar, 206-band. Operator va KRMB operatori hisob-kitoblari
+206. Operator (provayder) va KRMB operatorining oʻzaro ishlashi va oʻzaro hisob-kitoblari jarayoni operator (provayder) va KRMB operatori oʻrtasida tuzilgan shartnoma bilan belgilanadi.
+
+## 3275-son Qoidalar, 207-band. Balansdagi pul: donor tomonidan qaytariladi
+207. Mobil aloqa tarmoqlarida abonent raqami koʻchirilganda abonentning shaxsiy hisob raqamida sarflanmagan pul mablagʻlari mavjud boʻlganda, ushbu mablagʻlarni qaytarish mazkur Qoidalarga va donor bilan tuzilgan mobil aloqa xizmatlarini koʻrsatish shartnomasiga muvofiq donor tomonidan amalga oshiriladi.
+Telefon aloqa tarmoqlaridan chaqiruv boshlanganida “Onward Routing” xizmatlari taqdim etilganligi uchun telefon va mobil aloqa tarmoqlarining operatorlari (provayderlari) oʻrtasidagi oʻzaro hisob-kitoblar ushbu operatorlar (provayderlar) oʻrtasida tuzilgan shartnoma shartlari bilan belgilanadi.
+
+## 3275-son Qoidalar, 208-band. Rouming qarzi: donor 30 kalendar kun ichida hisob taqdim etishi mumkin
+208. Abonentning donor oldida koʻchirilgan raqam boʻyicha koʻrsatilgan rouming xizmatlari uchun qarzdorligi mavjud boʻlganda donor abonent raqami retsipiyent tarmogʻiga koʻchirilgan sanadan boshlab 30 kalendar kun davomida koʻrsatilgan rouming xizmatlariga haq toʻlash uchun hisobni taqdim etish huquqiga ega.
+
+## 3275-son Qoidalar, 208-band. Rouming qarzi: KRMB orqali soʻrov va 7 ish kunlik toʻlash muddati
+208-band (davomi): Bunda, donor KRMB operatori orqali abonent raqamini, qarzdorlik summasini va qarzdorlikni toʻlash muddatini koʻrsatgan holda retsipiyentga soʻrov yuboradi. Qarzdorlikni bartaraf etish (toʻlash) muddati 7 ish kunidan oshmasligi kerak.
+
+## 3275-son Qoidalar, 208-band. Rouming qarzi: KRMB operatori 30 kunlik muddatni tekshiradi
+208-band (davomi): KRMB operatori donorning koʻchirilgan abonent raqamining qarzdorligi toʻgʻrisida retsipiyent yuborilgan soʻrovini olganda, soʻrovning 30 kalendar kun davomida taqdim etilganligi tekshiriladi, agar soʻrov ushbu muddatga rioya qilingan holda yuborilganda KRMB operatori donorning soʻrovini tasdiqlab va retsipiyentga abonent tomonidan qarzdorlikni toʻlash zarurligi toʻgʻrisida xabar yuboradi, agar soʻrov ushbu muddatda taqdim etilmaganligi aniqlanganda, KRMB operatori donorga soʻrovning rad etilishi haqida xabar yuboradi.
+
+## 3275-son Qoidalar, 208-band. Rouming qarzi: retsipiyent 15 daqiqa ichida SMS orqali xabar beradi
+208-band (davomi): Retsipiyent KRMB operatoridan koʻchirilgan abonent raqami boʻyicha abonent tomonidan qarzdorlikni toʻlash toʻgʻrisidagi xabarnomani olgan paytdan boshlab 15 daqiqa ichida quyidagilar haqida xabardor qiladi:
+abonentning donor oldidagi qarzdorligini toʻlash zarurligi toʻgʻrisida SMS-xabarnomani joʻnatish yoʻli bilan;
+abonentni xabardor qilish vaqti toʻgʻrisida KRMB operatorini.
+KRMB operatori retsipiyent tomonidan abonent xabardor qilingan paytidan boshlab abonentning qarzdorligini toʻlash uchun belgilangan vaqtni hisoblash boshlanganligini KRMBda qayd qiladi va bu haqda donorni xabardor qiladi.
+
+## 3275-son Qoidalar, 208-band. Rouming qarzi 7 ish kunida toʻlanmasa: xizmat toʻxtatiladi
+208-band (davomi): Abonent tomonidan qarzdorlikni bartaraf etish toʻgʻrisida retsipiyentdan xabarnoma olingan vaqtdan boshlab 7 ish kuni davomida qarzdorlik bartaraf etilmagan (toʻlanmagan) taqdirda, donor KRMB operatoriga retsipiyent tomonidan abonent uchun aloqa xizmatlarini blokirovka qilish soʻrovini yuboradi.
+Retsipiyent abonent donor oldidagi qarzdorligini toʻliq toʻlaguniga qadar KRMB operatoridan xabarnomani olgan paytdan boshlab abonentga xizmatlar koʻrsatishni toʻxtatadi. Bunda retsipiyent abonentga qarzdorlikni toʻlash zarurligi toʻgʻrisida SMS xabarni yuboradi.
+
+## 3275-son Qoidalar, 208-band. Rouming qarzi toʻlanganda: 15 daqiqada blokdan chiqarish
+208-band (davomi): Abonent qarzdorligini bartataraf etganda (toʻlaganda), donor 15 daqiqa ichida KRMB operatoriga qarzdorlik toʻlanganligi va abonent raqami blokirovkadan chiqarilganligi toʻgʻrisida xabar yuboradi, bu haqda KRMB operatori retsipiyentga xabar qiladi.
+
+## 3275-son Qoidalar, 209-band. Retsipiyent bilan shartnoma bekor boʻlsa: raqam birlamchi operatorga qaytadi
+209. Retsipiyent bilan mobil aloqa xizmatlarini koʻrsatish shartnomasi bekor qilinganda, koʻchirilgan abonent raqami bir ish kuni ichida birlamchi operatorga qaytarilishi kerak.
+Bunda, retsipiyent tomonidan KRMB operatoriga abonent raqamini birlamchi operatorga qaytarish toʻgʻrisidagi soʻrov (bundan buyon matnda soʻrov deb yuritiladi) yuboriladi.
+
+## 3275-son Qoidalar, 210-band. Raqamni qaytarish shartlari
+210. KRMB operatori quyidagi hollarda abonent raqamini qaytaradi:
+raqam retsipiyentga tegishli boʻlganda;
+raqamni koʻchirish aktiv jarayoni boʻlganda yoki boʻlmaganda;
+raqamni qaytarish soʻrovining formati toʻgʻri toʻldirilganda.
+
+## 3275-son Qoidalar, 211-band. Raqam qaytarilishi haqida xabarnoma
+211. Soʻrov tasdiqlaganda KRMB operatori retsipiyentga va birlamchi operatorga raqamni qaytarish toʻgʻrisida xabarnoma yuboradi, bunda parallel ravishda operatorlarni (provayderlarni) tarmoqda konfiguratsiyaning oʻzgarishi va marshrutlashni oʻzgartirish zarurligi toʻgʻrisida xabardor qiladi.
+
+## 3275-son Qoidalar, 212-band. Birlamchi operator raqam olinganini tasdiqlaydi
+212. Birlamchi operator KRMB operatori orqali retsipiyentni qaytarilgan abonent raqami olinganligi toʻgʻrisida xabardor qiladi.
+
+## 3275-son Qoidalar, 213-band. Xato koʻchirish aniqlansa: retsipiyent xabar beradi
+213. Abonent raqami xato koʻchirilganda retsipiyent KRMB operatoriga aniqlangan xato va abonent raqamining qaytarilishi toʻgʻrisida xabar yuboradi.
+
+## 3275-son Qoidalar, 214-band. Xato koʻchirishni qaytarish: KRMB tekshiruvi
+214. KRMB operatori abonent raqamini qaytarish mumkinligini, abonent raqamining donorga tegishliligini, aktiv koʻchirish jarayoni borligini tekshiradi. Tekshiruv muvaffaqiyatli oʻtganda, KRMB operatori retsipiyentga abonent raqamini qaytarish va donorga xato raqamni qaytarish toʻgʻrisida xabar yuboradi.
+Abonent raqamini xato koʻchirishni qaytarish soʻrovida xatoliklar aniqlanganda KRMB operatori retsipiyentga abonent raqami xato koʻchirilganligini qaytarishni rad etish toʻgʻrisida xabar yuboradi.
+Retsipiyent xatolarni bartaraf etadi va KRMB operatoriga qayta soʻrovni yuboradi.
+
+## 3275-son Qoidalar, 215-band. Donor xato koʻchirilgan raqam soʻrovini tekshiradi
+215. Donor KRMB operatoridan xato koʻchirilgan abonent raqami qaytarilganligi toʻgʻrisidagi xabarni olib, soʻrovni tekshiradi.
+
+## 3275-son Qoidalar, 216-band. Xato koʻchirishni qaytarish: abonent arizasi, toʻlovsiz
+216. Abonent raqami xato koʻchrilganligi aniqlangan holda, bunday abonent raqamini qaytarish jarayoni abonentning yozma arizasi yoki donorning axborot-maʼlumot xizmatiga murojaati asosida donor tomonidan boshlab beriladi. Bunda abonentning aybi bilan boʻlmagan xato koʻchirilgan abonent raqamini qaytarish uchun toʻlov undirilmaydi.
+
+## 3275-son Qoidalar, 217-band. Donor xato koʻchirilgan raqamni qaytarishni soʻraydi
+217. Donor KRMB operatoriga xato koʻchirilgan abonent raqamini qaytarish toʻgʻrisidagi soʻrovni yuboradi.
+
+## 3275-son Qoidalar, 218-band. Xato koʻchirish soʻrovini KRMB tekshiradi
+218. KRMB operatori xato koʻchirilgan abonent raqamini qaytarish soʻrovini olganda uni abonent raqamini koʻchirish mumkinligi yuzasidan tekshiradi, bu jarayon quyidagilardan iborat:
+abonent maʼlumotlarini toʻldirish;
+ushbu abonent raqamini koʻchirish uchun aktiv talabnomalarning borligi.
+
+## 3275-son Qoidalar, 219-band. Xato koʻchirish soʻrovi tasdiqlanganda
+219. Tekshiruv muvaffaqiyatli boʻlgan holda KRMB operatori donorga soʻrovni olganligini tasdiqlaydi va uni xato koʻchirilgan abonent raqami boʻlgan mobil aloqa operatoriga (provayderiga) yuboradi.
+
+## 3275-son Qoidalar, 220-band. Xato koʻchirish soʻrovi rad etilganda
+220. Xato koʻchirilgan abonent raqamini qaytarish soʻrovida xatoliklar aniqlanganda KRMB operatori donorga sababini koʻrsatgan holda xato koʻchirilgan abonent raqamining qaytarilishi rad etilganligi toʻgʻrisida xabar yuboradi.
+
+## 3275-son Qoidalar, 221-band. Operator xato koʻchirishni qaytarishni tasdiqlaydi yoki rad etadi
+221. Mobil aloqa operatori (provayderi) KRMB operatoridan xato koʻchirilgan abonent raqami qaytarilganligi toʻgʻrisidagi xabarni olib, soʻrovni tekshiradi. Tekshiruv natijalari boʻyicha xato koʻchirilgan abonent raqami boʻlgan mobil aloqa operatori (provayderi) KRMB operatoriga xato koʻchirilgan abonent raqamini qaytarish boshlanganligini yoki u rad etilganligini tasdiqlaydi.
+
+## 3275-son Qoidalar, 222-band. 30 daqiqada javob boʻlmasa — avtomatik tasdiq
+222. Agar xato koʻchirilgan abonent raqami boʻlgan mobil aloqa operatori (provayderi) 30 daqiqa ichida xato koʻchirilgan abonent raqamini qaytarish yoki rad etish tasdiqlanganligi toʻgʻrisida KRMB operatorini xabardor qilmasa, KRMB operatori donorga xato koʻchirilgan abonent raqami qaytarilganligini tasdiqlash toʻgʻrisida avtomatik ravishda xabar qiladi.
+
+## 3275-son Qoidalar, 223-band. Donor 30 daqiqa ichida xizmatni qayta yoqadi
+223. Donor KRMB operatoridan xato koʻchirilgan abonent raqami qaytarilganligi toʻgʻrisida xabar olgan paytdan boshlab 30 daqiqa ichida abonentga xizmatni aktivatsiya qiladi. Xizmatlar muvaffaqiyatli aktivatsiya qilingandan keyin donor KRMB operatoriga abonent raqami aktivatsiya qilinganligini tasdiqlaydi.
+
+## 3275-son Qoidalar, 224-band. Xato koʻchirilgan raqam deaktivatsiyasi va marshrutlash
+224. KRMB operatori xato koʻchirilgan abonent raqami boʻlgan mobil aloqa operatoriga (provayderiga) abonent raqami muvaffaqiyatli aktivatsiya qilinganligi toʻgʻrisida va telekommunikatsiya operatorlariga – tarmoqdagi marshrutlash oʻzgarganligi toʻgʻrisida xabar yuboradi. Bunda xato koʻchirilgan abonent raqami boʻlgan mobil aloqa operatori (provayderi) 30 daqiqa ichida abonent raqamini deaktivatsiya qiladi.
+
+## 3275-son Qoidalar, 225-band. Marshrutlashni 30 daqiqada oʻzgartirish, 1 soatda tasdiqlash
+225. Operator (provayder) KRMB operatoridan xabar olgan paytdan boshlab 30 daqiqadan kechiktirmay koʻchirilgan abonent raqami boʻyicha marshrutlashga oʻzgartirishlar kiritadi va KRMB operatoridan xabarni olgan paytdan boshlab bir soatdan kechiktirmay KRMB operatoriga oʻz tarmogʻida marshrutlash oʻzgarganligini tasdiqlaydi.
+
+## 3275-son Qoidalar, 226-band. Xato koʻchirishdan keyin xizmatlar, tarif va balans tiklanadi
+226. Xizmatlar, tarif rejasi, xato koʻchirilgan abonent raqami balansi xato koʻchirish paytidagi holatgacha donor tomonidan tiklanadi.
+
+## 3275-son Qoidalar, 19-band. Abonent maʼlumotlarini uchinchi shaxslarga berish taqiqlanadi
+19. Operator, provayder va dilerlar xizmat majburiyatlarini bajarishlari davomida ularga maʼlum boʻlgan abonentlar toʻgʻrisidagi maʼlumotlarni abonentning roziligisiz uchinchi shaxslarga berish yoki tarqatishga haqli emas, qonunchilik hujjatlarida nazarda tutilgan hollar bundan mustasno.
+Abonent toʻgʻrisidagi maʼlumotlarga quyidagilar kiradi:
+a) abonent-jismoniy shaxsning familiyasi, ismi, otasining ismi, JSHSHIR;
+b) abonent-yuridik shaxs xodimlarining shaxsiy maʼlumotlari, abonent manzili yoki oxirgi terminal uskuna oʻrnatiladigan manzili, abonentni va uning oxirgi terminal uskunasini aynan identifikatsiyalash imkonini beradigan taxallusi, abonent raqamlari va boshqa maʼlumotlar.
+
+## 3275-son Qoidalar, 20-band. Abonentlar bazalari konfidensial himoyalanadi
+20. Operator va provayderlar tomonidan yaratilgan va abonentlar toʻgʻrisidagi maʼlumotlarni oʻz ichiga olgan maʼlumotlar bazalari konfidensial tusdagi hujjatlar sifatida himoyalanishi kerak.
+
+## 3275-son Qoidalar, 256-band. Shartnoma bekor boʻlish holatlari, jumladan raqam koʻchib oʻtganda
+256. Shartnoma quyidagi hollarda bekor qilinishi mumkin:
+abonentning tashabbusi bilan istalgan vaqtda;
+operatorning (provayderning, eshittiruvchining) tashabbusi boʻyicha, ushbu Qoidalar va/yoki shartnoma shartlarida belgilangan talablar abonent tomonidan buzilganda;
+abonent — jismoniy shaxs vafot etganda yoki abonent — yuridik shaxs tugatilgan holda, tasdiqlovchi hujjatlar taqdim etilgan taqdirda;
+abonentning shaxsiy hisobidagi mablagʻlar tugagan kundan boshlab 60 kundan koʻp vaqt oʻtgandan keyin;
+abonentning mobil raqami boshqa operator (provayder) tarmogʻiga koʻchib oʻtganida;
+shartnomada yoki qonunchilik hujjatlarida nazarda tutilgan boshqa hollarda.
+
+## 3275-son Qoidalar, 257-band. Shartnoma bekor boʻlganda hisob-kitoblar
+257. Shartnoma bekor qilinganda tomonlar oʻzlarining barcha majburiyatlari boʻyicha hisob-kitoblarni amalga oshirishlari kerak.
+
+## 3275-son Qoidalar, 258-band. Raqamni (shartnomani) boshqa shaxs nomiga oʻtkazish
+258. Abonent operatorning (provayderning) xizmat koʻrsatish punktlarida shartnomani boshqa shaxsning nomiga uning ishtirokida va roziligi bilan qayta rasmiylashtirishi mumkin.
+Bunda, operator (provayder) va amaldagi abonent oʻrtasida tuzilgan shartnoma bekor qilinadi va raqam nomiga qayta rasmiylashtirilayotgan shaxs bilan belgilangan tartibda yangi shartnoma tuziladi.
+
+## 3275-son Qoidalar, 270-band. Mobil shartnoma: shaxsan yoki ishonchnomali vakil orqali
+270. Mobil aloqa xizmatlarini koʻrsatish shartnomasi faqat abonent — jismoniy shaxs shaxsan boʻlganda va u tomonidan pasportning asl nusxasi (yoki shaxsini tasdiqlovchi boshqa hujjat) taqdim etilganda yoki uning vakili shaxsan ishtirok etganda va u tomonidan pasportning asl nusxasi (yoki shaxsini tasdiqlovchi boshqa hujjat) va belgilangan tartibda rasmiylashtirilgan ishonchnoma taqdim etilganda tuziladi.
+
+## 3275-son Qoidalar, 339-band. Shartnoma bekor boʻlganda avans qoldigʻi 15 kunda qaytariladi
+339. Shartnoma bekor qilingan hollarda abonent avans sifatida kiritilgan pul mablagʻlarini qaytarish uchun operatorga (provayderga, eshittiruvchiga) murojaat qilish huquqiga ega. Bunday holda operator (provayder, eshittiruvchi) oʻn besh kun muddat ichida pul mablagʻlarining foydalanilmagan qoldigʻini qaytarishga majbur.
+
+## 3275-son Qoidalar, 370-band. Qoida buzilganda xizmat toʻxtatilishi
+370. Abonent tomonidan ushbu Qoidalarda belgilangan talablar, shuningdek, shartnoma shartlari buzilgan hollarda, buzilishlar bartaraf etilgunga qadar operator (provayder) mobil aloqa xizmatlari koʻrsatilishini toʻxtatish huquqiga ega.
+Bunda, mobil aloqa tarmogʻidan foydalana olish va abonent tomonidan favqulodda tezkor xizmatlarni chaqirish imkoniyati saqlanadi.
+
+## 3275-son Qoidalar, 371-band. Buzilish bartaraf etilgach xizmat tiklanadi
+371. Operator (provayder) tomonidan mobil aloqa xizmatlarini koʻrsatish toʻxtatilgandan keyin abonent shartnoma va qonunchilik hujjatlari bilan belgilangan muddatda aniqlangan buzilishlarni bartaraf etish huquqiga ega. Aniqlangan buzilishlar bartaraf etilgandan keyin mobil aloqa xizmatlaridan foydalanish tiklanadi.
+
+## 3275-son Qoidalar, 373-band. MNP toʻlovi va retsipiyent bilan shartnoma
+373. Abonent raqamini koʻchirib oʻtish xizmatlari uchun toʻlov va retsipiyent bilan mobil aloqa xizmatlarini koʻrsatish boʻyicha shartnoma tuzish abonent tomonidan qonunchilik hujjatlarida belgilangan tartibda amalga oshiriladi.
+
+## 3275-son Qoidalar, 251-band. Shartnomadagi shaxsiy maʼlumotni oʻzgartirish bepul (MNPga tegishli xatboshilar)
+251. Shartnomada quyidagilar aks etgan boʻlishi lozim:
+Shartnomadagi abonent toʻgʻrisidagi maʼlumotlar oʻzgarishi bilan bogʻliq oʻzgarishlar qoʻshimcha toʻlov undirilmasdan kiritilishi kerak.
+
+## 3275-son Qoidalar, 296-band. Mobil operatorning MNPga oid majburiyatlari (MNPga tegishli xatboshilar)
+296. Mobil aloqa xizmatlarini koʻrsatishda operator (provayder) quyidagilarga majbur:
+abonent shartnomaning bekor qilinishi vaqtigacha qarzini va oldindan toʻlovning zarur summasi toʻliq hajmda toʻlaganida abonentga mobil aloqa xizmatlari koʻrsatilishini tiklash;
+SIM-karta yoki abonent qurilmasi (SIM-kartadan foydalanish koʻzda tutilmagan mobil aloqa standartlari uchun va eSIM) yoʻqolganda abonentning yozma arizasi boʻyicha yoki abonent uchun qulay boʻlgan, operator (provayder) tomonidan oʻrnatilgan, boshqa usulda berilgan xabar boʻyicha xizmatlarning koʻrsatilishini zudlik bilan toʻxtatish;
+Oʻzbekiston Respublikasi hududida GSM standartida ishlaydigan barcha operator (provayder) koʻchib oʻtgan raqamlarning markazlashtirilgan bazasiga ulanish;
+abonent tomonidan donorga rouming xizmatlari uchun aniqlangan qarzdorlik toʻlanmagan taqdirda xizmat koʻrsatishni toʻxtatib qoʻyish;
+abonentning operator tarmoqlarida abonent raqamini koʻchib oʻtish xizmatidan foydalanish huquqiga toʻsqinlik qilmaslik;
+
+## 3275-son Qoidalar, 318-band. Abonentning MNP xizmatidan foydalanish huquqi (MNPga tegishli xatboshilar)
+318. Mobil aloqa xizmatlari abonentlari va foydalanuvchilari quyidagi huquqlarga ega:
+qonunchilik hujjatlarida belgilangan tartibda operator (provayder) tarmoqlarida abonent raqamini koʻchib oʻtish xizmatidan foydalanishi.
+
+## 3275-son Qoidalar, 324-band. Abonent majburiyatlari: maʼlumot oʻzgarishi, donor oldidagi qarz (MNPga tegishli xatboshilar)
+324. Mobil aloqa xizmatlari abonentlari va foydalanuvchilari quyidagilarga majbur:
+b) maʼlumotlar oʻzgargani haqida operatorga (provayderga) 15 kun ichida xabar berish:
+jismoniy shaxs uchun — familiyasi, ismi, otasining ismi, doimiy yashash joyi boʻyicha yoki vaqtincha turgan joyi boʻyicha roʻyxatga olinganligi va pasport maʼlumotlari haqiqiy pasportni koʻrsatish yoʻli bilan;
+yuridik shaxs uchun — nomi (firma nomi), yuridik manzili oʻzgarganligi, shuningdek, yuridik shaxs tugatilganligi toʻgʻrisida xabar qilish;
+k) abonent raqami koʻchib oʻtgan taqdirda, donor bilan tuzilgan mobil aloqa xizmatlarini koʻrsatish shartnomasi boʻyicha mobil aloqa tarmogʻi xizmatlari uchun mavjud qarzni toʻlashi.
+
+## Tahrirlar tarixi (amaldagi qoida emas)
+3275-son Qoidalarning 19-bandi qachon va qaysi hujjat bilan oʻzgartirilgan (tarixiy izoh, amaldagi qoida emas):
+- 19-bandning birinchi xatboshisi Oʻzbekiston Respublikasi adliya vazirining 2021-yil 28-iyuldagi 16-mh-sonli buyrugʻi (roʻyxat raqami 3313, 28.07.2021-y.) tahririda — Qonunchilik maʼlumotlari milliy bazasi, 28.07.2021-y., 10/21/3313/0724-son
+3275-son Qoidalarning 178-bandi qachon va qaysi hujjat bilan oʻzgartirilgan (tarixiy izoh, amaldagi qoida emas):
+- 178-band Oʻzbekiston Respublikasi adliya vazirining 2021-yil 28-iyuldagi 16-mh-sonli buyrugʻi (roʻyxat raqami 3313, 28.07.2021-y.) tahririda — Qonunchilik maʼlumotlari milliy bazasi, 28.07.2021-y., 10/21/3313/0724-son
+3275-son Qoidalarning 251-bandi qachon va qaysi hujjat bilan oʻzgartirilgan (tarixiy izoh, amaldagi qoida emas):
+- 251-bandning yigirma ikkinchi xatboshisi Oʻzbekiston Respublikasi adliya vazirining 2021-yil 28-iyuldagi 16-mh-sonli buyrugʻi (roʻyxat raqami 3313, 28.07.2021-y.) tahririda — Qonunchilik maʼlumotlari milliy bazasi, 28.07.2021-y., 10/21/3313/0724-son
+3275-son Qoidalarning 256-bandi qachon va qaysi hujjat bilan oʻzgartirilgan (tarixiy izoh, amaldagi qoida emas):
+- 256-bandning yettinchi xatboshisi Oʻzbekiston Respublikasi adliya vazirining 2021-yil 28-iyuldagi 16-mh-sonli buyrugʻi (roʻyxat raqami 3313, 28.07.2021-y.) tahririda — Qonunchilik maʼlumotlari milliy bazasi, 28.07.2021-y., 10/21/3313/0724-son
+3275-son Qoidalarning 318-bandi qachon va qaysi hujjat bilan oʻzgartirilgan (tarixiy izoh, amaldagi qoida emas):
+- 318-bandning toʻrtinchi xatboshisi Oʻzbekiston Respublikasi adliya vazirining 2021-yil 28-iyuldagi 16-mh-sonli buyrugʻi (roʻyxat raqami 3313, 28.07.2021-y.) tahririda — Qonunchilik maʼlumotlari milliy bazasi, 28.07.2021-y., 10/21/3313/0724-son
+3275-son Qoidalarning 371-bandi qachon va qaysi hujjat bilan oʻzgartirilgan (tarixiy izoh, amaldagi qoida emas):
+- 371-band Oʻzbekiston Respublikasi adliya vazirining 2021-yil 28-iyuldagi 16-mh-sonli buyrugʻi (roʻyxat raqami 3313, 28.07.2021-y.) tahririda — Qonunchilik maʼlumotlari milliy bazasi, 28.07.2021-y., 10/21/3313/0724-son
+3275-son Qoidalarning 373-bandi qachon va qaysi hujjat bilan oʻzgartirilgan (tarixiy izoh, amaldagi qoida emas):
+- 373-band Oʻzbekiston Respublikasi adliya vazirining 2021-yil 28-iyuldagi 16-mh-sonli buyrugʻi (roʻyxat raqami 3313, 28.07.2021-y.) tahririda — Qonunchilik maʼlumotlari milliy bazasi, 28.07.2021-y., 10/21/3313/0724-son

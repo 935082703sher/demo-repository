@@ -58,6 +58,26 @@ python src/build_kb.py                                       # out/kb.jsonl + st
 python src/eval_retrieval.py
 ```
 
+### MNP — 3275-son Qoidalar korpusi
+
+"Telekommunikatsiya xizmatlarini ko'rsatish qoidalari" (3275-son, 30.06.2020;
+konsolidatsiya 28.07.2021) dan **MNP bilan bog'liq barcha normativ qoidalar**
+alohida qatlam: 10-§ to'liq (167–226-bandlar), 3-banddagi MNP ta'riflari (donor,
+retsipiyent, birlamchi operator, KRMB, KRMB operatori, lokal baza, sinxronlash, RN,
+All Call Query, Onward Routing, xato ko'chirish) va boshqa bo'limlardagi MNPga
+aloqador bandlar (19, 20, 251, 256–258, 270, 296, 318, 324, 339, 370–371, 373).
+
+| Fayl | Vazifa |
+|---|---|
+| `sources/3275_30.06.2020.doc` | lex.uz eksporti (manba) |
+| `src/ingest_mnp3275.py` | parser → `data/mnp_3275_full.json` + `data/mnp_3275_full_source.txt` |
+| `src/mnp3275_data.py` | tanlov, qismlarga bo'lish (179, 183, 208), sarlavha, oddiy tildagi izoh, uz/ru/en teglar, `mnp_*` case_type, rad sabablari |
+
+Chunk turlari: `mnp_nizom_current` (authority 2, band raqami `legal_refs`da),
+`mnp_rejection_guide` (authority 3: belgi / sabab / yechim / normativ asos),
+`mnp_nizom_historical_note` (authority 5). MNP FAQ va toza KB maqolalari o'z
+joyida qoladi. Qayta qurish: `python src/ingest_mnp3275.py && python src/build_kb.py`.
+
 Ma'lum cheklovlar: 2- va 4-ilova sxemalari manbada rasm (matn yo'q) — faqat
 nomi va ularga havola qilgan band (11, 25) indekslanadi; 6-ilova tarif jadvalining
 6-qatorida (sud qarori asosida sotuvchi tashkilot) manbaning o'zida miqdor yo'q.

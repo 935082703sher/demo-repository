@@ -1,0 +1,3125 @@
+{
+ "document": "Telekommunikatsiya xizmatlarini koʻrsatish qoidalari (3275-son, 30.06.2020)",
+ "source": "lex.uz eksporti: kb/sources/3275_30.06.2020.doc",
+ "in_force": "2020-09-30",
+ "consolidated_through": "2021-07-28",
+ "units": [
+  {
+   "key": "def:abonent",
+   "clause": "3",
+   "title": "3275-son Qoidalar, 3-band. Asosiy tushuncha: abonent",
+   "plain": "",
+   "paragraphs": [
+    "abonent — telekommunikatsiyalar operatori yoki provayderi bilan tuzilgan shartnomaga asosan telekommunikatsiyalar xizmatlaridan bevosita foydalanuvchi jismoniy yoki yuridik shaxs;"
+   ],
+   "text": "abonent — telekommunikatsiyalar operatori yoki provayderi bilan tuzilgan shartnomaga asosan telekommunikatsiyalar xizmatlaridan bevosita foydalanuvchi jismoniy yoki yuridik shaxs;",
+   "section": "I BOʻLIM. UMUMIY QOIDALAR",
+   "chapter": null,
+   "paragraph": null,
+   "excerpt": false,
+   "case_type": "mnp_definition",
+   "tags": [],
+   "legal_refs": [
+    "3275-son Qoidalar, 3-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "def:abonent_raqami",
+   "clause": "3",
+   "title": "3275-son Qoidalar, 3-band. Asosiy tushuncha: abonent raqami",
+   "plain": "",
+   "paragraphs": [
+    "abonent raqami — telekommunikatsiya xizmatlari koʻrsatilishi uchun shartnomaning amal qilish davrida abonentga operator (provayder) tomonidan ajratiladigan raqam;"
+   ],
+   "text": "abonent raqami — telekommunikatsiya xizmatlari koʻrsatilishi uchun shartnomaning amal qilish davrida abonentga operator (provayder) tomonidan ajratiladigan raqam;",
+   "section": "I BOʻLIM. UMUMIY QOIDALAR",
+   "chapter": null,
+   "paragraph": null,
+   "excerpt": false,
+   "case_type": "mnp_definition",
+   "tags": [
+    "abonent raqami nima",
+    "номер абонента"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 3-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "def:kochib_otishi",
+   "clause": "3",
+   "title": "3275-son Qoidalar, 3-band. Asosiy tushuncha: MNP — abonent raqamining koʻchib oʻtishi (raqamni boshqa operatorga koʻchirish)",
+   "plain": "Oddiy tilda: MNP — telefon raqamingizni saqlagan holda boshqa mobil operatorga oʻtish. Raqam oʻsha qoladi, operator oʻzgaradi.",
+   "paragraphs": [
+    "abonent raqamining koʻchib oʻtishi — mobil aloqa xizmatlarini koʻrsatish shartnomasi asosida donor tomonidan abonentga ajratilgan abonent raqamini boshqa mobil aloqa operatori (retsipiyent) bilan yangi shartnoma tuzishda saqlash va undan foydalanish uchun amalga oshiriladigan tashkiliy-texnik tadbirlar majmui;"
+   ],
+   "text": "abonent raqamining koʻchib oʻtishi — mobil aloqa xizmatlarini koʻrsatish shartnomasi asosida donor tomonidan abonentga ajratilgan abonent raqamini boshqa mobil aloqa operatori (retsipiyent) bilan yangi shartnoma tuzishda saqlash va undan foydalanish uchun amalga oshiriladigan tashkiliy-texnik tadbirlar majmui;",
+   "section": "I BOʻLIM. UMUMIY QOIDALAR",
+   "chapter": null,
+   "paragraph": null,
+   "excerpt": false,
+   "case_type": "mnp_definition",
+   "tags": [
+    "mnp nima",
+    "mnp",
+    "raqamni boshqa operatorga o'tkazish",
+    "operator almashtirish",
+    "raqam saqlanadi",
+    "что такое mnp",
+    "перенос номера",
+    "what is mnp",
+    "mobile number portability",
+    "number portability"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 3-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "def:birlamchi_operator",
+   "clause": "3",
+   "title": "3275-son Qoidalar, 3-band. Asosiy tushuncha: Birlamchi operator",
+   "plain": "Oddiy tilda: birlamchi operator — raqam dastlab ajratilgan (raqam aslida tegishli boʻlgan) operator.",
+   "paragraphs": [
+    "birlamchi operator — birlamchi ravishda raqamlash resursi ajratilgan, bu resursdan abonentga abonent raqami birinchi marta koʻchirilgan mobil aloqa operatori yoki provayder;"
+   ],
+   "text": "birlamchi operator — birlamchi ravishda raqamlash resursi ajratilgan, bu resursdan abonentga abonent raqami birinchi marta koʻchirilgan mobil aloqa operatori yoki provayder;",
+   "section": "I BOʻLIM. UMUMIY QOIDALAR",
+   "chapter": null,
+   "paragraph": null,
+   "excerpt": false,
+   "case_type": "mnp_definition",
+   "tags": [
+    "birlamchi operator",
+    "asl operator",
+    "первичный оператор",
+    "original operator"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 3-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "def:jshshir",
+   "clause": "3",
+   "title": "3275-son Qoidalar, 3-band. Asosiy tushuncha: Oʻzbekiston Respublikasida jismoniy shaxsning shaxsiy identifikatsiya raqami (bundan buyon matnda JSHSHIR deb yuritiladi)",
+   "plain": "",
+   "paragraphs": [
+    "Oʻzbekiston Respublikasida jismoniy shaxsning shaxsiy identifikatsiya raqami (bundan buyon matnda JSHSHIR deb yuritiladi) — JSHSHIRni aniqlash tartibiga muvofiq jismoniy shaxsning pasporti boʻyicha aniqlash mumkin boʻlgan va 14 raqamdan iborat shaxsiy identifikatsiya raqami;"
+   ],
+   "text": "Oʻzbekiston Respublikasida jismoniy shaxsning shaxsiy identifikatsiya raqami (bundan buyon matnda JSHSHIR deb yuritiladi) — JSHSHIRni aniqlash tartibiga muvofiq jismoniy shaxsning pasporti boʻyicha aniqlash mumkin boʻlgan va 14 raqamdan iborat shaxsiy identifikatsiya raqami;",
+   "section": "I BOʻLIM. UMUMIY QOIDALAR",
+   "chapter": null,
+   "paragraph": null,
+   "excerpt": false,
+   "case_type": "mnp_definition",
+   "tags": [],
+   "legal_refs": [
+    "3275-son Qoidalar, 3-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "def:markazlashtirilgan_baza",
+   "clause": "3",
+   "title": "3275-son Qoidalar, 3-band. Asosiy tushuncha: Koʻchib oʻtgan raqamlar markazlashtirilgan bazasi (KRMB)",
+   "plain": "",
+   "paragraphs": [
+    "koʻchib oʻtgan raqamlar markazlashtirilgan bazasi — mobil aloqa tarmoqlarida koʻchib oʻtgan abonent raqamlari maʼlumotlar bazasini boshqarish uchun apparat-dasturiy komplek;"
+   ],
+   "text": "koʻchib oʻtgan raqamlar markazlashtirilgan bazasi — mobil aloqa tarmoqlarida koʻchib oʻtgan abonent raqamlari maʼlumotlar bazasini boshqarish uchun apparat-dasturiy komplek;",
+   "section": "I BOʻLIM. UMUMIY QOIDALAR",
+   "chapter": null,
+   "paragraph": null,
+   "excerpt": false,
+   "case_type": "mnp_krmb",
+   "tags": [
+    "krmb",
+    "markazlashtirilgan baza",
+    "central database"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 3-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "def:krmb",
+   "clause": "3",
+   "title": "3275-son Qoidalar, 3-band. Asosiy tushuncha: KRMB — koʻchirilgan raqamlar markazlashtirilgan bazasi",
+   "plain": "Oddiy tilda: KRMB — koʻchirilgan raqamlarning markaziy bazasi; operatorlar MNP soʻrovlarini shu orqali almashadi va qoʻngʻiroqlar toʻgʻri operatorga yetadi.",
+   "paragraphs": [
+    "koʻchirilgan raqamlar markazlashtirilgan bazasi (bundan buyon matnda KRMB deb yuritiladi) — mobil aloqa tarmoqlarida koʻchirilgan abonent raqamlari toʻgʻrisidagi axborotni, shu jumladan, ushbu nizomda belgilanadigan maʼlumotlarni oʻz ichiga olgan maʼlumotlar bazasini boshqaruvchi apparat-dasturiy kompleks;"
+   ],
+   "text": "koʻchirilgan raqamlar markazlashtirilgan bazasi (bundan buyon matnda KRMB deb yuritiladi) — mobil aloqa tarmoqlarida koʻchirilgan abonent raqamlari toʻgʻrisidagi axborotni, shu jumladan, ushbu nizomda belgilanadigan maʼlumotlarni oʻz ichiga olgan maʼlumotlar bazasini boshqaruvchi apparat-dasturiy kompleks;",
+   "section": "I BOʻLIM. UMUMIY QOIDALAR",
+   "chapter": null,
+   "paragraph": null,
+   "excerpt": false,
+   "case_type": "mnp_krmb",
+   "tags": [
+    "krmb nima",
+    "krmb",
+    "ko'chirilgan raqamlar bazasi",
+    "markazlashtirilgan baza",
+    "что такое krmb",
+    "центральная база перенесенных номеров",
+    "centralized number portability database",
+    "what is krmb"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 3-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "def:krmb_operatori",
+   "clause": "3",
+   "title": "3275-son Qoidalar, 3-band. Asosiy tushuncha: KRMB operatori",
+   "plain": "Oddiy tilda: KRMB operatori — markaziy MNP bazasini yurituvchi tashkilot.",
+   "paragraphs": [
+    "KRMB operatori — KRMB shakllantirilishi, ishlashi, texnik kuzatilishi va rivojlanishini taʼminlaydigan, uning resurslaridan foydalanishni taqdim etadigan tashkilot;"
+   ],
+   "text": "KRMB operatori — KRMB shakllantirilishi, ishlashi, texnik kuzatilishi va rivojlanishini taʼminlaydigan, uning resurslaridan foydalanishni taqdim etadigan tashkilot;",
+   "section": "I BOʻLIM. UMUMIY QOIDALAR",
+   "chapter": null,
+   "paragraph": null,
+   "excerpt": false,
+   "case_type": "mnp_krmb",
+   "tags": [
+    "krmb operatori",
+    "krmb kim boshqaradi",
+    "оператор krmb",
+    "krmb operator"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 3-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "def:lokal_baza",
+   "clause": "3",
+   "title": "3275-son Qoidalar, 3-band. Asosiy tushuncha: Koʻchirilgan raqamlarning lokal bazasi",
+   "plain": "Oddiy tilda: har bir operatordagi KRMB nusxasi; qoʻngʻiroqni koʻchgan raqamga toʻgʻri yoʻnaltirish uchun ishlatiladi.",
+   "paragraphs": [
+    "koʻchirilgan raqamlarning lokal bazasi — chaqiruv yoki boshqa xabarlarni koʻchirilgan raqamga toʻgʻri marshrutlash uchun mobil aloqa operatori tomonidan undan real vaqtda foydalaniladigan, bu operatorda boʻlgan koʻchirilgan raqamlar markazlashtirilgan bazasining nusxasi;"
+   ],
+   "text": "koʻchirilgan raqamlarning lokal bazasi — chaqiruv yoki boshqa xabarlarni koʻchirilgan raqamga toʻgʻri marshrutlash uchun mobil aloqa operatori tomonidan undan real vaqtda foydalaniladigan, bu operatorda boʻlgan koʻchirilgan raqamlar markazlashtirilgan bazasining nusxasi;",
+   "section": "I BOʻLIM. UMUMIY QOIDALAR",
+   "chapter": null,
+   "paragraph": null,
+   "excerpt": false,
+   "case_type": "mnp_krmb",
+   "tags": [
+    "lokal baza",
+    "local database",
+    "локальная база"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 3-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "def:sinxronlash",
+   "clause": "3",
+   "title": "3275-son Qoidalar, 3-band. Asosiy tushuncha: Lokal bazani KRMB bilan sinxronlash",
+   "plain": "Oddiy tilda: operatorning lokal bazasi markaziy KRMB bilan muntazam yangilab turiladi.",
+   "paragraphs": [
+    "koʻchirilgan raqamlarning lokal bazasini KRMB bilan sinxronlash — muayyan davriylik bilan amalga oshiriladigan, koʻchirilgan raqamlar markazlashtirilgan bazasidagi axborotning koʻchirilgan raqamlar lokal bazasiga nusxasini koʻchirish jarayoni;"
+   ],
+   "text": "koʻchirilgan raqamlarning lokal bazasini KRMB bilan sinxronlash — muayyan davriylik bilan amalga oshiriladigan, koʻchirilgan raqamlar markazlashtirilgan bazasidagi axborotning koʻchirilgan raqamlar lokal bazasiga nusxasini koʻchirish jarayoni;",
+   "section": "I BOʻLIM. UMUMIY QOIDALAR",
+   "chapter": null,
+   "paragraph": null,
+   "excerpt": false,
+   "case_type": "mnp_krmb",
+   "tags": [
+    "sinxronlash",
+    "synchronization",
+    "синхронизация"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 3-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "def:sms",
+   "clause": "3",
+   "title": "3275-son Qoidalar, 3-band. Asosiy tushuncha: qisqa matnli xabar (SMS) (bundan buyon matnda SMS deb yuritiladi)",
+   "plain": "",
+   "paragraphs": [
+    "qisqa matnli xabar (SMS) (bundan buyon matnda SMS deb yuritiladi) — qiska xabarlar markazi orqali mobil aloqa abonentlariga qiska matnli xabarlarni uzatish va qabul qilish uchun moʻljallangan xizmat;"
+   ],
+   "text": "qisqa matnli xabar (SMS) (bundan buyon matnda SMS deb yuritiladi) — qiska xabarlar markazi orqali mobil aloqa abonentlariga qiska matnli xabarlarni uzatish va qabul qilish uchun moʻljallangan xizmat;",
+   "section": "I BOʻLIM. UMUMIY QOIDALAR",
+   "chapter": null,
+   "paragraph": null,
+   "excerpt": false,
+   "case_type": "mnp_definition",
+   "tags": [],
+   "legal_refs": [
+    "3275-son Qoidalar, 3-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "def:rn",
+   "clause": "3",
+   "title": "3275-son Qoidalar, 3-band. Asosiy tushuncha: Marshrut raqami (routing number, RN)",
+   "plain": "Oddiy tilda: RN — koʻchgan raqamga qoʻngʻiroqni yangi operatorga yoʻnaltirish uchun ishlatiladigan texnik manzil.",
+   "paragraphs": [
+    "marshrut raqami (routing number, RN) — mobil telekommunikatsiya tarmogʻining koʻchirilgan abonent raqamiga chaqiruvlarni amalga oshirish uchun telekommunikatsiya tarmoqlarida foydalaniladigan manzilli axborot;"
+   ],
+   "text": "marshrut raqami (routing number, RN) — mobil telekommunikatsiya tarmogʻining koʻchirilgan abonent raqamiga chaqiruvlarni amalga oshirish uchun telekommunikatsiya tarmoqlarida foydalaniladigan manzilli axborot;",
+   "section": "I BOʻLIM. UMUMIY QOIDALAR",
+   "chapter": null,
+   "paragraph": null,
+   "excerpt": false,
+   "case_type": "mnp_routing",
+   "tags": [
+    "rn",
+    "routing number",
+    "marshrut raqami",
+    "маршрутный номер"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 3-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "def:mahalliy_operator",
+   "clause": "3",
+   "title": "3275-son Qoidalar, 3-band. Asosiy tushuncha: mahalliy operator",
+   "plain": "",
+   "paragraphs": [
+    "mahalliy operator — Oʻzbekiston Respublikasi hududida jismoniy va yuridik shaxslarga mobil aloqa xizmatlarini koʻrsatuvchi aloqa operatori (provayderi);"
+   ],
+   "text": "mahalliy operator — Oʻzbekiston Respublikasi hududida jismoniy va yuridik shaxslarga mobil aloqa xizmatlarini koʻrsatuvchi aloqa operatori (provayderi);",
+   "section": "I BOʻLIM. UMUMIY QOIDALAR",
+   "chapter": null,
+   "paragraph": null,
+   "excerpt": false,
+   "case_type": "mnp_definition",
+   "tags": [],
+   "legal_refs": [
+    "3275-son Qoidalar, 3-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "def:donor",
+   "clause": "3",
+   "title": "3275-son Qoidalar, 3-band. Asosiy tushuncha: Donor — siz ketayotgan eski operator (operator-donor)",
+   "plain": "Oddiy tilda: donor — siz ketayotgan eski operator.",
+   "paragraphs": [
+    "operator (provayder)-donor (bundan buyon matnda donor deb yuritiladi) — telekommunikatsiyalar tarmogʻidan abonent raqami koʻchiriladigan mobil aloqa operatori (provayderi);"
+   ],
+   "text": "operator (provayder)-donor (bundan buyon matnda donor deb yuritiladi) — telekommunikatsiyalar tarmogʻidan abonent raqami koʻchiriladigan mobil aloqa operatori (provayderi);",
+   "section": "I BOʻLIM. UMUMIY QOIDALAR",
+   "chapter": null,
+   "paragraph": null,
+   "excerpt": false,
+   "case_type": "mnp_definition",
+   "tags": [
+    "donor nima",
+    "donor operator",
+    "eski operator",
+    "оператор-донор",
+    "что такое оператор донор",
+    "donor operator",
+    "what is the donor operator"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 3-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "def:retsipiyent",
+   "clause": "3",
+   "title": "3275-son Qoidalar, 3-band. Asosiy tushuncha: Retsipiyent — siz oʻtayotgan yangi operator (operator-retsipiyent)",
+   "plain": "Oddiy tilda: retsipiyent — siz oʻtayotgan yangi operator.",
+   "paragraphs": [
+    "operator (provayder)-retsipiyent (bundan buyon matnda retsipiyent deb yuritiladi) — telekommunikatsiyalar tarmogʻiga abonent raqami koʻchiriladigan mobil aloqa operatori (provayderi);"
+   ],
+   "text": "operator (provayder)-retsipiyent (bundan buyon matnda retsipiyent deb yuritiladi) — telekommunikatsiyalar tarmogʻiga abonent raqami koʻchiriladigan mobil aloqa operatori (provayderi);",
+   "section": "I BOʻLIM. UMUMIY QOIDALAR",
+   "chapter": null,
+   "paragraph": null,
+   "excerpt": false,
+   "case_type": "mnp_definition",
+   "tags": [
+    "retsipiyent nima",
+    "retsipient",
+    "recipient",
+    "yangi operator",
+    "оператор-реципиент",
+    "что такое оператор реципиент",
+    "recipient operator",
+    "what is the recipient operator"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 3-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "def:rouming",
+   "clause": "3",
+   "title": "3275-son Qoidalar, 3-band. Asosiy tushuncha: rouming",
+   "plain": "",
+   "paragraphs": [
+    "rouming — bitta mobil aloqa operatori abonentining bitta davlat doirasida (milliy rouming) yoki boshqa mamlakatda (xalqaro rouming) boʻlgan boshqa mobil aloqa operatorining xizmat koʻrsatish zonasida boʻlganda boshqa mobil aloqa operatorining tarmogʻidan foydalana olishini taʼminlovchi xizmat;"
+   ],
+   "text": "rouming — bitta mobil aloqa operatori abonentining bitta davlat doirasida (milliy rouming) yoki boshqa mamlakatda (xalqaro rouming) boʻlgan boshqa mobil aloqa operatorining xizmat koʻrsatish zonasida boʻlganda boshqa mobil aloqa operatorining tarmogʻidan foydalana olishini taʼminlovchi xizmat;",
+   "section": "I BOʻLIM. UMUMIY QOIDALAR",
+   "chapter": null,
+   "paragraph": null,
+   "excerpt": false,
+   "case_type": "mnp_definition",
+   "tags": [],
+   "legal_refs": [
+    "3275-son Qoidalar, 3-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "def:xato_kochirish",
+   "clause": "3",
+   "title": "3275-son Qoidalar, 3-band. Asosiy tushuncha: Xato koʻchirish",
+   "plain": "Oddiy tilda: abonent soʻramagan holda xodim xatosi bilan raqam (masalan, talabnomadagidan boshqa raqam) koʻchirib yuborilishi.",
+   "paragraphs": [
+    "xato koʻchirish — abonent talabnomasisiz mobil aloqa operatorlari (provayderlari) tomonidan abonent raqamining koʻchirilishi (“inson omili” keltirib chiqargan xato sababli, yaʼni texnik tizimlar bilan oʻzaro ishlaganda xodimlarning notoʻgʻri xatti-harakatlari sababli abonentning talabnomasida koʻrsatilgan raqamdan boshqa raqamning koʻchirilishi);"
+   ],
+   "text": "xato koʻchirish — abonent talabnomasisiz mobil aloqa operatorlari (provayderlari) tomonidan abonent raqamining koʻchirilishi (“inson omili” keltirib chiqargan xato sababli, yaʼni texnik tizimlar bilan oʻzaro ishlaganda xodimlarning notoʻgʻri xatti-harakatlari sababli abonentning talabnomasida koʻrsatilgan raqamdan boshqa raqamning koʻchirilishi);",
+   "section": "I BOʻLIM. UMUMIY QOIDALAR",
+   "chapter": null,
+   "paragraph": null,
+   "excerpt": false,
+   "case_type": "mnp_wrong_port",
+   "tags": [
+    "xato ko'chirish nima",
+    "raqamimni men so'ramasdan ko'chirishdi",
+    "noto'g'ri raqam ko'chib ketdi",
+    "wrong number ported",
+    "номер перенесли по ошибке",
+    "ruxsatsiz ko'chirish"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 3-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "def:all_call_query",
+   "clause": "3",
+   "title": "3275-son Qoidalar, 3-band. Asosiy tushuncha: All Call Query (barcha chaqiruvlar uchun soʻrov)",
+   "plain": "Oddiy tilda: qoʻngʻiroq qiluvchi tarmoq har bir chaqiruvda bazadan raqam qaysi operatorda ekanini soʻraydi va toʻgʻridan-toʻgʻri yoʻnaltiradi.",
+   "paragraphs": [
+    "barcha chaqiruvlar uchun soʻrov (All Call Query) (bundan buyon matnda All Call Query deb yuritiladi) — mobil telekommunikatsiya tarmogʻining koʻchirilgan abonent raqamlariga trafikni oʻtkazish uchun chaqiruvlarni toʻgʻridan-toʻgʻri marshrutlash metodi, bunda chaqiruv tashabbuskorining tarmogʻi koʻchirilgan raqam toʻgʻrisida axborot olish va chaqiruvni belgilangan joyiga keyinchalik marshrutlash uchun koʻchirilgan raqamlarning operatsion maʼlumotlar bazasiga soʻrovni amalga oshiradi;"
+   ],
+   "text": "barcha chaqiruvlar uchun soʻrov (All Call Query) (bundan buyon matnda All Call Query deb yuritiladi) — mobil telekommunikatsiya tarmogʻining koʻchirilgan abonent raqamlariga trafikni oʻtkazish uchun chaqiruvlarni toʻgʻridan-toʻgʻri marshrutlash metodi, bunda chaqiruv tashabbuskorining tarmogʻi koʻchirilgan raqam toʻgʻrisida axborot olish va chaqiruvni belgilangan joyiga keyinchalik marshrutlash uchun koʻchirilgan raqamlarning operatsion maʼlumotlar bazasiga soʻrovni amalga oshiradi;",
+   "section": "I BOʻLIM. UMUMIY QOIDALAR",
+   "chapter": null,
+   "paragraph": null,
+   "excerpt": false,
+   "case_type": "mnp_routing",
+   "tags": [
+    "all call query",
+    "acq",
+    "marshrutlash"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 3-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "def:esim",
+   "clause": "3",
+   "title": "3275-son Qoidalar, 3-band. Asosiy tushuncha: eSIM",
+   "plain": "",
+   "paragraphs": [
+    "eSIM — abonent qurilmasining virtual identifikatsiya moduli, uning yordamida abonent qurilmasini identifikatsiya qilish, uning mobil aloqa tarmogʻidan foydalana olishi, shuningdek, abonent raqamidan ruxsatsiz foydalanishdan himoya qilish taʼminlanadi;"
+   ],
+   "text": "eSIM — abonent qurilmasining virtual identifikatsiya moduli, uning yordamida abonent qurilmasini identifikatsiya qilish, uning mobil aloqa tarmogʻidan foydalana olishi, shuningdek, abonent raqamidan ruxsatsiz foydalanishdan himoya qilish taʼminlanadi;",
+   "section": "I BOʻLIM. UMUMIY QOIDALAR",
+   "chapter": null,
+   "paragraph": null,
+   "excerpt": false,
+   "case_type": "mnp_definition",
+   "tags": [],
+   "legal_refs": [
+    "3275-son Qoidalar, 3-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "def:msisdn",
+   "clause": "3",
+   "title": "3275-son Qoidalar, 3-band. Asosiy tushuncha: MSISDN (Mobile Station Integrated Services Digital Network)",
+   "plain": "",
+   "paragraphs": [
+    "MSISDN (Mobile Station Integrated Services Digital Network) — GSM/UMTS standartlarida aloqa uchun xizmatlari integratsiyalashgan raqamli tarmoq mobil abonentining raqami (masalan: +998 XX-XXX-XX-XX);"
+   ],
+   "text": "MSISDN (Mobile Station Integrated Services Digital Network) — GSM/UMTS standartlarida aloqa uchun xizmatlari integratsiyalashgan raqamli tarmoq mobil abonentining raqami (masalan: +998 XX-XXX-XX-XX);",
+   "section": "I BOʻLIM. UMUMIY QOIDALAR",
+   "chapter": null,
+   "paragraph": null,
+   "excerpt": false,
+   "case_type": "mnp_definition",
+   "tags": [
+    "msisdn",
+    "telefon raqami"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 3-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "def:onward_routing",
+   "clause": "3",
+   "title": "3275-son Qoidalar, 3-band. Asosiy tushuncha: Onward Routing (progressiv marshrutlash)",
+   "plain": "Oddiy tilda: qoʻngʻiroq avval donor (eski operator) tarmogʻiga boradi, u bazadan tekshirib, yangi operatorga uzatadi.",
+   "paragraphs": [
+    "progressiv marshrutlash (Onward Routing) (bundan buyon matnda Onward Routing deb yuritiladi) — mobil telekommunikatsiyalar tarmogʻining koʻchirilgan abonent raqamlariga trafikni oʻtkazish uchun chaqiruvlarni toʻgʻridan-toʻgʻri boʻlmagan marshrutlash metodi, bunda chaqiruv tashabbuskorining tarmogʻi donor tarmogʻiga soʻrovni amalga oshiradi, donor esa, oʻz navbatida, koʻchirilgan raqam toʻgʻrisida axborot olish va chaqiruvni belgilangan joyiga keyinchalik marshrutlash uchun koʻchirilgan raqamlarning operatsion maʼlumotlar bazasiga soʻrovni amalga oshiradi;"
+   ],
+   "text": "progressiv marshrutlash (Onward Routing) (bundan buyon matnda Onward Routing deb yuritiladi) — mobil telekommunikatsiyalar tarmogʻining koʻchirilgan abonent raqamlariga trafikni oʻtkazish uchun chaqiruvlarni toʻgʻridan-toʻgʻri boʻlmagan marshrutlash metodi, bunda chaqiruv tashabbuskorining tarmogʻi donor tarmogʻiga soʻrovni amalga oshiradi, donor esa, oʻz navbatida, koʻchirilgan raqam toʻgʻrisida axborot olish va chaqiruvni belgilangan joyiga keyinchalik marshrutlash uchun koʻchirilgan raqamlarning operatsion maʼlumotlar bazasiga soʻrovni amalga oshiradi;",
+   "section": "I BOʻLIM. UMUMIY QOIDALAR",
+   "chapter": null,
+   "paragraph": null,
+   "excerpt": false,
+   "case_type": "mnp_routing",
+   "tags": [
+    "onward routing",
+    "progressiv marshrutlash"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 3-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "def:sim",
+   "clause": "3",
+   "title": "3275-son Qoidalar, 3-band. Asosiy tushuncha: SIM/RUIM-karta (bundan buyon matnda SIM karta deb yuritiladi)",
+   "plain": "",
+   "paragraphs": [
+    "SIM/RUIM-karta (bundan buyon matnda SIM karta deb yuritiladi) — ichiga mikrosxema oʻrnatilgan, olinuvchi identifikatsiya moduli, uning yordamida abonent qurilmasini identifikatsiya qilish, uning mobil aloqa tarmogʻidan foydalana olishi, shuningdek, abonent raqamidan ruxsatsiz foydalanishdan himoya qilish taʼminlanadi;"
+   ],
+   "text": "SIM/RUIM-karta (bundan buyon matnda SIM karta deb yuritiladi) — ichiga mikrosxema oʻrnatilgan, olinuvchi identifikatsiya moduli, uning yordamida abonent qurilmasini identifikatsiya qilish, uning mobil aloqa tarmogʻidan foydalana olishi, shuningdek, abonent raqamidan ruxsatsiz foydalanishdan himoya qilish taʼminlanadi;",
+   "section": "I BOʻLIM. UMUMIY QOIDALAR",
+   "chapter": null,
+   "paragraph": null,
+   "excerpt": false,
+   "case_type": "mnp_definition",
+   "tags": [],
+   "legal_refs": [
+    "3275-son Qoidalar, 3-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "167",
+   "clause": "167",
+   "title": "3275-son Qoidalar, 167-band. MNP xizmatini kim koʻrsatadi",
+   "plain": "",
+   "paragraphs": [
+    "167. Abonent uchun abonent raqamini koʻchirish xizmati mobil aloqa operatorlari (provayderlari) tomonidan taqdim etiladi."
+   ],
+   "text": "167. Abonent uchun abonent raqamini koʻchirish xizmati mobil aloqa operatorlari (provayderlari) tomonidan taqdim etiladi.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "1-bob. Telekommunikatsiya xizmatlarini koʻrsatish",
+   "paragraph": "10-§. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish xizmatini taqdim etish",
+   "excerpt": false,
+   "case_type": "mnp_application",
+   "tags": [
+    "mnp xizmati kim ko'rsatadi",
+    "operatorlar"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 167-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "168",
+   "clause": "168",
+   "title": "3275-son Qoidalar, 168-band. MNP chastotasi: 30 kalendar kunda koʻpi bilan bir marta",
+   "plain": "Oddiy tilda: raqamni 30 kalendar kun ichida faqat bir marta koʻchirish mumkin.",
+   "paragraphs": [
+    "168. Abonent raqamini koʻchirish abonentga 30 kalendar kun mobaynida koʻpi bilan bir marta taqdim etiladi."
+   ],
+   "text": "168. Abonent raqamini koʻchirish abonentga 30 kalendar kun mobaynida koʻpi bilan bir marta taqdim etiladi.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "1-bob. Telekommunikatsiya xizmatlarini koʻrsatish",
+   "paragraph": "10-§. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish xizmatini taqdim etish",
+   "excerpt": false,
+   "case_type": "mnp_repeat_porting",
+   "tags": [
+    "bir oyda ikki marta",
+    "30 kunda bir marta",
+    "qayta ko'chirish",
+    "takroriy porting",
+    "operatorni tez-tez almashtirish",
+    "как часто можно переносить номер",
+    "once in 30 days",
+    "how often can i port"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 168-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "169",
+   "clause": "169",
+   "title": "3275-son Qoidalar, 169-band. Qaysi raqamlar koʻchiriladi; raqam terish formati oʻzgarmaydi",
+   "plain": "Oddiy tilda: faqat mobil raqamlar koʻchiriladi va raqamingiz shakli oʻzgarmaydi.",
+   "paragraphs": [
+    "169. Koʻchiriladigan raqamlar sifatida faqat mobil aloqa operatorlari (provayderlari) uchun ajratilgan raqamlar qoʻllanilishi mumkin.",
+    "Raqamni koʻchirish oqibatida raqamni terish formatining oʻzgartirilishiga yoʻl qoʻyilmaydi."
+   ],
+   "text": "169. Koʻchiriladigan raqamlar sifatida faqat mobil aloqa operatorlari (provayderlari) uchun ajratilgan raqamlar qoʻllanilishi mumkin.\nRaqamni koʻchirish oqibatida raqamni terish formatining oʻzgartirilishiga yoʻl qoʻyilmaydi.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "1-bob. Telekommunikatsiya xizmatlarini koʻrsatish",
+   "paragraph": "10-§. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish xizmatini taqdim etish",
+   "excerpt": false,
+   "case_type": "mnp_eligibility",
+   "tags": [
+    "raqam o'zgaradimi",
+    "raqam shakli",
+    "raqam formati",
+    "номер не меняется",
+    "does my number change"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 169-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "170",
+   "clause": "170",
+   "title": "3275-son Qoidalar, 170-band. MNP xizmati raqamlarini mobil tarmoqqa va aksincha koʻchirish taqiqlanadi",
+   "plain": "",
+   "paragraphs": [
+    "170. Abonent raqamlarini koʻchirish xizmatini taqdim etish uchun foydalaniladigan raqamlarning mobil aloqa tarmoqlariga va aksincha koʻchirilishi taqiqlanadi."
+   ],
+   "text": "170. Abonent raqamlarini koʻchirish xizmatini taqdim etish uchun foydalaniladigan raqamlarning mobil aloqa tarmoqlariga va aksincha koʻchirilishi taqiqlanadi.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "1-bob. Telekommunikatsiya xizmatlarini koʻrsatish",
+   "paragraph": "10-§. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish xizmatini taqdim etish",
+   "excerpt": false,
+   "case_type": "mnp_eligibility",
+   "tags": [],
+   "legal_refs": [
+    "3275-son Qoidalar, 170-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "171",
+   "clause": "171",
+   "title": "3275-son Qoidalar, 171-band. KRMB operatorining vazifasi: axborotni avtomatlashtirish va muvofiqlashtirish",
+   "plain": "",
+   "paragraphs": [
+    "171. KRMB operatori abonent raqami koʻchirilishini taʼminlash uchun mobil aloqa operatorlari (provayderlari) tomonidan taqdim etiladigan axborotni yigʻish, uni qayta ishlash, saqlash va uzatish jarayonlarini avtomatlashtiradi va muvofiqlashtiradi."
+   ],
+   "text": "171. KRMB operatori abonent raqami koʻchirilishini taʼminlash uchun mobil aloqa operatorlari (provayderlari) tomonidan taqdim etiladigan axborotni yigʻish, uni qayta ishlash, saqlash va uzatish jarayonlarini avtomatlashtiradi va muvofiqlashtiradi.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "1-bob. Telekommunikatsiya xizmatlarini koʻrsatish",
+   "paragraph": "10-§. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish xizmatini taqdim etish",
+   "excerpt": false,
+   "case_type": "mnp_krmb",
+   "tags": [],
+   "legal_refs": [
+    "3275-son Qoidalar, 171-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "172",
+   "clause": "172",
+   "title": "3275-son Qoidalar, 172-band. Barcha MNP axborot almashinuvi KRMB operatori orqali",
+   "plain": "",
+   "paragraphs": [
+    "172. Abonent raqamlarini koʻchirish, koʻchirilgan abonent raqamlari toʻgʻrisidagi maʼlumotlarni oʻzgartirish, abonent raqamini koʻchirish xizmatini toʻxtatib turish va koʻchirilgan abonent raqamini birlamchi operatorga qaytarish jarayoniga tegishli axborot bilan almashish KRMB operatori orqali amalga oshiriladi."
+   ],
+   "text": "172. Abonent raqamlarini koʻchirish, koʻchirilgan abonent raqamlari toʻgʻrisidagi maʼlumotlarni oʻzgartirish, abonent raqamini koʻchirish xizmatini toʻxtatib turish va koʻchirilgan abonent raqamini birlamchi operatorga qaytarish jarayoniga tegishli axborot bilan almashish KRMB operatori orqali amalga oshiriladi.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "1-bob. Telekommunikatsiya xizmatlarini koʻrsatish",
+   "paragraph": "10-§. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish xizmatini taqdim etish",
+   "excerpt": false,
+   "case_type": "mnp_krmb",
+   "tags": [],
+   "legal_refs": [
+    "3275-son Qoidalar, 172-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "173",
+   "clause": "173",
+   "title": "3275-son Qoidalar, 173-band. KRMB shaxsga doir maʼlumotlar qonuniga rioya qilgan holda yuritiladi",
+   "plain": "",
+   "paragraphs": [
+    "173. KRMBni shakllantirish, yuritish, ishlashi va texnik kuzatuvi, shu jumladan, undagi axborot va maʼlumotlarni yigʻish, saqlash, qayta ishlash, uzatish, shuningdek, KRMBdan foydalana olish imkoniyatini taqdim etish Oʻzbekiston Respublikasining “Shaxsga doir maʼlumotlar toʻgʻrisida”gi Qonuni talablariga rioya qilgan holda KRMB operatori tomonidan taʼminlanadi."
+   ],
+   "text": "173. KRMBni shakllantirish, yuritish, ishlashi va texnik kuzatuvi, shu jumladan, undagi axborot va maʼlumotlarni yigʻish, saqlash, qayta ishlash, uzatish, shuningdek, KRMBdan foydalana olish imkoniyatini taqdim etish Oʻzbekiston Respublikasining “Shaxsga doir maʼlumotlar toʻgʻrisida”gi Qonuni talablariga rioya qilgan holda KRMB operatori tomonidan taʼminlanadi.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "1-bob. Telekommunikatsiya xizmatlarini koʻrsatish",
+   "paragraph": "10-§. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish xizmatini taqdim etish",
+   "excerpt": false,
+   "case_type": "mnp_krmb",
+   "tags": [],
+   "legal_refs": [
+    "3275-son Qoidalar, 173-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "174",
+   "clause": "174",
+   "title": "3275-son Qoidalar, 174-band. Operatorlar KRMBga maʼlumot taqdim etadi",
+   "plain": "",
+   "paragraphs": [
+    "174. Mobil aloqa tarmoqlarining abonent raqamlari toʻgʻrisidagi axborot va abonent raqamini koʻchirish jarayonini amalga oshirish uchun zarur boʻlgan boshqa maʼlumotlar mobil aloqa operatorlari (provayderlari) tomonidan Oʻzbekiston Respublikasining “Shaxsga doir maʼlumotlar toʻgʻrisida”gi Qonuni talablariga rioya qilgan holda KRMB operatoriga taqdim etiladi."
+   ],
+   "text": "174. Mobil aloqa tarmoqlarining abonent raqamlari toʻgʻrisidagi axborot va abonent raqamini koʻchirish jarayonini amalga oshirish uchun zarur boʻlgan boshqa maʼlumotlar mobil aloqa operatorlari (provayderlari) tomonidan Oʻzbekiston Respublikasining “Shaxsga doir maʼlumotlar toʻgʻrisida”gi Qonuni talablariga rioya qilgan holda KRMB operatoriga taqdim etiladi.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "1-bob. Telekommunikatsiya xizmatlarini koʻrsatish",
+   "paragraph": "10-§. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish xizmatini taqdim etish",
+   "excerpt": false,
+   "case_type": "mnp_krmb",
+   "tags": [],
+   "legal_refs": [
+    "3275-son Qoidalar, 174-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "175",
+   "clause": "175",
+   "title": "3275-son Qoidalar, 175-band. Operatorlarning KRMBdan foydalanishi shartnoma asosida",
+   "plain": "",
+   "paragraphs": [
+    "175. Mobil aloqa tarmoqlari operatorlarining (provayderlarining) KRMBdan foydalanishi KRMB operatori va mobil aloqa tarmoqlari operatorlari (provayderlari) oʻrtasida tuzilgan shartnomaga muvofiq amalga oshiriladi."
+   ],
+   "text": "175. Mobil aloqa tarmoqlari operatorlarining (provayderlarining) KRMBdan foydalanishi KRMB operatori va mobil aloqa tarmoqlari operatorlari (provayderlari) oʻrtasida tuzilgan shartnomaga muvofiq amalga oshiriladi.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "1-bob. Telekommunikatsiya xizmatlarini koʻrsatish",
+   "paragraph": "10-§. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish xizmatini taqdim etish",
+   "excerpt": false,
+   "case_type": "mnp_krmb",
+   "tags": [],
+   "legal_refs": [
+    "3275-son Qoidalar, 175-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "176",
+   "clause": "176",
+   "title": "3275-son Qoidalar, 176-band. KRMBda qanday axborot saqlanadi",
+   "plain": "",
+   "paragraphs": [
+    "176. KRMBda quyidagi axborotlar saqlanadi va (yoki) qayta ishlanadi:",
+    "mobil aloqa xizmatlarini koʻrsatish toʻgʻrisida boshqa mobil aloqa operatorlari (provayderlari) bilan yangi shartnomalarni tuzishda abonentlarda saqlanadigan koʻchirilgan abonent raqamlari toʻgʻrisida;",
+    "abonent raqamini koʻchirish sanasi va vaqti toʻgʻrisida;",
+    "raqamlash resursining mobil aloqa operatoriga (provayderiga) tegishliligini koʻrsatib, belgilangan tartibda mobil aloqa operatorlariga (provayderlariga) ajratilgan raqamlash toʻgʻrisida."
+   ],
+   "text": "176. KRMBda quyidagi axborotlar saqlanadi va (yoki) qayta ishlanadi:\nmobil aloqa xizmatlarini koʻrsatish toʻgʻrisida boshqa mobil aloqa operatorlari (provayderlari) bilan yangi shartnomalarni tuzishda abonentlarda saqlanadigan koʻchirilgan abonent raqamlari toʻgʻrisida;\nabonent raqamini koʻchirish sanasi va vaqti toʻgʻrisida;\nraqamlash resursining mobil aloqa operatoriga (provayderiga) tegishliligini koʻrsatib, belgilangan tartibda mobil aloqa operatorlariga (provayderlariga) ajratilgan raqamlash toʻgʻrisida.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "1-bob. Telekommunikatsiya xizmatlarini koʻrsatish",
+   "paragraph": "10-§. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish xizmatini taqdim etish",
+   "excerpt": false,
+   "case_type": "mnp_krmb",
+   "tags": [
+    "krmb nima saqlaydi",
+    "krmb ma'lumotlari"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 176-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "177",
+   "clause": "177",
+   "title": "3275-son Qoidalar, 177-band. KRMB operatorining texnik tadbirlari",
+   "plain": "",
+   "paragraphs": [
+    "177. KRMB ishlashini va texnik kuzatuvini taʼminlash maqsadida KRMB operatori quyidagi tadbirlarni amalga oshiradi:",
+    "a) KRMB kechayu kunduz ishlashini taʼminlash;",
+    "b) mobil aloqa operatorlaridan (provayderlaridan) kelib tushadigan axborotni yigʻish, saqlash va qayta ishlash;",
+    "v) KRMBdagi axborot muhofazasini taʼminlash;",
+    "g) abonent raqamini koʻchirish va toʻgʻri marshrutlashni amalga oshirish uchun zarur boʻlgan, KRMBda mavjud boʻlgan axborotdan aloqa operatorlarining foydalana olish imkoniyatlarini taqdim etish."
+   ],
+   "text": "177. KRMB ishlashini va texnik kuzatuvini taʼminlash maqsadida KRMB operatori quyidagi tadbirlarni amalga oshiradi:\na) KRMB kechayu kunduz ishlashini taʼminlash;\nb) mobil aloqa operatorlaridan (provayderlaridan) kelib tushadigan axborotni yigʻish, saqlash va qayta ishlash;\nv) KRMBdagi axborot muhofazasini taʼminlash;\ng) abonent raqamini koʻchirish va toʻgʻri marshrutlashni amalga oshirish uchun zarur boʻlgan, KRMBda mavjud boʻlgan axborotdan aloqa operatorlarining foydalana olish imkoniyatlarini taqdim etish.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "1-bob. Telekommunikatsiya xizmatlarini koʻrsatish",
+   "paragraph": "10-§. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish xizmatini taqdim etish",
+   "excerpt": false,
+   "case_type": "mnp_krmb",
+   "tags": [
+    "krmb kechayu kunduz",
+    "krmb muhofaza"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 177-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "178",
+   "clause": "178",
+   "title": "3275-son Qoidalar, 178-band. KRMBdagi axborotni muhofaza qilish",
+   "plain": "",
+   "paragraphs": [
+    "178. KRMBdagi axborotni muhofaza qilish, shuningdek, undan foydalana olish qonunchilik hujjatlarida belgilangan talablarga rioya qilgan holda taʼminlanadi."
+   ],
+   "text": "178. KRMBdagi axborotni muhofaza qilish, shuningdek, undan foydalana olish qonunchilik hujjatlarida belgilangan talablarga rioya qilgan holda taʼminlanadi.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "1-bob. Telekommunikatsiya xizmatlarini koʻrsatish",
+   "paragraph": "10-§. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish xizmatini taqdim etish",
+   "excerpt": false,
+   "case_type": "mnp_krmb",
+   "tags": [
+    "krmb ma'lumotlarini himoya qilish",
+    "ruxsatsiz kirish",
+    "data protection"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 178-band"
+   ],
+   "valid_from": "2021-07-28",
+   "amended_by": [
+    "Adliya vazirining 16-mh-son buyrugʻi (2021), roʻyxat raqami 3313"
+   ],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "179#kanallar",
+   "clause": "179",
+   "title": "3275-son Qoidalar, 179-band. Talabnoma topshirish usullari (ofis, veb-sayt, mobil ilova)",
+   "plain": "Oddiy tilda: MNP arizasini yangi operatorning ofisida (pasport bilan), rasmiy veb-saytida yoki mobil ilovasida berish mumkin.",
+   "paragraphs": [
+    "179. Mobil aloqa tarmoqlarida abonent raqamini koʻchirish uchun talabnoma (bundan buyon matnda talabnoma deb yuritiladi) abonentdan quyidagi tartibda qabul qilinadi:",
+    "a) abonent retsipiyentning ofisida mijozlarga xizmat koʻrsatish punktida shaxsini tasdiqlovchi hujjatini taqdim etgan holda;",
+    "b) abonent shaxsini tasdiqlovchi hujjatdagi maʼlumotlari kiritgan holda retsipiyentning rasmiy veb-saytida elektron koʻrinishda;",
+    "v) abonent shaxsini tasdiqlovchi hujjatdagi maʼlumotlarni mobil ilova orqali elektron koʻrinishda."
+   ],
+   "text": "179. Mobil aloqa tarmoqlarida abonent raqamini koʻchirish uchun talabnoma (bundan buyon matnda talabnoma deb yuritiladi) abonentdan quyidagi tartibda qabul qilinadi:\na) abonent retsipiyentning ofisida mijozlarga xizmat koʻrsatish punktida shaxsini tasdiqlovchi hujjatini taqdim etgan holda;\nb) abonent shaxsini tasdiqlovchi hujjatdagi maʼlumotlari kiritgan holda retsipiyentning rasmiy veb-saytida elektron koʻrinishda;\nv) abonent shaxsini tasdiqlovchi hujjatdagi maʼlumotlarni mobil ilova orqali elektron koʻrinishda.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "1-bob. Telekommunikatsiya xizmatlarini koʻrsatish",
+   "paragraph": "10-§. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish xizmatini taqdim etish",
+   "excerpt": false,
+   "case_type": "mnp_application",
+   "tags": [
+    "mnp arizasini qayerda topshirish",
+    "ariza berish",
+    "talabnoma",
+    "veb-sayt",
+    "mobil ilova",
+    "где подать заявление на перенос",
+    "where to apply for mnp"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 179-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "179#malumot_ozgarishi",
+   "clause": "179",
+   "title": "3275-son Qoidalar, 179-band. Shaxsiy maʼlumotlar oʻzgargan boʻlsa — avval donor shartnomasini yangilash",
+   "plain": "Oddiy tilda: familiya yoki pasport oʻzgargan boʻlsa, MNP arizasidan OLDIN eski operatordagi shartnomangizni yangilang, aks holda maʼlumotlar mos kelmaydi deb rad etiladi.",
+   "paragraphs": [
+    "179-band (davomi): Donor bilan mobil aloqa xizmatlarini koʻrsatish toʻgʻrisidagi shartnoma tuzilgan paytdan boshlab abonentda uning shaxsiy maʼlumotlarida oʻzgarishlar (familiyasi oʻzgarganda, pasporti almashganda va h.k.) yuz bergan holda, talabnomani berishdan oldin donor bilan tuzilgan shartnomaga tegishli oʻzgartirishlar kiritilishi kerak."
+   ],
+   "text": "179-band (davomi): Donor bilan mobil aloqa xizmatlarini koʻrsatish toʻgʻrisidagi shartnoma tuzilgan paytdan boshlab abonentda uning shaxsiy maʼlumotlarida oʻzgarishlar (familiyasi oʻzgarganda, pasporti almashganda va h.k.) yuz bergan holda, talabnomani berishdan oldin donor bilan tuzilgan shartnomaga tegishli oʻzgartirishlar kiritilishi kerak.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "1-bob. Telekommunikatsiya xizmatlarini koʻrsatish",
+   "paragraph": "10-§. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish xizmatini taqdim etish",
+   "excerpt": false,
+   "case_type": "mnp_identity_mismatch",
+   "tags": [
+    "ma'lumotlarim mos emas deyapti",
+    "familiya o'zgargan",
+    "pasport almashgan",
+    "shaxsiy ma'lumot o'zgargan",
+    "данные не совпадают",
+    "personal data mismatch"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 179-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "180",
+   "clause": "180",
+   "title": "3275-son Qoidalar, 180-band. MNP muddati: talabnomadan keyin 8 ish soatidan koʻp emas",
+   "plain": "Oddiy tilda: talabnomadan keyin koʻchirish 8 ish soatidan oshmasligi kerak.",
+   "paragraphs": [
+    "180. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish abonentdan olingan talabnoma asosida 8 ish soatidan koʻp boʻlmagan vaqt davomida mobil aloqa operatori (provayderi) tomonidan taʼminlanadi."
+   ],
+   "text": "180. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish abonentdan olingan talabnoma asosida 8 ish soatidan koʻp boʻlmagan vaqt davomida mobil aloqa operatori (provayderi) tomonidan taʼminlanadi.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "1-bob. Telekommunikatsiya xizmatlarini koʻrsatish",
+   "paragraph": "10-§. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish xizmatini taqdim etish",
+   "excerpt": false,
+   "case_type": "mnp_timing",
+   "tags": [
+    "mnp qancha vaqtda",
+    "necha soatda ko'chadi",
+    "8 ish soati",
+    "ko'chirish muddati",
+    "сколько занимает перенос номера",
+    "how long does number porting take"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 180-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "181",
+   "clause": "181",
+   "title": "3275-son Qoidalar, 181-band. Retsipiyent vazifalari: talabnoma, yangi shartnoma, vaqtinchalik raqamli SIM",
+   "plain": "Oddiy tilda: yangi operator talabnomangizni qabul qiladi, yangi shartnoma tuzadi va vaqtinchalik raqamli yangi SIM beradi (eSIM ham boʻlishi mumkin).",
+   "paragraphs": [
+    "181. Retsipiyent:",
+    "abonentdan talabnoma qabul qiladi;",
+    "talabnoma toʻgʻri toʻldirilganligini tekshiradi, uni roʻyxatga oladi va KRMBga soʻrov yuboradi yoki KRMB tomonidan talabnomani mobil ilova orqali olinganligini tasdiqlaydi;",
+    "abonent bilan yangi shartnoma tuzadi va retsipiyentga biriktirilgan hamda abonent tomonidan talabnomada koʻrsatilgan tarif rejasiga ulangan raqamlash diapazonidagi vaqtincha raqamli yangi SIM kartani beradi.",
+    "Elektron roʻyxatdan oʻtgandan keyin abonent SIM-kartani olish va shartnomani imzolash uchun operator (provayder) ofisiga kelishi kerakligi toʻgʻrisida xabardor qilinadi. Agar retsipiyent abonentga eSIM qoʻllab-quvvatlash bilan qurilmalar uchun xizmatlarni taqdim etsa, operator (provayder) shartnomani masofadan tuzish imkoniyati bilan aktiv eSIMga raqam koʻchirilishini taklif qilishi mumkin."
+   ],
+   "text": "181. Retsipiyent:\nabonentdan talabnoma qabul qiladi;\ntalabnoma toʻgʻri toʻldirilganligini tekshiradi, uni roʻyxatga oladi va KRMBga soʻrov yuboradi yoki KRMB tomonidan talabnomani mobil ilova orqali olinganligini tasdiqlaydi;\nabonent bilan yangi shartnoma tuzadi va retsipiyentga biriktirilgan hamda abonent tomonidan talabnomada koʻrsatilgan tarif rejasiga ulangan raqamlash diapazonidagi vaqtincha raqamli yangi SIM kartani beradi.\nElektron roʻyxatdan oʻtgandan keyin abonent SIM-kartani olish va shartnomani imzolash uchun operator (provayder) ofisiga kelishi kerakligi toʻgʻrisida xabardor qilinadi. Agar retsipiyent abonentga eSIM qoʻllab-quvvatlash bilan qurilmalar uchun xizmatlarni taqdim etsa, operator (provayder) shartnomani masofadan tuzish imkoniyati bilan aktiv eSIMga raqam koʻchirilishini taklif qilishi mumkin.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "1-bob. Telekommunikatsiya xizmatlarini koʻrsatish",
+   "paragraph": "10-§. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish xizmatini taqdim etish",
+   "excerpt": false,
+   "case_type": "mnp_application",
+   "tags": [
+    "yangi sim",
+    "vaqtincha raqam",
+    "vaqtinchalik raqam",
+    "esim",
+    "yangi shartnoma",
+    "новая sim карта",
+    "temporary number",
+    "new sim"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 181-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "182",
+   "clause": "182",
+   "title": "3275-son Qoidalar, 182-band. Vaqtinchalik SIM: koʻchirish tugaguncha va rad etilganda",
+   "plain": "Oddiy tilda: vaqtinchalik SIM darhol ishlaydi; koʻchirish rad etilsa ham undan foydalanishda davom etasiz.",
+   "paragraphs": [
+    "182. Shartnoma tuzish paytida vaqtincha raqamli SIM-karta aktivlashtiriladi va abonent haqiqiy koʻchirilguncha retsipiyentning aloqa xizmatlaridan foydalanishi mumkin.",
+    "Abonent raqamini koʻchirish rad etilganda abonent unga berilgan SIM-karta orqali retsipiyentning aloqa xizmatlaridan foydalanishni davom ettirishi mumkin. Bunda aynan shu retsipiyentga abonent raqamini koʻchirish uchun talabnoma takroran berilganda aloqa xizmatlarini koʻrsatish toʻgʻrisida yangi shartnomani tuzish talab etilmaydi."
+   ],
+   "text": "182. Shartnoma tuzish paytida vaqtincha raqamli SIM-karta aktivlashtiriladi va abonent haqiqiy koʻchirilguncha retsipiyentning aloqa xizmatlaridan foydalanishi mumkin.\nAbonent raqamini koʻchirish rad etilganda abonent unga berilgan SIM-karta orqali retsipiyentning aloqa xizmatlaridan foydalanishni davom ettirishi mumkin. Bunda aynan shu retsipiyentga abonent raqamini koʻchirish uchun talabnoma takroran berilganda aloqa xizmatlarini koʻrsatish toʻgʻrisida yangi shartnomani tuzish talab etilmaydi.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "1-bob. Telekommunikatsiya xizmatlarini koʻrsatish",
+   "paragraph": "10-§. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish xizmatini taqdim etish",
+   "excerpt": false,
+   "case_type": "mnp_application",
+   "tags": [
+    "vaqtincha raqamli sim",
+    "rad etilsa sim",
+    "временный номер"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 182-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "183#sorov",
+   "clause": "183",
+   "title": "3275-son Qoidalar, 183-band. Retsipiyentning KRMBga soʻrovi tarkibi (jismoniy va yuridik shaxs)",
+   "plain": "",
+   "paragraphs": [
+    "183. Retsipiyentdan abonent raqamini koʻchirish toʻgʻrisida KRMBga berilgan soʻrovda quyidagi maʼlumotlar boʻladi:",
+    "a) jismoniy shaxslar uchun:",
+    "abonentning pasport maʼlumotlari (pasport turi, seriyasi va raqami, JSHSHIR, pasport berilgan sana va kim tomonidan berilganligi);",
+    "abonent raqami;",
+    "b) yuridik shaxslar uchun:",
+    "tashkilotning STIR;",
+    "abonent raqami yoki abonent raqamlarining roʻyxati;",
+    "abonent raqamlarini toʻliq yoki qisman koʻchirishni tanlash toʻgʻrisidagi koʻrsatma."
+   ],
+   "text": "183. Retsipiyentdan abonent raqamini koʻchirish toʻgʻrisida KRMBga berilgan soʻrovda quyidagi maʼlumotlar boʻladi:\na) jismoniy shaxslar uchun:\nabonentning pasport maʼlumotlari (pasport turi, seriyasi va raqami, JSHSHIR, pasport berilgan sana va kim tomonidan berilganligi);\nabonent raqami;\nb) yuridik shaxslar uchun:\ntashkilotning STIR;\nabonent raqami yoki abonent raqamlarining roʻyxati;\nabonent raqamlarini toʻliq yoki qisman koʻchirishni tanlash toʻgʻrisidagi koʻrsatma.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "1-bob. Telekommunikatsiya xizmatlarini koʻrsatish",
+   "paragraph": "10-§. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish xizmatini taqdim etish",
+   "excerpt": false,
+   "case_type": "mnp_application",
+   "tags": [
+    "krmb so'rovi",
+    "pasport ma'lumotlari",
+    "stir"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 183-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "183#toliq",
+   "clause": "183",
+   "title": "3275-son Qoidalar, 183-band. Toʻliq koʻchirish: bir nechta raqam — bittasi rad etilsa hammasi rad",
+   "plain": "Oddiy tilda: bir nechta raqamni 'toʻliq' koʻchirishda bittasi rad etilsa, butun roʻyxat rad etiladi.",
+   "paragraphs": [
+    "183-band (davomi): Bunda, abonent raqamining toʻliq koʻchirilishini tanlash abonent tomonidan abonent raqamlari roʻyxatida aks ettirilgan barcha abonent raqamlari koʻchirilishini koʻzda tutadi. Agar abonent raqamlaridan bittasini boʻlsa ham koʻchirish rad etilgan boʻlsa, u holda soʻrov roʻyxatda aks ettirilgan barcha abonent raqamlari boʻyicha toʻliq rad etilgan hisoblanadi."
+   ],
+   "text": "183-band (davomi): Bunda, abonent raqamining toʻliq koʻchirilishini tanlash abonent tomonidan abonent raqamlari roʻyxatida aks ettirilgan barcha abonent raqamlari koʻchirilishini koʻzda tutadi. Agar abonent raqamlaridan bittasini boʻlsa ham koʻchirish rad etilgan boʻlsa, u holda soʻrov roʻyxatda aks ettirilgan barcha abonent raqamlari boʻyicha toʻliq rad etilgan hisoblanadi.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "1-bob. Telekommunikatsiya xizmatlarini koʻrsatish",
+   "paragraph": "10-§. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish xizmatini taqdim etish",
+   "excerpt": false,
+   "case_type": "mnp_multi_number",
+   "tags": [
+    "bir nechta raqamni ko'chirish",
+    "to'liq ko'chirish",
+    "full porting",
+    "несколько номеров",
+    "korporativ raqamlar"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 183-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "183#qisman",
+   "clause": "183",
+   "title": "3275-son Qoidalar, 183-band. Qisman koʻchirish: tasdiqlangan raqamlar koʻchiriladi",
+   "plain": "Oddiy tilda: 'qisman' koʻchirishda rad etilgan raqamlar qoladi, eski operator tasdiqlagan raqamlar koʻchiriladi.",
+   "paragraphs": [
+    "183-band (davomi): Abonent raqami qisman koʻchirilishini tanlash koʻchirish uchun donor tomonidan tasdiqlangan abonent raqamlarining roʻyxatida abonent tomonidan aks ettirilgan abonent raqamlarining faqat qismi koʻchirilishini koʻzda tutadi. Bunda bir yoki bir nechta abonent raqamlari boʻyicha koʻchirishni rad etish roʻyxatdagi donor tasdiqlagan abonent raqamlarini koʻchirish uchun rad javobi hisoblanmaydi."
+   ],
+   "text": "183-band (davomi): Abonent raqami qisman koʻchirilishini tanlash koʻchirish uchun donor tomonidan tasdiqlangan abonent raqamlarining roʻyxatida abonent tomonidan aks ettirilgan abonent raqamlarining faqat qismi koʻchirilishini koʻzda tutadi. Bunda bir yoki bir nechta abonent raqamlari boʻyicha koʻchirishni rad etish roʻyxatdagi donor tasdiqlagan abonent raqamlarini koʻchirish uchun rad javobi hisoblanmaydi.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "1-bob. Telekommunikatsiya xizmatlarini koʻrsatish",
+   "paragraph": "10-§. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish xizmatini taqdim etish",
+   "excerpt": false,
+   "case_type": "mnp_multi_number",
+   "tags": [
+    "qisman ko'chirish",
+    "partial porting",
+    "bir nechta raqam"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 183-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "184",
+   "clause": "184",
+   "title": "3275-son Qoidalar, 184-band. KRMB tekshiruvi va rad etish: talabnoma, 30 kun, aktiv talabnoma",
+   "plain": "Oddiy tilda: markaziy baza (KRMB) arizani rad etadi, agar u notoʻgʻri toʻldirilgan boʻlsa, oxirgi koʻchirishdan 30 kun oʻtmagan boʻlsa yoki shu raqam boʻyicha boshqa aktiv ariza boʻlsa. Rad sababi vaqtinchalik SIMga SMS bilan yuboriladi.",
+   "paragraphs": [
+    "184. KRMB operatori retsipiyentdan abonent raqamini koʻchirish soʻrovini olganda quyidagi shartlarga rioya qilinganligini tekshiradi:",
+    "KRMBda retsipiyent tomonidan mobil aloqa tarmoqlarida abonent raqamini koʻchirish uchun soʻrovning toʻgʻri toʻldirilganligini. Bunda toʻgʻri toʻldirilganligi soʻrovning talabnomaga muvofiq toʻgʻri va aniq toʻldirilganligi bilan aniqlanadi. Ushbu shart bajarilmaganda KRMB operatori retsipiyentni xabardor qilgan holda talabnomani rad etadi. Retsipiyent kamchiliklarni bartaraf etadi va KRMB operatoriga yangi soʻrovni yuboradi;",
+    "abonent raqamini koʻchirish imkoniyatini tasdiqlash — oxirgi koʻchirilgan paytdan boshlab kamida 30 kalendar kuni oʻtganligi, bundan xato koʻchirilgan holatlar mustasno;",
+    "abonent raqamini koʻchirish uchun aktiv talabnomalar yoʻqligi.",
+    "Ushbu bandning uchinchi va toʻrtinchi xatboshilaridagi shartlar bajarilmagan holda KRMB operatori retsipiyentga abonent raqamini koʻchirish rad etilganligi toʻgʻrisida xabar qiladi, bu haqda retsipiyent vaqtincha raqamli SIM kartaga SMS xabarni yuborish orqali, rad etish sababini koʻrsatgan holda abonentni xabardor qiladi."
+   ],
+   "text": "184. KRMB operatori retsipiyentdan abonent raqamini koʻchirish soʻrovini olganda quyidagi shartlarga rioya qilinganligini tekshiradi:\nKRMBda retsipiyent tomonidan mobil aloqa tarmoqlarida abonent raqamini koʻchirish uchun soʻrovning toʻgʻri toʻldirilganligini. Bunda toʻgʻri toʻldirilganligi soʻrovning talabnomaga muvofiq toʻgʻri va aniq toʻldirilganligi bilan aniqlanadi. Ushbu shart bajarilmaganda KRMB operatori retsipiyentni xabardor qilgan holda talabnomani rad etadi. Retsipiyent kamchiliklarni bartaraf etadi va KRMB operatoriga yangi soʻrovni yuboradi;\nabonent raqamini koʻchirish imkoniyatini tasdiqlash — oxirgi koʻchirilgan paytdan boshlab kamida 30 kalendar kuni oʻtganligi, bundan xato koʻchirilgan holatlar mustasno;\nabonent raqamini koʻchirish uchun aktiv talabnomalar yoʻqligi.\nUshbu bandning uchinchi va toʻrtinchi xatboshilaridagi shartlar bajarilmagan holda KRMB operatori retsipiyentga abonent raqamini koʻchirish rad etilganligi toʻgʻrisida xabar qiladi, bu haqda retsipiyent vaqtincha raqamli SIM kartaga SMS xabarni yuborish orqali, rad etish sababini koʻrsatgan holda abonentni xabardor qiladi.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "1-bob. Telekommunikatsiya xizmatlarini koʻrsatish",
+   "paragraph": "10-§. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish xizmatini taqdim etish",
+   "excerpt": false,
+   "case_type": "mnp_rejection",
+   "tags": [
+    "mnp rad etildi",
+    "ko'chirish rad etildi",
+    "raqam ko'chmadi",
+    "rad sababi",
+    "перенос номера отклонен",
+    "отказ в переносе",
+    "number porting rejected",
+    "why was mnp rejected",
+    "30 kun o'tmagan",
+    "aktiv talabnoma",
+    "noto'g'ri to'ldirilgan"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 184-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "185",
+   "clause": "185",
+   "title": "3275-son Qoidalar, 185-band. KRMB soʻrovni donorga yuboradi",
+   "plain": "",
+   "paragraphs": [
+    "185. Retsipiyentdan abonent raqamini koʻchirish toʻgʻrisidagi soʻrov qabul qilinganda KRMB operatori donorga abonent raqamini koʻchirish toʻgʻrisidagi soʻrovni yuborib, retsipiyentga keyin koʻrib chiqish uchun talabnoma qabul qilinganligi toʻgʻrisida xabar qiladi."
+   ],
+   "text": "185. Retsipiyentdan abonent raqamini koʻchirish toʻgʻrisidagi soʻrov qabul qilinganda KRMB operatori donorga abonent raqamini koʻchirish toʻgʻrisidagi soʻrovni yuborib, retsipiyentga keyin koʻrib chiqish uchun talabnoma qabul qilinganligi toʻgʻrisida xabar qiladi.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "1-bob. Telekommunikatsiya xizmatlarini koʻrsatish",
+   "paragraph": "10-§. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish xizmatini taqdim etish",
+   "excerpt": false,
+   "case_type": "mnp_application",
+   "tags": [],
+   "legal_refs": [
+    "3275-son Qoidalar, 185-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "186",
+   "clause": "186",
+   "title": "3275-son Qoidalar, 186-band. Donor tekshiruvi va rad etish: shaxsiy maʼlumot, qarz, majburiyat",
+   "plain": "Oddiy tilda: eski operator rad etadi, agar shaxsiy maʼlumotlaringiz uning shartnomasiga mos kelmasa, unga qarzingiz boʻlsa (roumingdan tashqari) yoki bajarilmagan majburiyatingiz boʻlsa. Rad sababi SMS bilan keladi.",
+   "paragraphs": [
+    "186. Donor KRMB operatoridan abonent raqamini koʻchirish soʻrovini olganda quyidagi shartlarga rioya qilinganligini tekshiradi:",
+    "abonent shaxsiy maʼlumotlarining ishonchliligini. Bunda ishonchlilik KRMBdan soʻrovda kelib tushgan shaxsiy maʼlumotlarning donor va abonent oʻrtasidagi mobil aloqa xizmatlarini koʻrsatish toʻgʻrisidagi shartnomada koʻrsatilgan maʼlumotlar bilan mosligi bilan aniqlanadi;",
+    "donor bilan tuzilgan aloqa xizmatlarini koʻrsatish toʻgʻrisidagi shartnoma boʻyicha donor tomonidan tekshirish paytida abonent qarzlarining yoʻqligi, rouming xizmatlaridan tashqari;",
+    "abonentda donor oldidagi shartnoma boʻyicha majburiyatlarining yoʻqligi.",
+    "Bunda mazkur bandda koʻrsatilgan shartlardan bittasi boʻlsa ham bajarilmasa, donor KRMB operatoriga abonent raqamini koʻchirishni rad etish toʻgʻrisidagi asoslangan bildirishnoma yuboradi, bu haqda KRMB operatori retsipiyentga xabar qiladi, retsipiyent esa, oʻz navbatida, vaqtincha raqamli SIM kartaga SMS-xabarni yuborib, rad etish sababini koʻrsatgan holda abonentni abonent raqamini koʻchirish rad etilganligi toʻgʻrisida xabardor qiladi."
+   ],
+   "text": "186. Donor KRMB operatoridan abonent raqamini koʻchirish soʻrovini olganda quyidagi shartlarga rioya qilinganligini tekshiradi:\nabonent shaxsiy maʼlumotlarining ishonchliligini. Bunda ishonchlilik KRMBdan soʻrovda kelib tushgan shaxsiy maʼlumotlarning donor va abonent oʻrtasidagi mobil aloqa xizmatlarini koʻrsatish toʻgʻrisidagi shartnomada koʻrsatilgan maʼlumotlar bilan mosligi bilan aniqlanadi;\ndonor bilan tuzilgan aloqa xizmatlarini koʻrsatish toʻgʻrisidagi shartnoma boʻyicha donor tomonidan tekshirish paytida abonent qarzlarining yoʻqligi, rouming xizmatlaridan tashqari;\nabonentda donor oldidagi shartnoma boʻyicha majburiyatlarining yoʻqligi.\nBunda mazkur bandda koʻrsatilgan shartlardan bittasi boʻlsa ham bajarilmasa, donor KRMB operatoriga abonent raqamini koʻchirishni rad etish toʻgʻrisidagi asoslangan bildirishnoma yuboradi, bu haqda KRMB operatori retsipiyentga xabar qiladi, retsipiyent esa, oʻz navbatida, vaqtincha raqamli SIM kartaga SMS-xabarni yuborib, rad etish sababini koʻrsatgan holda abonentni abonent raqamini koʻchirish rad etilganligi toʻgʻrisida xabardor qiladi.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "1-bob. Telekommunikatsiya xizmatlarini koʻrsatish",
+   "paragraph": "10-§. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish xizmatini taqdim etish",
+   "excerpt": false,
+   "case_type": "mnp_rejection",
+   "tags": [
+    "mnp rad etildi",
+    "ko'chirish rad etildi",
+    "raqam ko'chmadi",
+    "rad sababi",
+    "перенос номера отклонен",
+    "отказ в переносе",
+    "number porting rejected",
+    "why was mnp rejected",
+    "ma'lumotlarim mos emas",
+    "qarzdorlik",
+    "majburiyat",
+    "eski operatorga qarz",
+    "несоответствие данных",
+    "долг перед оператором"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 186-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "187",
+   "clause": "187",
+   "title": "3275-son Qoidalar, 187-band. Donor talabnomani 3 ish soatida koʻrib chiqadi",
+   "plain": "Oddiy tilda: eski operator arizani 3 ish soatida koʻrib chiqishi kerak; kechiksa, koʻchirishga ruxsat avtomatik beriladi.",
+   "paragraphs": [
+    "187. Donor tomonidan talabnomani koʻrib chiqish muddati KRMB operatoridan soʻrovni olgan paytdan boshlab hisoblanadi va 3 ish soatidan koʻp boʻlmagan vaqtni tashkil qiladi. Bunda koʻrib chiqish ajratilgan muddatdan oshib ketganda KRMB avtomatik ravishda retsipiyent va donorga abonent raqami koʻchirilishi mumkinligi toʻgʻrisida xabar qiladi, KRMB talabnomani oʻz vaqtida tasdiqlamagan donor tomonidan buzilishga yoʻl qoʻyilganligini qayd qiladi."
+   ],
+   "text": "187. Donor tomonidan talabnomani koʻrib chiqish muddati KRMB operatoridan soʻrovni olgan paytdan boshlab hisoblanadi va 3 ish soatidan koʻp boʻlmagan vaqtni tashkil qiladi. Bunda koʻrib chiqish ajratilgan muddatdan oshib ketganda KRMB avtomatik ravishda retsipiyent va donorga abonent raqami koʻchirilishi mumkinligi toʻgʻrisida xabar qiladi, KRMB talabnomani oʻz vaqtida tasdiqlamagan donor tomonidan buzilishga yoʻl qoʻyilganligini qayd qiladi.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "1-bob. Telekommunikatsiya xizmatlarini koʻrsatish",
+   "paragraph": "10-§. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish xizmatini taqdim etish",
+   "excerpt": false,
+   "case_type": "mnp_timing",
+   "tags": [
+    "donor necha soatda ko'rib chiqadi",
+    "3 ish soati",
+    "donor muddati",
+    "срок рассмотрения донором"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 187-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "188",
+   "clause": "188",
+   "title": "3275-son Qoidalar, 188-band. Donor tasdigʻi — eski shartnomani bekor qilish asosi",
+   "plain": "",
+   "paragraphs": [
+    "188. Donor tomonidan KRMB operatoriga abonent raqamini koʻchirish mumkinligini tasdiqlash mobil aloqa xizmatlarini koʻrsatish toʻgʻrisidagi shartnomani bekor qilish uchun asos boʻlib hisoblanadi."
+   ],
+   "text": "188. Donor tomonidan KRMB operatoriga abonent raqamini koʻchirish mumkinligini tasdiqlash mobil aloqa xizmatlarini koʻrsatish toʻgʻrisidagi shartnomani bekor qilish uchun asos boʻlib hisoblanadi.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "1-bob. Telekommunikatsiya xizmatlarini koʻrsatish",
+   "paragraph": "10-§. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish xizmatini taqdim etish",
+   "excerpt": false,
+   "case_type": "mnp_success",
+   "tags": [
+    "eski shartnoma bekor",
+    "shartnoma bekor qilish"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 188-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "189",
+   "clause": "189",
+   "title": "3275-son Qoidalar, 189-band. Texnik koʻchirish boshlanishi haqida SMS",
+   "plain": "Oddiy tilda: texnik koʻchirish boshlanganda vaqtinchalik SIMga SMS keladi.",
+   "paragraphs": [
+    "189. Donordan abonent raqamini koʻchirish imkoniyati toʻgʻrisida bildirishnomani olgandan keyin KRMB operatori retsipiyent va donorga abonent raqamini texnik koʻchirish boshlanishi toʻgʻrisida xabar qiladi, retsipiyent esa, oʻz navbatida, bu haqda vaqtincha raqamli SIM kartaga SMS-xabarni yuborib abonentni xabardor qiladi."
+   ],
+   "text": "189. Donordan abonent raqamini koʻchirish imkoniyati toʻgʻrisida bildirishnomani olgandan keyin KRMB operatori retsipiyent va donorga abonent raqamini texnik koʻchirish boshlanishi toʻgʻrisida xabar qiladi, retsipiyent esa, oʻz navbatida, bu haqda vaqtincha raqamli SIM kartaga SMS-xabarni yuborib abonentni xabardor qiladi.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "1-bob. Telekommunikatsiya xizmatlarini koʻrsatish",
+   "paragraph": "10-§. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish xizmatini taqdim etish",
+   "excerpt": false,
+   "case_type": "mnp_success",
+   "tags": [
+    "texnik ko'chirish boshlandi sms"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 189-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "190",
+   "clause": "190",
+   "title": "3275-son Qoidalar, 190-band. Texnik koʻchirish: retsipiyent va donor harakatlari",
+   "plain": "",
+   "paragraphs": [
+    "190. KRMB operatoridan abonent raqamini texnik koʻchirishni boshlash toʻgʻrisidagi xabarni olgandan keyin:",
+    "retsipiyent abonent raqamini oʻz maʼlumotlar bazasiga kiritish, shu jumladan, billing tizimlari va abonentlarni identifikatsiyalash maʼlumotlar bazasiga kiritish zarur xatti-harakatlarni bajaradi, shuningdek, SIM-kartadagi vaqtincha raqamni talabnomada abonent tomonidan koʻchiriladigan sifatida koʻrsatilgan raqamga almashtiradi va KRMB operatoriga abonent raqamini oʻz tarmogʻida roʻyxatga olish ishlari tugallanganligi toʻgʻrisida xabar qiladi;",
+    "donor abonent raqamini oʻz billing tizimidan chiqarish boʻyicha kerakli ishlarni bajaradi va abonent deaktivatsiya qilinganligi toʻgʻrisida KRMB operatoriga xabar qiladi."
+   ],
+   "text": "190. KRMB operatoridan abonent raqamini texnik koʻchirishni boshlash toʻgʻrisidagi xabarni olgandan keyin:\nretsipiyent abonent raqamini oʻz maʼlumotlar bazasiga kiritish, shu jumladan, billing tizimlari va abonentlarni identifikatsiyalash maʼlumotlar bazasiga kiritish zarur xatti-harakatlarni bajaradi, shuningdek, SIM-kartadagi vaqtincha raqamni talabnomada abonent tomonidan koʻchiriladigan sifatida koʻrsatilgan raqamga almashtiradi va KRMB operatoriga abonent raqamini oʻz tarmogʻida roʻyxatga olish ishlari tugallanganligi toʻgʻrisida xabar qiladi;\ndonor abonent raqamini oʻz billing tizimidan chiqarish boʻyicha kerakli ishlarni bajaradi va abonent deaktivatsiya qilinganligi toʻgʻrisida KRMB operatoriga xabar qiladi.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "1-bob. Telekommunikatsiya xizmatlarini koʻrsatish",
+   "paragraph": "10-§. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish xizmatini taqdim etish",
+   "excerpt": false,
+   "case_type": "mnp_success",
+   "tags": [],
+   "legal_refs": [
+    "3275-son Qoidalar, 190-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "191",
+   "clause": "191",
+   "title": "3275-son Qoidalar, 191-band. KRMB koʻchirishni qayd etadi va marshrutlashni oʻzgartirishni soʻraydi",
+   "plain": "",
+   "paragraphs": [
+    "191. KRMB operatori donordan raqam deaktivatsiya qilinganligi toʻgʻrisida va retsipiyentdan abonent raqami roʻyxatga olinganligi toʻgʻrisidagi xabarlarni olgandan keyin abonent raqami koʻchirilganligi toʻgʻrisidagi maʼlumotlarni KRMBga kiritadi hamda barcha telekommunikatsiya operatorlarini (provayderlarini) koʻchirilgan abonent raqami boʻyicha marshrutlashni oʻzgartirish zarurligi toʻgʻrisida xabardor qiladi.",
+    "Ajratilgan muddatdan oshib ketgan holda KRMB marshrutlash oʻzgarganligini oʻz vaqtida tasdiqlamagan operator (provayder) tomonidan buzilishga yoʻl qoʻyilganligini qayd qiladi. Buzilish toʻgʻrisidagi bunday axborot keyinchalik nazorat qiluvchi vakolatli organni xabardor qilish uchun KRMB bazasida roʻyxatga olinadi."
+   ],
+   "text": "191. KRMB operatori donordan raqam deaktivatsiya qilinganligi toʻgʻrisida va retsipiyentdan abonent raqami roʻyxatga olinganligi toʻgʻrisidagi xabarlarni olgandan keyin abonent raqami koʻchirilganligi toʻgʻrisidagi maʼlumotlarni KRMBga kiritadi hamda barcha telekommunikatsiya operatorlarini (provayderlarini) koʻchirilgan abonent raqami boʻyicha marshrutlashni oʻzgartirish zarurligi toʻgʻrisida xabardor qiladi.\nAjratilgan muddatdan oshib ketgan holda KRMB marshrutlash oʻzgarganligini oʻz vaqtida tasdiqlamagan operator (provayder) tomonidan buzilishga yoʻl qoʻyilganligini qayd qiladi. Buzilish toʻgʻrisidagi bunday axborot keyinchalik nazorat qiluvchi vakolatli organni xabardor qilish uchun KRMB bazasida roʻyxatga olinadi.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "1-bob. Telekommunikatsiya xizmatlarini koʻrsatish",
+   "paragraph": "10-§. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish xizmatini taqdim etish",
+   "excerpt": false,
+   "case_type": "mnp_routing",
+   "tags": [],
+   "legal_refs": [
+    "3275-son Qoidalar, 191-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "192",
+   "clause": "192",
+   "title": "3275-son Qoidalar, 192-band. Operatorlar marshrutlashni oʻzgartiradi",
+   "plain": "",
+   "paragraphs": [
+    "192. Telekommunikatsiya operatorlari (provayderlari) KRMBdan operatoridan xabarni olgandan keyin koʻchirilgan abonent raqami boʻyicha marshrutlashga oʻzgartirishlar kiritadilar va oʻz tarmoqlarida ishlar tugatilganligi toʻgʻrisida KRMB operatoriga tasdiq yuboradilar."
+   ],
+   "text": "192. Telekommunikatsiya operatorlari (provayderlari) KRMBdan operatoridan xabarni olgandan keyin koʻchirilgan abonent raqami boʻyicha marshrutlashga oʻzgartirishlar kiritadilar va oʻz tarmoqlarida ishlar tugatilganligi toʻgʻrisida KRMB operatoriga tasdiq yuboradilar.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "1-bob. Telekommunikatsiya xizmatlarini koʻrsatish",
+   "paragraph": "10-§. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish xizmatini taqdim etish",
+   "excerpt": false,
+   "case_type": "mnp_routing",
+   "tags": [],
+   "legal_refs": [
+    "3275-son Qoidalar, 192-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "193",
+   "clause": "193",
+   "title": "3275-son Qoidalar, 193-band. Koʻchirish muvaffaqiyatli tugaganligi haqida KRMB xabari",
+   "plain": "",
+   "paragraphs": [
+    "193. KRMB operatori koʻchirilgan abonent raqami boʻyicha marshrutlash oʻzgarganligi toʻgʻrisida telekommunikatsiya operatorlaridan (provayderlaridan) tasdiqni olganlaridan keyin yoki bu operatsiya uchun ajratilgan muddat oshib ketgan holda barcha telekommunikatsiya operatorlariga (provayderlariga) abonent raqamini koʻchirish muvaffaqiyatli tugallanganligi toʻgʻrisida xabar yuboradi. Ajratilgan muddat oshib ketgan holda KRMB marshrutlash oʻzgarganligini oʻz vaqtida tasdiqlamagan operator (provayder) tomonidan buzilishga yoʻl qoʻyilganligini qayd qiladi. Buzilish toʻgʻrisidagi bunday axborot keyinchalik nazorat qiluvchi vakolatli organni xabardor qilish uchun KRMB bazasida roʻyxatga olinadi."
+   ],
+   "text": "193. KRMB operatori koʻchirilgan abonent raqami boʻyicha marshrutlash oʻzgarganligi toʻgʻrisida telekommunikatsiya operatorlaridan (provayderlaridan) tasdiqni olganlaridan keyin yoki bu operatsiya uchun ajratilgan muddat oshib ketgan holda barcha telekommunikatsiya operatorlariga (provayderlariga) abonent raqamini koʻchirish muvaffaqiyatli tugallanganligi toʻgʻrisida xabar yuboradi. Ajratilgan muddat oshib ketgan holda KRMB marshrutlash oʻzgarganligini oʻz vaqtida tasdiqlamagan operator (provayder) tomonidan buzilishga yoʻl qoʻyilganligini qayd qiladi. Buzilish toʻgʻrisidagi bunday axborot keyinchalik nazorat qiluvchi vakolatli organni xabardor qilish uchun KRMB bazasida roʻyxatga olinadi.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "1-bob. Telekommunikatsiya xizmatlarini koʻrsatish",
+   "paragraph": "10-§. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish xizmatini taqdim etish",
+   "excerpt": false,
+   "case_type": "mnp_success",
+   "tags": [
+    "ko'chirish tugadi",
+    "muvaffaqiyatli"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 193-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "194",
+   "clause": "194",
+   "title": "3275-son Qoidalar, 194-band. MNP muvaffaqiyatli tugaganini qanday bilaman: SMS xabar",
+   "plain": "Oddiy tilda: MNP muvaffaqiyatli tugaganda yangi operator koʻchirilgan raqamli SIMingizga SMS yuboradi.",
+   "paragraphs": [
+    "194. Retsipiyent KRMB operatoridan abonent raqamini koʻchirish muvaffaqiyatli tugallanganligi toʻgʻrisidagi xabarni olgandan keyin bu haqda koʻchirilgan raqamli SIM kartaga SMS-xabarni yuborish orqali abonentni xabardor qiladi."
+   ],
+   "text": "194. Retsipiyent KRMB operatoridan abonent raqamini koʻchirish muvaffaqiyatli tugallanganligi toʻgʻrisidagi xabarni olgandan keyin bu haqda koʻchirilgan raqamli SIM kartaga SMS-xabarni yuborish orqali abonentni xabardor qiladi.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "1-bob. Telekommunikatsiya xizmatlarini koʻrsatish",
+   "paragraph": "10-§. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish xizmatini taqdim etish",
+   "excerpt": false,
+   "case_type": "mnp_success",
+   "tags": [
+    "mnp tugaganini qanday bilaman",
+    "muvaffaqiyatli tugadi",
+    "sms keladi",
+    "mnp bo'ldimi",
+    "как узнать что номер перенесен",
+    "porting completed sms",
+    "how do i know porting is done"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 194-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "195",
+   "clause": "195",
+   "title": "3275-son Qoidalar, 195-band. MNPdan voz kechish (arizani bekor qilish) mumkin — donor tasdiqlaguncha",
+   "plain": "Oddiy tilda: eski operator soʻrovni tasdiqlaguncha MNPdan voz kechishingiz (arizani bekor qilishingiz) mumkin.",
+   "paragraphs": [
+    "195. Donor tomonidan abonent raqamining koʻchirilishi toʻgʻrisida soʻrov tasdiqlanguncha abonent abonent raqamini koʻchirish xizmatlarini rad etishi mumkin."
+   ],
+   "text": "195. Donor tomonidan abonent raqamining koʻchirilishi toʻgʻrisida soʻrov tasdiqlanguncha abonent abonent raqamini koʻchirish xizmatlarini rad etishi mumkin.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "1-bob. Telekommunikatsiya xizmatlarini koʻrsatish",
+   "paragraph": "10-§. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish xizmatini taqdim etish",
+   "excerpt": false,
+   "case_type": "mnp_cancel",
+   "tags": [
+    "mnp arizasini bekor qilish",
+    "fikrimdan qaytdim",
+    "portingni to'xtatmoqchiman",
+    "mnpdan voz kechish",
+    "отменить перенос номера",
+    "можно ли отменить перенос",
+    "cancel number porting",
+    "cancel a porting request"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 195-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "196",
+   "clause": "196",
+   "title": "3275-son Qoidalar, 196-band. Avval koʻchirilgan raqamni yana koʻchirish (takroriy porting)",
+   "plain": "Oddiy tilda: koʻchirilgan raqamni yana boshqa operatorga (yoki eskisiga) koʻchirish xuddi shu tartibda boʻladi; 30 kunlik cheklov amal qiladi.",
+   "paragraphs": [
+    "196. Avval bir operatordan (provayderdan) boshqa operatorga (provayderga) koʻchirilgan abonent raqamini koʻchirish jarayoni abonentning talabnomasi boʻyicha 183 — 195-bandlarda koʻrsatilgan ketma-ketlikda bajariladi."
+   ],
+   "text": "196. Avval bir operatordan (provayderdan) boshqa operatorga (provayderga) koʻchirilgan abonent raqamini koʻchirish jarayoni abonentning talabnomasi boʻyicha 183 — 195-bandlarda koʻrsatilgan ketma-ketlikda bajariladi.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "1-bob. Telekommunikatsiya xizmatlarini koʻrsatish",
+   "paragraph": "10-§. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish xizmatini taqdim etish",
+   "excerpt": false,
+   "case_type": "mnp_repeat_porting",
+   "tags": [
+    "eski operatorga qaytish",
+    "qayta ko'chirish",
+    "takroriy porting",
+    "вернуться к старому оператору",
+    "port back"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 196-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "197",
+   "clause": "197",
+   "title": "3275-son Qoidalar, 197-band. KRMB orqali barcha harakatlar sinxron tasdiqlanadi",
+   "plain": "",
+   "paragraphs": [
+    "197. KRMB operatori orqali abonent raqamini koʻchirish protseduralari bilan bogʻliq barcha xatti-harakatlar soʻrov olinganligini majburiy sinxron tasdiqlagan holda bajariladi."
+   ],
+   "text": "197. KRMB operatori orqali abonent raqamini koʻchirish protseduralari bilan bogʻliq barcha xatti-harakatlar soʻrov olinganligini majburiy sinxron tasdiqlagan holda bajariladi.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "1-bob. Telekommunikatsiya xizmatlarini koʻrsatish",
+   "paragraph": "10-§. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish xizmatini taqdim etish",
+   "excerpt": false,
+   "case_type": "mnp_krmb",
+   "tags": [],
+   "legal_refs": [
+    "3275-son Qoidalar, 197-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "198",
+   "clause": "198",
+   "title": "3275-son Qoidalar, 198-band. Marshrutlash texnologiyalari: All Call Query va Onward Routing",
+   "plain": "Oddiy tilda: qoʻngʻiroqlar koʻchgan raqamga All Call Query yoki Onward Routing usulida yoʻnaltiriladi.",
+   "paragraphs": [
+    "198. Aloqa tarmoqlarida koʻchirilgan abonent raqamlari uchun ulanishlarning marshrutlanishini taʼminlash uchun quyidagi texnologiyalar qoʻllaniladi:",
+    "a) mobil aloqa tarmoqlaridan chaqiruvni boshlab berishda koʻchirilgan raqamlarning lokal bazasidan foydalangan holda “All Call Query”;",
+    "b) qayd qilingan aloqa tarmoqlaridan chaqiruvni boshlab berishda “All Call Query” yoki “Onward Routing”."
+   ],
+   "text": "198. Aloqa tarmoqlarida koʻchirilgan abonent raqamlari uchun ulanishlarning marshrutlanishini taʼminlash uchun quyidagi texnologiyalar qoʻllaniladi:\na) mobil aloqa tarmoqlaridan chaqiruvni boshlab berishda koʻchirilgan raqamlarning lokal bazasidan foydalangan holda “All Call Query”;\nb) qayd qilingan aloqa tarmoqlaridan chaqiruvni boshlab berishda “All Call Query” yoki “Onward Routing”.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "1-bob. Telekommunikatsiya xizmatlarini koʻrsatish",
+   "paragraph": "10-§. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish xizmatini taqdim etish",
+   "excerpt": false,
+   "case_type": "mnp_routing",
+   "tags": [
+    "all call query",
+    "onward routing",
+    "marshrutlash",
+    "routing"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 198-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "199",
+   "clause": "199",
+   "title": "3275-son Qoidalar, 199-band. Operatorning MNP boʻyicha majburiyatlari",
+   "plain": "",
+   "paragraphs": [
+    "199. Operator (provayder) quyidagilarni taʼminlaydi:",
+    "koʻchirilgan abonent raqamlariga oʻz tarmogʻidan ulanishlarni toʻgʻri marshrutlashni taʼminlash uchun zarur boʻlgan koʻchirilgan raqamlarning lokal bazasini shakllantirish, uning ishlashi va texnik kuzatish;",
+    "KRMB operatoriga talabnomada abonent tomonidan koʻrsatilgan abonent raqamlari toʻgʻrisidagi maʼlumotlarni taqdim etish;",
+    "koʻchirilgan abonent raqamlarini oʻzining raqamlash resursiga kiritish va mazkur Qoidalarida belgilangan tartibda tuzilgan shartnomaning amal qilish muddatida mobil aloqa xizmatlarini koʻrsatish;",
+    "donor tomonidan boshqa operatorning tarmogʻiga koʻchirilishi kerak boʻlgan raqamning berilishi;",
+    "abonent raqamini koʻchirish va koʻchirilgan abonent raqami boʻyicha oʻz tarmoqlarida xizmatlarni lozim darajada koʻrsatish uchun oʻz tarmoqlarini texnik jihatdan tayyorlash;",
+    "foydalanilayotgan texnologiya, taqdim etilayotgan mobil aloqa xizmatining turi, abonent tomonidan aloqa xizmatlariga haq toʻlash usulidan qatʼi nazar mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish;",
+    "aholiga mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish shartlari toʻgʻrisidagi axborotni taqdim etish;",
+    "belgilangan muddatlarda retsipiyent va abonent oʻrtasida shartnoma bekor qilinganda koʻchirilgan abonent raqamini donorga qaytarish."
+   ],
+   "text": "199. Operator (provayder) quyidagilarni taʼminlaydi:\nkoʻchirilgan abonent raqamlariga oʻz tarmogʻidan ulanishlarni toʻgʻri marshrutlashni taʼminlash uchun zarur boʻlgan koʻchirilgan raqamlarning lokal bazasini shakllantirish, uning ishlashi va texnik kuzatish;\nKRMB operatoriga talabnomada abonent tomonidan koʻrsatilgan abonent raqamlari toʻgʻrisidagi maʼlumotlarni taqdim etish;\nkoʻchirilgan abonent raqamlarini oʻzining raqamlash resursiga kiritish va mazkur Qoidalarida belgilangan tartibda tuzilgan shartnomaning amal qilish muddatida mobil aloqa xizmatlarini koʻrsatish;\ndonor tomonidan boshqa operatorning tarmogʻiga koʻchirilishi kerak boʻlgan raqamning berilishi;\nabonent raqamini koʻchirish va koʻchirilgan abonent raqami boʻyicha oʻz tarmoqlarida xizmatlarni lozim darajada koʻrsatish uchun oʻz tarmoqlarini texnik jihatdan tayyorlash;\nfoydalanilayotgan texnologiya, taqdim etilayotgan mobil aloqa xizmatining turi, abonent tomonidan aloqa xizmatlariga haq toʻlash usulidan qatʼi nazar mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish;\naholiga mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish shartlari toʻgʻrisidagi axborotni taqdim etish;\nbelgilangan muddatlarda retsipiyent va abonent oʻrtasida shartnoma bekor qilinganda koʻchirilgan abonent raqamini donorga qaytarish.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "1-bob. Telekommunikatsiya xizmatlarini koʻrsatish",
+   "paragraph": "10-§. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish xizmatini taqdim etish",
+   "excerpt": false,
+   "case_type": "mnp_application",
+   "tags": [
+    "operator majburiyatlari mnp",
+    "lokal baza"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 199-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "200",
+   "clause": "200",
+   "title": "3275-son Qoidalar, 200-band. KRMB operatorining majburiyatlari",
+   "plain": "",
+   "paragraphs": [
+    "200. KRMB operatori quyidagilarni taʼminlaydi:",
+    "KRMBni shakllantirish va texnik kuzatish hamda operatorlar (provayderlar) tomonidan abonent raqamlarini koʻchirish uchun uning resurslaridan foydalana olish imkonini yaratish;",
+    "abonent raqamlarini koʻchirish jarayonida yuzaga keladigan masalalar boʻyicha operatorlar (provayderlar) oʻrtasida oʻzaro ishlashni tashkil etish;",
+    "KRMBning koʻchirilgan abonent raqamlari toʻgʻrisidagi axborotni aktuallashtirish (maʼlumotlarni sinxronlash) uchun KRMBga ulangan operatorlarning (provayderlarning) koʻchirilgan raqamlarning lokal bazasi bilan oʻzaro ishlashi;",
+    "koʻchirilgan abonent raqamlari toʻgʻrisidagi axborotni KRMBga kiritish (abonent raqamlarini koʻchirish jarayonida axborotni yangilash);",
+    "koʻchirilgan abonent raqamlari toʻgʻrisidagi maʼlumotlardan ruxsatsiz foydalana olishdan himoyalash;",
+    "operatorlarni (provayderlarni) koʻchirilgan abonent raqamiga xizmat koʻrsatuvchi mobil aloqa operatorining (provayderining) almashganligi toʻgʻrisida xabardor qilish."
+   ],
+   "text": "200. KRMB operatori quyidagilarni taʼminlaydi:\nKRMBni shakllantirish va texnik kuzatish hamda operatorlar (provayderlar) tomonidan abonent raqamlarini koʻchirish uchun uning resurslaridan foydalana olish imkonini yaratish;\nabonent raqamlarini koʻchirish jarayonida yuzaga keladigan masalalar boʻyicha operatorlar (provayderlar) oʻrtasida oʻzaro ishlashni tashkil etish;\nKRMBning koʻchirilgan abonent raqamlari toʻgʻrisidagi axborotni aktuallashtirish (maʼlumotlarni sinxronlash) uchun KRMBga ulangan operatorlarning (provayderlarning) koʻchirilgan raqamlarning lokal bazasi bilan oʻzaro ishlashi;\nkoʻchirilgan abonent raqamlari toʻgʻrisidagi axborotni KRMBga kiritish (abonent raqamlarini koʻchirish jarayonida axborotni yangilash);\nkoʻchirilgan abonent raqamlari toʻgʻrisidagi maʼlumotlardan ruxsatsiz foydalana olishdan himoyalash;\noperatorlarni (provayderlarni) koʻchirilgan abonent raqamiga xizmat koʻrsatuvchi mobil aloqa operatorining (provayderining) almashganligi toʻgʻrisida xabardor qilish.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "1-bob. Telekommunikatsiya xizmatlarini koʻrsatish",
+   "paragraph": "10-§. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish xizmatini taqdim etish",
+   "excerpt": false,
+   "case_type": "mnp_krmb",
+   "tags": [
+    "krmb operatori majburiyatlari",
+    "sinxronlash",
+    "ruxsatsiz foydalanishdan himoya"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 200-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "201",
+   "clause": "201",
+   "title": "3275-son Qoidalar, 201-band. Donor va retsipiyent faqat KRMB orqali oʻzaro ishlaydi",
+   "plain": "",
+   "paragraphs": [
+    "201. Abonent raqamlarini koʻchirish jarayonida yuzaga keladigan retsipiyent va donorning oʻzaro ishlashlari faqat KRMB operatori orqali amalga oshiriladi."
+   ],
+   "text": "201. Abonent raqamlarini koʻchirish jarayonida yuzaga keladigan retsipiyent va donorning oʻzaro ishlashlari faqat KRMB operatori orqali amalga oshiriladi.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "1-bob. Telekommunikatsiya xizmatlarini koʻrsatish",
+   "paragraph": "10-§. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish xizmatini taqdim etish",
+   "excerpt": false,
+   "case_type": "mnp_krmb",
+   "tags": [
+    "donor va retsipiyent krmb orqali"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 201-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "202",
+   "clause": "202",
+   "title": "3275-son Qoidalar, 202-band. KRMBda jarayon avtomatlashtirilgan",
+   "plain": "",
+   "paragraphs": [
+    "202. KRMBda abonent raqamlarini koʻchirish jarayoni, shu jumladan, axborot almashish avtomatlashtirilgan rejimda amalga oshiriladi."
+   ],
+   "text": "202. KRMBda abonent raqamlarini koʻchirish jarayoni, shu jumladan, axborot almashish avtomatlashtirilgan rejimda amalga oshiriladi.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "1-bob. Telekommunikatsiya xizmatlarini koʻrsatish",
+   "paragraph": "10-§. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish xizmatini taqdim etish",
+   "excerpt": false,
+   "case_type": "mnp_krmb",
+   "tags": [
+    "avtomatik rejim",
+    "krmb avtomatik"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 202-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "203",
+   "clause": "203",
+   "title": "3275-son Qoidalar, 203-band. MNP xarajatlari operatorlar hisobidan",
+   "plain": "",
+   "paragraphs": [
+    "203. Mobil aloqa operatorlari (provayderlari) oʻz tarmoqlarida, abonent raqamining koʻchirilishini taʼminlash boʻyicha barcha xarajatlarini, shu jumladan, KRMBga ulanish va abonentlarga koʻchirish jarayonlarida koʻzda tutilgan SMSlarni joʻnatish uchun aloqa kanallarini ijaraga olish xarajatlarini oʻz hisoblaridan amalga oshiradilar."
+   ],
+   "text": "203. Mobil aloqa operatorlari (provayderlari) oʻz tarmoqlarida, abonent raqamining koʻchirilishini taʼminlash boʻyicha barcha xarajatlarini, shu jumladan, KRMBga ulanish va abonentlarga koʻchirish jarayonlarida koʻzda tutilgan SMSlarni joʻnatish uchun aloqa kanallarini ijaraga olish xarajatlarini oʻz hisoblaridan amalga oshiradilar.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "1-bob. Telekommunikatsiya xizmatlarini koʻrsatish",
+   "paragraph": "10-§. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish xizmatini taqdim etish",
+   "excerpt": false,
+   "case_type": "mnp_price",
+   "tags": [],
+   "legal_refs": [
+    "3275-son Qoidalar, 203-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "204",
+   "clause": "204",
+   "title": "3275-son Qoidalar, 204-band. MNP narxini retsipiyent belgilaydi",
+   "plain": "Oddiy tilda: MNP narxini yangi operator oʻzi belgilaydi.",
+   "paragraphs": [
+    "204. Mobil aloqa operatorlari (provayderlari) tomonidan abonent raqamlaridan, shu jumladan, koʻchirilgan abonent raqamlaridan foydalanganlik uchun toʻlov abonentga mobil aloqa xizmatlarini koʻrsatuvchi operator (provayder) tomonidan amalga oshiriladi.",
+    "Abonent raqamini koʻchirish xizmati uchun abonent tomonidan toʻlanadigan haq miqdori retsipiyent tomonidan mustaqil ravishda belgilanadi."
+   ],
+   "text": "204. Mobil aloqa operatorlari (provayderlari) tomonidan abonent raqamlaridan, shu jumladan, koʻchirilgan abonent raqamlaridan foydalanganlik uchun toʻlov abonentga mobil aloqa xizmatlarini koʻrsatuvchi operator (provayder) tomonidan amalga oshiriladi.\nAbonent raqamini koʻchirish xizmati uchun abonent tomonidan toʻlanadigan haq miqdori retsipiyent tomonidan mustaqil ravishda belgilanadi.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "1-bob. Telekommunikatsiya xizmatlarini koʻrsatish",
+   "paragraph": "10-§. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish xizmatini taqdim etish",
+   "excerpt": false,
+   "case_type": "mnp_price",
+   "tags": [
+    "mnp narxi",
+    "mnp qancha turadi",
+    "стоимость переноса номера",
+    "mnp price"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 204-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "205",
+   "clause": "205",
+   "title": "3275-son Qoidalar, 205-band. MNP toʻlovi bir martalik, retsipiyentga toʻlanadi",
+   "plain": "Oddiy tilda: MNP uchun bir marta, yangi operatorga, shartnoma tuzishda toʻlanadi.",
+   "paragraphs": [
+    "205. Abonent tomonidan abonent raqamini koʻchirish xizmati uchun toʻlanadigan haq bir martalik hisoblanadi va mobil aloqa xizmatlarini koʻrsatish toʻgʻrisidagi shartnomani tuzishda retsipiyentga toʻlanadi."
+   ],
+   "text": "205. Abonent tomonidan abonent raqamini koʻchirish xizmati uchun toʻlanadigan haq bir martalik hisoblanadi va mobil aloqa xizmatlarini koʻrsatish toʻgʻrisidagi shartnomani tuzishda retsipiyentga toʻlanadi.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "1-bob. Telekommunikatsiya xizmatlarini koʻrsatish",
+   "paragraph": "10-§. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish xizmatini taqdim etish",
+   "excerpt": false,
+   "case_type": "mnp_price",
+   "tags": [
+    "mnp to'lovi",
+    "bir martalik to'lov",
+    "оплата переноса"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 205-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "206",
+   "clause": "206",
+   "title": "3275-son Qoidalar, 206-band. Operator va KRMB operatori hisob-kitoblari",
+   "plain": "",
+   "paragraphs": [
+    "206. Operator (provayder) va KRMB operatorining oʻzaro ishlashi va oʻzaro hisob-kitoblari jarayoni operator (provayder) va KRMB operatori oʻrtasida tuzilgan shartnoma bilan belgilanadi."
+   ],
+   "text": "206. Operator (provayder) va KRMB operatorining oʻzaro ishlashi va oʻzaro hisob-kitoblari jarayoni operator (provayder) va KRMB operatori oʻrtasida tuzilgan shartnoma bilan belgilanadi.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "1-bob. Telekommunikatsiya xizmatlarini koʻrsatish",
+   "paragraph": "10-§. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish xizmatini taqdim etish",
+   "excerpt": false,
+   "case_type": "mnp_price",
+   "tags": [],
+   "legal_refs": [
+    "3275-son Qoidalar, 206-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "207",
+   "clause": "207",
+   "title": "3275-son Qoidalar, 207-band. Balansdagi pul: donor tomonidan qaytariladi",
+   "plain": "Oddiy tilda: eski raqam hisobidagi sarflanmagan pul yangi operatorga oʻtmaydi — uni eski operator (donor) qaytaradi.",
+   "paragraphs": [
+    "207. Mobil aloqa tarmoqlarida abonent raqami koʻchirilganda abonentning shaxsiy hisob raqamida sarflanmagan pul mablagʻlari mavjud boʻlganda, ushbu mablagʻlarni qaytarish mazkur Qoidalarga va donor bilan tuzilgan mobil aloqa xizmatlarini koʻrsatish shartnomasiga muvofiq donor tomonidan amalga oshiriladi.",
+    "Telefon aloqa tarmoqlaridan chaqiruv boshlanganida “Onward Routing” xizmatlari taqdim etilganligi uchun telefon va mobil aloqa tarmoqlarining operatorlari (provayderlari) oʻrtasidagi oʻzaro hisob-kitoblar ushbu operatorlar (provayderlar) oʻrtasida tuzilgan shartnoma shartlari bilan belgilanadi."
+   ],
+   "text": "207. Mobil aloqa tarmoqlarida abonent raqami koʻchirilganda abonentning shaxsiy hisob raqamida sarflanmagan pul mablagʻlari mavjud boʻlganda, ushbu mablagʻlarni qaytarish mazkur Qoidalarga va donor bilan tuzilgan mobil aloqa xizmatlarini koʻrsatish shartnomasiga muvofiq donor tomonidan amalga oshiriladi.\nTelefon aloqa tarmoqlaridan chaqiruv boshlanganida “Onward Routing” xizmatlari taqdim etilganligi uchun telefon va mobil aloqa tarmoqlarining operatorlari (provayderlari) oʻrtasidagi oʻzaro hisob-kitoblar ushbu operatorlar (provayderlar) oʻrtasida tuzilgan shartnoma shartlari bilan belgilanadi.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "1-bob. Telekommunikatsiya xizmatlarini koʻrsatish",
+   "paragraph": "10-§. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish xizmatini taqdim etish",
+   "excerpt": false,
+   "case_type": "mnp_balance",
+   "tags": [
+    "balansim yangi operatorga o'tadimi",
+    "eski simda pulim qolgan",
+    "mnp qildim pulim nima bo'ladi",
+    "balansdagi pul",
+    "qoldiq mablag'",
+    "переносится ли баланс при mnp",
+    "переносится ли баланс",
+    "does my balance move to the new operator",
+    "balance transfer"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 207-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "208#aniqlash",
+   "clause": "208",
+   "title": "3275-son Qoidalar, 208-band. Rouming qarzi: donor 30 kalendar kun ichida hisob taqdim etishi mumkin",
+   "plain": "Oddiy tilda: koʻchirishdan keyin ham eski operator rouming qarzini koʻchirish sanasidan 30 kalendar kun ichida talab qilishi mumkin.",
+   "paragraphs": [
+    "208. Abonentning donor oldida koʻchirilgan raqam boʻyicha koʻrsatilgan rouming xizmatlari uchun qarzdorligi mavjud boʻlganda donor abonent raqami retsipiyent tarmogʻiga koʻchirilgan sanadan boshlab 30 kalendar kun davomida koʻrsatilgan rouming xizmatlariga haq toʻlash uchun hisobni taqdim etish huquqiga ega."
+   ],
+   "text": "208. Abonentning donor oldida koʻchirilgan raqam boʻyicha koʻrsatilgan rouming xizmatlari uchun qarzdorligi mavjud boʻlganda donor abonent raqami retsipiyent tarmogʻiga koʻchirilgan sanadan boshlab 30 kalendar kun davomida koʻrsatilgan rouming xizmatlariga haq toʻlash uchun hisobni taqdim etish huquqiga ega.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "1-bob. Telekommunikatsiya xizmatlarini koʻrsatish",
+   "paragraph": "10-§. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish xizmatini taqdim etish",
+   "excerpt": false,
+   "case_type": "mnp_roaming_debt",
+   "tags": [
+    "mnpdan keyin rouming qarzi",
+    "rouming qarzi",
+    "rouming qarzi chiqdi",
+    "eski operator qancha vaqt ichida rouming qarzini talab qilishi mumkin",
+    "долг за роуминг после переноса",
+    "roaming debt after porting"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 208-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "208#tolash_muddati",
+   "clause": "208",
+   "title": "3275-son Qoidalar, 208-band. Rouming qarzi: KRMB orqali soʻrov va 7 ish kunlik toʻlash muddati",
+   "plain": "Oddiy tilda: rouming qarzini toʻlash muddati 7 ish kunidan oshmaydi.",
+   "paragraphs": [
+    "208-band (davomi): Bunda, donor KRMB operatori orqali abonent raqamini, qarzdorlik summasini va qarzdorlikni toʻlash muddatini koʻrsatgan holda retsipiyentga soʻrov yuboradi. Qarzdorlikni bartaraf etish (toʻlash) muddati 7 ish kunidan oshmasligi kerak."
+   ],
+   "text": "208-band (davomi): Bunda, donor KRMB operatori orqali abonent raqamini, qarzdorlik summasini va qarzdorlikni toʻlash muddatini koʻrsatgan holda retsipiyentga soʻrov yuboradi. Qarzdorlikni bartaraf etish (toʻlash) muddati 7 ish kunidan oshmasligi kerak.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "1-bob. Telekommunikatsiya xizmatlarini koʻrsatish",
+   "paragraph": "10-§. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish xizmatini taqdim etish",
+   "excerpt": false,
+   "case_type": "mnp_roaming_debt",
+   "tags": [
+    "rouming qarzini necha kunda to'lash kerak",
+    "7 ish kuni",
+    "qarzni to'lash muddati",
+    "срок оплаты долга за роуминг",
+    "roaming debt payment deadline"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 208-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "208#krmb_tekshiruv",
+   "clause": "208",
+   "title": "3275-son Qoidalar, 208-band. Rouming qarzi: KRMB operatori 30 kunlik muddatni tekshiradi",
+   "plain": "",
+   "paragraphs": [
+    "208-band (davomi): KRMB operatori donorning koʻchirilgan abonent raqamining qarzdorligi toʻgʻrisida retsipiyent yuborilgan soʻrovini olganda, soʻrovning 30 kalendar kun davomida taqdim etilganligi tekshiriladi, agar soʻrov ushbu muddatga rioya qilingan holda yuborilganda KRMB operatori donorning soʻrovini tasdiqlab va retsipiyentga abonent tomonidan qarzdorlikni toʻlash zarurligi toʻgʻrisida xabar yuboradi, agar soʻrov ushbu muddatda taqdim etilmaganligi aniqlanganda, KRMB operatori donorga soʻrovning rad etilishi haqida xabar yuboradi."
+   ],
+   "text": "208-band (davomi): KRMB operatori donorning koʻchirilgan abonent raqamining qarzdorligi toʻgʻrisida retsipiyent yuborilgan soʻrovini olganda, soʻrovning 30 kalendar kun davomida taqdim etilganligi tekshiriladi, agar soʻrov ushbu muddatga rioya qilingan holda yuborilganda KRMB operatori donorning soʻrovini tasdiqlab va retsipiyentga abonent tomonidan qarzdorlikni toʻlash zarurligi toʻgʻrisida xabar yuboradi, agar soʻrov ushbu muddatda taqdim etilmaganligi aniqlanganda, KRMB operatori donorga soʻrovning rad etilishi haqida xabar yuboradi.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "1-bob. Telekommunikatsiya xizmatlarini koʻrsatish",
+   "paragraph": "10-§. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish xizmatini taqdim etish",
+   "excerpt": false,
+   "case_type": "mnp_roaming_debt",
+   "tags": [
+    "rouming qarzi 30 kun tekshiruvi"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 208-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "208#xabarnoma",
+   "clause": "208",
+   "title": "3275-son Qoidalar, 208-band. Rouming qarzi: retsipiyent 15 daqiqa ichida SMS orqali xabar beradi",
+   "plain": "Oddiy tilda: yangi operator 15 daqiqa ichida SMS bilan rouming qarzini toʻlash kerakligini xabar qiladi.",
+   "paragraphs": [
+    "208-band (davomi): Retsipiyent KRMB operatoridan koʻchirilgan abonent raqami boʻyicha abonent tomonidan qarzdorlikni toʻlash toʻgʻrisidagi xabarnomani olgan paytdan boshlab 15 daqiqa ichida quyidagilar haqida xabardor qiladi:",
+    "abonentning donor oldidagi qarzdorligini toʻlash zarurligi toʻgʻrisida SMS-xabarnomani joʻnatish yoʻli bilan;",
+    "abonentni xabardor qilish vaqti toʻgʻrisida KRMB operatorini.",
+    "KRMB operatori retsipiyent tomonidan abonent xabardor qilingan paytidan boshlab abonentning qarzdorligini toʻlash uchun belgilangan vaqtni hisoblash boshlanganligini KRMBda qayd qiladi va bu haqda donorni xabardor qiladi."
+   ],
+   "text": "208-band (davomi): Retsipiyent KRMB operatoridan koʻchirilgan abonent raqami boʻyicha abonent tomonidan qarzdorlikni toʻlash toʻgʻrisidagi xabarnomani olgan paytdan boshlab 15 daqiqa ichida quyidagilar haqida xabardor qiladi:\nabonentning donor oldidagi qarzdorligini toʻlash zarurligi toʻgʻrisida SMS-xabarnomani joʻnatish yoʻli bilan;\nabonentni xabardor qilish vaqti toʻgʻrisida KRMB operatorini.\nKRMB operatori retsipiyent tomonidan abonent xabardor qilingan paytidan boshlab abonentning qarzdorligini toʻlash uchun belgilangan vaqtni hisoblash boshlanganligini KRMBda qayd qiladi va bu haqda donorni xabardor qiladi.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "1-bob. Telekommunikatsiya xizmatlarini koʻrsatish",
+   "paragraph": "10-§. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish xizmatini taqdim etish",
+   "excerpt": false,
+   "case_type": "mnp_roaming_debt",
+   "tags": [
+    "rouming qarzi sms",
+    "qarz haqida xabar",
+    "уведомление о долге"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 208-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "208#cheklash",
+   "clause": "208",
+   "title": "3275-son Qoidalar, 208-band. Rouming qarzi 7 ish kunida toʻlanmasa: xizmat toʻxtatiladi",
+   "plain": "Oddiy tilda: 7 ish kunida toʻlanmasa, yangi operator qarz toʻlanguncha xizmatni toʻxtatadi.",
+   "paragraphs": [
+    "208-band (davomi): Abonent tomonidan qarzdorlikni bartaraf etish toʻgʻrisida retsipiyentdan xabarnoma olingan vaqtdan boshlab 7 ish kuni davomida qarzdorlik bartaraf etilmagan (toʻlanmagan) taqdirda, donor KRMB operatoriga retsipiyent tomonidan abonent uchun aloqa xizmatlarini blokirovka qilish soʻrovini yuboradi.",
+    "Retsipiyent abonent donor oldidagi qarzdorligini toʻliq toʻlaguniga qadar KRMB operatoridan xabarnomani olgan paytdan boshlab abonentga xizmatlar koʻrsatishni toʻxtatadi. Bunda retsipiyent abonentga qarzdorlikni toʻlash zarurligi toʻgʻrisida SMS xabarni yuboradi."
+   ],
+   "text": "208-band (davomi): Abonent tomonidan qarzdorlikni bartaraf etish toʻgʻrisida retsipiyentdan xabarnoma olingan vaqtdan boshlab 7 ish kuni davomida qarzdorlik bartaraf etilmagan (toʻlanmagan) taqdirda, donor KRMB operatoriga retsipiyent tomonidan abonent uchun aloqa xizmatlarini blokirovka qilish soʻrovini yuboradi.\nRetsipiyent abonent donor oldidagi qarzdorligini toʻliq toʻlaguniga qadar KRMB operatoridan xabarnomani olgan paytdan boshlab abonentga xizmatlar koʻrsatishni toʻxtatadi. Bunda retsipiyent abonentga qarzdorlikni toʻlash zarurligi toʻgʻrisida SMS xabarni yuboradi.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "1-bob. Telekommunikatsiya xizmatlarini koʻrsatish",
+   "paragraph": "10-§. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish xizmatini taqdim etish",
+   "excerpt": false,
+   "case_type": "mnp_roaming_debt",
+   "tags": [
+    "rouming qarzi sabab bloklandi",
+    "xizmat to'xtatildi",
+    "qarz to'lanmasa",
+    "заблокировали за долг роуминга"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 208-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "208#blokdan_chiqarish",
+   "clause": "208",
+   "title": "3275-son Qoidalar, 208-band. Rouming qarzi toʻlanganda: 15 daqiqada blokdan chiqarish",
+   "plain": "Oddiy tilda: qarz toʻlangach eski operator 15 daqiqa ichida blokdan chiqarish haqida xabar beradi.",
+   "paragraphs": [
+    "208-band (davomi): Abonent qarzdorligini bartataraf etganda (toʻlaganda), donor 15 daqiqa ichida KRMB operatoriga qarzdorlik toʻlanganligi va abonent raqami blokirovkadan chiqarilganligi toʻgʻrisida xabar yuboradi, bu haqda KRMB operatori retsipiyentga xabar qiladi."
+   ],
+   "text": "208-band (davomi): Abonent qarzdorligini bartataraf etganda (toʻlaganda), donor 15 daqiqa ichida KRMB operatoriga qarzdorlik toʻlanganligi va abonent raqami blokirovkadan chiqarilganligi toʻgʻrisida xabar yuboradi, bu haqda KRMB operatori retsipiyentga xabar qiladi.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "1-bob. Telekommunikatsiya xizmatlarini koʻrsatish",
+   "paragraph": "10-§. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish xizmatini taqdim etish",
+   "excerpt": false,
+   "case_type": "mnp_roaming_debt",
+   "tags": [
+    "qarzni to'ladim blokdan chiqarish",
+    "unblock after payment"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 208-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "209",
+   "clause": "209",
+   "title": "3275-son Qoidalar, 209-band. Retsipiyent bilan shartnoma bekor boʻlsa: raqam birlamchi operatorga qaytadi",
+   "plain": "Oddiy tilda: yangi operator bilan shartnoma bekor qilinsa, raqam bir ish kunida uning asl operatoriga qaytariladi.",
+   "paragraphs": [
+    "209. Retsipiyent bilan mobil aloqa xizmatlarini koʻrsatish shartnomasi bekor qilinganda, koʻchirilgan abonent raqami bir ish kuni ichida birlamchi operatorga qaytarilishi kerak.",
+    "Bunda, retsipiyent tomonidan KRMB operatoriga abonent raqamini birlamchi operatorga qaytarish toʻgʻrisidagi soʻrov (bundan buyon matnda soʻrov deb yuritiladi) yuboriladi."
+   ],
+   "text": "209. Retsipiyent bilan mobil aloqa xizmatlarini koʻrsatish shartnomasi bekor qilinganda, koʻchirilgan abonent raqami bir ish kuni ichida birlamchi operatorga qaytarilishi kerak.\nBunda, retsipiyent tomonidan KRMB operatoriga abonent raqamini birlamchi operatorga qaytarish toʻgʻrisidagi soʻrov (bundan buyon matnda soʻrov deb yuritiladi) yuboriladi.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "1-bob. Telekommunikatsiya xizmatlarini koʻrsatish",
+   "paragraph": "10-§. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish xizmatini taqdim etish",
+   "excerpt": false,
+   "case_type": "mnp_number_return",
+   "tags": [
+    "shartnoma bekor bo'lsa raqam",
+    "raqam qaytariladi",
+    "birlamchi operatorga qaytarish",
+    "что будет с номером при расторжении",
+    "number returned"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 209-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "210",
+   "clause": "210",
+   "title": "3275-son Qoidalar, 210-band. Raqamni qaytarish shartlari",
+   "plain": "",
+   "paragraphs": [
+    "210. KRMB operatori quyidagi hollarda abonent raqamini qaytaradi:",
+    "raqam retsipiyentga tegishli boʻlganda;",
+    "raqamni koʻchirish aktiv jarayoni boʻlganda yoki boʻlmaganda;",
+    "raqamni qaytarish soʻrovining formati toʻgʻri toʻldirilganda."
+   ],
+   "text": "210. KRMB operatori quyidagi hollarda abonent raqamini qaytaradi:\nraqam retsipiyentga tegishli boʻlganda;\nraqamni koʻchirish aktiv jarayoni boʻlganda yoki boʻlmaganda;\nraqamni qaytarish soʻrovining formati toʻgʻri toʻldirilganda.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "1-bob. Telekommunikatsiya xizmatlarini koʻrsatish",
+   "paragraph": "10-§. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish xizmatini taqdim etish",
+   "excerpt": false,
+   "case_type": "mnp_number_return",
+   "tags": [
+    "raqamni qaytarish"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 210-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "211",
+   "clause": "211",
+   "title": "3275-son Qoidalar, 211-band. Raqam qaytarilishi haqida xabarnoma",
+   "plain": "",
+   "paragraphs": [
+    "211. Soʻrov tasdiqlaganda KRMB operatori retsipiyentga va birlamchi operatorga raqamni qaytarish toʻgʻrisida xabarnoma yuboradi, bunda parallel ravishda operatorlarni (provayderlarni) tarmoqda konfiguratsiyaning oʻzgarishi va marshrutlashni oʻzgartirish zarurligi toʻgʻrisida xabardor qiladi."
+   ],
+   "text": "211. Soʻrov tasdiqlaganda KRMB operatori retsipiyentga va birlamchi operatorga raqamni qaytarish toʻgʻrisida xabarnoma yuboradi, bunda parallel ravishda operatorlarni (provayderlarni) tarmoqda konfiguratsiyaning oʻzgarishi va marshrutlashni oʻzgartirish zarurligi toʻgʻrisida xabardor qiladi.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "1-bob. Telekommunikatsiya xizmatlarini koʻrsatish",
+   "paragraph": "10-§. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish xizmatini taqdim etish",
+   "excerpt": false,
+   "case_type": "mnp_number_return",
+   "tags": [],
+   "legal_refs": [
+    "3275-son Qoidalar, 211-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "212",
+   "clause": "212",
+   "title": "3275-son Qoidalar, 212-band. Birlamchi operator raqam olinganini tasdiqlaydi",
+   "plain": "",
+   "paragraphs": [
+    "212. Birlamchi operator KRMB operatori orqali retsipiyentni qaytarilgan abonent raqami olinganligi toʻgʻrisida xabardor qiladi."
+   ],
+   "text": "212. Birlamchi operator KRMB operatori orqali retsipiyentni qaytarilgan abonent raqami olinganligi toʻgʻrisida xabardor qiladi.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "1-bob. Telekommunikatsiya xizmatlarini koʻrsatish",
+   "paragraph": "10-§. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish xizmatini taqdim etish",
+   "excerpt": false,
+   "case_type": "mnp_number_return",
+   "tags": [],
+   "legal_refs": [
+    "3275-son Qoidalar, 212-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "213",
+   "clause": "213",
+   "title": "3275-son Qoidalar, 213-band. Xato koʻchirish aniqlansa: retsipiyent xabar beradi",
+   "plain": "",
+   "paragraphs": [
+    "213. Abonent raqami xato koʻchirilganda retsipiyent KRMB operatoriga aniqlangan xato va abonent raqamining qaytarilishi toʻgʻrisida xabar yuboradi."
+   ],
+   "text": "213. Abonent raqami xato koʻchirilganda retsipiyent KRMB operatoriga aniqlangan xato va abonent raqamining qaytarilishi toʻgʻrisida xabar yuboradi.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "1-bob. Telekommunikatsiya xizmatlarini koʻrsatish",
+   "paragraph": "10-§. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish xizmatini taqdim etish",
+   "excerpt": false,
+   "case_type": "mnp_wrong_port",
+   "tags": [
+    "xato ko'chirish",
+    "wrong port"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 213-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "214",
+   "clause": "214",
+   "title": "3275-son Qoidalar, 214-band. Xato koʻchirishni qaytarish: KRMB tekshiruvi",
+   "plain": "",
+   "paragraphs": [
+    "214. KRMB operatori abonent raqamini qaytarish mumkinligini, abonent raqamining donorga tegishliligini, aktiv koʻchirish jarayoni borligini tekshiradi. Tekshiruv muvaffaqiyatli oʻtganda, KRMB operatori retsipiyentga abonent raqamini qaytarish va donorga xato raqamni qaytarish toʻgʻrisida xabar yuboradi.",
+    "Abonent raqamini xato koʻchirishni qaytarish soʻrovida xatoliklar aniqlanganda KRMB operatori retsipiyentga abonent raqami xato koʻchirilganligini qaytarishni rad etish toʻgʻrisida xabar yuboradi.",
+    "Retsipiyent xatolarni bartaraf etadi va KRMB operatoriga qayta soʻrovni yuboradi."
+   ],
+   "text": "214. KRMB operatori abonent raqamini qaytarish mumkinligini, abonent raqamining donorga tegishliligini, aktiv koʻchirish jarayoni borligini tekshiradi. Tekshiruv muvaffaqiyatli oʻtganda, KRMB operatori retsipiyentga abonent raqamini qaytarish va donorga xato raqamni qaytarish toʻgʻrisida xabar yuboradi.\nAbonent raqamini xato koʻchirishni qaytarish soʻrovida xatoliklar aniqlanganda KRMB operatori retsipiyentga abonent raqami xato koʻchirilganligini qaytarishni rad etish toʻgʻrisida xabar yuboradi.\nRetsipiyent xatolarni bartaraf etadi va KRMB operatoriga qayta soʻrovni yuboradi.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "1-bob. Telekommunikatsiya xizmatlarini koʻrsatish",
+   "paragraph": "10-§. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish xizmatini taqdim etish",
+   "excerpt": false,
+   "case_type": "mnp_wrong_port",
+   "tags": [
+    "xato ko'chirish qaytarish"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 214-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "215",
+   "clause": "215",
+   "title": "3275-son Qoidalar, 215-band. Donor xato koʻchirilgan raqam soʻrovini tekshiradi",
+   "plain": "",
+   "paragraphs": [
+    "215. Donor KRMB operatoridan xato koʻchirilgan abonent raqami qaytarilganligi toʻgʻrisidagi xabarni olib, soʻrovni tekshiradi."
+   ],
+   "text": "215. Donor KRMB operatoridan xato koʻchirilgan abonent raqami qaytarilganligi toʻgʻrisidagi xabarni olib, soʻrovni tekshiradi.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "1-bob. Telekommunikatsiya xizmatlarini koʻrsatish",
+   "paragraph": "10-§. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish xizmatini taqdim etish",
+   "excerpt": false,
+   "case_type": "mnp_wrong_port",
+   "tags": [],
+   "legal_refs": [
+    "3275-son Qoidalar, 215-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "216",
+   "clause": "216",
+   "title": "3275-son Qoidalar, 216-band. Xato koʻchirishni qaytarish: abonent arizasi, toʻlovsiz",
+   "plain": "Oddiy tilda: raqamingiz xato koʻchirilgan boʻlsa, eski operatorga yozma ariza yoki maʼlumot xizmati orqali murojaat qiling; qaytarish uchun pul olinmaydi.",
+   "paragraphs": [
+    "216. Abonent raqami xato koʻchrilganligi aniqlangan holda, bunday abonent raqamini qaytarish jarayoni abonentning yozma arizasi yoki donorning axborot-maʼlumot xizmatiga murojaati asosida donor tomonidan boshlab beriladi. Bunda abonentning aybi bilan boʻlmagan xato koʻchirilgan abonent raqamini qaytarish uchun toʻlov undirilmaydi."
+   ],
+   "text": "216. Abonent raqami xato koʻchrilganligi aniqlangan holda, bunday abonent raqamini qaytarish jarayoni abonentning yozma arizasi yoki donorning axborot-maʼlumot xizmatiga murojaati asosida donor tomonidan boshlab beriladi. Bunda abonentning aybi bilan boʻlmagan xato koʻchirilgan abonent raqamini qaytarish uchun toʻlov undirilmaydi.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "1-bob. Telekommunikatsiya xizmatlarini koʻrsatish",
+   "paragraph": "10-§. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish xizmatini taqdim etish",
+   "excerpt": false,
+   "case_type": "mnp_wrong_port",
+   "tags": [
+    "xato ko'chirilgan raqamni qaytarish",
+    "raqamimni so'ramasdan ko'chirishdi",
+    "xato ko'chirish to'lovsiz",
+    "номер перенесли по ошибке",
+    "wrong number ported"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 216-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "217",
+   "clause": "217",
+   "title": "3275-son Qoidalar, 217-band. Donor xato koʻchirilgan raqamni qaytarishni soʻraydi",
+   "plain": "",
+   "paragraphs": [
+    "217. Donor KRMB operatoriga xato koʻchirilgan abonent raqamini qaytarish toʻgʻrisidagi soʻrovni yuboradi."
+   ],
+   "text": "217. Donor KRMB operatoriga xato koʻchirilgan abonent raqamini qaytarish toʻgʻrisidagi soʻrovni yuboradi.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "1-bob. Telekommunikatsiya xizmatlarini koʻrsatish",
+   "paragraph": "10-§. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish xizmatini taqdim etish",
+   "excerpt": false,
+   "case_type": "mnp_wrong_port",
+   "tags": [],
+   "legal_refs": [
+    "3275-son Qoidalar, 217-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "218",
+   "clause": "218",
+   "title": "3275-son Qoidalar, 218-band. Xato koʻchirish soʻrovini KRMB tekshiradi",
+   "plain": "",
+   "paragraphs": [
+    "218. KRMB operatori xato koʻchirilgan abonent raqamini qaytarish soʻrovini olganda uni abonent raqamini koʻchirish mumkinligi yuzasidan tekshiradi, bu jarayon quyidagilardan iborat:",
+    "abonent maʼlumotlarini toʻldirish;",
+    "ushbu abonent raqamini koʻchirish uchun aktiv talabnomalarning borligi."
+   ],
+   "text": "218. KRMB operatori xato koʻchirilgan abonent raqamini qaytarish soʻrovini olganda uni abonent raqamini koʻchirish mumkinligi yuzasidan tekshiradi, bu jarayon quyidagilardan iborat:\nabonent maʼlumotlarini toʻldirish;\nushbu abonent raqamini koʻchirish uchun aktiv talabnomalarning borligi.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "1-bob. Telekommunikatsiya xizmatlarini koʻrsatish",
+   "paragraph": "10-§. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish xizmatini taqdim etish",
+   "excerpt": false,
+   "case_type": "mnp_wrong_port",
+   "tags": [],
+   "legal_refs": [
+    "3275-son Qoidalar, 218-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "219",
+   "clause": "219",
+   "title": "3275-son Qoidalar, 219-band. Xato koʻchirish soʻrovi tasdiqlanganda",
+   "plain": "",
+   "paragraphs": [
+    "219. Tekshiruv muvaffaqiyatli boʻlgan holda KRMB operatori donorga soʻrovni olganligini tasdiqlaydi va uni xato koʻchirilgan abonent raqami boʻlgan mobil aloqa operatoriga (provayderiga) yuboradi."
+   ],
+   "text": "219. Tekshiruv muvaffaqiyatli boʻlgan holda KRMB operatori donorga soʻrovni olganligini tasdiqlaydi va uni xato koʻchirilgan abonent raqami boʻlgan mobil aloqa operatoriga (provayderiga) yuboradi.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "1-bob. Telekommunikatsiya xizmatlarini koʻrsatish",
+   "paragraph": "10-§. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish xizmatini taqdim etish",
+   "excerpt": false,
+   "case_type": "mnp_wrong_port",
+   "tags": [],
+   "legal_refs": [
+    "3275-son Qoidalar, 219-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "220",
+   "clause": "220",
+   "title": "3275-son Qoidalar, 220-band. Xato koʻchirish soʻrovi rad etilganda",
+   "plain": "",
+   "paragraphs": [
+    "220. Xato koʻchirilgan abonent raqamini qaytarish soʻrovida xatoliklar aniqlanganda KRMB operatori donorga sababini koʻrsatgan holda xato koʻchirilgan abonent raqamining qaytarilishi rad etilganligi toʻgʻrisida xabar yuboradi."
+   ],
+   "text": "220. Xato koʻchirilgan abonent raqamini qaytarish soʻrovida xatoliklar aniqlanganda KRMB operatori donorga sababini koʻrsatgan holda xato koʻchirilgan abonent raqamining qaytarilishi rad etilganligi toʻgʻrisida xabar yuboradi.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "1-bob. Telekommunikatsiya xizmatlarini koʻrsatish",
+   "paragraph": "10-§. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish xizmatini taqdim etish",
+   "excerpt": false,
+   "case_type": "mnp_wrong_port",
+   "tags": [],
+   "legal_refs": [
+    "3275-son Qoidalar, 220-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "221",
+   "clause": "221",
+   "title": "3275-son Qoidalar, 221-band. Operator xato koʻchirishni qaytarishni tasdiqlaydi yoki rad etadi",
+   "plain": "",
+   "paragraphs": [
+    "221. Mobil aloqa operatori (provayderi) KRMB operatoridan xato koʻchirilgan abonent raqami qaytarilganligi toʻgʻrisidagi xabarni olib, soʻrovni tekshiradi. Tekshiruv natijalari boʻyicha xato koʻchirilgan abonent raqami boʻlgan mobil aloqa operatori (provayderi) KRMB operatoriga xato koʻchirilgan abonent raqamini qaytarish boshlanganligini yoki u rad etilganligini tasdiqlaydi."
+   ],
+   "text": "221. Mobil aloqa operatori (provayderi) KRMB operatoridan xato koʻchirilgan abonent raqami qaytarilganligi toʻgʻrisidagi xabarni olib, soʻrovni tekshiradi. Tekshiruv natijalari boʻyicha xato koʻchirilgan abonent raqami boʻlgan mobil aloqa operatori (provayderi) KRMB operatoriga xato koʻchirilgan abonent raqamini qaytarish boshlanganligini yoki u rad etilganligini tasdiqlaydi.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "1-bob. Telekommunikatsiya xizmatlarini koʻrsatish",
+   "paragraph": "10-§. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish xizmatini taqdim etish",
+   "excerpt": false,
+   "case_type": "mnp_wrong_port",
+   "tags": [],
+   "legal_refs": [
+    "3275-son Qoidalar, 221-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "222",
+   "clause": "222",
+   "title": "3275-son Qoidalar, 222-band. 30 daqiqada javob boʻlmasa — avtomatik tasdiq",
+   "plain": "",
+   "paragraphs": [
+    "222. Agar xato koʻchirilgan abonent raqami boʻlgan mobil aloqa operatori (provayderi) 30 daqiqa ichida xato koʻchirilgan abonent raqamini qaytarish yoki rad etish tasdiqlanganligi toʻgʻrisida KRMB operatorini xabardor qilmasa, KRMB operatori donorga xato koʻchirilgan abonent raqami qaytarilganligini tasdiqlash toʻgʻrisida avtomatik ravishda xabar qiladi."
+   ],
+   "text": "222. Agar xato koʻchirilgan abonent raqami boʻlgan mobil aloqa operatori (provayderi) 30 daqiqa ichida xato koʻchirilgan abonent raqamini qaytarish yoki rad etish tasdiqlanganligi toʻgʻrisida KRMB operatorini xabardor qilmasa, KRMB operatori donorga xato koʻchirilgan abonent raqami qaytarilganligini tasdiqlash toʻgʻrisida avtomatik ravishda xabar qiladi.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "1-bob. Telekommunikatsiya xizmatlarini koʻrsatish",
+   "paragraph": "10-§. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish xizmatini taqdim etish",
+   "excerpt": false,
+   "case_type": "mnp_wrong_port",
+   "tags": [
+    "30 daqiqa"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 222-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "223",
+   "clause": "223",
+   "title": "3275-son Qoidalar, 223-band. Donor 30 daqiqa ichida xizmatni qayta yoqadi",
+   "plain": "",
+   "paragraphs": [
+    "223. Donor KRMB operatoridan xato koʻchirilgan abonent raqami qaytarilganligi toʻgʻrisida xabar olgan paytdan boshlab 30 daqiqa ichida abonentga xizmatni aktivatsiya qiladi. Xizmatlar muvaffaqiyatli aktivatsiya qilingandan keyin donor KRMB operatoriga abonent raqami aktivatsiya qilinganligini tasdiqlaydi."
+   ],
+   "text": "223. Donor KRMB operatoridan xato koʻchirilgan abonent raqami qaytarilganligi toʻgʻrisida xabar olgan paytdan boshlab 30 daqiqa ichida abonentga xizmatni aktivatsiya qiladi. Xizmatlar muvaffaqiyatli aktivatsiya qilingandan keyin donor KRMB operatoriga abonent raqami aktivatsiya qilinganligini tasdiqlaydi.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "1-bob. Telekommunikatsiya xizmatlarini koʻrsatish",
+   "paragraph": "10-§. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish xizmatini taqdim etish",
+   "excerpt": false,
+   "case_type": "mnp_wrong_port",
+   "tags": [
+    "xizmatni aktivatsiya qilish"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 223-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "224",
+   "clause": "224",
+   "title": "3275-son Qoidalar, 224-band. Xato koʻchirilgan raqam deaktivatsiyasi va marshrutlash",
+   "plain": "",
+   "paragraphs": [
+    "224. KRMB operatori xato koʻchirilgan abonent raqami boʻlgan mobil aloqa operatoriga (provayderiga) abonent raqami muvaffaqiyatli aktivatsiya qilinganligi toʻgʻrisida va telekommunikatsiya operatorlariga – tarmoqdagi marshrutlash oʻzgarganligi toʻgʻrisida xabar yuboradi. Bunda xato koʻchirilgan abonent raqami boʻlgan mobil aloqa operatori (provayderi) 30 daqiqa ichida abonent raqamini deaktivatsiya qiladi."
+   ],
+   "text": "224. KRMB operatori xato koʻchirilgan abonent raqami boʻlgan mobil aloqa operatoriga (provayderiga) abonent raqami muvaffaqiyatli aktivatsiya qilinganligi toʻgʻrisida va telekommunikatsiya operatorlariga – tarmoqdagi marshrutlash oʻzgarganligi toʻgʻrisida xabar yuboradi. Bunda xato koʻchirilgan abonent raqami boʻlgan mobil aloqa operatori (provayderi) 30 daqiqa ichida abonent raqamini deaktivatsiya qiladi.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "1-bob. Telekommunikatsiya xizmatlarini koʻrsatish",
+   "paragraph": "10-§. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish xizmatini taqdim etish",
+   "excerpt": false,
+   "case_type": "mnp_wrong_port",
+   "tags": [],
+   "legal_refs": [
+    "3275-son Qoidalar, 224-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "225",
+   "clause": "225",
+   "title": "3275-son Qoidalar, 225-band. Marshrutlashni 30 daqiqada oʻzgartirish, 1 soatda tasdiqlash",
+   "plain": "",
+   "paragraphs": [
+    "225. Operator (provayder) KRMB operatoridan xabar olgan paytdan boshlab 30 daqiqadan kechiktirmay koʻchirilgan abonent raqami boʻyicha marshrutlashga oʻzgartirishlar kiritadi va KRMB operatoridan xabarni olgan paytdan boshlab bir soatdan kechiktirmay KRMB operatoriga oʻz tarmogʻida marshrutlash oʻzgarganligini tasdiqlaydi."
+   ],
+   "text": "225. Operator (provayder) KRMB operatoridan xabar olgan paytdan boshlab 30 daqiqadan kechiktirmay koʻchirilgan abonent raqami boʻyicha marshrutlashga oʻzgartirishlar kiritadi va KRMB operatoridan xabarni olgan paytdan boshlab bir soatdan kechiktirmay KRMB operatoriga oʻz tarmogʻida marshrutlash oʻzgarganligini tasdiqlaydi.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "1-bob. Telekommunikatsiya xizmatlarini koʻrsatish",
+   "paragraph": "10-§. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish xizmatini taqdim etish",
+   "excerpt": false,
+   "case_type": "mnp_wrong_port",
+   "tags": [],
+   "legal_refs": [
+    "3275-son Qoidalar, 225-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "226",
+   "clause": "226",
+   "title": "3275-son Qoidalar, 226-band. Xato koʻchirishdan keyin xizmatlar, tarif va balans tiklanadi",
+   "plain": "Oddiy tilda: xato koʻchirishdan keyin xizmatlar, tarif va balans avvalgi holatiga tiklanadi.",
+   "paragraphs": [
+    "226. Xizmatlar, tarif rejasi, xato koʻchirilgan abonent raqami balansi xato koʻchirish paytidagi holatgacha donor tomonidan tiklanadi."
+   ],
+   "text": "226. Xizmatlar, tarif rejasi, xato koʻchirilgan abonent raqami balansi xato koʻchirish paytidagi holatgacha donor tomonidan tiklanadi.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "1-bob. Telekommunikatsiya xizmatlarini koʻrsatish",
+   "paragraph": "10-§. Mobil aloqa tarmoqlarida abonent raqamlarini koʻchirish xizmatini taqdim etish",
+   "excerpt": false,
+   "case_type": "mnp_wrong_port",
+   "tags": [
+    "xato ko'chirishdan keyin balans tiklanadi",
+    "tarif tiklanadi"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 226-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "19",
+   "clause": "19",
+   "title": "3275-son Qoidalar, 19-band. Abonent maʼlumotlarini uchinchi shaxslarga berish taqiqlanadi",
+   "plain": "",
+   "paragraphs": [
+    "19. Operator, provayder va dilerlar xizmat majburiyatlarini bajarishlari davomida ularga maʼlum boʻlgan abonentlar toʻgʻrisidagi maʼlumotlarni abonentning roziligisiz uchinchi shaxslarga berish yoki tarqatishga haqli emas, qonunchilik hujjatlarida nazarda tutilgan hollar bundan mustasno.",
+    "Abonent toʻgʻrisidagi maʼlumotlarga quyidagilar kiradi:",
+    "a) abonent-jismoniy shaxsning familiyasi, ismi, otasining ismi, JSHSHIR;",
+    "b) abonent-yuridik shaxs xodimlarining shaxsiy maʼlumotlari, abonent manzili yoki oxirgi terminal uskuna oʻrnatiladigan manzili, abonentni va uning oxirgi terminal uskunasini aynan identifikatsiyalash imkonini beradigan taxallusi, abonent raqamlari va boshqa maʼlumotlar."
+   ],
+   "text": "19. Operator, provayder va dilerlar xizmat majburiyatlarini bajarishlari davomida ularga maʼlum boʻlgan abonentlar toʻgʻrisidagi maʼlumotlarni abonentning roziligisiz uchinchi shaxslarga berish yoki tarqatishga haqli emas, qonunchilik hujjatlarida nazarda tutilgan hollar bundan mustasno.\nAbonent toʻgʻrisidagi maʼlumotlarga quyidagilar kiradi:\na) abonent-jismoniy shaxsning familiyasi, ismi, otasining ismi, JSHSHIR;\nb) abonent-yuridik shaxs xodimlarining shaxsiy maʼlumotlari, abonent manzili yoki oxirgi terminal uskuna oʻrnatiladigan manzili, abonentni va uning oxirgi terminal uskunasini aynan identifikatsiyalash imkonini beradigan taxallusi, abonent raqamlari va boshqa maʼlumotlar.",
+   "section": "I BOʻLIM. UMUMIY QOIDALAR",
+   "chapter": null,
+   "paragraph": null,
+   "excerpt": false,
+   "case_type": "mnp_data_protection",
+   "tags": [
+    "shaxsiy ma'lumotlar himoyasi",
+    "персональные данные"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 19-band"
+   ],
+   "valid_from": "2021-07-28",
+   "amended_by": [
+    "Adliya vazirining 16-mh-son buyrugʻi (2021), roʻyxat raqami 3313"
+   ],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "20",
+   "clause": "20",
+   "title": "3275-son Qoidalar, 20-band. Abonentlar bazalari konfidensial himoyalanadi",
+   "plain": "",
+   "paragraphs": [
+    "20. Operator va provayderlar tomonidan yaratilgan va abonentlar toʻgʻrisidagi maʼlumotlarni oʻz ichiga olgan maʼlumotlar bazalari konfidensial tusdagi hujjatlar sifatida himoyalanishi kerak."
+   ],
+   "text": "20. Operator va provayderlar tomonidan yaratilgan va abonentlar toʻgʻrisidagi maʼlumotlarni oʻz ichiga olgan maʼlumotlar bazalari konfidensial tusdagi hujjatlar sifatida himoyalanishi kerak.",
+   "section": "I BOʻLIM. UMUMIY QOIDALAR",
+   "chapter": null,
+   "paragraph": null,
+   "excerpt": false,
+   "case_type": "mnp_data_protection",
+   "tags": [
+    "konfidensial baza"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 20-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "256",
+   "clause": "256",
+   "title": "3275-son Qoidalar, 256-band. Shartnoma bekor boʻlish holatlari, jumladan raqam koʻchib oʻtganda",
+   "plain": "",
+   "paragraphs": [
+    "256. Shartnoma quyidagi hollarda bekor qilinishi mumkin:",
+    "abonentning tashabbusi bilan istalgan vaqtda;",
+    "operatorning (provayderning, eshittiruvchining) tashabbusi boʻyicha, ushbu Qoidalar va/yoki shartnoma shartlarida belgilangan talablar abonent tomonidan buzilganda;",
+    "abonent — jismoniy shaxs vafot etganda yoki abonent — yuridik shaxs tugatilgan holda, tasdiqlovchi hujjatlar taqdim etilgan taqdirda;",
+    "abonentning shaxsiy hisobidagi mablagʻlar tugagan kundan boshlab 60 kundan koʻp vaqt oʻtgandan keyin;",
+    "abonentning mobil raqami boshqa operator (provayder) tarmogʻiga koʻchib oʻtganida;",
+    "shartnomada yoki qonunchilik hujjatlarida nazarda tutilgan boshqa hollarda."
+   ],
+   "text": "256. Shartnoma quyidagi hollarda bekor qilinishi mumkin:\nabonentning tashabbusi bilan istalgan vaqtda;\noperatorning (provayderning, eshittiruvchining) tashabbusi boʻyicha, ushbu Qoidalar va/yoki shartnoma shartlarida belgilangan talablar abonent tomonidan buzilganda;\nabonent — jismoniy shaxs vafot etganda yoki abonent — yuridik shaxs tugatilgan holda, tasdiqlovchi hujjatlar taqdim etilgan taqdirda;\nabonentning shaxsiy hisobidagi mablagʻlar tugagan kundan boshlab 60 kundan koʻp vaqt oʻtgandan keyin;\nabonentning mobil raqami boshqa operator (provayder) tarmogʻiga koʻchib oʻtganida;\nshartnomada yoki qonunchilik hujjatlarida nazarda tutilgan boshqa hollarda.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "2-bob. Telekommunikatsiya xizmatlarini koʻrsatishga shartnomalar tuzish va bekor qilish",
+   "paragraph": "1-§. Telekommunikatsiya xizmatlarini koʻrsatish shartnomasini tuzish va bekor qilish",
+   "excerpt": false,
+   "case_type": "mnp_number_return",
+   "tags": [
+    "raqam ko'chganda shartnoma bekor",
+    "shartnoma bekor qilish"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 256-band"
+   ],
+   "valid_from": "2021-07-28",
+   "amended_by": [
+    "Adliya vazirining 16-mh-son buyrugʻi (2021), roʻyxat raqami 3313"
+   ],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "257",
+   "clause": "257",
+   "title": "3275-son Qoidalar, 257-band. Shartnoma bekor boʻlganda hisob-kitoblar",
+   "plain": "",
+   "paragraphs": [
+    "257. Shartnoma bekor qilinganda tomonlar oʻzlarining barcha majburiyatlari boʻyicha hisob-kitoblarni amalga oshirishlari kerak."
+   ],
+   "text": "257. Shartnoma bekor qilinganda tomonlar oʻzlarining barcha majburiyatlari boʻyicha hisob-kitoblarni amalga oshirishlari kerak.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "2-bob. Telekommunikatsiya xizmatlarini koʻrsatishga shartnomalar tuzish va bekor qilish",
+   "paragraph": "1-§. Telekommunikatsiya xizmatlarini koʻrsatish shartnomasini tuzish va bekor qilish",
+   "excerpt": false,
+   "case_type": "mnp_balance",
+   "tags": [],
+   "legal_refs": [
+    "3275-son Qoidalar, 257-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "258",
+   "clause": "258",
+   "title": "3275-son Qoidalar, 258-band. Raqamni (shartnomani) boshqa shaxs nomiga oʻtkazish",
+   "plain": "Oddiy tilda: raqamni boshqa odam nomiga oʻtkazish uchun u ham ishtirok etishi va rozi boʻlishi kerak; eski shartnoma bekor qilinib, yangisi tuziladi.",
+   "paragraphs": [
+    "258. Abonent operatorning (provayderning) xizmat koʻrsatish punktlarida shartnomani boshqa shaxsning nomiga uning ishtirokida va roziligi bilan qayta rasmiylashtirishi mumkin.",
+    "Bunda, operator (provayder) va amaldagi abonent oʻrtasida tuzilgan shartnoma bekor qilinadi va raqam nomiga qayta rasmiylashtirilayotgan shaxs bilan belgilangan tartibda yangi shartnoma tuziladi."
+   ],
+   "text": "258. Abonent operatorning (provayderning) xizmat koʻrsatish punktlarida shartnomani boshqa shaxsning nomiga uning ishtirokida va roziligi bilan qayta rasmiylashtirishi mumkin.\nBunda, operator (provayder) va amaldagi abonent oʻrtasida tuzilgan shartnoma bekor qilinadi va raqam nomiga qayta rasmiylashtirilayotgan shaxs bilan belgilangan tartibda yangi shartnoma tuziladi.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "2-bob. Telekommunikatsiya xizmatlarini koʻrsatishga shartnomalar tuzish va bekor qilish",
+   "paragraph": "1-§. Telekommunikatsiya xizmatlarini koʻrsatish shartnomasini tuzish va bekor qilish",
+   "excerpt": false,
+   "case_type": "mnp_ownership",
+   "tags": [
+    "raqamni boshqa shaxs nomiga o'tkazish",
+    "qayta rasmiylashtirish",
+    "переоформление номера",
+    "transfer number to another person"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 258-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "270",
+   "clause": "270",
+   "title": "3275-son Qoidalar, 270-band. Mobil shartnoma: shaxsan yoki ishonchnomali vakil orqali",
+   "plain": "Oddiy tilda: mobil shartnoma (MNPda yangi operator bilan ham) faqat shaxsan yoki ishonchnomali vakil orqali tuziladi.",
+   "paragraphs": [
+    "270. Mobil aloqa xizmatlarini koʻrsatish shartnomasi faqat abonent — jismoniy shaxs shaxsan boʻlganda va u tomonidan pasportning asl nusxasi (yoki shaxsini tasdiqlovchi boshqa hujjat) taqdim etilganda yoki uning vakili shaxsan ishtirok etganda va u tomonidan pasportning asl nusxasi (yoki shaxsini tasdiqlovchi boshqa hujjat) va belgilangan tartibda rasmiylashtirilgan ishonchnoma taqdim etilganda tuziladi."
+   ],
+   "text": "270. Mobil aloqa xizmatlarini koʻrsatish shartnomasi faqat abonent — jismoniy shaxs shaxsan boʻlganda va u tomonidan pasportning asl nusxasi (yoki shaxsini tasdiqlovchi boshqa hujjat) taqdim etilganda yoki uning vakili shaxsan ishtirok etganda va u tomonidan pasportning asl nusxasi (yoki shaxsini tasdiqlovchi boshqa hujjat) va belgilangan tartibda rasmiylashtirilgan ishonchnoma taqdim etilganda tuziladi.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "2-bob. Telekommunikatsiya xizmatlarini koʻrsatishga shartnomalar tuzish va bekor qilish",
+   "paragraph": "3-§. Mobil aloqa xizmatlarini koʻrsatish uchun shartnoma tuzishning alohida shartlari",
+   "excerpt": false,
+   "case_type": "mnp_ownership",
+   "tags": [
+    "otamning raqamini ko'chirib bera olamanmi",
+    "boshqa odam nomidagi raqam",
+    "ishonchnoma",
+    "vakil",
+    "raqam egasi",
+    "доверенность",
+    "power of attorney",
+    "someone else's number"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 270-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "339",
+   "clause": "339",
+   "title": "3275-son Qoidalar, 339-band. Shartnoma bekor boʻlganda avans qoldigʻi 15 kunda qaytariladi",
+   "plain": "Oddiy tilda: shartnoma bekor boʻlganda avans qoldigʻini qaytarish uchun operatorga murojaat qilasiz; u 15 kun ichida qaytarishi shart.",
+   "paragraphs": [
+    "339. Shartnoma bekor qilingan hollarda abonent avans sifatida kiritilgan pul mablagʻlarini qaytarish uchun operatorga (provayderga, eshittiruvchiga) murojaat qilish huquqiga ega. Bunday holda operator (provayder, eshittiruvchi) oʻn besh kun muddat ichida pul mablagʻlarining foydalanilmagan qoldigʻini qaytarishga majbur."
+   ],
+   "text": "339. Shartnoma bekor qilingan hollarda abonent avans sifatida kiritilgan pul mablagʻlarini qaytarish uchun operatorga (provayderga, eshittiruvchiga) murojaat qilish huquqiga ega. Bunday holda operator (provayder, eshittiruvchi) oʻn besh kun muddat ichida pul mablagʻlarining foydalanilmagan qoldigʻini qaytarishga majbur.",
+   "section": "V BOʻLIM. KOʻRSATILGAN TELEKOMMUNIKATSIYA XIZMATLARI UCHUN HISOB-KITOBLAR VA TOʻLOVLAR",
+   "chapter": null,
+   "paragraph": null,
+   "excerpt": false,
+   "case_type": "mnp_balance",
+   "tags": [
+    "pulni qaytarish 15 kun",
+    "avans qaytarish",
+    "возврат аванса"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 339-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "370",
+   "clause": "370",
+   "title": "3275-son Qoidalar, 370-band. Qoida buzilganda xizmat toʻxtatilishi",
+   "plain": "",
+   "paragraphs": [
+    "370. Abonent tomonidan ushbu Qoidalarda belgilangan talablar, shuningdek, shartnoma shartlari buzilgan hollarda, buzilishlar bartaraf etilgunga qadar operator (provayder) mobil aloqa xizmatlari koʻrsatilishini toʻxtatish huquqiga ega.",
+    "Bunda, mobil aloqa tarmogʻidan foydalana olish va abonent tomonidan favqulodda tezkor xizmatlarni chaqirish imkoniyati saqlanadi."
+   ],
+   "text": "370. Abonent tomonidan ushbu Qoidalarda belgilangan talablar, shuningdek, shartnoma shartlari buzilgan hollarda, buzilishlar bartaraf etilgunga qadar operator (provayder) mobil aloqa xizmatlari koʻrsatilishini toʻxtatish huquqiga ega.\nBunda, mobil aloqa tarmogʻidan foydalana olish va abonent tomonidan favqulodda tezkor xizmatlarni chaqirish imkoniyati saqlanadi.",
+   "section": "V BOʻLIM. KOʻRSATILGAN TELEKOMMUNIKATSIYA XIZMATLARI UCHUN HISOB-KITOBLAR VA TOʻLOVLAR",
+   "chapter": null,
+   "paragraph": null,
+   "excerpt": false,
+   "case_type": "mnp_blocked_number",
+   "tags": [],
+   "legal_refs": [
+    "3275-son Qoidalar, 370-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "371",
+   "clause": "371",
+   "title": "3275-son Qoidalar, 371-band. Buzilish bartaraf etilgach xizmat tiklanadi",
+   "plain": "",
+   "paragraphs": [
+    "371. Operator (provayder) tomonidan mobil aloqa xizmatlarini koʻrsatish toʻxtatilgandan keyin abonent shartnoma va qonunchilik hujjatlari bilan belgilangan muddatda aniqlangan buzilishlarni bartaraf etish huquqiga ega. Aniqlangan buzilishlar bartaraf etilgandan keyin mobil aloqa xizmatlaridan foydalanish tiklanadi."
+   ],
+   "text": "371. Operator (provayder) tomonidan mobil aloqa xizmatlarini koʻrsatish toʻxtatilgandan keyin abonent shartnoma va qonunchilik hujjatlari bilan belgilangan muddatda aniqlangan buzilishlarni bartaraf etish huquqiga ega. Aniqlangan buzilishlar bartaraf etilgandan keyin mobil aloqa xizmatlaridan foydalanish tiklanadi.",
+   "section": "V BOʻLIM. KOʻRSATILGAN TELEKOMMUNIKATSIYA XIZMATLARI UCHUN HISOB-KITOBLAR VA TOʻLOVLAR",
+   "chapter": null,
+   "paragraph": null,
+   "excerpt": false,
+   "case_type": "mnp_blocked_number",
+   "tags": [],
+   "legal_refs": [
+    "3275-son Qoidalar, 371-band"
+   ],
+   "valid_from": "2021-07-28",
+   "amended_by": [
+    "Adliya vazirining 16-mh-son buyrugʻi (2021), roʻyxat raqami 3313"
+   ],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "373",
+   "clause": "373",
+   "title": "3275-son Qoidalar, 373-band. MNP toʻlovi va retsipiyent bilan shartnoma",
+   "plain": "",
+   "paragraphs": [
+    "373. Abonent raqamini koʻchirib oʻtish xizmatlari uchun toʻlov va retsipiyent bilan mobil aloqa xizmatlarini koʻrsatish boʻyicha shartnoma tuzish abonent tomonidan qonunchilik hujjatlarida belgilangan tartibda amalga oshiriladi."
+   ],
+   "text": "373. Abonent raqamini koʻchirib oʻtish xizmatlari uchun toʻlov va retsipiyent bilan mobil aloqa xizmatlarini koʻrsatish boʻyicha shartnoma tuzish abonent tomonidan qonunchilik hujjatlarida belgilangan tartibda amalga oshiriladi.",
+   "section": "V BOʻLIM. KOʻRSATILGAN TELEKOMMUNIKATSIYA XIZMATLARI UCHUN HISOB-KITOBLAR VA TOʻLOVLAR",
+   "chapter": null,
+   "paragraph": null,
+   "excerpt": false,
+   "case_type": "mnp_price",
+   "tags": [
+    "mnp to'lovi"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 373-band"
+   ],
+   "valid_from": "2021-07-28",
+   "amended_by": [
+    "Adliya vazirining 16-mh-son buyrugʻi (2021), roʻyxat raqami 3313"
+   ],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "251",
+   "clause": "251",
+   "title": "3275-son Qoidalar, 251-band. Shartnomadagi shaxsiy maʼlumotni oʻzgartirish bepul (MNPga tegishli xatboshilar)",
+   "plain": "",
+   "paragraphs": [
+    "251. Shartnomada quyidagilar aks etgan boʻlishi lozim:",
+    "Shartnomadagi abonent toʻgʻrisidagi maʼlumotlar oʻzgarishi bilan bogʻliq oʻzgarishlar qoʻshimcha toʻlov undirilmasdan kiritilishi kerak."
+   ],
+   "text": "251. Shartnomada quyidagilar aks etgan boʻlishi lozim:\nShartnomadagi abonent toʻgʻrisidagi maʼlumotlar oʻzgarishi bilan bogʻliq oʻzgarishlar qoʻshimcha toʻlov undirilmasdan kiritilishi kerak.",
+   "section": "II BOʻLIM. TELEKOMMUNIKATSIYA XIZMATLARINI TAQDIM ETISH",
+   "chapter": "2-bob. Telekommunikatsiya xizmatlarini koʻrsatishga shartnomalar tuzish va bekor qilish",
+   "paragraph": "1-§. Telekommunikatsiya xizmatlarini koʻrsatish shartnomasini tuzish va bekor qilish",
+   "excerpt": true,
+   "case_type": "mnp_identity_mismatch",
+   "tags": [
+    "shartnomadagi ma'lumotni o'zgartirish bepul",
+    "pasport almashgan"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 251-band"
+   ],
+   "valid_from": "2021-07-28",
+   "amended_by": [
+    "Adliya vazirining 16-mh-son buyrugʻi (2021), roʻyxat raqami 3313"
+   ],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "296",
+   "clause": "296",
+   "title": "3275-son Qoidalar, 296-band. Mobil operatorning MNPga oid majburiyatlari (MNPga tegishli xatboshilar)",
+   "plain": "",
+   "paragraphs": [
+    "296. Mobil aloqa xizmatlarini koʻrsatishda operator (provayder) quyidagilarga majbur:",
+    "abonent shartnomaning bekor qilinishi vaqtigacha qarzini va oldindan toʻlovning zarur summasi toʻliq hajmda toʻlaganida abonentga mobil aloqa xizmatlari koʻrsatilishini tiklash;",
+    "SIM-karta yoki abonent qurilmasi (SIM-kartadan foydalanish koʻzda tutilmagan mobil aloqa standartlari uchun va eSIM) yoʻqolganda abonentning yozma arizasi boʻyicha yoki abonent uchun qulay boʻlgan, operator (provayder) tomonidan oʻrnatilgan, boshqa usulda berilgan xabar boʻyicha xizmatlarning koʻrsatilishini zudlik bilan toʻxtatish;",
+    "Oʻzbekiston Respublikasi hududida GSM standartida ishlaydigan barcha operator (provayder) koʻchib oʻtgan raqamlarning markazlashtirilgan bazasiga ulanish;",
+    "abonent tomonidan donorga rouming xizmatlari uchun aniqlangan qarzdorlik toʻlanmagan taqdirda xizmat koʻrsatishni toʻxtatib qoʻyish;",
+    "abonentning operator tarmoqlarida abonent raqamini koʻchib oʻtish xizmatidan foydalanish huquqiga toʻsqinlik qilmaslik;"
+   ],
+   "text": "296. Mobil aloqa xizmatlarini koʻrsatishda operator (provayder) quyidagilarga majbur:\nabonent shartnomaning bekor qilinishi vaqtigacha qarzini va oldindan toʻlovning zarur summasi toʻliq hajmda toʻlaganida abonentga mobil aloqa xizmatlari koʻrsatilishini tiklash;\nSIM-karta yoki abonent qurilmasi (SIM-kartadan foydalanish koʻzda tutilmagan mobil aloqa standartlari uchun va eSIM) yoʻqolganda abonentning yozma arizasi boʻyicha yoki abonent uchun qulay boʻlgan, operator (provayder) tomonidan oʻrnatilgan, boshqa usulda berilgan xabar boʻyicha xizmatlarning koʻrsatilishini zudlik bilan toʻxtatish;\nOʻzbekiston Respublikasi hududida GSM standartida ishlaydigan barcha operator (provayder) koʻchib oʻtgan raqamlarning markazlashtirilgan bazasiga ulanish;\nabonent tomonidan donorga rouming xizmatlari uchun aniqlangan qarzdorlik toʻlanmagan taqdirda xizmat koʻrsatishni toʻxtatib qoʻyish;\nabonentning operator tarmoqlarida abonent raqamini koʻchib oʻtish xizmatidan foydalanish huquqiga toʻsqinlik qilmaslik;",
+   "section": "III BOʻLIM. TELEKOMMUNIKATSIYA OPERATOR VA PROVAYDERLARINING XUQUQ VA MAJBURIYATLARI",
+   "chapter": "2-bob. Telekommunikatsiya operatorlari va provayderlarining xizmatlarni koʻrsatishdagi majburiyatlari",
+   "paragraph": "3-§. Mobil aloqa operatorlarining (provayderlarining) majburiyatlari",
+   "excerpt": true,
+   "case_type": "mnp_application",
+   "tags": [
+    "operator mnpga to'sqinlik qilmaydi",
+    "rouming qarzi xizmat to'xtatish",
+    "krmbga ulanish"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 296-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "318",
+   "clause": "318",
+   "title": "3275-son Qoidalar, 318-band. Abonentning MNP xizmatidan foydalanish huquqi (MNPga tegishli xatboshilar)",
+   "plain": "",
+   "paragraphs": [
+    "318. Mobil aloqa xizmatlari abonentlari va foydalanuvchilari quyidagi huquqlarga ega:",
+    "qonunchilik hujjatlarida belgilangan tartibda operator (provayder) tarmoqlarida abonent raqamini koʻchib oʻtish xizmatidan foydalanishi."
+   ],
+   "text": "318. Mobil aloqa xizmatlari abonentlari va foydalanuvchilari quyidagi huquqlarga ega:\nqonunchilik hujjatlarida belgilangan tartibda operator (provayder) tarmoqlarida abonent raqamini koʻchib oʻtish xizmatidan foydalanishi.",
+   "section": "IV BOʻLIM. ABONENTLAR VA FOYDALANUVCHILARNING HUQUQ VA MAJBURIYATLARI",
+   "chapter": "1-bob. Abonentlar va foydalanuvchilarning huquqlari",
+   "paragraph": "5-§. Mobil aloqa xizmatlari abonentlari va foydalanuvchilarining huquqlari",
+   "excerpt": true,
+   "case_type": "mnp_application",
+   "tags": [
+    "mnp huquqi",
+    "право на перенос номера"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 318-band"
+   ],
+   "valid_from": "2021-07-28",
+   "amended_by": [
+    "Adliya vazirining 16-mh-son buyrugʻi (2021), roʻyxat raqami 3313"
+   ],
+   "requires_realtime_status": false
+  },
+  {
+   "key": "324",
+   "clause": "324",
+   "title": "3275-son Qoidalar, 324-band. Abonent majburiyatlari: maʼlumot oʻzgarishi, donor oldidagi qarz (MNPga tegishli xatboshilar)",
+   "plain": "",
+   "paragraphs": [
+    "324. Mobil aloqa xizmatlari abonentlari va foydalanuvchilari quyidagilarga majbur:",
+    "b) maʼlumotlar oʻzgargani haqida operatorga (provayderga) 15 kun ichida xabar berish:",
+    "jismoniy shaxs uchun — familiyasi, ismi, otasining ismi, doimiy yashash joyi boʻyicha yoki vaqtincha turgan joyi boʻyicha roʻyxatga olinganligi va pasport maʼlumotlari haqiqiy pasportni koʻrsatish yoʻli bilan;",
+    "yuridik shaxs uchun — nomi (firma nomi), yuridik manzili oʻzgarganligi, shuningdek, yuridik shaxs tugatilganligi toʻgʻrisida xabar qilish;",
+    "k) abonent raqami koʻchib oʻtgan taqdirda, donor bilan tuzilgan mobil aloqa xizmatlarini koʻrsatish shartnomasi boʻyicha mobil aloqa tarmogʻi xizmatlari uchun mavjud qarzni toʻlashi."
+   ],
+   "text": "324. Mobil aloqa xizmatlari abonentlari va foydalanuvchilari quyidagilarga majbur:\nb) maʼlumotlar oʻzgargani haqida operatorga (provayderga) 15 kun ichida xabar berish:\njismoniy shaxs uchun — familiyasi, ismi, otasining ismi, doimiy yashash joyi boʻyicha yoki vaqtincha turgan joyi boʻyicha roʻyxatga olinganligi va pasport maʼlumotlari haqiqiy pasportni koʻrsatish yoʻli bilan;\nyuridik shaxs uchun — nomi (firma nomi), yuridik manzili oʻzgarganligi, shuningdek, yuridik shaxs tugatilganligi toʻgʻrisida xabar qilish;\nk) abonent raqami koʻchib oʻtgan taqdirda, donor bilan tuzilgan mobil aloqa xizmatlarini koʻrsatish shartnomasi boʻyicha mobil aloqa tarmogʻi xizmatlari uchun mavjud qarzni toʻlashi.",
+   "section": "IV BOʻLIM. ABONENTLAR VA FOYDALANUVCHILARNING HUQUQ VA MAJBURIYATLARI",
+   "chapter": "2-bob. Abonentlar va foydalanuvchilarning majburiyatlari",
+   "paragraph": "5-§. Mobil aloqa xizmatlari abonentlari va foydalanuvchilarining majburiyatlari",
+   "excerpt": true,
+   "case_type": "mnp_identity_mismatch",
+   "tags": [
+    "ma'lumot o'zgarsa 15 kun",
+    "donor oldidagi qarzni to'lash",
+    "familiya o'zgardi"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 324-band"
+   ],
+   "valid_from": "2020-09-30",
+   "amended_by": [],
+   "requires_realtime_status": false
+  }
+ ],
+ "rejection_reasons": [
+  {
+   "id": "notogri_talabnoma",
+   "title": "MNP rad etildi: talabnoma notoʻgʻri toʻldirilgan",
+   "case_type": "mnp_rejection",
+   "symptom": "SMSda talabnoma notoʻgʻri yoki toʻliq toʻldirilmaganligi aytiladi.",
+   "cause": "KRMB operatori soʻrovning talabnomaga muvofiq toʻgʻri va aniq toʻldirilganligini tekshiradi; shart bajarilmasa talabnoma rad etiladi.",
+   "resolution": [
+    "Yangi operator (retsipiyent) kamchiliklarni bartaraf etadi",
+    "Retsipiyent KRMB operatoriga yangi soʻrov yuboradi"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 184-band"
+   ],
+   "tags": [
+    "ariza noto'g'ri to'ldirilgan",
+    "talabnoma xato",
+    "заявление заполнено неверно",
+    "mnp rad etildi",
+    "mnp nega rad etildi",
+    "rad sababi",
+    "почему отказали в переносе",
+    "why can an mnp request be rejected"
+   ]
+  },
+  {
+   "id": "malumot_mos_emas",
+   "title": "MNP rad etildi: shaxsiy maʼlumotlar eski operator maʼlumotiga mos emas",
+   "case_type": "mnp_identity_mismatch",
+   "symptom": "\"Maʼlumotlar mos emas\" degan rad sababi keladi.",
+   "cause": "Donor KRMBdan kelgan shaxsiy maʼlumotlar (F.I.Sh., pasport, raqam egasi) u bilan tuzilgan shartnomadagi maʼlumotlarga mos kelishini tekshiradi.",
+   "resolution": [
+    "Eski operatorga (donor) murojaat qilib, shartnomadagi maʼlumotlarni yangilang (familiya oʻzgargan, pasport almashgan va h.k.) — bu bepul",
+    "Shundan keyin MNP arizasini qayta topshiring",
+    "Chatda pasport yoki JSHSHIR yuborish shart emas — tekshiruv operator ofisida boʻladi"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 179-band (oxirgi xatboshi)",
+    "186-band",
+    "251-band",
+    "324-band b)"
+   ],
+   "tags": [
+    "ma'lumotlarim mos emas deyapti",
+    "ma'lumotlar mos emas",
+    "familiya o'zgargan",
+    "pasport almashgan",
+    "данные не совпадают",
+    "personal data mismatch",
+    "mnp rad etildi",
+    "mnp nega rad etildi",
+    "rad sababi",
+    "почему отказали в переносе",
+    "why can an mnp request be rejected"
+   ]
+  },
+  {
+   "id": "30_kun",
+   "title": "MNP rad etildi: oxirgi koʻchirishdan 30 kun oʻtmagan",
+   "case_type": "mnp_repeat_porting",
+   "symptom": "Yaqinda raqam koʻchirilgan va yana ariza berilgan.",
+   "cause": "Raqam 30 kalendar kun ichida koʻpi bilan bir marta koʻchiriladi (xato koʻchirish holatlari bundan mustasno).",
+   "resolution": [
+    "30 kalendar kun oʻtishini kuting",
+    "Keyin arizani qayta topshiring"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 168-band",
+    "184-band"
+   ],
+   "tags": [
+    "30 kun o'tmagan",
+    "bir oyda ikki marta",
+    "too soon to port again",
+    "mnp rad etildi",
+    "mnp nega rad etildi",
+    "rad sababi",
+    "почему отказали в переносе",
+    "why can an mnp request be rejected"
+   ]
+  },
+  {
+   "id": "aktiv_talabnoma",
+   "title": "MNP rad etildi: shu raqam boʻyicha aktiv talabnoma mavjud",
+   "case_type": "mnp_rejection",
+   "symptom": "Raqam boʻyicha boshqa koʻchirish arizasi hali yakunlanmagan.",
+   "cause": "KRMB operatori raqam boʻyicha aktiv talabnomalar yoʻqligini tekshiradi.",
+   "resolution": [
+    "Avvalgi talabnoma yakunlanishini kuting yoki undan voz keching (donor tasdiqlaguncha voz kechish mumkin)",
+    "Keyin yangi ariza bering"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 184-band",
+    "195-band"
+   ],
+   "tags": [
+    "aktiv ariza bor",
+    "ikkita ariza",
+    "активная заявка",
+    "mnp rad etildi",
+    "mnp nega rad etildi",
+    "rad sababi",
+    "почему отказали в переносе",
+    "why can an mnp request be rejected"
+   ]
+  },
+  {
+   "id": "qarzdorlik",
+   "title": "MNP rad etildi: eski operator oldida qarzdorlik bor",
+   "case_type": "mnp_debt",
+   "symptom": "Rad sababi sifatida qarzdorlik koʻrsatiladi.",
+   "cause": "Donor tekshirish paytida abonentning shartnoma boʻyicha qarzi yoʻqligini tekshiradi (rouming xizmatlaridan tashqari).",
+   "resolution": [
+    "Eski operator oldidagi qarzni yoping",
+    "Shundan keyin koʻchirish uchun qayta ariza bering (oʻsha retsipiyentga takroran berilganda yangi shartnoma shart emas)"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 186-band",
+    "182-band",
+    "324-band k)"
+   ],
+   "tags": [
+    "qarzdorlik sabab rad bo'ldi",
+    "eski operatorga qarzim bor",
+    "eski operatorga qarzim bor mnp bo'ladimi",
+    "qarz bor",
+    "долг перед оператором",
+    "debt to old operator",
+    "mnp rad etildi",
+    "mnp nega rad etildi",
+    "rad sababi",
+    "почему отказали в переносе",
+    "why can an mnp request be rejected"
+   ]
+  },
+  {
+   "id": "majburiyat",
+   "title": "MNP rad etildi: donor bilan bajarilmagan majburiyat bor",
+   "case_type": "mnp_rejection",
+   "symptom": "Rad sababi sifatida shartnoma boʻyicha majburiyat koʻrsatiladi.",
+   "cause": "Donor abonentda u bilan tuzilgan shartnoma boʻyicha majburiyatlar yoʻqligini tekshiradi.",
+   "resolution": [
+    "Eski operator bilan majburiyatni (shartnoma shartini) aniqlab, uni bajaring",
+    "Keyin arizani qayta topshiring"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 186-band"
+   ],
+   "tags": [
+    "majburiyat bor",
+    "shartnoma majburiyati",
+    "обязательства перед оператором",
+    "mnp rad etildi",
+    "mnp nega rad etildi",
+    "rad sababi",
+    "почему отказали в переносе",
+    "why can an mnp request be rejected"
+   ]
+  },
+  {
+   "id": "bloklangan",
+   "title": "Raqam bloklangan boʻlsa MNP (3275-son Qoidalarda alohida rad sababi emas)",
+   "case_type": "mnp_blocked_number",
+   "symptom": "Raqam eski operator tomonidan bloklangan (SIM yoʻqolgan, toʻlov qilinmagan, sud qarori va h.k.).",
+   "cause": "3275-son Qoidalarda \"raqam bloklangan\" alohida rad asosi sifatida koʻrsatilmagan; blok odatda qarz yoki bajarilmagan majburiyat bilan bogʻliq (186-band) yoki SIM yoʻqolgani sababli (296-band). Tasdiqlangan FAQ (KB-MNP-013) boʻyicha avval blokdan chiqarish kerak.",
+   "resolution": [
+    "Eski operatorga murojaat qilib, blok sababini aniqlang va raqamni blokdan chiqaring (qarzni yopish, SIMni tiklash)",
+    "Keyin MNP arizasini qayta topshiring"
+   ],
+   "legal_refs": [
+    "3275-son Qoidalar, 186-band",
+    "296-band",
+    "370-371-band",
+    "KB-MNP-013 (FAQ)"
+   ],
+   "tags": [
+    "raqam bloklangan bo'lsa ko'chirish mumkinmi",
+    "bloklangan raqam",
+    "sim yo'qolgan",
+    "заблокированный номер перенос",
+    "blocked number porting",
+    "mnp rad etildi",
+    "mnp nega rad etildi",
+    "rad sababi",
+    "почему отказали в переносе",
+    "why can an mnp request be rejected"
+   ]
+  }
+ ],
+ "historical_notes": [
+  {
+   "key": "tarix:19",
+   "clause": "19",
+   "title": "3275-son Qoidalar, 19-band — tahrirlar tarixi",
+   "text": "3275-son Qoidalarning 19-bandi qachon va qaysi hujjat bilan oʻzgartirilgan (tarixiy izoh, amaldagi qoida emas):\n- 19-bandning birinchi xatboshisi Oʻzbekiston Respublikasi adliya vazirining 2021-yil 28-iyuldagi 16-mh-sonli buyrugʻi (roʻyxat raqami 3313, 28.07.2021-y.) tahririda — Qonunchilik maʼlumotlari milliy bazasi, 28.07.2021-y., 10/21/3313/0724-son",
+   "dates": [
+    "2021-07-28"
+   ],
+   "decrees": [
+    "Adliya vazirining 16-mh-son buyrugʻi (2021), roʻyxat raqami 3313"
+   ],
+   "tags": [
+    "qachon o'zgargan",
+    "tahrir",
+    "o'zgartirish",
+    "3313",
+    "16-mh",
+    "2021-yil",
+    "когда изменен",
+    "редакция",
+    "amended",
+    "history",
+    "19-band"
+   ]
+  },
+  {
+   "key": "tarix:178",
+   "clause": "178",
+   "title": "3275-son Qoidalar, 178-band — tahrirlar tarixi",
+   "text": "3275-son Qoidalarning 178-bandi qachon va qaysi hujjat bilan oʻzgartirilgan (tarixiy izoh, amaldagi qoida emas):\n- 178-band Oʻzbekiston Respublikasi adliya vazirining 2021-yil 28-iyuldagi 16-mh-sonli buyrugʻi (roʻyxat raqami 3313, 28.07.2021-y.) tahririda — Qonunchilik maʼlumotlari milliy bazasi, 28.07.2021-y., 10/21/3313/0724-son",
+   "dates": [
+    "2021-07-28"
+   ],
+   "decrees": [
+    "Adliya vazirining 16-mh-son buyrugʻi (2021), roʻyxat raqami 3313"
+   ],
+   "tags": [
+    "qachon o'zgargan",
+    "tahrir",
+    "o'zgartirish",
+    "3313",
+    "16-mh",
+    "2021-yil",
+    "когда изменен",
+    "редакция",
+    "amended",
+    "history",
+    "178-band"
+   ]
+  },
+  {
+   "key": "tarix:251",
+   "clause": "251",
+   "title": "3275-son Qoidalar, 251-band — tahrirlar tarixi",
+   "text": "3275-son Qoidalarning 251-bandi qachon va qaysi hujjat bilan oʻzgartirilgan (tarixiy izoh, amaldagi qoida emas):\n- 251-bandning yigirma ikkinchi xatboshisi Oʻzbekiston Respublikasi adliya vazirining 2021-yil 28-iyuldagi 16-mh-sonli buyrugʻi (roʻyxat raqami 3313, 28.07.2021-y.) tahririda — Qonunchilik maʼlumotlari milliy bazasi, 28.07.2021-y., 10/21/3313/0724-son",
+   "dates": [
+    "2021-07-28"
+   ],
+   "decrees": [
+    "Adliya vazirining 16-mh-son buyrugʻi (2021), roʻyxat raqami 3313"
+   ],
+   "tags": [
+    "qachon o'zgargan",
+    "tahrir",
+    "o'zgartirish",
+    "3313",
+    "16-mh",
+    "2021-yil",
+    "когда изменен",
+    "редакция",
+    "amended",
+    "history",
+    "251-band"
+   ]
+  },
+  {
+   "key": "tarix:256",
+   "clause": "256",
+   "title": "3275-son Qoidalar, 256-band — tahrirlar tarixi",
+   "text": "3275-son Qoidalarning 256-bandi qachon va qaysi hujjat bilan oʻzgartirilgan (tarixiy izoh, amaldagi qoida emas):\n- 256-bandning yettinchi xatboshisi Oʻzbekiston Respublikasi adliya vazirining 2021-yil 28-iyuldagi 16-mh-sonli buyrugʻi (roʻyxat raqami 3313, 28.07.2021-y.) tahririda — Qonunchilik maʼlumotlari milliy bazasi, 28.07.2021-y., 10/21/3313/0724-son",
+   "dates": [
+    "2021-07-28"
+   ],
+   "decrees": [
+    "Adliya vazirining 16-mh-son buyrugʻi (2021), roʻyxat raqami 3313"
+   ],
+   "tags": [
+    "qachon o'zgargan",
+    "tahrir",
+    "o'zgartirish",
+    "3313",
+    "16-mh",
+    "2021-yil",
+    "когда изменен",
+    "редакция",
+    "amended",
+    "history",
+    "256-band"
+   ]
+  },
+  {
+   "key": "tarix:318",
+   "clause": "318",
+   "title": "3275-son Qoidalar, 318-band — tahrirlar tarixi",
+   "text": "3275-son Qoidalarning 318-bandi qachon va qaysi hujjat bilan oʻzgartirilgan (tarixiy izoh, amaldagi qoida emas):\n- 318-bandning toʻrtinchi xatboshisi Oʻzbekiston Respublikasi adliya vazirining 2021-yil 28-iyuldagi 16-mh-sonli buyrugʻi (roʻyxat raqami 3313, 28.07.2021-y.) tahririda — Qonunchilik maʼlumotlari milliy bazasi, 28.07.2021-y., 10/21/3313/0724-son",
+   "dates": [
+    "2021-07-28"
+   ],
+   "decrees": [
+    "Adliya vazirining 16-mh-son buyrugʻi (2021), roʻyxat raqami 3313"
+   ],
+   "tags": [
+    "qachon o'zgargan",
+    "tahrir",
+    "o'zgartirish",
+    "3313",
+    "16-mh",
+    "2021-yil",
+    "когда изменен",
+    "редакция",
+    "amended",
+    "history",
+    "318-band"
+   ]
+  },
+  {
+   "key": "tarix:371",
+   "clause": "371",
+   "title": "3275-son Qoidalar, 371-band — tahrirlar tarixi",
+   "text": "3275-son Qoidalarning 371-bandi qachon va qaysi hujjat bilan oʻzgartirilgan (tarixiy izoh, amaldagi qoida emas):\n- 371-band Oʻzbekiston Respublikasi adliya vazirining 2021-yil 28-iyuldagi 16-mh-sonli buyrugʻi (roʻyxat raqami 3313, 28.07.2021-y.) tahririda — Qonunchilik maʼlumotlari milliy bazasi, 28.07.2021-y., 10/21/3313/0724-son",
+   "dates": [
+    "2021-07-28"
+   ],
+   "decrees": [
+    "Adliya vazirining 16-mh-son buyrugʻi (2021), roʻyxat raqami 3313"
+   ],
+   "tags": [
+    "qachon o'zgargan",
+    "tahrir",
+    "o'zgartirish",
+    "3313",
+    "16-mh",
+    "2021-yil",
+    "когда изменен",
+    "редакция",
+    "amended",
+    "history",
+    "371-band"
+   ]
+  },
+  {
+   "key": "tarix:373",
+   "clause": "373",
+   "title": "3275-son Qoidalar, 373-band — tahrirlar tarixi",
+   "text": "3275-son Qoidalarning 373-bandi qachon va qaysi hujjat bilan oʻzgartirilgan (tarixiy izoh, amaldagi qoida emas):\n- 373-band Oʻzbekiston Respublikasi adliya vazirining 2021-yil 28-iyuldagi 16-mh-sonli buyrugʻi (roʻyxat raqami 3313, 28.07.2021-y.) tahririda — Qonunchilik maʼlumotlari milliy bazasi, 28.07.2021-y., 10/21/3313/0724-son",
+   "dates": [
+    "2021-07-28"
+   ],
+   "decrees": [
+    "Adliya vazirining 16-mh-son buyrugʻi (2021), roʻyxat raqami 3313"
+   ],
+   "tags": [
+    "qachon o'zgargan",
+    "tahrir",
+    "o'zgartirish",
+    "3313",
+    "16-mh",
+    "2021-yil",
+    "когда изменен",
+    "редакция",
+    "amended",
+    "history",
+    "373-band"
+   ]
+  }
+ ],
+ "stats": {
+  "units": 104,
+  "definitions": 22,
+  "clauses_167_226": 60,
+  "rejection_reasons": 7,
+  "historical_notes": 7,
+  "raw_change_notes_in_document": 85
+ }
+}

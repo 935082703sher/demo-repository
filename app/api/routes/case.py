@@ -66,12 +66,16 @@ from app.services.intent_control import (
     FEE_ORIGIN_QUESTION,
     PAYMENT_RECEIPT,
     REGISTRATION_FEE,
+    ROAMING_DEBT_AFTER_PORT,
+    WRONG_PORT,
     detect_intent,
     fee_followup_reply,
     fee_reply,
     mentions_amount,
     receipt_reply,
+    roaming_debt_reply,
     transaction_facts,
+    wrong_port_reply,
 )
 from app.services.interaction_log import InteractionLog, InteractionRecord
 from app.services.kb_retriever import get_retriever
@@ -841,6 +845,11 @@ async def _maybe_policy_answer(
     documents) plus the retrieved clauses form the legal basis; the composer writes the
     natural answer and a legal-grounding check confirms every cited clause is from it.
     """
+    # The engine's clause base is VMQ-778 (IMEI registration) only. An MNP question
+    # (cancel a porting request, number transfer, ...) must never be answered with IMEI
+    # clauses - it goes to the MNP knowledge (3275-son Qoidalar corpus) instead.
+    if detect_domain(message) == "mnp" or case.domain == "mnp":
+        return None
     query_vector = await engine.embed(message)  # semantic recall when configured, else None
     reasoning = engine.reason(case, message, query_vector=query_vector)
     if not reasoning.has_grounds():
@@ -1167,6 +1176,17 @@ async def _intent_answer(
     from is still unknown; that question is never asked twice.
     """
     known = case.known_facts()
+    if case.current_intent in (WRONG_PORT, ROAMING_DEBT_AFTER_PORT):
+        case.user_goal = case.current_intent
+        case.last_question = None
+        case.domain = "mnp"
+        case.status = CaseStatus.RESOLVED
+        reply = (
+            wrong_port_reply(lang)
+            if case.current_intent == WRONG_PORT
+            else (roaming_debt_reply(lang))
+        )
+        return _resp(case, reply, done=True)
     if case.current_intent == PAYMENT_RECEIPT:
         case.user_goal = PAYMENT_RECEIPT
         case.last_question = None
