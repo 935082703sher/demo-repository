@@ -76,6 +76,26 @@ def test_a_greeting_without_numbers_or_sources_is_allowed() -> None:
     assert res.error is False and res.sources == []
 
 
+def test_payment_question_evidence_carries_the_fee_clauses_and_computed_tariff() -> None:
+    # A legal-basis-for-the-fee question must always get the fee clauses (42 + Annex 6)
+    # and the computed amounts, regardless of how retrieval ranked the clauses.
+    from app.api.routes.case import _ai_rag_evidence
+    from app.domain.case_state import CaseState
+
+    app = create_app(settings=Settings())
+    engine = app.state.legal_reasoning
+    tariffs = app.state.tariffs
+    case = CaseState(case_id="c", session_id="s", domain="imei")
+    ev = asyncio.run(
+        _ai_rag_evidence(engine, tariffs, case, "qonuniy dalil bormi qancha to'lashim haqida")
+    )
+    ids = " ".join(e.source_id for e in ev)
+    text = " ".join(e.text for e in ev)
+    assert "42" in ids  # clause 42: fee amounts are set in Annex 6
+    assert "ilova" in ids  # the Annex 6 amounts table / computed tariff
+    assert "82400" in text and "103000" in text  # the exact computed amounts are present
+
+
 def test_mode_on_with_no_model_fails_openly_and_shows_no_menu() -> None:
     # The mock provider wires no AI+RAG model, so every turn must fail openly - never a
     # tree, a menu, or a canned domain answer.

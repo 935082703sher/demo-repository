@@ -28,6 +28,7 @@ from app.domain.knowledge_gap import RetrievedDoc
 from app.domain.legal_clauses import Clause
 from app.domain.policy import PolicyRule
 from app.domain.schemas import LLMRequest
+from app.domain.tariffs import TariffConfig
 from app.providers.base import LLMProvider
 from app.providers.errors import ProviderError
 from app.services.ai_rag import AiRagResponder, Evidence
@@ -1289,43 +1290,100 @@ async def _intent_answer(
     return _resp(case, reply, done=True)
 
 
+# Payment-topic cues (any language), used only to decide whether to attach the fee
+# legal basis - a general money detector, never tied to a specific test question.
+_PAYMENT_TERMS = (
+    "tolov", "tolash", "tolay", "toladi", "tolagan", "tarif", "narx", "pul", "bhm",
+    " som", "soum", "oplat", "plat", "cena", "stoim", "skolko stoit",
+    "pay", "price", "cost", " fee", "how much",
+)
+# The clauses that establish the registration fee: the obligation (6) and the amounts
+# (42 points to Annex 6; 6-ilova is the amounts table). Retrieval ranks these unreliably
+# for some phrasings ("is there a legal basis for the amount?"), so for a payment topic
+# they are attached deterministically - the law's own fee basis, not a canned answer.
+_FEE_CLAUSE_LABELS = ("6", "42", "6-ilova")
+_FEE_FORMULAS = ("physical_person_within_30_days", "physical_person_after_30_days")
+
+
+def _is_payment_topic(message: str, evidence: list[Evidence]) -> bool:
+    """True when the turn is about the registration fee (message or retrieved material)."""
+    hay = message.lower().replace("'", "").replace("ʻ", "").replace("`", "")
+    if any(term in hay for term in _PAYMENT_TERMS):
+        return True
+    joined = " ".join(f"{e.title} {e.text}".lower() for e in evidence)
+    return "to'lov" in joined or "tarif" in joined or "turadi" in joined
+
+
+def _computed_fee_evidence(tariffs: TariffConfig) -> Evidence | None:
+    """An authoritative fee item: the amounts (BHM x percent) tied to their law clauses.
+
+    Built from the versioned tariff source, so the model can ground the exact sum to the
+    law instead of saying no clause confirms it. None when the fee cannot be priced.
+    """
+    today = date.today()
+    within = tariffs.resolve(_FEE_FORMULAS[0], today)
+    after = tariffs.resolve(_FEE_FORMULAS[1], today)
+    if within is None or after is None:
+        return None
+    text = (
+        f"Ro'yxatdan o'tkazish to'lovi (jismoniy shaxs, har IMEI uchun alohida): dastlabki "
+        f"tarmoq hodisasidan 30 kalendar kun ichida BHM ({within.bhm} {within.currency}) ning "
+        f"{within.percent}% = {within.amount} {within.currency}; 30 kundan keyin {after.percent}% "
+        f"= {after.amount} {after.currency}. Huquqiy asos: VMQ-778 6-band (to'lov majburiyati) "
+        f"hamda 42-band va 6-ilova (miqdorlar jadvali)."
+    )
+    return Evidence(
+        source_id="VMQ-778 6-ilova (hisoblangan tarif)",
+        title="Ro'yxatdan o'tkazish to'lovi (hisoblangan)",
+        text=text,
+    )
+
+
 async def _ai_rag_evidence(
-    reasoning_engine: LegalReasoningEngine, case: CaseState, message: str
+    reasoning_engine: LegalReasoningEngine,
+    tariffs: TariffConfig,
+    case: CaseState,
+    message: str,
 ) -> list[Evidence]:
     """Gather the RAG evidence for a turn: approved KB passages and VMQ-778 clauses.
 
     The approved FAQ/card text and the law clauses are offered only as SOURCES the model
     reasons over - never as a ready answer. Passages far weaker than the best hit are
-    dropped (§22) so an off-topic article does not ride along.
+    dropped (§22) so an off-topic article does not ride along. For a payment question the
+    fee clauses and the computed tariff are attached deterministically, so the legal basis
+    of the amount is always present regardless of how retrieval ranked it.
     """
     evidence: list[Evidence] = []
     seen: set[str] = set()
+
+    def _add(source_id: str, title: str, text: str) -> None:
+        if source_id and source_id not in seen:
+            seen.add(source_id)
+            evidence.append(Evidence(source_id=source_id, title=title, text=text))
+
+    def _add_clause(label: str) -> None:
+        clause = reasoning_engine.clause(label)
+        if clause is not None:
+            sid = clause.rule_id or f"VMQ-778:{clause.clause}"
+            _add(sid, f"VMQ-778 {clause.clause}", clause.legal_rule)
+
     retriever = get_retriever()
     for r in _applicable_results(retriever.retrieve(message, _RAG_TOP_K, domain=case.domain)):
-        if r.chunk.doc_id in seen:
-            continue
-        seen.add(r.chunk.doc_id)
-        evidence.append(Evidence(source_id=r.chunk.doc_id, title=r.chunk.title, text=r.chunk.text))
+        _add(r.chunk.doc_id, r.chunk.title, r.chunk.text)
     try:
         query_vector = await reasoning_engine.embed(message)
         reasoning = reasoning_engine.reason(case, message, query_vector=query_vector)
-        for label in reasoning.legal_basis[:4]:
-            clause = reasoning_engine.clause(label)
-            if clause is None:
-                continue
-            source_id = clause.rule_id or f"VMQ-778:{clause.clause}"
-            if source_id in seen:
-                continue
-            seen.add(source_id)
-            evidence.append(
-                Evidence(
-                    source_id=source_id,
-                    title=f"VMQ-778 {clause.clause}",
-                    text=clause.legal_rule,
-                )
-            )
+        for label in reasoning.legal_basis[:6]:
+            _add_clause(label)
     except Exception:  # pragma: no cover - retrieval of clauses must never break a turn
         pass
+    # Fee questions: attach the fee legal basis and the computed amounts deterministically.
+    if _is_payment_topic(message, evidence):
+        for label in _FEE_CLAUSE_LABELS:
+            _add_clause(label)
+        fee = _computed_fee_evidence(tariffs)
+        if fee is not None:
+            _add(fee.source_id, fee.title, fee.text)
     return evidence
 
 
@@ -1347,6 +1405,7 @@ async def _converse_ai_rag(
     """
     responder = cast("AiRagResponder | None", getattr(request.app.state, "ai_rag", None))
     reasoning_engine = cast(LegalReasoningEngine, request.app.state.legal_reasoning)
+    tariffs = cast(TariffConfig, request.app.state.tariffs)
     extractor = cast(FactExtractor, request.app.state.fact_extractor)
     grounding = cast(GroundingValidator, request.app.state.grounding)
     if responder is None:
@@ -1362,7 +1421,7 @@ async def _converse_ai_rag(
         pass
     _refresh_unknowns(case)
 
-    evidence = await _ai_rag_evidence(reasoning_engine, case, message)
+    evidence = await _ai_rag_evidence(reasoning_engine, tariffs, case, message)
     result = await responder.respond(case, message, lang, evidence)
     case.status = CaseStatus.DIAGNOSING  # non-terminal: the context carries to next turn
     await store.save(case)
