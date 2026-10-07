@@ -26,3 +26,6 @@
 {"id": "rag-mnp-duration", "turns": [{"msg": "MNP necha kun ichida amalga oshadi?", "expect": "rag"}]}
 {"id": "menu-select-tree", "turns": [{"msg": "imei-blokdan_chiqarish", "expect": "question", "reply_has": ["blok"]}]}
 {"id": "offtopic", "turns": [{"msg": "bugungi ob-havo qanday", "expect": "menu"}]}
+{"id": "intent-receipt-en", "turns": [{"msg": "On July 1, 2026, I registered two IMEI codes and paid UZS 164,800. Registration was successful, but I did not receive an electronic receipt. I need an official receipt for reimbursement.", "expect": "rag", "reply_has": ["receipt", "application number"], "reply_not": ["where did you buy", "qayerdan oldingiz"]}]}
+{"id": "intent-fee-then-receipt", "turns": [{"msg": "Registratsiya juda qimmat.", "expect": "greeting", "reply_has": ["olib kelganmisiz"]}, {"msg": "To'lov qildim, registratsiya muvaffaqiyatli bo'ldi. Endi elektron chek kerak.", "expect": "rag", "reply_has": ["elektron tasdig"], "reply_not": ["qayerdan oldingiz", "olib kelganmisiz"]}]}
+{"id": "intent-fee-ru-followup", "turns": [{"msg": "Здравствуйте, я был в Узбекистане и купил сим карту... сумма регистрации 2 620 786,6 сум. Это правда так дорого?", "expect": "greeting", "reply_has": ["не могу проверить"]}, {"msg": "Привёз телефон из Дубая", "expect": "rag", "reply_has": ["UZIMEI"]}]}

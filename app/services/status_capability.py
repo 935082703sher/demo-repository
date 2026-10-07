@@ -37,6 +37,7 @@ MY_DEVICES = "my_devices"
 CUSTOMS = "customs"
 APPLICATION = "application"
 LOCATION = "location"
+PAYMENT = "payment"
 
 # The knowledge-base article that governs each kind of lookup request.
 SEED_ENTRY_BY_KIND = {
@@ -47,6 +48,7 @@ SEED_ENTRY_BY_KIND = {
     CUSTOMS: "KB-IMPORT-002",
     APPLICATION: "KB-IMEI-001",
     LOCATION: "KB-IMEI-LOST-001",
+    PAYMENT: "KB-IMEI-PAYMENT-001",
 }
 
 # A request for the assistant itself to look something up.
@@ -148,6 +150,23 @@ _KINDS: tuple[tuple[str, tuple[str, ...], tuple[str, ...]], ...] = (
             "murojaatim qayerda",
             "status zayavki",
             "gde moya zayavka",
+        ),
+    ),
+    (
+        PAYMENT,
+        ("tolov", "oplat", "platezh", "payment"),
+        (
+            "tolovim otdimi",
+            "tolovim otganmi",
+            "tolov otdimi",
+            "tolov otganmi",
+            "tolovim tushdimi",
+            "tolov tushdimi",
+            "oplata proshla",
+            "platezh proshel",
+            "did my payment go through",
+            "has my payment gone through",
+            "is my payment in the system",
         ),
     ),
     (
@@ -360,6 +379,23 @@ _REPLIES: dict[str, dict[str, str]] = {
         "isler organlarına arza menen múráját etiw kerek. Arza ushın qurılmanıń islep "
         "shıǵarıwshısın, modelin hám IMEI'lerin tayarlap qoyıń.",
     },
+    PAYMENT: {
+        "uz": "To'lov tizimidagi ma'lumotni men bevosita tekshira olmayman. To'lov qilgan "
+        "ilova yoki bankdagi tranzaksiya holatini ko'ring va sizga chiqqan xabar yoki chekni "
+        "yuboring — nimani anglatishini va keyingi qadamni tushuntirib beraman.",
+        "uz_cyrl": "Тўлов тизимидаги маълумотни мен бевосита текшира олмайман. Тўлов қилган "
+        "илова ёки банкдаги транзакция ҳолатини кўринг ва сизга чиққан хабар ёки чекни "
+        "юборинг — нимани англатишини ва кейинги қадамни тушунтириб бераман.",
+        "ru": "Я не могу напрямую проверить данные платёжной системы. Посмотрите статус "
+        "транзакции в приложении или банке, через который платили, и пришлите сообщение или "
+        "чек — объясню, что это значит и что делать дальше.",
+        "en": "I can't check the payment system directly. Look at the transaction status in "
+        "the app or bank you paid through, and send me the message or receipt you see — I'll "
+        "explain what it means and the next step.",
+        "kaa": "Tólem sistemasındaǵı maǵlıwmattı men tikkeley tekserip bere almayman. Tólem "
+        "qılǵan qosımsha yamasa banktegi tranzakciya jaǵdayın kóriń hám sizge shıqqan xabardı "
+        "yamasa chekti jiberiń — neni ańlatatuǵının túsindirip beremen.",
+    },
 }
 
 
@@ -526,6 +562,12 @@ _LIVE_CHECK_CLAIMS = (
     "ill check",
     "i looked up",
     "your current status is",
+    "tolovingiz tizimda",
+    "tolov tizimda mavjud",
+    "arizangizni tekshirdim",
+    "your payment is in the system",
+    "your payment has been confirmed in the system",
+    "vash platezh est v sisteme",
 )
 
 
