@@ -1,0 +1,295 @@
+{
+  "seed_version": "0.1",
+  "title": "UZIMEI AI Assistant - Clean Knowledge Base Seed",
+  "language": "uz",
+  "statuses": {
+    "published_candidate": "Mazmuni aniq; muammo va natija tushunarli; assistant diagnostikasida ishlatish mumkin. Normativ qoida bo'lsa, amaldagi holat alohida tekshiriladi.",
+    "needs_current_verification": "Bilim foydali, lekin tarif, limit, qonun, davlat organi yoki amaldagi protseduraga bog'liq; production javobda qat'iy fakt sifatida ishlatishdan oldin aktual manba bilan tekshiriladi.",
+    "needs_expert_input": "Muammo ma'lum, lekin aniq resolution steps yetishmaydi.",
+    "historical": "Eski o'tish davri qoidasi; active assistant knowledge sifatida ishlatilmaydi."
+  },
+  "capability_rule": {
+    "summary": "Assistant UZIMEI, MNP, bojxona, operator yoki boshqa tashqi tizimlardan real-time status ololmaydi. Statusni topmaydi; foydalanuvchi taqdim etgan statusni tahlil qiladi.",
+    "can_find_status": false,
+    "can_explain_status": true,
+    "can_analyse_problem": true,
+    "can_recommend_next_step": true,
+    "can_route_to_operator": true,
+    "forbidden_claims": [
+      "Tekshirib ko'raman.",
+      "Tizimdan qarayman.",
+      "IMEI'ingizni tekshirdim.",
+      "Sizning status hozir...",
+      "MNP jarayonini tizimdan tekshirdim."
+    ]
+  },
+  "entries": [
+    {
+      "id": "KB-IMEI-001",
+      "domain": "IMEI_REGISTRATION",
+      "title": "IMEI GSMA talablariga mos kelmaydi",
+      "status": "published_candidate",
+      "intents": ["imei_registration_failed", "invalid_imei", "imei_not_accepted"],
+      "user_examples": [
+        "IMEI ro'yxatdan o'tmayapti.",
+        "IMEI xato deyapti.",
+        "IMEI ni registratsiya qila olmayapman.",
+        "Nega IMEI qabul qilinmayapti?"
+      ],
+      "problem": "Mobil qurilmaning IMEI kodi registratsiyadan o'tmaydi.",
+      "possible_cause": "IMEI kodi GSMA tomonidan belgilangan talablarga javob bermasligi mumkin.",
+      "required_facts": ["UZIMEI tizimida chiqayotgan aniq xabar", "xatolik matni", "status"],
+      "status_codes": ["GSMA_INVALID"],
+      "resolution": "GSMA talablariga javob bermaydigan IMEI'ni texnik jihatdan odatiy tartibda ro'yxatdan o'tkazish imkoniyati mavjud emas.",
+      "must_not": [
+        "tasodifiy APN/SIM troubleshooting boshlash",
+        "\"yana registratsiya qilib ko'ring\" deb aylantirish",
+        "statusni tekshirmasdan GSMA muammosi deb taxmin qilish",
+        "real tizimga kira olmasa \"tekshirdim\" deyish"
+      ],
+      "escalation": "Foydalanuvchi rasmiy natijaga e'tiroz bildirsa yoki status noto'g'ri deb hisoblasa - operator/mutaxassisga yo'naltirish."
+    },
+    {
+      "id": "KB-IMEI-002",
+      "domain": "IMEI_REGISTRATION",
+      "title": "Klonlangan yoki aniqlanmagan IMEI",
+      "status": "published_candidate",
+      "intents": ["cloned_imei", "blacklisted_imei", "imei_registration_failed"],
+      "user_examples": [
+        "IMEI klonlangan deyapti.",
+        "Telefonim qora ro'yxatga tushdi.",
+        "IMEI registratsiya bo'lmayapti.",
+        "Klon IMEI nima degani?"
+      ],
+      "problem": "IMEI bo'yicha rasmiy tizim klonlangan, aniqlanmagan yoki blacklist statusini ko'rsatishi mumkin.",
+      "status_codes": ["CLONED", "UNKNOWN", "BLACKLISTED"],
+      "resolution": "CLONED statusida: status ma'nosini tushuntir; oddiy registratsiyani qayta-qayta taklif qilma; qurilma turini aniqlashga yordam ber; zarur bo'lsa operator/mutaxassisga yo'naltir.",
+      "exceptions": ["Ba'zi murojaatlarda IoT qurilmalar mobil telefon sifatida noto'g'ri talqin qilingan (KB-IMEI-003)."],
+      "must_not": ["statusni mustaqil tekshirayotgandek ko'rsatish"],
+      "escalation": "Zarur bo'lsa operator/mutaxassisga yo'naltirish."
+    },
+    {
+      "id": "KB-IMEI-003",
+      "domain": "IMEI_REGISTRATION",
+      "title": "IoT qurilmasiga IMEI registratsiyasi talab qilinmasligi mumkin",
+      "status": "published_candidate",
+      "intents": ["iot_device_imei", "device_classification", "false_imei_registration_requirement"],
+      "problem": "IMEI mavjud bo'lsa ham, qurilma mobil telefon emas, IoT qurilmasi (IoT modem, tracker, mobil aloqa moduliga ega maxsus qurilma) bo'lishi mumkin.",
+      "required_facts": ["qurilma modeli", "qurilma turi", "nima maqsadda ishlatilishi", "tizimda chiqayotgan xabar"],
+      "must_not": ["har qanday IMEI mavjud qurilmani avtomatik \"telefon\" deb qabul qilish"]
+    },
+    {
+      "id": "KB-IMPORT-001",
+      "domain": "IMPORTED_DEVICES",
+      "title": "Xalqaro pochta orqali kelgan telefonni IMEI ro'yxatdan o'tkazish",
+      "status": "needs_current_verification",
+      "intents": ["postal_import_registration", "online_store_phone_registration"],
+      "user_examples": [
+        "Alibaba'dan telefon oldim, IMEI o'tmayapti.",
+        "Telefon pochta orqali keldi.",
+        "AliExpress'dan kelgan telefonni registratsiya qila olmayapman."
+      ],
+      "required_facts": [
+        "qurilma qanday olib kirilgan",
+        "xalqaro pochta yoki kurer",
+        "jo'natma identifikatori mavjudmi",
+        "qurilma kimning nomiga kelgan",
+        "registratsiyada qanday xabar chiqyapti"
+      ],
+      "diagnostic_flow": [
+        "Telefon O'zbekistonga qanday kelgan - xalqaro pochta, kurer yoki o'zingiz olib kirganmisiz?",
+        "Registratsiyada aynan qanday xabar chiqyapti?"
+      ],
+      "must_not": [
+        "bojxona bazasini tekshirayotgandek ko'rsatish",
+        "\"tizimdan qaradim\" deyish",
+        "darrov boj limiti haqida taxmin qilish"
+      ]
+    },
+    {
+      "id": "KB-IMPORT-002",
+      "domain": "IMPORTED_DEVICES",
+      "title": "Kurer orqali olib kirilgan telefon",
+      "status": "needs_current_verification",
+      "intents": ["courier_import_registration"],
+      "problem": "Chet eldan kurer orqali kelgan telefon IMEI registratsiyasida muammo.",
+      "required_facts": [
+        "kurer kompaniyasi",
+        "shipment/tracking identifikatori mavjudligi",
+        "foydalanuvchida qanday import hujjati mavjud",
+        "registratsiya paytida chiqayotgan xabar"
+      ],
+      "must_not": ["bojxona yoki kurer bazasiga kirayotgandek ko'rsatish"]
+    },
+    {
+      "id": "KB-IMPORT-003",
+      "domain": "IMPORTED_DEVICES",
+      "title": "Chet eldan shaxsan olib kirilgan telefon",
+      "status": "needs_current_verification",
+      "intents": ["personal_import_registration", "customs_declaration", "brought_phone_from_abroad"],
+      "user_examples": [
+        "Chet eldan telefon olib keldim.",
+        "Aeroportdan 2 ta telefon bilan keldim.",
+        "Bitta telefon o'tdi, ikkinchisi o'tmayapti."
+      ],
+      "required_facts": [
+        "nechta qurilma olib kirilgan",
+        "qaysi yo'l orqali olib kirilgan",
+        "bojxona deklaratsiyasi mavjudmi",
+        "qaysi IMEI muammoli",
+        "qanday xato/status chiqyapti"
+      ],
+      "diagnostic_flow": [
+        "Ikkinchi IMEI'ni ro'yxatdan o'tkazishda sizga aynan qanday xabar yoki rad sababi chiqyapti?"
+      ],
+      "must_not": ["birinchi taxmin sifatida \"Bojsiz me'yordan oshdingizmi?\" deb so'rash"]
+    },
+    {
+      "id": "KB-IDENTITY-001",
+      "domain": "OWNERSHIP_AND_IDENTITY",
+      "title": "Mening nomimga qaysi telefonlar/IMEI'lar ro'yxatdan o'tgan?",
+      "status": "published_candidate",
+      "security_level": "HIGH",
+      "intents": ["my_registered_devices", "registered_imei_lookup"],
+      "user_examples": [
+        "Mening nomimda qaysi telefonlar bor?",
+        "Qaysi IMEI'lar pasportimga registratsiya qilingan?",
+        "Tekshirib bering, mening nomimga nima turibdi?"
+      ],
+      "must_not": ["boshqa shaxsga tegishli device/IMEI ma'lumotlarini taxmin qilib berish"]
+    },
+    {
+      "id": "KB-IDENTITY-002",
+      "domain": "OWNERSHIP_AND_IDENTITY",
+      "title": "Mening nomimga begona IMEI ro'yxatdan o'tgan",
+      "status": "published_candidate",
+      "intents": ["unknown_device_registered", "unauthorized_imei_registration"],
+      "user_examples": [
+        "Bu telefon meniki emas.",
+        "Bu IMEI'ni men ro'yxatdan o'tkazmaganman.",
+        "Mening nomimga boshqa telefon chiqyapti."
+      ],
+      "prerequisite": "Foydalanuvchi bu holatni rasmiy xizmat orqali o'zi aniqlagan bo'lishi kerak.",
+      "resolution": "Foydalanuvchi o'zi ro'yxatdan o'tkazmagan IMEI aniqlansa, Tizim ro'yxatga oluvchisiga murojaat qilish orqali uni o'chirish masalasi ko'rib chiqiladi.",
+      "related": ["KB-IDENTITY-003"]
+    },
+    {
+      "id": "KB-IDENTITY-003",
+      "domain": "OWNERSHIP_AND_IDENTITY",
+      "title": "Pasport yoki shaxsiy ma'lumotlardan ruxsatsiz foydalanilgan",
+      "status": "published_candidate",
+      "security_level": "HIGH",
+      "intents": ["identity_misuse", "passport_data_misuse", "fraud_suspected"],
+      "resolution": "Shaxsiy ma'lumotlarni ortiqcha so'ramaslik; identity misuse ehtimoli sifatida ko'rish; tegishli rasmiy organ/protseduraga yo'naltirish."
+    },
+    {
+      "id": "KB-LOST-001",
+      "domain": "LOST_STOLEN_DEVICE",
+      "title": "Yo'qolgan yoki o'g'irlangan telefonni IMEI orqali qidirish",
+      "status": "published_candidate",
+      "intents": ["lost_phone", "stolen_phone", "find_phone_by_imei"],
+      "user_examples": [
+        "Telefonim yo'qoldi.",
+        "IMEI orqali topib bera olasizmi?",
+        "Telefon qayerdaligini tekshirib bering."
+      ],
+      "resolution": "Yo'qolgan yoki o'g'irlangan qurilma bo'yicha huquqni muhofaza qiluvchi organlarga tegishli hujjatlar bilan murojaat qilish kerak.",
+      "must_not": ["\"topib beraman\" deyish", "current subscriber ma'lumotlarini berish", "location topishni va'da qilish"]
+    },
+    {
+      "id": "KB-LOST-002",
+      "domain": "LOST_STOLEN_DEVICE",
+      "title": "Telefon topilgan, lekin blacklistda qolgan",
+      "status": "published_candidate",
+      "intents": ["found_phone_blacklisted", "remove_lost_device_blacklist"],
+      "user_examples": [
+        "Telefonim topildi, blacklistdan chiqqanmi tekshiring.",
+        "Qora ro'yxatda qolganmi?"
+      ],
+      "resolution": "Agar rasmiy tekshiruvda qurilma hali qora ro'yxatda ko'rinsa, yo'qolgan qurilma bo'yicha avvalgi rasmiy jarayon bilan bog'liq tashkilotga murojaat qilish kerak."
+    },
+    {
+      "id": "KB-LOST-003",
+      "domain": "LOST_STOLEN_DEVICE",
+      "title": "IMEI activity history maxfiy ma'lumot",
+      "status": "published_candidate",
+      "intents": ["imei_usage_history", "phone_number_history", "track_imei_activity"],
+      "must_not": [
+        "IMEI qaysi raqamda ishlayotganini tekshirish",
+        "foydalanish tarixini berish",
+        "location berish",
+        "boshqa abonent ma'lumotlarini oshkor qilish"
+      ]
+    },
+    {
+      "id": "KB-PURCHASE-001",
+      "domain": "DEVICE_PURCHASE",
+      "title": "Do'kondan sotib olingan telefon IMEI ro'yxatdan o'tmagan",
+      "status": "needs_current_verification",
+      "intents": ["retail_phone_unregistered", "seller_registration_responsibility"],
+      "required_facts": [
+        "qayerdan xarid qilingan",
+        "sotuvchi tadbirkormi",
+        "chek/shartnoma bormi",
+        "yangi yoki ishlatilgan",
+        "tizimda qanday xabar chiqmoqda"
+      ]
+    },
+    {
+      "id": "KB-PURCHASE-002",
+      "domain": "DEVICE_PURCHASE",
+      "title": "Second-hand / boshqa shaxsdan sotib olingan telefon",
+      "status": "needs_expert_input",
+      "intents": ["second_hand_phone", "used_phone_imei_problem"],
+      "required_facts": ["registratsiyada chiqayotgan xabar", "telefon qayerdan olingani", "mavjud hujjatlar"],
+      "must_not": ["statusni tekshirayotgandek ko'rsatish"]
+    },
+    {
+      "id": "KB-ESIM-001",
+      "domain": "ESIM_DUAL_IMEI",
+      "title": "Ikkinchi IMEI / eSIM slot ro'yxatdan o'tmayapti",
+      "status": "needs_expert_input",
+      "intents": ["second_imei", "esim_imei", "dual_sim_registration"],
+      "user_examples": [
+        "Birinchi IMEI o'tdi, ikkinchisi o'tmayapti.",
+        "eSIM IMEI registratsiya bo'lmayapti."
+      ],
+      "diagnostic_flow": [
+        "Qaysi IMEI ro'yxatdan o'tmayapti?",
+        "Aynan qanday xabar chiqyapti?",
+        "Qurilma modeli nima?",
+        "Bu eSIM IMEI'mi yoki ikkinchi physical SIM slotmi?",
+        "Telefon qayerdan olingan/olib kirilgan?"
+      ],
+      "must_not": ["\"Boj limitidan oshdingizmi?\" kabi oldindan tayyor taxmin bilan boshlash"]
+    },
+    {
+      "id": "KB-MNP-001",
+      "domain": "MNP",
+      "title": "Mobil raqamni boshqa operatorga ko'chirish statusini so'rash",
+      "status": "published_candidate",
+      "intents": ["mnp_status", "number_portability", "operator_changed"],
+      "user_examples": [
+        "Raqamim boshqa operatorga o'tdimi?",
+        "MNP statusini tekshirib bering."
+      ],
+      "resolution": "Assistant MNP nima ekanini, umumiy jarayonni va user ko'rgan xatoni tushuntiradi, qayerga murojaat qilish bo'yicha yo'nalish beradi; real statusni tekshirmaydi."
+    },
+    {
+      "id": "REVIEW-001",
+      "domain": "IMEI_REGISTRATION",
+      "title": "IMEI registratsiya narxi va muddat",
+      "status": "needs_current_verification",
+      "review_only": true,
+      "resolution": "Eski hujjatlardagi raqamlarni current deb aytmaslik. Faqat expert tomonidan tasdiqlangan current tarif ishlatiladi."
+    },
+    {
+      "id": "REVIEW-002",
+      "domain": "IMPORTED_DEVICES",
+      "title": "Bir safarda olib kirish mumkin bo'lgan qurilmalar soni",
+      "status": "needs_current_verification",
+      "review_only": true,
+      "resolution": "Current bojxona limitiga faqat expert tomonidan yangilangan va tasdiqlangan KB mavjud bo'lsa javob beriladi."
+    }
+  ]
+}
