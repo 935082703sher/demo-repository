@@ -88,6 +88,8 @@ VMQ778 = [
     ),
     dict(
         title="Qaror. Tizimni bosqichma-bosqich joriy etish sanalari (2019)",
+        # 2019-yilgi o'tish davri: amaldagi qoida emas, faqat tarixiy savollarda chiqadi
+        temporal_status="historical",
         domain="imei", case_type="royxatdan_otkazish",
         tags=["2019", "muddat", "joriy etish", "aktivlashtirish"],
         text="Tizim bosqichma-bosqich joriy etilgan: 2019-yil 1-noyabrgacha qurilmalar mobil "

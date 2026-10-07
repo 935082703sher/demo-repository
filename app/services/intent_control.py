@@ -31,6 +31,8 @@ from app.services.fact_extraction import _normalize
 
 PAYMENT_RECEIPT = "payment_receipt_request"
 REGISTRATION_FEE = "registration_fee_question"
+WRONG_PORT = "mnp_wrong_port"
+ROAMING_DEBT_AFTER_PORT = "mnp_roaming_debt_after_port"
 
 # The one question a fee complaint needs: where the phone came from decides which
 # registration category (and so which charge) applies.
@@ -100,6 +102,45 @@ _FEE_COMPLAINT = (
 _AMOUNT = re.compile(r"\d[\d\s.,]*\d\s*(som|sum|uzs|soum)\b|\buzs\s*\d", re.IGNORECASE)
 
 
+# A number ported without the customer's request: high-risk (possibly unauthorised),
+# never treated as an ordinary MNP question. A definition question ("Xato ko'chirish
+# nima?") is left to the knowledge base.
+_WRONG_PORT = (
+    "soramasdan kochir",
+    "soramay kochir",
+    "aytmasdan kochir",
+    "bilmasdan kochir",
+    "ruxsatsiz kochir",
+    "roziligimsiz kochir",
+    "xato kochirib",
+    "xato kochirildi",
+    "xato kochirilgan",
+    "notogri raqam kochib",
+    "notogri raqamni kochir",
+    "po oshibke perenes",
+    "perenesli po oshibke",
+    "bez moego soglasiya perenes",
+    "perenesli bez",
+    "ported without my",
+    "wrong number ported",
+    "number was ported by mistake",
+    "ported by mistake",
+)
+# "...men so'ramasdan boshqa operatorga ko'chirishdi": the two signals may be apart.
+_WITHOUT_CONSENT = (
+    "soramasdan",
+    "soramay",
+    "aytmasdan",
+    "bilmasdan",
+    "ruxsatsiz",
+    "roziligimsiz",
+    "arizasiz",
+    "talabnomasiz",
+)
+_PORT_WORDS = ("mnp", "kochir", "kochgan", "kochdi", "perenos", "perenes", "port")
+_DEBT_WORDS = ("qarz", "dolg", "debt")
+
+
 def detect_intent(message: str) -> str | None:
     """The goal this message explicitly states, or None.
 
@@ -107,6 +148,17 @@ def detect_intent(message: str) -> str | None:
     only need the receipt" is a receipt request.
     """
     text = _text(message)
+    wrong_port = _has(text, _WRONG_PORT) or (
+        _has(text, _WITHOUT_CONSENT) and " kochir" in text.replace("kochib", "kochir")
+    )
+    if wrong_port and " nima " not in text:
+        return WRONG_PORT
+    if (
+        ("rouming" in text or "roaming" in text)
+        and _has(text, _PORT_WORDS)
+        and _has(text, _DEBT_WORDS)
+    ):
+        return ROAMING_DEBT_AFTER_PORT
     if _is_receipt_request(text):
         return PAYMENT_RECEIPT
     if _has(text, _FEE_COMPLAINT):
@@ -329,3 +381,99 @@ def fee_followup_reply(lang: str, device_origin: str) -> str:
     """The answer once the deciding fact (where the phone came from) is known."""
     table = _FEE_IMPORTED if device_origin == "imported" else _FEE_LOCAL
     return table.get(lang) or table["uz"]
+
+
+# --- MNP: xato ko'chirish va ko'chirishdan keyingi rouming qarzi (3275-son Qoidalar) -------
+
+_WRONG_PORT_REPLY = {
+    "uz": "Bu oddiy MNP holati emas: raqamingiz siz soʻramasdan koʻchirilgan boʻlsa, bu xato "
+    "(ehtimol ruxsatsiz) koʻchirish. 3275-son Qoidalarga koʻra (216-band) bunday raqamni "
+    "qaytarish eski operatoringizga (donor) yozma ariza berish yoki uning maʼlumot xizmatiga "
+    "murojaat qilish orqali boshlanadi, va sizning aybingiz boʻlmasa qaytarish uchun toʻlov "
+    "olinmaydi. Raqam qaytarilgach xizmatlar, tarif rejasi va balans xato koʻchirishdan oldingi "
+    "holatga tiklanadi (226-band). Men operator tizimlarini tekshira olmayman; murojaatda "
+    "raqamingizni va aloqa qachon uzilganini koʻrsating. Agar shaxsiy maʼlumotlaringizdan "
+    "ruxsatsiz foydalanilgan deb hisoblasangiz, buni ham arizada yozing.",
+    "uz_cyrl": "Бу оддий MNP ҳолати эмас: рақамингиз сиз сўрамасдан кўчирилган бўлса, бу хато "
+    "(эҳтимол рухсатсиз) кўчириш. 3275-сон Қоидаларга кўра (216-банд) бундай рақамни қайтариш "
+    "эски операторингизга (донор) ёзма ариза бериш ёки унинг маълумот хизматига мурожаат қилиш "
+    "орқали бошланади, ва сизнинг айбингиз бўлмаса қайтариш учун тўлов олинмайди. Рақам "
+    "қайтарилгач хизматлар, тариф режаси ва баланс хато кўчиришдан олдинги ҳолатга тикланади "
+    "(226-банд). Мен оператор тизимларини текшира олмайман; мурожаатда рақамингизни ва алоқа "
+    "қачон узилганини кўрсатинг.",
+    "ru": "Это не обычный перенос: если номер перенесли без вашей заявки, это ошибочный "
+    "(возможно, несанкционированный) перенос. По Правилам № 3275 (п. 216) возврат такого номера "
+    "начинается по вашему письменному заявлению прежнему оператору (донору) или обращению в его "
+    "справочную службу, и если вашей вины нет, плата за возврат не взимается. После возврата "
+    "услуги, тариф и баланс восстанавливаются на момент ошибочного переноса (п. 226). Я не могу "
+    "проверить системы операторов; в обращении укажите номер и когда пропала связь. Если "
+    "подозреваете использование ваших данных без согласия, укажите и это.",
+    "en": "This isn't an ordinary port: if your number was moved without your request, it is "
+    "a wrong (possibly unauthorised) port. Under Rules No. 3275 (clause 216), getting it back "
+    "starts with a written application to your previous operator (the donor) or a call to its "
+    "information service, and if you are not at fault there is no charge for the return. Once "
+    "the number is returned, your services, tariff plan and balance are restored to their state "
+    "before the wrong port (clause 226). I can't check operators' systems; in your application "
+    "give the number and when the service stopped. If you think your personal data was misused, "
+    "say so as well.",
+    "kaa": "Bul ádettegi MNP emes: nomerińiz sizdiń talabıńızsız kóshirilgen bolsa, bul qáte "
+    "(múmkin ruxsatsız) kóshiriw. 3275-san Qaǵıydalarǵa kóre (216-band) bunday nomerdi qaytarıw "
+    "eski operatorıńızǵa (donor) jazba arza beriw yamasa onıń maǵlıwmat xızmetine múráját etiw "
+    "arqalı baslanadı, hám sizdiń aybıńız bolmasa qaytarıw ushın tólem alınbaydı. Nomer "
+    "qaytarılǵannan keyin xızmetler, tarif hám balans qáte kóshiriwden aldınǵı jaǵdayǵa "
+    "tiklenedi (226-band).",
+}
+
+_ROAMING_DEBT_REPLY = {
+    "uz": "Rouming qarzi koʻchirishni rad etish asosi emas: eski operator qarz yoʻqligini "
+    "rouming xizmatlaridan tashqari tekshiradi (3275-son Qoidalar, 186-band). "
+    "Koʻchirishdan keyin esa eski operator (donor) rouming xizmatlari uchun qarzni talab "
+    "qilishi mumkin, lekin faqat koʻchirish sanasidan boshlab 30 kalendar kun ichida — bundan "
+    "kech yuborilgan talabni KRMB operatori rad etadi (3275-son Qoidalar, 208-band). Talab "
+    "tasdiqlansa, yangi operator 15 daqiqa ichida SMS orqali qarzni toʻlash kerakligini "
+    "xabar qiladi; toʻlash muddati 7 ish kunidan oshmaydi. Shu muddatda toʻlanmasa, yangi "
+    "operator qarz toʻliq toʻlanguncha xizmatni toʻxtatadi; toʻlangach eski operator 15 daqiqa "
+    "ichida blokdan chiqarish haqida xabar beradi. SMS kelgan boʻlsa, qarzni eski operatorga "
+    "toʻlang — raqamni qayta koʻchirish shart emas.",
+    "uz_cyrl": "Роуминг қарзи кўчиришни рад этиш асоси эмас: эски оператор қарз йўқлигини "
+    "роуминг хизматларидан ташқари текширади (186-банд). "
+    "Кўчиришдан кейин эса эски оператор (донор) роуминг хизматлари учун қарзни талаб "
+    "қилиши мумкин, лекин фақат кўчириш санасидан бошлаб 30 календар кун ичида — бундан кеч "
+    "юборилган талабни KRMB оператори рад этади (3275-сон Қоидалар, 208-банд). Талаб "
+    "тасдиқланса, янги оператор 15 дақиқа ичида SMS орқали хабар қилади; тўлаш муддати 7 иш "
+    "кунидан ошмайди. Шу муддатда тўланмаса, янги оператор қарз тўлангунча хизматни "
+    "тўхтатади; тўлангач эски оператор 15 дақиқа ичида блокдан чиқариш ҳақида хабар беради.",
+    "ru": "Долг за роуминг не является основанием для отказа в переносе: донор проверяет "
+    "отсутствие задолженности, кроме роуминга (Правила № 3275, п. 186). "
+    "После переноса прежний оператор (донор) может выставить долг за роуминг, но только в "
+    "течение 30 календарных дней с даты переноса — более поздний запрос KRMB отклоняет (Правила "
+    "№ 3275, п. 208). Если запрос подтверждён, новый оператор в течение 15 минут сообщит по SMS о "
+    "необходимости оплаты; срок оплаты — не более 7 рабочих дней. Если не оплатить в этот срок, "
+    "новый оператор приостановит услуги до полной оплаты; после оплаты донор в течение 15 минут "
+    "сообщает о разблокировке. Переносить номер заново не нужно.",
+    "en": "A roaming debt is not a reason to reject porting: the donor checks for debts other "
+    "than roaming (Rules No. 3275, clause 186). "
+    "After porting, your previous operator (the donor) can still bill a roaming debt, but "
+    "only within 30 calendar days of the porting date — a later request is rejected by KRMB "
+    "(Rules No. 3275, clause 208). If the request is confirmed, your new operator notifies you "
+    "by SMS within 15 minutes; the payment deadline is at most 7 working days. If it isn't paid "
+    "in time, the new operator suspends service until the debt is paid in full; once paid, the "
+    "donor reports the unblocking within 15 minutes. You don't need to port the number again.",
+    "kaa": "Rouming qarızı kóshiriwdi biykar etiw tiykarı emes: eski operator qarızdı rouming "
+    "xızmetlerinen tısqarı tekseredi (186-band). "
+    "Kóshiriwden keyin de eski operator (donor) rouming xızmetleri ushın qarızdı talap "
+    "etiwi múmkin, biraq tek kóshiriw sánesinen baslap 30 kalendar kún ishinde (3275-san "
+    "Qaǵıydalar, 208-band). Talap tastıyıqlansa, jańa operator 15 minut ishinde SMS arqalı "
+    "xabar beredi; tólew múddeti 7 jumıs kúninen aspaydı. Tólenbese, jańa operator qarız "
+    "tólengenshe xızmetti toqtatadı.",
+}
+
+
+def wrong_port_reply(lang: str) -> str:
+    """A number ported without the customer's request: the return procedure (216, 226)."""
+    return _WRONG_PORT_REPLY.get(lang) or _WRONG_PORT_REPLY["uz"]
+
+
+def roaming_debt_reply(lang: str) -> str:
+    """A roaming debt and MNP: not a rejection ground (186); billed after porting (208)."""
+    return _ROAMING_DEBT_REPLY.get(lang) or _ROAMING_DEBT_REPLY["uz"]

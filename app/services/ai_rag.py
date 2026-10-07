@@ -189,9 +189,7 @@ class AiRagResponder:
         sources = [(e.source_id, e.title) for e in evidence if e.source_id in set(used)]
         return AiRagResult(reply=reply, sources=sources)
 
-    def _prompt(
-        self, case: CaseState, message: str, lang: str, evidence: list[Evidence]
-    ) -> str:
+    def _prompt(self, case: CaseState, message: str, lang: str, evidence: list[Evidence]) -> str:
         return json.dumps(
             {
                 "language": _LANGUAGE_NAME.get(lang, "Uzbek (Latin script)"),

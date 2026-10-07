@@ -292,21 +292,21 @@ _REPLIES: dict[str, dict[str, str]] = {
         "múráját etiw kerek.",
     },
     MNP_STATUS: {
-        "uz": "MNP tizimidagi real statusni bevosita tekshira olmayman. Raqam muvaffaqiyatli "
-        "ko'chirilganda yangi operator SMS orqali xabar beradi. Agar sizga SMS yoki rad sababi "
-        "kelgan bo'lsa, shu xabarni yuboring — keyingi qadamni aytaman.",
-        "uz_cyrl": "MNP тизимидаги реал статусни бевосита текшира олмайман. Рақам муваффақиятли "
-        "кўчирилганда янги оператор SMS орқали хабар беради. Агар сизга SMS ёки рад сабаби "
-        "келган бўлса, шу хабарни юборинг — кейинги қадамни айтаман.",
-        "ru": "Я не могу напрямую проверить статус переноса номера в системе MNP. Когда перенос "
-        "успешно завершён, новый оператор сообщает об этом по SMS. Если вам пришло SMS или "
-        "причина отказа, пришлите это сообщение — подскажу следующий шаг.",
-        "en": "I can't check the real porting status in the MNP system. When the number has "
+        "uz": "Men MNP/KRMB tizimidagi real statusni bevosita tekshira olmayman. Raqam "
+        "muvaffaqiyatli ko'chirilganda yangi operator SMS orqali xabar beradi. Agar sizga "
+        "SMS yoki rad sababi kelgan bo'lsa, shu xabarni yuboring — keyingi qadamni aytaman.",
+        "uz_cyrl": "Мен MNP/KRMB тизимидаги реал статусни бевосита текшира олмайман. Рақам "
+        "муваффақиятли кўчирилганда янги оператор SMS орқали хабар беради. Агар сизга SMS "
+        "ёки рад сабаби келган бўлса, шу хабарни юборинг — кейинги қадамни айтаман.",
+        "ru": "Я не могу напрямую проверить статус переноса номера в системе MNP/KRMB. Когда "
+        "перенос успешно завершён, новый оператор сообщает об этом по SMS. Если вам пришло "
+        "SMS или причина отказа, пришлите это сообщение — подскажу следующий шаг.",
+        "en": "I can't check the real porting status in the MNP/KRMB system. When the number has "
         "been ported successfully, the new operator lets you know by SMS. If you received an "
         "SMS or a rejection reason, send it to me and I'll tell you the next step.",
-        "kaa": "MNP sistemasındaǵı real statustı tikkeley tekserip bere almayman. Nomer tabıslı "
-        "kóshirilgende jańa operator SMS arqalı xabar beredi. Eger sizge SMS yamasa biykar "
-        "etiw sebebi kelgen bolsa, sol xabardı jiberiń — keyingi qádemdi aytaman.",
+        "kaa": "Men MNP/KRMB sistemasındaǵı real statustı tikkeley tekserip bere almayman. "
+        "Nomer tabıslı kóshirilgende jańa operator SMS arqalı xabar beredi. Eger sizge SMS "
+        "yamasa biykar etiw sebebi kelgen bolsa, sol xabardı jiberiń — keyingi qádemdi aytaman.",
     },
     MY_DEVICES: {
         "uz": "Men sizning nomingizga ro'yxatdan o'tgan qurilmalarni tizimdan bevosita ko'ra "
@@ -568,6 +568,12 @@ _LIVE_CHECK_CLAIMS = (
     "your payment is in the system",
     "your payment has been confirmed in the system",
     "vash platezh est v sisteme",
+    "krmb bazasidan tekshirdim",
+    "krmbdan tekshirdim",
+    "krmb bazasida tekshirdim",
+    "proveril v krmb",
+    "i checked krmb",
+    "i checked the krmb",
 )
 
 

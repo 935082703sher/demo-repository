@@ -10,7 +10,7 @@ from fastapi.testclient import TestClient
 
 from app.core.config import Settings
 from app.main import create_app
-from app.services.ai_rag import AiRagResponder, Evidence
+from app.services.ai_rag import AiRagResponder, AiRagResult, Evidence
 from app.services.grounding import GroundingValidator
 
 _EVIDENCE = [
@@ -29,7 +29,7 @@ def _responder(obj: dict[str, Any] | None) -> AiRagResponder:
     return AiRagResponder(complete, GroundingValidator(), model_name="test-model")
 
 
-def _run(obj: dict[str, Any] | None, *, message: str = "narxi qancha"):
+def _run(obj: dict[str, Any] | None, *, message: str = "narxi qancha") -> AiRagResult:
     from app.domain.case_state import CaseState
 
     case = CaseState(case_id="c", session_id="s")
@@ -71,8 +71,10 @@ def test_a_clarifying_question_needs_no_source() -> None:
 
 
 def test_a_greeting_without_numbers_or_sources_is_allowed() -> None:
-    res = _run({"type": "answer", "reply": "Assalomu alaykum! Qanday yordam beray?",
-                "used_sources": []}, message="salom")
+    res = _run(
+        {"type": "answer", "reply": "Assalomu alaykum! Qanday yordam beray?", "used_sources": []},
+        message="salom",
+    )
     assert res.error is False and res.sources == []
 
 
